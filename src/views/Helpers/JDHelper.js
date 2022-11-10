@@ -9,8 +9,9 @@ const JDHelper = () => {
         dim: {},
         JDSpecifications: {},
         JDAddInfo: {}
-    } 
-    )
+    })
+    const [JDList] = useState([])
+    
   const fetchDimensions = async () => {
     
     const response = await Api.get('/jd/dimensions/', { headers: {Authorization: Api.token} })
@@ -43,7 +44,23 @@ const JDHelper = () => {
     return JDResult
    
     }
-
+    const fetchJDList = async () => {
+        const response = await Api.get('/jd/', { headers: {Authorization: Api.token} })
+        if (response) {
+            if (response.status === 200) {
+                const List = response.data 
+                // console.warn(result)
+                if (Object.values(List).length > 0) {
+                    for (let i = 0; i < List.length; i++) {
+                          JDList.push(List[i])
+                      }  
+                      return JDList
+                }
+            } else {
+                Api.Toast('error', response.message)
+            }
+        }
+    }
   const postJD = async (data) => {
     let formData = new FormData()
         formData = JSON.stringify(Object.assign(data))
@@ -68,10 +85,38 @@ const JDHelper = () => {
                 Api.Toast('error', error)
             }) 
     
+  } 
+  const deleteJD = async id => {
+    if (id) {
+        await  Api.deleteData(`/jd/${id}/`, {method: 'Delete'})
+        .then((result) => {
+          const data = {status:result.status, result_data:result.data, message: result.message }
+          if (data.status === 200) {
+         
+            Api.Toast('success', result.message)
+            
+          } else {
+            Api.Toast('error', result.message)
+          }
+        })
+        .catch((error) => {
+          console.error(error)
+          Api.Toast('error', "Invalid Request")
+        }) 
+        
+      } else {
+        Api.Toast('error', "JD Not Found!")
+      }
+      
+       return false
+     
   }  
+
     return {
         fetchDimensions,
-        postJD
+        postJD,
+        fetchJDList,
+        deleteJD
     }
 }
 export default JDHelper

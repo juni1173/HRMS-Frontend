@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {Offcanvas, OffcanvasHeader, OffcanvasBody, InputGroup, Input, InputGroupText} from "reactstrap"
 import { Search } from 'react-feather'
 import JobWizard from './stepperForm'
-import JDList from "./Job-List"
+import JDList from "./JD-List"
 const Job_Description = () => {
   const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)

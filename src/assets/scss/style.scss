@@ -1,0 +1,113 @@
+/*================================================================================
+	Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
+	Version: 2.0
+	Author: PIXINVENT
+	Author URL: http://www.themeforest.net/user/pixinvent
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+.float-right{
+	float: right;
+}
+.white-heading{
+	color:white;
+}
+.opacity{
+	opacity: 0.8;
+}
+.warning-setup{
+	// background: linear-gradient(118deg, #315180, rgba(115, 103, 240, 0.7)) !important;
+	background: #315180;
+}
+.nav-link.active {
+	border: 0;
+	box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+}
+.nav-link.active h3{
+	color: white;
+}	
+.main-menu.menu-light .navigation > li.active > a, 
+.main-menu.menu-dark .navigation > li.active > a,
+.main-menu.menu-light .navigation > li ul .active {
+    background: #315180;
+}
+[dir] .btn-primary,
+ .bs-stepper .bs-stepper-header .step.active .step-trigger .bs-stepper-box,
+ .rc-input-number .rc-input-number-handler-wrap .rc-input-number-handler,
+ .dark-layout .nav-pills .nav-item .nav-link.active  {
+	border-color: #315180 !important;
+	background-color: #315180 !important;
+}
+.main-menu .navbar-header .navbar-brand .brand-text,
+.bs-stepper .bs-stepper-header .step.active .step-trigger .bs-stepper-label .bs-stepper-title {
+	color: #315180 !important;
+	
+}
+// .nav-pills .nav-link.active{
+// 	background-color: linear-gradient(118deg, #7367f0, rgba(115, 103, 240, 0.7)) !important;
+// }
+.card{
+	width: 100%;
+}
+.nav-link.active .card{
+	background-color: #315180 !important;
+	box-shadow: 0 0 0 0 !important;
+	margin-bottom: 0 ;
+}
+[dir] .nav-pills .nav-link {
+    padding: 0.786rem 0.5rem;
+}
+.nav-pills .nav-link.active {
+	background-color: #315180;
+	border-color: #315180;
+}
+.offcanvas-end{
+	width:700px;
+}
+.largeCanvas{
+	width:80% !important;
+}
+.form-control, .select__control, span.input-group-text{
+	border: 1px solid #b4b7bd;
+}
+.bs-stepper{
+	box-shadow: 0 4px 24px 0 #b4b7bd !important;
+}
+.bs-stepper.vertical .bs-stepper-header {
+    border-right: 1px solid #82868b54 !important;
+}
+button{
+	cursor: pointer;
+}
+.navbar-floating .header-navbar-shadow, .no-background{
+	background: transparent;
+}
+html[dir] body {
+	background: #4b4b4b1f;
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus{
+	background-color: #315180c7 !important;
+}
+.mr-1{
+	margin-right: 1rem !important;
+}
+#JD-essential, #additional-essential{
+	height:133px;
+}
+btn.btn-addmore span{
+	white-space: nowrap;
+}
+.apply-head-row{
+	background-color: #315180c7;
+}
+.apply-heading{
+	color:white;
+	padding: 20px 0;
+}
+.apply-form{
+	margin: 0px 400px;
+}

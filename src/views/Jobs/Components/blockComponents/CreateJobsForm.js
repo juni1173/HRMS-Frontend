@@ -5,19 +5,19 @@ import { Save} from "react-feather"
 import { Label, Row, Col, Input, Form, Button, Spinner } from "reactstrap" 
 import Select from 'react-select'
 // import { toast, Slide } from 'react-toastify'
-import apiHelper from "../../../Helpers/ApiHelper"
 import DepartmentsHelper from "../../../Helpers/DepartmentsHelper"
 import staffClassificationsHelper from "../../../Helpers/StaffClassificationHelper"
-import CustomHelper from "../../../Helpers/customHelper"
+import JobHelper from "../../../Helpers/JobHelper"
 import { Redirect } from "react-router-dom"
 const JobsAddForm = ({ count }) => {
-  const Api = apiHelper()
+  const Job_Helper = JobHelper()
   const Department = DepartmentsHelper()
   const StaffClassification = staffClassificationsHelper()
   const [depActive] = useState([])
   const [depNotActive] = useState([])
   const [staffActive] = useState([])
   const [staffNotActive] = useState([])
+  const [JDActive, setJDActive] = useState(null)
   const [loading, setLoading] = useState(true)
   
   const fetchDepartments = (depData) => {
@@ -38,6 +38,17 @@ const JobsAddForm = ({ count }) => {
         setLoading(false)
       }
   }
+  // const fetchJD = JDdata => {
+  //   setLoading(true)
+  //   if (JDdata.length > 0) {
+  //     JDActive.splice(0, JDActive.length)
+  //     for (let i = 0; i < JDdata.length; i++) {
+  //       JDActive.push({value: JDdata.id, label: JDdata.title})
+  //     }
+  //   }
+  //   console.warn(JDActive)
+  //   setLoading(false)
+  // }
   const fetchStaffClassifications = (staffData) => {
       setLoading(true)
         if (staffData.staff.length > 0) {
@@ -65,6 +76,22 @@ const JobsAddForm = ({ count }) => {
         fetchDepartments(depData)
       })
   }
+  const jdList = async () => {
+    setLoading(true)
+    await Job_Helper.fetchJD().then(data => {
+      // console.warn(data.jdActive)
+      if (data) {
+        if (Object.values(data.jdActive).length > 0) {
+          setJDActive(data.jdActive)
+        }
+      }
+      // fetchJD(data.jdActive)
+    })
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000)
+    
+  }
   const staffClassification = () => {
     StaffClassification.fetchstaffClassifications()
     .then(staffData => {
@@ -75,9 +102,11 @@ const JobsAddForm = ({ count }) => {
     if (count !== 0) {
         dep()
         staffClassification()
+        jdList()
     } else {
         dep()
         staffClassification()
+        jdList()
     }
   }, [])
   const onSubmit = async () => {
@@ -235,12 +264,25 @@ const JobsAddForm = ({ count }) => {
                 <label className='form-label'>
                   Job Description
                 </label>
-                  <Input
-                    id="individujob-descriptional"
-                    name="job-description"
-                    className="job-description"
-                    placeholder="Job Description "
+                {JDActive ? (
+                  !loading ? (
+                    <Select
+                  theme={JDActive}
+                    isClearable={false}
+                    id='job-JD'
+                    name='job-JD'
+                    className='react-select'
+                    classNamePrefix='select'
+                    options={JDActive}
+                    defaultValue={JDActive[0]}
+                  //   onChange={type => { setType(type.value) }}
                   />
+                  ) : <Spinner />
+                  
+                ) : (
+                  <p>No JD Available</p>
+                )}
+                
               </Col>
               
               <div className='row float-right'>

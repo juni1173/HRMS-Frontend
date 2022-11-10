@@ -69,7 +69,7 @@ const OrganizationAdd = ({ stepper, fetchGroupHeads, stepperStatus, GroupHeadCal
           .then((response) => response.json())
           .then((result) => {
             // const data = {status:result.status, result_data:result.data, message: result.message }
-            if (result.status === 201) {
+            if (result.status === 200) {
               toast.success(
                 <ToastContent type='success' message={result.message} />,
                 { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }

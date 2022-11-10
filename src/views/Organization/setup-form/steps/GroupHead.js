@@ -52,31 +52,7 @@ const GroupHead = ({ stepper, stepperStatus, list, createForm, fetchGroupHeads, 
             }
         })
         .catch(err => console.log(err))
-      // try {
-      //   const {data: response} = await axios.get('http://127.0.0.1:8000/api/grouphead/', {
-      //    headers: {
-      //     Accept : 'application/json'
-      //     // Authorization : token
-      //    }
-      //   })
-      //   if (response.status === 200) {
-      //       setList(response.data)        
-      //   } else {
-      //     toast.error(
-      //       <ToastContent type='error' message={response.message} />,
-      //       { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-      //     )
-      //     setList([])
-      //   }
-      // } catch (error) {
-      //   if (error.response) {
-      //     toast.error(
-      //       <ToastContent type='error' message='No Organization Found! Please enter info...' />,
-      //       { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-      //     )
-      //     setList([])
-      //   }
-      // }
+      
       setTimeout(() => {
         setLoading(false)
       }, 1000)
@@ -95,14 +71,7 @@ const GroupHead = ({ stepper, stepperStatus, list, createForm, fetchGroupHeads, 
   
   const deleteGroupHead = (id) => {
     if (id) {
-      
-      // ** Api DELETE Request
-      // fetch(`http://127.0.0.1:8000/api/grouphead/${id}/`, {
-      //   method: "DELETE",
-      //   headers: { "Content-Type": "Application/json", Authorization: token }
-      // })
-      // .then((response) => response.json())
-      api.deleteData(`/grouphead/${id}/`, {method: 'Delete'})
+      api.deleteData(`/organization/grouphead/${id}/`, {method: 'Delete'})
       .then((result) => {
         const data = {status:result.status, result_data:result.data, message: result.message }
         if (data.status === 200) {

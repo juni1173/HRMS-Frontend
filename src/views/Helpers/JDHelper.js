@@ -52,7 +52,9 @@ const JDHelper = () => {
                 // console.warn(result)
                 if (Object.values(List).length > 0) {
                     for (let i = 0; i < List.length; i++) {
-                          JDList.push(List[i])
+                        if (List[i].is_active) {
+                            JDList.push(List[i])
+                        } 
                       }  
                       return JDList
                 }

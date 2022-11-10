@@ -5,45 +5,46 @@ import JDHelper from "../../../Helpers/JDHelper"
 const JDList = ({count}) => {
     const Helper = JDHelper()
     const [loading, setLoading] = useState(true)
-    const [JDList, setJDList] = useState(null)
-    const getJD = async () => {
-        setLoading(true)
-        await Helper.fetchJDList().then(data => {
-            if (data) {
-                if (Object.values(data).length > 0) {
-                    setJDList(data)
-                } else {
-                    setJDList(null)
-                }
+    const [JD_List, setJDList] = useState(null)
+const getJD = async () => {
+    setLoading(true)
+    if (JD_List !== null) {
+        JD_List.splice(0, JD_List.length)
+    }
+    await Helper.fetchJDList().then(data => {
+        if (data) {
+            if (Object.values(data).length > 0) {
+                setJDList(data)
             } else {
                 setJDList(null)
             }
-            
-        })
-        setTimeout(() => {
-            setLoading(false)
-          }, 1000)
-    }
+        } 
+        
+    })
+    setTimeout(() => {
+        setLoading(false)
+        }, 1000)
+}
     
     useEffect(() => {
-        if (count > 0) {
+        if (count !== 0) {
             getJD()
         } else {
             getJD()
         }
     }, [count])
 
-    const deleteJD = id => {
-        Helper.deleteJD(id).then(() => {
+    const deleteJD = async id => {
+        await Helper.deleteJD(id).then(() => {
             getJD()
         })
     }
     return (        
         <Fragment>
         
-        {JDList ? (
+        {JD_List ? (
             !loading ? (
-                Object.values(JDList).map((item, key) => (
+                Object.values(JD_List).map((item, key) => (
                     <Card key={key}>
                     <CardBody>
                         <CardTitle tag='h4'>{item.title}</CardTitle>

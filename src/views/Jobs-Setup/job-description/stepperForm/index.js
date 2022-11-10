@@ -45,8 +45,8 @@ const JobWizard = ({CallBackList}) => {
     getDimensions()
   }, [])
 
- const  submitJD = (data) => {
-    Helper.postJD(data).then(data => {
+ const  submitJD = async (data) => {
+    await Helper.postJD(data).then(data => {
       CallBackList()
       return data
     })

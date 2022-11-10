@@ -169,7 +169,7 @@ const addPosition = ({ CallBack }) => {
                     Api.Toast('success', result.message)
                     CallBack()
                     } else {
-                        Api.Toast('error', 'notworking')
+                        Api.Toast('error', result.message)
                     }
                 })
             .catch((error) => {

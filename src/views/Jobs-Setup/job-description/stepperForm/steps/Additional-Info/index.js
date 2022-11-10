@@ -6,22 +6,22 @@ import apiHelper from '../../../../../Helpers/ApiHelper'
 const Job_Additional_Info = ({ stepper, CallBack, Dimensions }) => {
   const Api = apiHelper()
     const [loading, setLoading] = useState(true)
-    const [dimension, setDimension] = useState(null)
+    const [jd_dimension, setDimension] = useState(null)
     const [desirable, setDesirable] = useState(null)
     const [essential, setEssential] = useState(null)
     const [Add_info] = useState([])
   const addmoreSubmit = () => {
       setLoading(true)
-      if (dimension !== null && desirable !== null && essential !== null) {
-        const DimensionObject = Dimensions.find(x => x.value === dimension)
+      if (jd_dimension !== null && desirable !== null && essential !== null) {
+        const DimensionObject = Dimensions.find(x => x.value === jd_dimension)
         const DimensionLabel = DimensionObject.label
-        if (Add_info.find(x => x.dimension === dimension)) {
+        if (Add_info.find(x => x.jd_dimension === jd_dimension)) {
           Api.Toast('error', 'Dimension Already Exist')
           setTimeout(() => {
             setLoading(false)
           }, 1000)
         } else {
-          Add_info.push({dimension, desirable, essential, DimensionLabel})  
+          Add_info.push({jd_dimension, desirable, essential, DimensionLabel})  
         }
         
       } else {

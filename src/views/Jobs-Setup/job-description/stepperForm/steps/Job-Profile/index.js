@@ -96,6 +96,8 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
     setLoading(false)
   }, [])
  const onSubmit = data => {
+    data.department = data.department.value
+    data.position = data.position.value
     CallBack(data, '1')
     stepper.next()
   }
@@ -115,7 +117,8 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                 <Controller
                 id='react-select'
                 control={control}
-                name='departmentType'
+                name='department'
+                defaultValue={depActive[0]}
                 render={({ field }) => (
                   <Select
                   theme={depActive}
@@ -127,6 +130,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                     options={depActive}
                     defaultValue={depActive[0]}
                     {...field}
+                    
                   //   onChange={type => { setType(type.value) }}
                   />
                 )}
@@ -145,7 +149,8 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                 <Controller
                 id='react-select'
                 control={control}
-                name='positionType'
+                name='position'
+                defaultValue={positionActive[0]}
                 render={({ field }) => (
                   <Select
                   theme={positionActive}

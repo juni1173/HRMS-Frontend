@@ -10,6 +10,7 @@ import Avatar from '@components/avatar'
      token = token.replaceAll('"', '')
      token = `Bearer ${token}`
     const org = JSON.parse(localStorage.getItem('organization'))
+   
     const ApiBaseLink = process.env.REACT_APP_API_URL
 
     const ToastContent = ({ type, message }) => (
@@ -129,7 +130,8 @@ import Avatar from '@components/avatar'
         deleteData,
         Toast,
         org,
-        token
+        token,
+        ApiBaseLink
         
     }
 }

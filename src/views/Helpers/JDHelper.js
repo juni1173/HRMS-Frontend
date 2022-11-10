@@ -43,8 +43,35 @@ const JDHelper = () => {
     return JDResult
    
     }
+
+  const postJD = async (data) => {
+    let formData = new FormData()
+        formData = JSON.stringify(Object.assign(data))
+        console.warn(typeof (formData))
+        console.warn(formData)
+    
+    const url = `${Api.ApiBaseLink}/jd/`
+                fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "Application/json", Authorization: Api.token },
+                body: formData
+                })
+                .then((response) => response.json())
+                .then((result) => {
+                    if (result.status === 200) {
+                    Api.Toast('success', result.message)
+                    } else {
+                        Api.Toast('error', 'not working')
+                    }
+                })
+            .catch((error) => {
+                Api.Toast('error', error)
+            }) 
+    
+  }  
     return {
-        fetchDimensions
+        fetchDimensions,
+        postJD
     }
 }
 export default JDHelper

@@ -8,8 +8,8 @@ const Job_Description = () => {
     const [canvasOpen, setCanvasOpen] = useState(false)
     const [count, setCount] = useState(0)
 
-    const CallBack = () => {
-      // setCanvasOpen(false)
+    const CallBackList = () => {
+      setCanvasOpen(false)
       setCount(current => current + 1)
     }
     const toggleCanvasEnd = () => {
@@ -37,7 +37,6 @@ const Job_Description = () => {
                 <button className='btn btn-primary float-right' onClick={toggleCanvasEnd} >Add Job Description</button> 
               </div>
             </div>
-            
             <JDList count={count}/>
           </div>
         </div>
@@ -46,7 +45,7 @@ const Job_Description = () => {
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             {/* {Canvas(active)} */}
-            <JobWizard CallBack={CallBack}/>
+            <JobWizard CallBackList={CallBackList}/>
           </OffcanvasBody>
         </Offcanvas>
     </div>

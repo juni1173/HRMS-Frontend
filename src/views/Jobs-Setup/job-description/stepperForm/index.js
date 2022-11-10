@@ -10,7 +10,7 @@ import Job_Profile from './steps/Job-Profile'
 import Job_Specification from './steps/Job-Specification'
 import Job_Additional_Info from './steps/Additional-Info'
 import JDHelper from '../../../Helpers/JDHelper'
-const JobWizard = () => {
+const JobWizard = ({CallBackList}) => {
   // ** Ref
   const Helper = JDHelper()
   const ref = useRef(null)
@@ -36,7 +36,6 @@ const JobWizard = () => {
     JDAddInfo: {}
     })
   const getDimensions = () => {
-
         Helper.fetchDimensions().then(data => {
             setDimensions({all: data.dim, JDSpecifications: data.JDSpecifications, JDAddInfo: data.JDAddInfo})
         })
@@ -46,6 +45,12 @@ const JobWizard = () => {
     getDimensions()
   }, [])
 
+ const  submitJD = (data) => {
+    Helper.postJD(data).then(data => {
+      CallBackList()
+      return data
+    })
+  }
   const CallBack = (data, step) => {
     switch (step) {
         case '1': {
@@ -62,13 +67,17 @@ const JobWizard = () => {
         }
         case '4': {
             JD_data.JD_AdditionalInfo = data 
-
-            return JD_data
+            let final_data = {}
+            let JDSpec = []
+            JDSpec = [...JD_data.JD_Specification, ...JD_data.JD_AdditionalInfo]
+            final_data = Object.assign(JD_data.JD_Profile, {main_responsibilities: JD_data.JD_Description}, {jd_specifications: JDSpec})
+            console.warn(final_data)
+            submitJD(final_data)
         }
     }
       
   }
-
+ 
   const steps = [
     {
       id: 'Job-Profile',
@@ -92,7 +101,7 @@ const JobWizard = () => {
       id: 'Job-Additional-Info',
       title: 'Additional Info',
       subtitle: 'Enter Your Details.',
-      content: <Job_Additional_Info stepper={stepper} CallBack={CallBack} Dimensions={Dimensions.JDAddInfo}/>
+      content: <Job_Additional_Info stepper={stepper} CallBack={CallBack} Dimensions={Dimensions.JDAddInfo} />
     }
   ]
   return (

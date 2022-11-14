@@ -4,109 +4,41 @@ import { Save} from "react-feather"
 // // ** Reactstrap Imports
 import { Label, Row, Col, Input, Form, Button, Spinner } from "reactstrap" 
 import Select from 'react-select'
-// import { toast, Slide } from 'react-toastify'
-import DepartmentsHelper from "../../../Helpers/DepartmentsHelper"
-import staffClassificationsHelper from "../../../Helpers/StaffClassificationHelper"
 import JobHelper from "../../../Helpers/JobHelper"
-import { Redirect } from "react-router-dom"
 const JobsAddForm = ({ count }) => {
   const Job_Helper = JobHelper()
-  const Department = DepartmentsHelper()
-  const StaffClassification = staffClassificationsHelper()
-  const [depActive] = useState([])
-  const [depNotActive] = useState([])
-  const [staffActive] = useState([])
-  const [staffNotActive] = useState([])
-  const [JDActive, setJDActive] = useState(null)
+  const [formData] = useState({
+    Staff_Classification:{},
+    Department:{},
+    Position:{},
+    Job_Types:{},
+    JD:{}
+  })
   const [loading, setLoading] = useState(true)
   
-  const fetchDepartments = (depData) => {
+  const fetchPreData = async () => {
     setLoading(true)
-      if (depData.dep.length > 0) {
-        
-        depActive.splice(0, depActive.length)
-        depNotActive.splice(0, depNotActive.length)
-        for (let i = 0; i < depData.dep.length; i++) {
-          if (depData.dep[i].is_active) {
-              // console.warn(i)
-              depActive.push({value: depData.dep[i].id, label: depData.dep[i].title})
-          } else {
-              // console.warn(i)
-              depNotActive.push({value: depData.dep[i].id, label: depData.dep[i].title})
-          }
-        }  
-        setLoading(false)
-      }
-  }
-  // const fetchJD = JDdata => {
-  //   setLoading(true)
-  //   if (JDdata.length > 0) {
-  //     JDActive.splice(0, JDActive.length)
-  //     for (let i = 0; i < JDdata.length; i++) {
-  //       JDActive.push({value: JDdata.id, label: JDdata.title})
-  //     }
-  //   }
-  //   console.warn(JDActive)
-  //   setLoading(false)
-  // }
-  const fetchStaffClassifications = (staffData) => {
-      setLoading(true)
-        if (staffData.staff.length > 0) {
-          setLoading(true)
-          staffActive.splice(0, staffActive.length)
-          staffNotActive.splice(0, staffNotActive.length)
-          if (Object.values(staffData.staff).length > 0) {
-              for (let i = 0; i < staffData.staff.length; i++) {
-                  if (staffData.staff[i].is_active) {
-                    staffActive.push({value: staffData.staff[i].id, label: staffData.staff[i].title})
-                  } else {
-                    staffNotActive.push({value: staffData.staff[i].id, label: staffData.staff[i].title})
-                  }
-                }  
-                setLoading(false)
-          }
-          
-        } else {
-          <Redirect to={login} />
-        }
-  }
-  const dep = () => {
-      Department.fetchDepartments()
-      .then(depData => {
-        fetchDepartments(depData)
-      })
-  }
-  const jdList = async () => {
-    setLoading(true)
-    await Job_Helper.fetchJD().then(data => {
-      // console.warn(data.jdActive)
+    await Job_Helper.fetchFormPreData().then(data => {
+      console.warn(data)
       if (data) {
-        if (Object.values(data.jdActive).length > 0) {
-          setJDActive(data.jdActive)
-        }
+       formData.Staff_Classification = data.Staff_Classification
+       formData.Department = data.Department
+       formData.Position = data.Position
+       formData.Job_Types = data.Job_Types
+       formData.JD = data.JD
       }
-      // fetchJD(data.jdActive)
+      return formData
     })
     setTimeout(() => {
       setLoading(false)
     }, 1000)
     
   }
-  const staffClassification = () => {
-    StaffClassification.fetchstaffClassifications()
-    .then(staffData => {
-      fetchStaffClassifications(staffData)
-    })
-}
   useEffect(() => {
     if (count !== 0) {
-        dep()
-        staffClassification()
-        jdList()
+       fetchPreData()
     } else {
-        dep()
-        staffClassification()
-        jdList()
+        fetchPreData()
     }
   }, [])
   const onSubmit = async () => {
@@ -171,20 +103,20 @@ const JobsAddForm = ({ count }) => {
         </div>
         <Form onSubmit={e => e.preventDefault()}  id="create-job-form">
           <Row>
-            <Col md='6' className='mb-1'>
+            <Col md='4' className='mb-1'>
               <Label className='form-label'>
                 Departments
               </Label>
               {!loading ? (
                   <Select
-                  theme={depActive}
+                  theme={formData.Department}
                     isClearable={false}
                     id='dep-type'
                     name='dep-type'
                     className='react-select'
                     classNamePrefix='select'
-                    options={depActive}
-                    defaultValue={depActive[0]}
+                    options={formData.Department}
+                    defaultValue={formData.Department[0]}
                   //   onChange={type => { setType(type.value) }}
                   />
               ) : ( 
@@ -192,20 +124,20 @@ const JobsAddForm = ({ count }) => {
               )}
               
             </Col>
-            <Col md='6' className='mb-1'>
+            <Col md='4' className='mb-1'>
               <Label className='form-label'>
                 Staff Classifications
               </Label>
               {!loading ? (
                   <Select
-                  theme={staffActive}
+                  theme={formData.Staff_Classification}
                     isClearable={false}
                     id='staff-type'
                     name='staff-type'
                     className='react-select'
                     classNamePrefix='select'
-                    options={staffActive}
-                    defaultValue={staffActive[0]}
+                    options={formData.Staff_Classification}
+                    defaultValue={formData.Staff_Classification[0]}
                   //   onChange={type => { setType(type.value) }}
                   />
               ) : ( 
@@ -213,23 +145,70 @@ const JobsAddForm = ({ count }) => {
               )}
               
             </Col>
-            <Col md='6' className='mb-1'>
+            <Col md='4' className='mb-1'>
+              <Label className='form-label'>
+                Positions
+              </Label>
+              {formData.Position ? (
+                  !loading ? (
+                    <Select
+                  theme={formData.Position}
+                    isClearable={false}
+                    id='job-Pos'
+                    name='job-Pos'
+                    className='react-select'
+                    classNamePrefix='select'
+                    options={formData.Position}
+                    defaultValue={formData.Position[0]}
+                  //   onChange={type => { setType(type.value) }}
+                  />
+                  ) : <Spinner />
+                  
+                ) : (
+                  <p>No Positions Available</p>
+                )}
+              
+            </Col>
+            <Col md='4' className='mb-1'>
               <label className='form-label'>
-                Position Title
+                Job Type
+              </label>
+              {formData.Job_Types ? (
+                  !loading ? (
+                    <Select
+                  theme={formData.Job_Types}
+                    isClearable={false}
+                    id='job-Pos'
+                    name='job-Pos'
+                    className='react-select'
+                    classNamePrefix='select'
+                    options={formData.Job_Types}
+                    defaultValue={formData.Job_Types[0]}
+                  //   onChange={type => { setType(type.value) }}
+                  />
+                  ) : <Spinner />
+                  
+                ) : (
+                  <p>No Positions Available</p>
+                )}
+            </Col>
+            <Col md='4' className='mb-1'>
+              <label className='form-label'>
+                Job Title
               </label>
                 <Input
-                  id="position-title"
-                  name="position-title"
-                  className="position-title"
-                  placeholder="Position Title"
+                  id="job-title"
+                  name="job-title"
+                  className="job-title"
+                  placeholder="Title"
                 />
             </Col>
-            <Col md='6' className='mb-1'>
+            <Col md='4' className='mb-1'>
             <label className='form-label'>
                 Salary Range
               </label>
                 <div className="d-flex">
-                  <Col md='3' className="mb-1 mr-1">
+                  <Col md='4' className="mb-1 mr-1">
                       <Input
                         id="salary-range-min"
                         type="number"
@@ -238,7 +217,7 @@ const JobsAddForm = ({ count }) => {
                         placeholder="Min Salary Range"
                       />
                   </Col>
-                  <Col md='3' className="mb-1">
+                  <Col md='4' className="mb-1">
                       <Input
                         id="salary-range-max"
                         type="number"
@@ -264,17 +243,17 @@ const JobsAddForm = ({ count }) => {
                 <label className='form-label'>
                   Job Description
                 </label>
-                {JDActive ? (
+                {formData.JD ? (
                   !loading ? (
                     <Select
-                  theme={JDActive}
+                  theme={formData.JD}
                     isClearable={false}
                     id='job-JD'
                     name='job-JD'
                     className='react-select'
                     classNamePrefix='select'
-                    options={JDActive}
-                    defaultValue={JDActive[0]}
+                    options={formData.JD}
+                    defaultValue={formData.JD[0]}
                   //   onChange={type => { setType(type.value) }}
                   />
                   ) : <Spinner />

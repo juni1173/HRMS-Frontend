@@ -100,7 +100,7 @@ const JobsIndexComp = () => {
         
         {/* Canvas Panel Content */}
 
-        <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd}>
+        <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} className="Job-Form-Canvas">
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             {/* {Canvas(active)} */}

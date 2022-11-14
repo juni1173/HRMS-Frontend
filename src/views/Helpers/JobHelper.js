@@ -3,51 +3,50 @@ import { useState } from "react"
 import apiHelper from "./ApiHelper"
 const JobHelper = () => {
     const Api = apiHelper()
-    const [jdActive] = useState([])
-    const [jdNotActive] = useState([])
-    const [jdResult] = useState({
-        jd: {},
-        jdActive: {},
-        jdNotActive: {}
-    } 
-    )
-  const fetchJD = async () => {
     
-    const response = await Api.get('/jd/', { headers: {Authorization: Api.token} })
-    // console.warn(response)
-    if (response.status === 200) {
-    
-        // emptying the array
-    
-    jdActive.splice(0, jdActive.length)
-    jdNotActive.splice(0, jdNotActive.length)
-
-        const jd = response.data 
-        
-        // console.warn(result)
-        if (Object.values(jd).length > 0) {
-            for (let i = 0; i < jd.length; i++) {
-                if (jd[i].is_active) {
-                    
-                  jdActive.push({value: jd[i].id, label: jd[i].title})
-                } else {
-                  
-                   jdNotActive.push({value: jd[i].id, label: jd[i].title})
-                    
+    const [result] = useState({
+        Staff_Classification:[],
+        Department:[],
+        Position:[],
+        Job_Types:[],
+        JD:[]
+    })
+    const fetchFormPreData = async () => {
+        const response = await Api.get(`/jobs/pre/data/${Api.org.id}/`, { headers: {Authorization: Api.token} })
+        // console.warn(response)
+        if (response.status === 200) {
+            const data = response.data 
+            if (Object.values(data).length > 0) {
+                const SC = data.staff_classification
+                const Dep = data.department
+                const Pos = data.position
+                const JT = data.job_types
+                const JD = data.jd
+                for (let i = 0; i < SC.length; i++) {
+                    result.Staff_Classification.push({value: SC[i].id, label: SC[i].title})
                 }
-              }  
-        }
-        jdResult.jd = jd
-        jdResult.jdActive = jdActive
-        jdResult.jdNotActive = jdNotActive
-        return jdResult
+                for (let i = 0; i < Dep.length; i++) {
+                    result.Department.push({value: Dep[i].id, label: Dep[i].title})
+                }
+                for (let i = 0; i < Pos.length; i++) {
+                    result.Position.push({value: Pos[i].id, label: Pos[i].title})
+                }
+                for (let i = 0; i < JT.length; i++) {
+                    result.Job_Types.push({value: JT[i].id, label: JT[i].title})
+                }
+                for (let i = 0; i < JD.length; i++) {
+                    result.JD.push({value: JD[i].id, label: JD[i].title})
+                }
+                return result
+            } else {
+                Api.Toast('error', response.message)
+            }
         } else {
             Api.Toast('error', response.message)
         }
-   
-    }
+    }    
     return {
-        fetchJD
+        fetchFormPreData
     }
 }
 export default JobHelper

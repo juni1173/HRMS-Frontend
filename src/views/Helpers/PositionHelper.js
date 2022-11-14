@@ -11,6 +11,14 @@ const PositionHelper = () => {
         positionNotActive: {}
     } 
     )
+    const [SCActive] = useState([])
+    const [SCNotActive] = useState([])
+    const [SCResult] = useState({
+        SC: {},
+        SCActive: {},
+        SCNotActive: {}
+    } 
+    )
     const Status = [
         { value: 0, label: 'Inactive' },
         { value: 1, label: 'Active' }
@@ -66,6 +74,42 @@ const PositionHelper = () => {
     // console.warn(positionResult)
    
     }
+    const fetchStaffClassifications = async () => {
+    
+      const response = await Api.get(`/organization/staff_classification/`)
+      // console.warn(response)
+      if (response.status === 200) {
+      
+          // emptying the array
+      
+      SCActive.splice(0, SCActive.length)
+      SCNotActive.splice(0, SCNotActive.length)
+  
+          const SC = response.data 
+          
+          // console.warn(result)
+          if (Object.values(SC).length > 0) {
+              for (let i = 0; i < SC.length; i++) {
+                  if (SC[i].is_active) {
+                      
+                    SCActive.push(SC[i])
+                  } else {
+                    
+                     SCNotActive.push(SC[i])
+                      
+                  }
+                }  
+          }
+      SCResult.SC = SC
+      SCResult.SCActive = SCActive
+      SCResult.SCNotActive = SCNotActive
+      return  SCResult
+      } else {
+          Api.Toast('error', response.message)
+      }
+      return SCResult
+     
+      }
   const deletePosition = async id => {
     if (id) {
         await  Api.deleteData(`/organization/${Api.org.id}/positions/${id}/`, {method: 'Delete'})
@@ -94,6 +138,7 @@ const PositionHelper = () => {
  
     return {
         fetchPositions,
+        fetchStaffClassifications,
         deletePosition,
         experience,
         Status,

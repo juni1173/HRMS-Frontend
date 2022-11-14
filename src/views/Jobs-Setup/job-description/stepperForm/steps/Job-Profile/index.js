@@ -18,6 +18,8 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
   const [depNotActive] = useState([])
   const [positionActive] = useState([])
   const [positionNotActive] = useState([])
+  const [SCActive] = useState([])
+  const [SCNotActive] = useState([])
   const [loading, setLoading] = useState(true)
 
   const fetchDepartments = (depData) => {
@@ -59,6 +61,27 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
           <Redirect to={login} />
         }
   }
+  const fetchSC = (data) => {
+    setLoading(true)
+      if (data.SC.length > 0) {
+        setLoading(true)
+        SCActive.splice(0, SCActive.length)
+        SCNotActive.splice(0, SCNotActive.length)
+        if (Object.values(data.SC).length > 0) {
+            for (let i = 0; i < data.SC.length; i++) {
+                if (data.SC[i].is_active) {
+                  SCActive.push({value: data.SC[i].id, label: data.SC[i].title})
+                } else {
+                  SCNotActive.push({value: data.SC[i].id, label: data.SC[i].title})
+                }
+              }  
+              setLoading(false)
+        }
+        
+      } else {
+        <Redirect to={login} />
+      }
+}
   const dep = () => {
       Department.fetchDepartments()
       .then(depData => {
@@ -69,6 +92,12 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
     Position.fetchPositions()
     .then(data => {
       fetchPositions(data)
+    })
+  }
+  const SC = () => {
+    Position.fetchStaffClassifications()
+    .then(data => {
+      fetchSC(data)
     })
   }
   const defaultProfileValues = {
@@ -89,9 +118,11 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
     if (count !== 0) {
         dep()
         position()
+        SC()
     } else {
         dep()
         position()
+        SC()
     }
     setLoading(false)
   }, [])
@@ -109,7 +140,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
         </div>
         <Form onSubmit={handleSubmit(onSubmit)} id="create-job-form">
           <Row>
-            <Col md='6' className='mb-1'>
+            <Col md='4' className='mb-1'>
               <Label className='form-label'>
                 Departments
               </Label>
@@ -141,7 +172,37 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
               )}
               
             </Col>
-            <Col md='6' className='mb-1'>
+            <Col md='4' className='mb-1'>
+              <Label className='form-label'>
+                Staff Classification
+              </Label>
+              {!loading ? (
+                <Controller
+                id='react-select'
+                control={control}
+                name='SC'
+                defaultValue={SCActive[0]}
+                render={({ field }) => (
+                  <Select
+                  theme={SCActive}
+                    isClearable={false}
+                    id='SC-type'
+                    name='SC-type'
+                    className='react-select'
+                    classNamePrefix='select'
+                    options={SCActive}
+                    defaultValue={SCActive[0]}
+                    {...field}
+                    //   onChange={type => { setType(type.value) }}
+                    />
+                  )}
+                />
+              ) : ( 
+                  <Spinner />
+              )}
+              
+            </Col>
+            <Col md='4' className='mb-1'>
               <Label className='form-label'>
                 Positions
               </Label>

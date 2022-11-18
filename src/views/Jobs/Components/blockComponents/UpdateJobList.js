@@ -6,20 +6,22 @@ import { Label, Row, Col, Input, Form, Button, Spinner } from "reactstrap"
 import Select from 'react-select'
 import JobHelper from "../../../Helpers/JobHelper"
 import apiHelper from "../../../Helpers/ApiHelper"
-const JobsAddForm = ({ count, CallBack }) => {
+
+const UpdateJobList = ({ CallBack, data }) => {
+  console.warn(data)
   const Job_Helper = JobHelper()
   const Api = apiHelper()
 
-  const [departmentType, setDepartmentType] = useState('')
-  const [staffClassification, setStaffClassification] = useState('')
-  const [position, setPosition] = useState('')
-  const [jobType, setJobType] = useState('')
-  const [jobTitle, setJobTitle] = useState('')
+  const [departmentType, setDepartmentType] = useState(data.department)
+  const [staffClassification, setStaffClassification] = useState(data.staff_classification)
+  const [position, setPosition] = useState(data.position)
+  const [jobType, setJobType] = useState(data.job_posts[0].job_type)
+  const [jobTitle, setJobTitle] = useState(data.title)
   const [minSalary, setMinSalary] = useState('')
   const [maxSalary, setMaxSalary] = useState('')
-  const [jobCode, setJobCode] = useState('')
-  const [individualNo, setIndividualNo] = useState('')
-  const [jobDescription, setJobDescription] = useState('')
+  const [jobCode, setJobCode] = useState(data.job_posts[0].job_post_code)
+  const [individualNo, setIndividualNo] = useState(data.job_posts[0].no_of_individuals)
+  const [jobDescription, setJobDescription] = useState(data.job_posts[0].jd_selection)
 
   const [formData] = useState({
     Staff_Classification:{},
@@ -29,7 +31,6 @@ const JobsAddForm = ({ count, CallBack }) => {
     JD:{}
   })
   const [loading, setLoading] = useState(true)
-  
   const fetchPreData = async () => {
     setLoading(true)
     await Job_Helper.fetchFormPreData().then(data => {
@@ -49,11 +50,9 @@ const JobsAddForm = ({ count, CallBack }) => {
     
   }
   useEffect(() => {
-    if (count !== 0) {
+    
        fetchPreData()
-    } else {
-        fetchPreData()
-    }
+    
   }, [])
 
   const onChangeDepartmentHandler = (event) => {
@@ -89,26 +88,25 @@ const JobsAddForm = ({ count, CallBack }) => {
   }
   const onSubmit = async () => {
       
-    if (departmentType !== '' && staffClassification !== '' && position !== '' && jobType !== '' && jobTitle !== '' && minSalary !== '' &&
-           maxSalary !== '' && jobCode !== '' && individualNo !== '' && jobDescription !== '') {
+    if (departmentType !== '' && staffClassification !== '' && position !== '' && jobType !== '' && jobTitle !== '' && jobCode !== '' && jobDescription !== '') {
 
             const formInput = new FormData()
             formInput['department'] = departmentType
             formInput['position'] = position
-            formInput['Title'] = jobTitle
+            formInput['title'] = jobTitle
             formInput['staff_classification'] = staffClassification
-            formInput['maximumSalary'] = parseInt(maxSalary)
+            // formInput['maximumSalary'] = parseInt(maxSalary)
             formInput['no_of_individuals'] = parseInt(individualNo)
             formInput['job_code'] = parseInt(jobCode)
             formInput['jd_selection'] = jobDescription
             formInput['job_type'] = jobType
-            formInput['minimumSalary'] = parseInt(minSalary)
+            // formInput['minimumSalary'] = parseInt(minSalary)
 
-            console.log(formInput)
-            const url = `${process.env.REACT_APP_API_URL}/jobs/`
+            console.warn(`formData ${JSON.stringify(formInput)}`)
+            const url = `${process.env.REACT_APP_API_URL}/jobs/${data.uuid}/`
           fetch(url, {
-            headers: {'content-type': 'application/json', Authorization: Api.token},
-            method: "POST",
+            method: "Patch",
+            headers:{'Content-Type': 'application/json', Authorization: Api.token},
             body:JSON.stringify(formInput)
             })
           .then((response) => response.json())
@@ -123,17 +121,9 @@ const JobsAddForm = ({ count, CallBack }) => {
           })
        
     } else {
-      console.log(departmentType)
-      console.log(staffClassification)
-      console.log(position)
-      console.log(jobType)
-      console.log(jobTitle)
       console.log(minSalary)
       console.log(maxSalary)
-      console.log(jobCode)
-      console.log(individualNo)
-      console.log(jobDescription)
-      Api.Toast('error',   "All Fields Are Required")
+      Api.Toast('error',   "Please fill all required fields with *")
     }
     
     }
@@ -147,7 +137,7 @@ const JobsAddForm = ({ count, CallBack }) => {
           <Row>
             <Col md='4' className='mb-1'>
               <Label className='form-label'>
-                Departments
+                Departments<span className="required">*</span>
               </Label>
               {!loading ? (
                   <Select
@@ -158,7 +148,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.Department}
-                    defaultValue={formData.Department[0]}
+                    defaultValue={formData.Department.find(pre => pre.value === data.department[0]) ? formData.Department.find(pre => pre.value === data.department[0]) : formData.Department[0] }
                     onChange={onChangeDepartmentHandler}
                   />
               ) : ( 
@@ -168,7 +158,7 @@ const JobsAddForm = ({ count, CallBack }) => {
             </Col>
             <Col md='4' className='mb-1'>
               <Label className='form-label'>
-                Staff Classifications
+                Staff Classifications<span className="required">*</span>
               </Label>
               {!loading ? (
                   <Select
@@ -179,7 +169,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.Staff_Classification}
-                    defaultValue={formData.Staff_Classification[0]}
+                    defaultValue={formData.Staff_Classification.find(pre => pre.value === data.staff_classification[0]) ? formData.Staff_Classification.find(pre => pre.value === data.staff_classification[0]) : formData.Staff_Classification[0]}
                     onChange={onChangeStaffHandler}
                   />
               ) : ( 
@@ -189,7 +179,7 @@ const JobsAddForm = ({ count, CallBack }) => {
             </Col>
             <Col md='4' className='mb-1'>
               <Label className='form-label'>
-                Positions
+                Positions<span className="required">*</span>
               </Label>
               {formData.Position ? (
                   !loading ? (
@@ -201,7 +191,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.Position}
-                    defaultValue={formData.Position[0]}
+                    defaultValue={formData.Position.find(pre => pre.value === data.position[0]) ? formData.Position.find(pre => pre.value === data.position[0]) : formData.Position[0]}
                     onChange={onChangePositionHandler}
                   />
                   ) : <Spinner />
@@ -213,7 +203,7 @@ const JobsAddForm = ({ count, CallBack }) => {
             </Col>
             <Col md='4' className='mb-1'>
               <label className='form-label'>
-                Job Type
+                Job Type<span className="required">*</span>
               </label>
               {formData.Job_Types ? (
                   !loading ? (
@@ -225,7 +215,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.Job_Types}
-                    defaultValue={formData.Job_Types[0]}
+                    defaultValue={formData.Job_Types.find(pre => pre.value === data['job_posts'][0].job_type) ? formData.Job_Types.find(pre => pre.value === data['job_posts'][0].job_type) : formData.Job_Types[0]}
                     onChange={onChangeJobTypeHandler}
                   />
                   ) : <Spinner />
@@ -236,13 +226,14 @@ const JobsAddForm = ({ count, CallBack }) => {
             </Col>
             <Col md='4' className='mb-1'>
               <label className='form-label'>
-                Job Title
+                Job Title<span className="required">*</span>
               </label>
                 <Input
                   id="job-title"
                   name="job-title"
                   className="job-title"
                   placeholder="Title"
+                  defaultValue={data.title}
                   onChange={onChangeTitleHandler}
                 />
             </Col>
@@ -275,7 +266,7 @@ const JobsAddForm = ({ count, CallBack }) => {
               </Col>
               <Col md='4' className='mb-1'>
                 <label className='form-label'>
-                  Job Code
+                  Job Code<span className="required">*</span>
                 </label>
                   <Input
                     id="jobCode"
@@ -283,6 +274,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     name="jobCode"
                     className="job_code"
                     placeholder="Job Code"
+                    defaultValue={data['job_posts'][0].job_post_code}
                     onChange={onChangeJobCodeHandler}
                   />
               </Col>
@@ -295,12 +287,13 @@ const JobsAddForm = ({ count, CallBack }) => {
                     name="individual-required"
                     className="individual-required"
                     placeholder="No of Individual Required"
+                    defaultValue={data['job_posts'][0].no_of_individuals}
                     onChange={onChangeIndividualHandler}
                   />
               </Col>
               <Col md='4' className='mb-1'>
                 <label className='form-label'>
-                  Job Description
+                  Job Description<span className="required">*</span>
                 </label>
                 {formData.JD ? (
                   !loading ? (
@@ -312,7 +305,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.JD}
-                    defaultValue={formData.JD[0]}
+                    defaultValue={formData.JD.find(pre => pre.value === data['job_posts'][0].jd_selection) ? formData.JD.find(pre => pre.value === data['job_posts'][0].jd_selection) : formData.JD[0]}
                     onChange={onChangeJobDescroptionHandler}
                   />
                   ) : <Spinner />
@@ -338,8 +331,5 @@ const JobsAddForm = ({ count, CallBack }) => {
       </Fragment>
   )
 }
-JobsAddForm.defaultProps = {
-    count: 1
-}
 
-export default JobsAddForm
+export default UpdateJobList

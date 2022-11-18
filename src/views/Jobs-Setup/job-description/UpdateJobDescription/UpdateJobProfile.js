@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react" 
 // ** Icons Imports
 import { ArrowLeft, ArrowRight} from "react-feather" 
@@ -6,13 +7,13 @@ import { Label, Row, Col, Input, Form, Button, Spinner } from "reactstrap"
 import Select from 'react-select'
 import { useForm, Controller } from 'react-hook-form'
 // import { toast, Slide } from 'react-toastify'
-import DepartmentsHelper from "../../../../../Helpers/DepartmentsHelper"
-import PositionHelper from "../../../../../Helpers/PositionHelper"
+import DepartmentsHelper from "../../../Helpers/DepartmentsHelper"
+import PositionHelper from "../../../Helpers/PositionHelper"
 import { Redirect } from "react-router-dom"
 
-const Job_Profile = ({ stepper, count, CallBack}) => {
-  
-  const Department = DepartmentsHelper()
+const UpdateJobProfile = ({stepper, count, CallBack, jobDescription}) => {
+
+    const Department = DepartmentsHelper()
   const Position = PositionHelper()
   const [depActive] = useState([])
   const [depNotActive] = useState([])
@@ -61,6 +62,18 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
           <Redirect to={login} />
         }
   }
+  const dep = () => {
+      Department.fetchDepartments()
+      .then(depData => {
+        fetchDepartments(depData)
+      })
+  }
+  const position = () => {
+    Position.fetchPositions()
+    .then(data => {
+      fetchPositions(data)
+    })
+  }
   const fetchSC = (data) => {
     setLoading(true)
       if (data.SC.length > 0) {
@@ -82,18 +95,6 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
         <Redirect to={login} />
       }
 }
-  const dep = () => {
-      Department.fetchDepartments()
-      .then(depData => {
-        fetchDepartments(depData)
-      })
-  }
-  const position = () => {
-    Position.fetchPositions()
-    .then(data => {
-      fetchPositions(data)
-    })
-  }
   const SC = () => {
     Position.fetchStaffClassifications()
     .then(data => {
@@ -129,9 +130,11 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
  const onSubmit = data => {
     data.department = data.department.value
     data.position = data.position.value
+    data.staff_classification = data.staff_classification.value
     CallBack(data, '1')
     stepper.next()
   }
+//   console.log()
   return (
     <div>
       <div className='content-header' >
@@ -149,7 +152,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                 id='react-select'
                 control={control}
                 name='department'
-                defaultValue={depActive[0]}
+                defaultValue={depActive.find(({value}) => value === jobDescription.department) ? depActive.find(({value}) => value === jobDescription.department) : depActive[0]}
                 render={({ field }) => (
                   <Select
                   theme={depActive}
@@ -159,14 +162,45 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={depActive}
-                    defaultValue={depActive[0]}
+                    defaultValue={depActive.find(({value}) => value === jobDescription.department) ? depActive.find(({value}) => value === jobDescription.department) : depActive[0]}
                     {...field}
-                    
                   //   onChange={type => { setType(type.value) }}
                   />
                 )}
               />
                   
+              ) : ( 
+                  <Spinner />
+              )}
+              
+            </Col>
+            <Col md='4' className='mb-1'>
+              <Label className='form-label'>
+                Positions
+              </Label>
+              {!loading ? (
+                
+                <Controller
+                id='react-select'
+                control={control}
+                name='position'
+                defaultValue={positionActive.find(({value}) => value === jobDescription.position) ? positionActive.find(({value}) => value === jobDescription.position) : positionActive[0]}
+                render={({ field }) => (
+                    
+                  <Select
+                  theme={positionActive}
+                    isClearable={false}
+                    id='position-type'
+                    name='position-type'
+                    className='react-select'
+                    classNamePrefix='select'
+                    options={positionActive}
+                    defaultValue={positionActive.find(({value}) => value === jobDescription.position) ? positionActive.find(({value}) => value === jobDescription.position) : positionActive[0]}
+                    {...field}
+                    //   onChange={type => { setType(type.value) }}
+                    />
+                  )}
+                />
               ) : ( 
                   <Spinner />
               )}
@@ -203,43 +237,13 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
               
             </Col>
             <Col md='4' className='mb-1'>
-              <Label className='form-label'>
-                Positions
-              </Label>
-              {!loading ? (
-                <Controller
-                id='react-select'
-                control={control}
-                name='position'
-                defaultValue={positionActive[0]}
-                render={({ field }) => (
-                  <Select
-                  theme={positionActive}
-                    isClearable={false}
-                    id='position-type'
-                    name='position-type'
-                    className='react-select'
-                    classNamePrefix='select'
-                    options={positionActive}
-                    defaultValue={positionActive[0]}
-                    {...field}
-                    //   onChange={type => { setType(type.value) }}
-                    />
-                  )}
-                />
-              ) : ( 
-                  <Spinner />
-              )}
-              
-            </Col>
-            <Col md='4' className='mb-1'>
               <label className='form-label'>
                 Project
               </label>
               <Controller
                 control={control}
                 name='project'
-                defaultValue=""
+                defaultValue={jobDescription.project ? jobDescription.project : ''}
                 render={({ field }) => (
                 <Input
                   id="JD-project"
@@ -259,7 +263,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
               <Controller
                 control={control}
                 name='title'
-                defaultValue=""
+                defaultValue={jobDescription.title ? jobDescription.title : ''}
                 render={({ field }) => (
                 <Input
                   id="JD-title"
@@ -279,7 +283,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
               <Controller
                 control={control}
                 name='code'
-                defaultValue=""
+                defaultValue={jobDescription.code ? jobDescription.code : '' }
                 render={({ field }) => (
                 <Input
                   id="JD-code"
@@ -310,5 +314,4 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
     </div>
   )
 }
-
-export default Job_Profile
+export default UpdateJobProfile

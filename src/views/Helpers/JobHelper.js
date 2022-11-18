@@ -45,8 +45,34 @@ const JobHelper = () => {
             Api.Toast('error', response.message)
         }
     }    
+    const deleteJob = async uuid => {
+        if (uuid) {
+            await  Api.deleteData(`/jobs/${uuid}/`, {method: 'Delete', headers: {Authorization: Api.token}})
+            .then((result) => {
+              const data = {status:result.status, result_data:result.data, message: result.message }
+              if (data.status === 200) {
+             
+                Api.Toast('success', result.message)
+                
+              } else {
+                Api.Toast('error', result.message)
+              }
+            })
+            .catch((error) => {
+              console.error(error)
+              Api.Toast('error', "Invalid Request")
+            }) 
+            
+          } else {
+            Api.Toast('error', "Position Not Found!")
+          }
+          
+           return false
+         
+      }  
     return {
-        fetchFormPreData
+        fetchFormPreData,
+        deleteJob
     }
 }
 export default JobHelper

@@ -71,6 +71,9 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 .largeCanvas{
 	width:80% !important;
 }
+.xlargeCanvas{
+	width: 90%;
+}
 .form-control, .select__control, span.input-group-text{
 	border: 1px solid #b4b7bd;
 }
@@ -116,4 +119,8 @@ btn.btn-addmore span{
 }
 table.JD-Card-table th, table.JD-Card-table td {
 	padding: 0.22rem 0.5rem !important;
+}
+.required{
+	color: red;
+    font-size: large;
 }

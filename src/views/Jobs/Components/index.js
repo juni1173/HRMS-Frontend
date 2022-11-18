@@ -1,17 +1,33 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Search } from "react-feather"
-import { Input, InputGroup, InputGroupText, TabContent, TabPane, Nav, NavItem, NavLink, Offcanvas, OffcanvasHeader, OffcanvasBody, Card, CardBody, CardTitle, CardText } from "reactstrap"
+import { Input, InputGroup, InputGroupText, TabContent, TabPane, Nav, NavItem, NavLink, Offcanvas, OffcanvasHeader, OffcanvasBody, Card, CardBody, CardTitle, CardText, Spinner } from "reactstrap"
 import ActiveJobsList from "./blockComponents/ActiveJobsList"
 import DeletedJobsList from "./blockComponents/DeletedJobsList"
 import JobsAddForm from "./blockComponents/CreateJobsForm"
+import JobHelper from "../../Helpers/JobHelper"
 const JobsIndexComp = () => {
+    const Job_Helper = JobHelper()
     const [active, setActive] = useState('1')
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
     const [count, setCount] = useState(0)
-
+    const [formData] = useState([])
+    const [loading, setLoading] = useState(true)
     // Tabs Toggle State Set
-    
+    const fetchPreData = async () => {
+        setLoading(true)
+        await Job_Helper.fetchFormPreData().then(data => {
+          if (data) {
+           formData['Staff_Classification'] = data.Staff_Classification
+           formData['Department'] = data.Department
+           formData['Position'] = data.Position
+           formData['Job_Types'] = data.Job_Types
+           formData['JD_Selection'] = data.JD
+          }
+          setLoading(false)
+          return formData
+        })
+      }
     const toggle = tab => {
         setActive(tab)
       }
@@ -20,15 +36,17 @@ const JobsIndexComp = () => {
       
       
       const CallBack = () => {
-        // setCanvasOpen(false)
+        setCanvasOpen(false)
         setCount(current => current + 1)
       }
       const toggleCanvasEnd = () => {
         setCanvasPlacement('end')
         setCanvasOpen(!canvasOpen)
-        CallBack()
+        // CallBack()
       }
-
+      useEffect(() => {
+           fetchPreData()
+      }, [])
     return (
 
         <>
@@ -86,7 +104,12 @@ const JobsIndexComp = () => {
             <TabContent className='py-50' activeTab={active}>
                 <TabPane tabId='1'>
                     <div>
-                        <ActiveJobsList />
+                        {Object.values(formData).length > 0 && !loading ? (
+                            <ActiveJobsList data={formData} count={count}/>
+                        ) : (
+                            <Spinner />
+                        )}
+                        
                     </div>
                 </TabPane>
                 <TabPane tabId='2'>
@@ -104,7 +127,7 @@ const JobsIndexComp = () => {
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             {/* {Canvas(active)} */}
-            <JobsAddForm  count={count}/>
+            <JobsAddForm  count={count} CallBack={CallBack}/>
           </OffcanvasBody>
         </Offcanvas>
         </>

@@ -1,64 +1,146 @@
 import { useState, useEffect, Fragment } from "react"
-import { Edit, User, XCircle } from "react-feather"
-import { Card, CardBody, CardTitle, Spinner } from "reactstrap"
+import { Edit, Eye, Search, XCircle } from "react-feather"
+import {Card, CardBody, CardTitle, Spinner, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody, CardSubtitle, InputGroup, Input, InputGroupText} from "reactstrap"
 import JDHelper from "../../../Helpers/JDHelper"
-const JDList = ({count}) => {
+import StepperForm from "../../job-description/UpdateJobDescription/StepperForm"
+import JDView from "../JD-View"
+import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
+const JDList = ({count, Canvas}) => {
     const Helper = JDHelper()
+    const searchHelper = SearchHelper()
     const [loading, setLoading] = useState(true)
-    const [JD_List, setJDList] = useState(null)
-const getJD = async () => {
-    setLoading(true)
-    if (JD_List !== null) {
-        JD_List.splice(0, JD_List.length)
-    }
-    await Helper.fetchJDList().then(data => {
-        if (data) {
-            if (Object.values(data).length > 0) {
-                setJDList(data)
-            } else {
-                setJDList(null)
-            }
-        } 
-        
-    })
-    setTimeout(() => {
-        setLoading(false)
-        }, 1000)
-}
+    const [JDList, setJDList] = useState([])
+    const [editJDList, setEditJDList] = useState(null)
+    const [viewJDList, setViewJDList] = useState(null)
+
+    const [canvasUpdatePlacement, setCanvasUpdatePlacement] = useState('end')
+    const [canvasUpdateOpen, setCanvasUpdateOpen] = useState(false)
+    const [canvasViewPlacement, setCanvasViewPlacement] = useState('end')
+    const [canvasViewOpen, setCanvasViewOpen] = useState(false)
+    const [searchResults, setSearchResults] = useState([])
+
     
+    const toggleUpdateCanvasEnd = (item_data) => {
+        setEditJDList(item_data)
+        setCanvasUpdatePlacement('end')
+        setCanvasUpdateOpen(!canvasUpdateOpen)
+    
+    }
+    const toggleViewCanvasEnd = item => {
+        setViewJDList(item) 
+        setCanvasViewPlacement('end')
+        setCanvasViewOpen(!canvasViewOpen)
+    }
+    
+    const getJD = async () => {
+        setLoading(true)
+        if (JDList !== null) {
+            JDList.splice(0, JDList.length)
+        }
+        await Helper.fetchJDList().then(data => {
+            console.log(data)
+            if (data) {
+                if (Object.values(data).length > 0) {
+                    setJDList(data)
+                    setSearchResults(data)
+                } else {
+                    setJDList([])
+                    setSearchResults([])
+                }
+            } else {
+                setJDList([])
+                setSearchResults([])
+            }
+            
+        })
+        setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+    }
+    // const handleSearchChange = (e) => {
+    //     if (!e.target.value) return setSearchResults(JDList)
+    //     const resultsArray =  JDList.filter(jdList => jdList.title.toLowerCase().includes((e.target.value).toLowerCase()))
+    //     setSearchResults(resultsArray)
+    // }
+    const getSearch = options => {
+        setSearchResults(searchHelper.searchObj(options))
+    }
+    const CallBack = () => {
+        setCanvasUpdateOpen(false)
+        getJD()
+    }
     useEffect(() => {
-        if (count !== 0) {
+        if (count > 0) {
             getJD()
         } else {
             getJD()
         }
     }, [count])
-
-    const deleteJD = async id => {
-        await Helper.deleteJD(id).then(() => {
+    const deleteJD = id => {
+        Helper.deleteJD(id).then(() => {
             getJD()
         })
     }
     return (        
         <Fragment>
-        
-        {JD_List ? (
+        <div className='row  my-1'>
+              <div className='col-lg-6'>
+                <div className="col-lg-6">
+                
+                  <InputGroup className='input-group-merge mb-2'>
+                      <InputGroupText>
+                      <Search size={14} />
+                      </InputGroupText>
+                      <Input placeholder='search...' onChange={e => { getSearch({list: JDList, key: 'title', value: e.target.value }) } }/>
+                  </InputGroup>
+                 
+                </div>
+              </div>
+              <div className='col-lg-6'>
+                <button className='btn btn-primary float-right' onClick={Canvas} >Add Job Description</button> 
+              </div>
+            </div>
+        {searchResults ? (
             !loading ? (
-                Object.values(JD_List).map((item, key) => (
-                    <Card key={key}>
+                Object.values(searchResults).map((item) => (
+                    <Card key={item.id}>
                     <CardBody>
-                        <CardTitle tag='h4'>{item.title}</CardTitle>
                         <div className="row">
-                            <div className="col-lg-6">
-                                <User size={14}/> 10   a day go
+                            <div className="col-md-3">
+                              <CardTitle tag='h1'>{item.title}</CardTitle>
+                              <CardSubtitle><Badge color='light-warning'>
+                                        code 
+                                </Badge>{`${item.code}`}</CardSubtitle>
                             </div>
-                            <div className="col-lg-6 float-right">
+                            <div className="col-md-3">
+                                <Badge color='light-info'>
+                                        Position 
+                                </Badge><br></br>
+                                <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{item.position_title && item.position_title}</span>
+                            </div>
+                            <div className="col-md-3">
+                                <Badge color='light-success'>
+                                    Department
+                                </Badge><br></br>
+                                <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.department_title && item.department_title}</span>
+                                
+                            </div>
+                            <div className="col-lg-3 float-right">
+                                
                                 <div className="float-right">
+                                <button
+                                        className="border-0 no-background"
+                                        title="Edit Job"
+                                        onClick={() => toggleViewCanvasEnd(item)}
+                                        >
+                                        <Eye color="green"/>
+                                    </button>
                                     <button
                                         className="border-0 no-background"
                                         title="Edit Job"
+                                        onClick={() => toggleUpdateCanvasEnd(item)}
                                         >
-                                        <Edit color="green"/>
+                                        <Edit color="orange"/>
                                     </button>
                                     <button
                                         className="border-0 no-background"
@@ -70,7 +152,58 @@ const getJD = async () => {
                                 </div>
                             </div>
                         </div>
+                         {/* <hr></hr> */}
+                        {/* <div className="row">
                            
+                            <div className="col-lg-6 text-center">
+                                <Badge color='light-danger'>
+                                    Specification
+                                </Badge> 
+                                <table className="table mt-2 JD-Card-table">
+                                    <thead className='table-dark'>
+                                        <tr>
+                                        <th>Dimension</th>
+                                        <th>Essentail</th>
+                                        <th>Desirable</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {Object.values(item.jd_specifications).map((specification) => ( 
+                                        <tr key={specification.id}>
+                                            <td>{specification.jd_dimension}</td> 
+                                            <td>{specification.desirable}</td>
+                                            <td>{specification.desirable}</td> 
+                                        </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="col-lg-6 text-center">
+                                <Badge color='light-primary'>
+                                    Additional Information
+                                </Badge>
+                                <table className="table mt-2 JD-Card-table">
+                                    <thead className='table-dark'>
+                                        <tr>
+                                        <th>Dimension</th>
+                                        <th>Essentail</th>
+                                        <th>Desirable</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {Object.values(item.jd_specifications).map((specification, index) => ( 
+                                        <tr key={index}>
+                                            <td>{specification.jd_dimension}</td> 
+                                            <td>{specification.desirable}</td>
+                                            <td>{specification.desirable}</td> 
+                                        </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> */}
+                         
+                            
                     </CardBody>
                     </Card> 
                 ))
@@ -86,6 +219,21 @@ const getJD = async () => {
             </CardBody>
             </Card> 
         )}
+        <Offcanvas direction={canvasUpdatePlacement} isOpen={canvasUpdateOpen} toggle={toggleUpdateCanvasEnd} className="largeCanvas">
+          <OffcanvasHeader toggle={toggleUpdateCanvasEnd}></OffcanvasHeader>
+          <OffcanvasBody className=''>
+            {/* {Canvas(active)} */}
+            <StepperForm updateCallBack={CallBack} eidtJdData={editJDList}/>
+          </OffcanvasBody>
+        </Offcanvas>
+
+        <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} className="xlargeCanvas">
+          <OffcanvasHeader toggle={toggleViewCanvasEnd}></OffcanvasHeader>
+          <OffcanvasBody className=''>
+            <JDView data={viewJDList} />
+          </OffcanvasBody>
+        </Offcanvas>
+            
         </Fragment>
     )
 }

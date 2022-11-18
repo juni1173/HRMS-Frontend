@@ -52,7 +52,6 @@ import Avatar from '@components/avatar'
               )
               
         )
-        console.warn(message)
       }
     const callAPI = async (endpointurl, options = {}) => {
         endpointurl = ApiBaseLink + endpointurl

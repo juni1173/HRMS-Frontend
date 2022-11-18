@@ -1,6 +1,6 @@
 import { Input, Col} from  "reactstrap"
 
-const CandidateListTable = () => {
+const CandidateListTable = (props) => {
     return (
            <div>
                 <table className="table ">
@@ -23,40 +23,34 @@ const CandidateListTable = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                            <Col md='12' className='mb-1'>
-                                <Input
-                                    type="checkbox"
-                                    id="dd"
-                                    />
-                            </Col>
-                            </td>
-                            <td>Jorge Eden</td>
-                            <td>jorge@gmail.com</td>
-                            <td>Sales Manager</td>
-                            <td>Oct 23</td>
-                            <td> </td>
-                            <td>Phone Scree</td>
+
+                    {Object.values(props.data).length > 0 ? (
+                        props.data.map((candidate, index) => (
+                            <tr key={index}>
+                                <td>
+                                <Col md='12' className='mb-1'>
+                                    <Input
+                                        type="checkbox"
+                                        id="dd"
+                                        />
+                                </Col>
+                                </td>
+                                <td>{candidate.candidate_name}</td>
+                                <td>{candidate.email}</td>
+                                <td>Sales Manager</td>
+                                <td>Oct 23</td>
+                                <td> </td>
+                                <td>Phone Scree</td>
+                            </tr>
+    
+                        ))
+                    ) : (
+                        <tr className="text-center">
+                            <td colSpan={7}> No Data Available</td>
                         </tr>
-                        <tr>
-                        <td>
-                            <Col md='12' className='mb-1'>
-                                <Input
-                                    type="checkbox"
-                                    id="dd"
-                                    />
-                            </Col>
-                            </td>
-                            <td>Eden</td>
-                            <td>Eden@gmail.com</td>
-                            <td>Sales Manager</td>
-                            <td>Oct 23</td>
-                            <td> </td>
-                            <td>Phone Scree</td>
-                        </tr>
-                        
-                        
+                    )}
+                    
+                       
                     </tbody>
                </table>
             </div>

@@ -66,12 +66,32 @@ const JDHelper = () => {
   const postJD = async (data) => {
     let formData = new FormData()
         formData = JSON.stringify(Object.assign(data))
-        console.warn(typeof (formData))
-        console.warn(formData)
-    
     const url = `${Api.ApiBaseLink}/jd/`
                 fetch(url, {
                 method: "POST",
+                headers: { "Content-Type": "Application/json", Authorization: Api.token },
+                body: formData
+                })
+                .then((response) => response.json())
+                .then((result) => {
+                    if (result.status === 200) {
+                    Api.Toast('success', result.message)
+                    } else {
+                        Api.Toast('error', 'not working')
+                    }
+                })
+            .catch((error) => {
+                Api.Toast('error', error)
+            }) 
+    
+  } 
+  const updateJD = async (data, id) => {
+    let formData = new FormData()
+        formData = JSON.stringify(Object.assign(data))
+        console.warn(Object.assign(data))
+    const url = `${Api.ApiBaseLink}/jd/${id}/`
+                fetch(url, {
+                method: "Patch",
                 headers: { "Content-Type": "Application/json", Authorization: Api.token },
                 body: formData
                 })
@@ -118,7 +138,8 @@ const JDHelper = () => {
         fetchDimensions,
         postJD,
         fetchJDList,
-        deleteJD
+        deleteJD,
+        updateJD
     }
 }
 export default JDHelper

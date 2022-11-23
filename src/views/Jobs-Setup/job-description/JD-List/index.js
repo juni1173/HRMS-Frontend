@@ -246,7 +246,7 @@ const JDList = ({count, Canvas}) => {
           </OffcanvasBody>
         </Offcanvas>
 
-        <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} className="xlargeCanvas">
+        <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} >
           <OffcanvasHeader toggle={toggleViewCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             <JDView data={viewJDList} />

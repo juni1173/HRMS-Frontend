@@ -63,7 +63,7 @@ const CandidateListNavBar = () => {
     )
 }
 
-const CandidateListNavBarButton = () => {
+const CandidateListNavBarButton = ({callFilters}) => {
 
    const [active, setActive] = useState('all')
    const toggle = tab => {
@@ -74,9 +74,9 @@ const CandidateListNavBarButton = () => {
         <div className="row ">
             <div className="col-lg-8">
                 <Nav tabs>
-                    <div className='col-md-4'>
+                    {/* <div className='col-md-4'>
                     <button className="btn btn-primary">ADD CANDIDATES</button>
-                    </div>
+                    </div> */}
                     <div className='col-md-3 '>
                         <NavItem>
                         <NavLink
@@ -95,7 +95,7 @@ const CandidateListNavBarButton = () => {
                         <NavLink
                              active={active === 'filters'}
                              onClick={() => {
-                             toggle('filters')
+                             callFilters()
                              }} 
                         >
                     FILTERS

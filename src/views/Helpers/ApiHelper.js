@@ -7,6 +7,9 @@ import Avatar from '@components/avatar'
   const apiHelper = () => {
 
     let token = localStorage.getItem('accessToken')
+    if (!token) {
+      window.location.url('/login')
+    }
      token = token.replaceAll('"', '')
      token = `Bearer ${token}`
     const org = JSON.parse(localStorage.getItem('organization'))
@@ -47,7 +50,7 @@ import Avatar from '@components/avatar'
               )
         ) : (
             toast.error(
-                <ToastContent type='error' message={message} />,
+                <ToastContent type='error' message={message ? message : 'No Response From Server'} />,
                 { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
               )
               

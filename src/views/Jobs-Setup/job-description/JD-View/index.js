@@ -48,7 +48,7 @@ const JDView = ({data}) => {
                                     <tr key={specification.id}>
                                         {specification.jd_dimension < 5 && (
                                             <>
-                                                <td>{specification.jd_dimension}</td> 
+                                                <td>{specification.jd_dimension_title}</td> 
                                                 <td>{specification.desirable}</td>
                                                 <td>{specification.desirable}</td> 
                                                 </>
@@ -84,7 +84,7 @@ const JDView = ({data}) => {
                                     <tr key={specification.id}>
                                         {specification.jd_dimension > 4 && (
                                             <>
-                                                <td>{specification.jd_dimension}</td> 
+                                                <td>{specification.jd_dimension_title}</td> 
                                                 <td>{specification.desirable}</td>
                                                 <td>{specification.desirable}</td> 
                                                 </>

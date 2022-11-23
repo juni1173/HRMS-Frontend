@@ -18,7 +18,7 @@ const JDList = ({count, Canvas}) => {
     const [canvasViewPlacement, setCanvasViewPlacement] = useState('end')
     const [canvasViewOpen, setCanvasViewOpen] = useState(false)
     const [searchResults, setSearchResults] = useState([])
-
+    const [searchQuery] = useState([])
     
     const toggleUpdateCanvasEnd = (item_data) => {
         setEditJDList(item_data)
@@ -63,7 +63,26 @@ const JDList = ({count, Canvas}) => {
     //     setSearchResults(resultsArray)
     // }
     const getSearch = options => {
-        setSearchResults(searchHelper.searchObj(options))
+        
+            if (options.value === '' || options.value === null || options.value === undefined) {
+
+                if (options.key in searchQuery) {
+                    delete searchQuery[options.key]
+                } 
+                if (Object.values(searchQuery).length > 0) {
+                    options.value = {query: searchQuery}
+                } else {
+                    options.value = {}
+                }
+                setSearchResults(searchHelper.searchObj(options))
+                
+            } else {
+                
+                searchQuery[options.key] = options.value
+                options.value = {query: searchQuery}
+                setSearchResults(searchHelper.searchObj(options))
+            }
+            
     }
     const CallBack = () => {
         setCanvasUpdateOpen(false)
@@ -91,7 +110,7 @@ const JDList = ({count, Canvas}) => {
                       <InputGroupText>
                       <Search size={14} />
                       </InputGroupText>
-                      <Input placeholder='search...' onChange={e => { getSearch({list: JDList, key: 'title', value: e.target.value }) } }/>
+                      <Input placeholder='search title...' onChange={e => { getSearch({list: JDList, key: 'title', value: e.target.value }) } }/>
                   </InputGroup>
                  
                 </div>

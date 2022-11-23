@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
-import { Item } from "react-contexify"
-import { Edit, User, XCircle } from "react-feather"
-import { Card, CardBody, CardTitle, CardText, Spinne, Table, Modal, ModalBody, ModalHeader} from "reactstrap"
+import { Edit, XCircle } from "react-feather"
+import { Table, Modal, ModalBody, ModalHeader} from "reactstrap"
 import apiHelper from "../../../Helpers/ApiHelper"
 import JobHelper from "../../../Helpers/JobHelper"
 import UpdateJobList from "./UpdateJobList"
@@ -20,12 +19,7 @@ const ActiveJobsList = ({count, data}) => {
       }
     const getActiveJobs = () => {
         setLoading(true)
-        const url = `${process.env.REACT_APP_API_URL}/jobs/`
-        fetch(url, {
-            method: "GET",
-            headers: {Authorization: Api.token }
-            })
-            .then((response) => response.json())
+        Api.get(`/jobs`)
             .then((result) => {
                 if (result.status === 200) {
                     if (result.data.length > 0) {

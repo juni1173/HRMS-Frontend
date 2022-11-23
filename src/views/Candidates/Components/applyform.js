@@ -3,7 +3,7 @@ import { Row, Col, Form, Input, Button, Table, Spinner, Label } from 'reactstrap
 import { Save, XCircle, X, Check} from "react-feather"
 import InputMask from 'react-input-mask'
 import validator from "validator"
- 
+import {useParams} from "react-router-dom" 
 // import { toast, Slide } from 'react-toastify'
 import apiHelper from "../../Helpers/ApiHelper"
  
@@ -26,6 +26,8 @@ const applyForm = () => {
     const [linkedin, setLinkedin] = useState('')
     const [selectedImage, setSelectedImage] = useState('')
     const [data] = useState([])
+    const [url_params] = useState(useParams())
+        
     const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
           setSelectedImage(e.target.files[0]) 
@@ -126,7 +128,8 @@ const applyForm = () => {
     const submit = () => {
         
         setLoading(true)
-        if (name !== '' && cnic !== '' && email !== '' && phone !== '' && linkedin !== '') {
+        const uuid = url_params.uuid
+        if (uuid !== '' && uuid !== null && uuid !== undefined && name !== '' && cnic !== '' && email !== '' && phone !== '' && linkedin !== '') {
           
             const isValidCnic = checkCnic(cnic)
             if (!isValidCnic) {
@@ -152,17 +155,16 @@ const applyForm = () => {
                 return
             }
 
-            
             const formData = new FormData()
             formData.append("candidate_name", name)
             formData.append("cnic_no", cnic)
             formData.append("email", email)
             formData.append("mobile_no", phone)
             formData.append("linkedin_profile", linkedin)
-            formData.append("upload_resume", selectedImage)
+            formData.append("resume", selectedImage)
              
             
-            const url = `${process.env.REACT_APP_API_URL}/candidate/apply/form/`
+            const url = `${process.env.REACT_APP_API_URL}/candidates/apply/form/${uuid}/`
             fetch(url, {
                 method: "POST",
                 headers: {Authorization: Api.token },

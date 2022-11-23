@@ -44,6 +44,10 @@ const Routes = [
     component: lazy(() => import('../../views/Candidates/index'))
   },
   {
+    path: '/questions',
+    component: lazy(() => import('../../views/Interview-Questions/index'))
+  },
+  {
     path: '/apply/:uuid',
     component: lazy(() => import('../../views/Candidates/Components/applyform')),
     layout: 'BlankLayout',

@@ -1,9 +1,11 @@
 import { useState } from "react" 
 // import { toast, Slide } from 'react-toastify'
 import apiHelper from "./ApiHelper"
+import Swal from "sweetalert2"
+import withReactContent from 'sweetalert2-react-content'
 const JobHelper = () => {
     const Api = apiHelper()
-    
+    const MySwal = withReactContent(Swal)
     const [result] = useState({
         Staff_Classification:[],
         Department:[],
@@ -70,9 +72,48 @@ const JobHelper = () => {
            return false
          
       }  
+      const sweetAlert = async (id) => {
+        return  MySwal.fire({  
+            title: 'Are you sure?',  
+            text: 'This entry will be deleted!',  
+            icon: 'warning',  
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              deleteJob(id).then((result) => { 
+                MySwal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    text: result.message,
+                    customClass: {
+                      confirmButton: 'btn btn-success'
+                    }
+                  })
+              })
+            } else {
+                MySwal.fire({
+                    title: 'Cancelled',
+                    icon: 'error',
+                    customClass: {
+                      confirmButton: 'btn btn-success'
+                    }
+                  })
+            }
+        })
+          
+        
+    }
     return {
         fetchFormPreData,
-        deleteJob
+        deleteJob,
+        sweetAlert
     }
 }
 export default JobHelper

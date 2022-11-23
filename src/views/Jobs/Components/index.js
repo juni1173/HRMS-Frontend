@@ -85,7 +85,7 @@ const JobsIndexComp = () => {
                     </div>
                 </Nav>
             </div>
-            <div className="col-lg-6">
+            {/* <div className="col-lg-6">
                
                 <InputGroup className='input-group-merge mb-2'>
                 <InputGroupText>
@@ -93,7 +93,7 @@ const JobsIndexComp = () => {
                 </InputGroupText>
                 <Input placeholder='search...' />
             </InputGroup>
-            </div>
+            </div> */}
         </div>
         
         {/* Tabs Content */}
@@ -105,7 +105,7 @@ const JobsIndexComp = () => {
                 <TabPane tabId='1'>
                     <div>
                         {Object.values(formData).length > 0 && !loading ? (
-                            <ActiveJobsList data={formData} count={count}/>
+                            <ActiveJobsList data={formData} count={count} CallBack={CallBack}/>
                         ) : (
                             <Spinner />
                         )}
@@ -114,7 +114,12 @@ const JobsIndexComp = () => {
                 </TabPane>
                 <TabPane tabId='2'>
                     <div>
-                        <DeletedJobsList />
+                    {Object.values(formData).length > 0 && !loading ? (
+                            <DeletedJobsList data={formData} count={count} CallBack={CallBack}/>
+                        ) : (
+                            <Spinner />
+                        )}
+                        
                     </div>
                 </TabPane>
             </TabContent> 

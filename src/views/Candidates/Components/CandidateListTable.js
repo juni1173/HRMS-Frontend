@@ -1,5 +1,5 @@
 import {useState} from "react"
-import { Input, Col, Badge} from  "reactstrap"
+import { Input, Col, Badge, Table, Card, CardBody} from  "reactstrap"
 import Select from 'react-select'
 import dateFormat from 'dateformat'
 import apiHelper from "../../Helpers/ApiHelper"
@@ -68,85 +68,90 @@ const CandidateListTable = (props) => {
        
     return (
            <div>
-                <table className="table ">
-                    <thead>
-                        <tr>
-                            <th>
-                            <Col md='12' className='mb-1'>
-                                <Input
-                                type="checkbox"
-                                id="ckbox"
-                                />
-                            </Col>
-                            </th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Job title</th>
-                            <th>Created at</th>
-                            <th>Score</th>
-                            <th>Stage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    {Object.values(props.data).length > 0 ? (
-                        props.data.map((candidate, index) => (
-                            <tr key={index}>
-                                <td>
+            <Card>
+                <CardBody>
+                    <Table bordered striped responsive>
+                        <thead className='table-dark text-center'>
+                            <tr>
+                                <th>
                                 <Col md='12' className='mb-1'>
                                     <Input
-                                        type="checkbox"
-                                        id="dd"
-                                        />
+                                    type="checkbox"
+                                    id="ckbox"
+                                    />
                                 </Col>
-                                </td>
-                                <td>{candidate.candidate_name}</td>
-                                <td>{candidate.email}</td>
-                                <td>{candidate.job_title ? candidate.job_title : <Badge color="light-danger">N/A</Badge>}</td>
-                                <td>{dateFormat(candidate.created_at, "mmmm dS, yyyy")}</td>
-                                <td>{candidate.score ? candidate.score : <Badge color="light-danger">N/A</Badge>} </td>
-                                <td>
-                                    {!btn ? (
-                                        
-                                        <div className="row">
-                                            <div className="col-lg-8">
-                                            <Select
-                                                isClearable={false}
-                                                options={props.stages}
-                                                className='react-select'
-                                                classNamePrefix='select'
-                                                defaultValue={props.stages.find(({value}) => value === candidate.stage) ? props.stages.find(({value}) => value === candidate.stage) : props.stages[0] }
-                                                onChange={stageData => onStageUpdate(candidate.uuid, stageData.value)}
-                                                />
-                                            </div>
-                                            <div className="col-lg-4 float-right">
-                                            <XCircle color="red" onClick={() => setBtn(!btn)}/>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="row">
-                                            <div className="col-lg-8">
-                                            {props.stages.find(({value}) => value === candidate.stage) ? props.stages.find(({value}) => value === candidate.stage).label : props.stages[0].label }
-                                            </div>
-                                            <div className="col-lg-4 float-right">
-                                            <Edit color="orange" onClick={() => setBtn(!btn)}/>
-                                            </div>
-                                        </div>
-                                    )}
-                                    
-                                </td>
+                                </th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Job title</th>
+                                <th>Created at</th>
+                                <th>Score</th>
+                                <th>Stage</th>
                             </tr>
-    
-                        ))
-                    ) : (
-                        <tr className="text-center">
-                            <td colSpan={7}> No Data Available</td>
-                        </tr>
-                    )}
-                    
-                       
-                    </tbody>
-               </table>
+                        </thead>
+                        <tbody>
+
+                        {Object.values(props.data).length > 0 ? (
+                            props.data.map((candidate, index) => (
+                                <tr key={index}>
+                                    <td>
+                                    <Col md='12' className='mb-1'>
+                                        <Input
+                                            type="checkbox"
+                                            id="dd"
+                                            />
+                                    </Col>
+                                    </td>
+                                    <td>{candidate.candidate_name}</td>
+                                    <td>{candidate.email}</td>
+                                    <td>{candidate.job_title ? candidate.job_title : <Badge color="light-danger">N/A</Badge>}</td>
+                                    <td>{dateFormat(candidate.created_at, "mmmm dS, yyyy")}</td>
+                                    <td>{candidate.score ? candidate.score : <Badge color="light-danger">N/A</Badge>} </td>
+                                    <td>
+                                        {!btn ? (
+                                            
+                                            <div className="row">
+                                                <div className="col-lg-8">
+                                                <Select
+                                                    isClearable={false}
+                                                    options={props.stages}
+                                                    className='react-select'
+                                                    classNamePrefix='select'
+                                                    defaultValue={props.stages.find(({value}) => value === candidate.stage) ? props.stages.find(({value}) => value === candidate.stage) : props.stages[0] }
+                                                    onChange={stageData => onStageUpdate(candidate.uuid, stageData.value)}
+                                                    />
+                                                </div>
+                                                <div className="col-lg-4 float-right">
+                                                <XCircle color="red" onClick={() => setBtn(!btn)}/>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="row">
+                                                <div className="col-lg-8">
+                                                {props.stages.find(({value}) => value === candidate.stage) ? props.stages.find(({value}) => value === candidate.stage).label : props.stages[0].label }
+                                                </div>
+                                                <div className="col-lg-4 float-right">
+                                                <Edit color="orange" onClick={() => setBtn(!btn)}/>
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                    </td>
+                                </tr>
+        
+                            ))
+                        ) : (
+                            <tr className="text-center">
+                                <td colSpan={7}> No Data Available</td>
+                            </tr>
+                        )}
+                        
+                        
+                        </tbody>
+                    </Table>
+                </CardBody>
+            </Card>
+                
             </div>
     )
 }

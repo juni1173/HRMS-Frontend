@@ -148,7 +148,6 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
       formData.append('logo', selectedImage)
       formData.append('is_active', true)
       
-      console.warn(formData)
       fetch('http://127.0.0.1:8000/api/organizations/', {
         method: "POST",
         headers: { Authorization: token },

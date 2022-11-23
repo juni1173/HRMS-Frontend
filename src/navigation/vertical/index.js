@@ -32,6 +32,12 @@ export default [
         title: 'Job Description',
         icon: <Circle size={12} />,
         navLink: '/job-description'
+      },
+      {
+        id: 'nav-interview-questions',
+        title: 'Interview Questions',
+        icon: <Circle size={12} />,
+        navLink: '/questions'
       }
     ]
   },

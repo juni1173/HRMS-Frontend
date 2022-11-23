@@ -1,7 +1,11 @@
 import { useState } from "react" 
 // import { toast, Slide } from 'react-toastify'
 import apiHelper from "./ApiHelper"
+import Swal from "sweetalert2"
+import withReactContent from 'sweetalert2-react-content'
+
 const PositionHelper = () => {
+  const MySwal = withReactContent(Swal)
     const Api = apiHelper()
     const [positionActive] = useState([])
     const [positionNotActive] = useState([])
@@ -135,11 +139,53 @@ const PositionHelper = () => {
        return false
      
   }  
+
+  const sweetAlert = (id) => {
+    return  MySwal.fire({  
+        title: 'Are you sure?',  
+        text: 'You want to delete this',  
+        icon: 'warning',  
+        showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+          
+    }).then((result) => {
+        console.log(result)
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          deletePosition(id).then((result) => { 
+            console.log(result)
+            MySwal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: result.message,
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            })
+          })
+        } else {
+          MySwal.fire({
+            title: 'Cancelled',
+            icon: 'error',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          })
+        }
+    })
+  }
+
  
     return {
         fetchPositions,
         fetchStaffClassifications,
         deletePosition,
+        sweetAlert,
         experience,
         Status,
         Qualification

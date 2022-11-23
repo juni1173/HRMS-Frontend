@@ -141,6 +141,9 @@ svg {
 p.label{
 	color: #82868bcf;
 }
-.JD-Card-table th{
-	padding: 10px 0 !important;
+
+.JD-Card-table td:nth-child(1){
+	background-color: #00cfe83b; 
+	font-size: medium;
+	font-weight: 500;
 }

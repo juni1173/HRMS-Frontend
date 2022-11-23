@@ -1,5 +1,5 @@
 import {React} from 'react'
-import { Card, CardBody, CardTitle, Badge } from 'reactstrap'
+import {Table } from 'reactstrap'
 const JDView = ({data}) => {
   
   return (
@@ -53,8 +53,8 @@ const JDView = ({data}) => {
             <h4 color='white'>Job Specifications</h4>
         </div>
         <div className='col-lg-12'>
-            <table className="table JD-Card-table">
-                <thead className='table-dark'>
+            <Table>
+                <thead className='table-dark '>
                     <tr>
                     <th>Dimension</th>
                     <th>Essentail</th>
@@ -65,7 +65,7 @@ const JDView = ({data}) => {
             {data.jd_specifications && (
                 Object.values(data.jd_specifications).length > 0 ? (
                     Object.values(data.jd_specifications).map((specification) => ( 
-                        <tr key={specification.id}>
+                        <tr key={specification.id} className='JD-Card-table'>
                             {specification.jd_dimension < 5 && (
                                 <>
                                     <td>{specification.jd_dimension_title}</td> 
@@ -83,13 +83,13 @@ const JDView = ({data}) => {
                 ))
                     }
                 </tbody>
-            </table>
+            </Table>
         </div>
         <div className='col-lg-12 bg-blue my-1 text-center'>
             <h4 color='white'>Additional Info</h4>
         </div>
         <div className='col-lg-12'>
-            <table className="table JD-Card-table">
+            <Table>
                 <thead className='table-dark'>
                     <tr>
                     <th>Dimension</th>
@@ -101,7 +101,7 @@ const JDView = ({data}) => {
                     {data.jd_specifications && (
                         Object.values(data.jd_specifications).length > 0 ? (
                             Object.values(data.jd_specifications).map((specification) => ( 
-                                <tr key={specification.id}>
+                                <tr key={specification.id} className='JD-Card-table'>
                                     {specification.jd_dimension > 4 && (
                                         <>
                                             <td>{specification.jd_dimension_title}</td> 
@@ -119,7 +119,7 @@ const JDView = ({data}) => {
                         ))
                     }
                 </tbody>
-            </table>
+            </Table>
         </div>
     </div>
   

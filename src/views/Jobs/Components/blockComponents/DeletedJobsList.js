@@ -1,12 +1,17 @@
 // import { useState } from "react"
 import { useState, useEffect } from "react"
-import { Check } from "react-feather"
-import { Spinner, Table } from "reactstrap"
+import { Check, Search } from "react-feather"
+import { Spinner, Table, Input, InputGroup, InputGroupText } from "reactstrap"
 import apiHelper from "../../../Helpers/ApiHelper"
+import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
 const DeletedJobsList = ({data, count, CallBack}) => {
     const Api = apiHelper()
+    const searchHelper = SearchHelper()
     const [Loading, setLoading] = useState(true)
     const [notActiveJobsList, setNotActiveJobList] = useState([])
+    const [searchResults, setSearchResults] = useState([])
+    const [searchQuery] = useState([])
+
 
     const getNotActiveJobs = () => {
         const notActiveListArray = []
@@ -26,6 +31,7 @@ const DeletedJobsList = ({data, count, CallBack}) => {
                        
                         setLoading(false)
                         setNotActiveJobList(notActiveListArray)
+                        setSearchResults(notActiveListArray)
                     }
                 } else {
                     Api.Toast('error', result.message)
@@ -61,6 +67,32 @@ const DeletedJobsList = ({data, count, CallBack}) => {
          console.log(item)
           
     }
+      
+    const getSearch = options => {
+      setLoading(true)
+      
+      if (options.value === '' || options.value === null || options.value === undefined) {
+          if (options.key in searchQuery) {
+              delete searchQuery[options.key]
+          } 
+          if (Object.values(searchQuery).length > 0) {
+              options.value = {query: searchQuery}
+          } else {
+              options.value = {}
+          }
+          setSearchResults(searchHelper.searchObj(options))
+          
+      } else {
+          
+          searchQuery[options.key] = options.value
+          options.value = {query: searchQuery}
+          setSearchResults(searchHelper.searchObj(options))
+      }
+      setTimeout(() => {
+          setLoading(false)
+      }, 1000)
+    }
+
 
     useEffect(() => {
         if (count !== 0) {
@@ -73,7 +105,20 @@ const DeletedJobsList = ({data, count, CallBack}) => {
     return (
         
         <>
-         
+          <div className="row">
+            <div className="col-lg-6"></div>
+            <div className="col-lg-6">
+            
+                <InputGroup className='input-group-merge mb-2'>
+                    <InputGroupText>
+                    <Search size={14} />
+                    </InputGroupText>
+                    <Input placeholder='search title...' onChange={e => { getSearch({list: notActiveJobsList, key: 'title', value: e.target.value }) } }/>
+                </InputGroup>
+               
+            </div>
+          </div>
+
           <Table bordered striped responsive>
         <thead className='table-dark text-center'>
           <tr>
@@ -112,7 +157,7 @@ const DeletedJobsList = ({data, count, CallBack}) => {
         <tbody className='text-center'>
 
         { !Loading ? (
-        Object.values(notActiveJobsList).map((item, key) => ( 
+        Object.values(searchResults).map((item, key) => ( 
                 <tr key={key}>
                   <td>{item.title}</td>      
                   <td>{data.Department.find(pre => pre.value === item.department) ? data.Department.find(pre => pre.value === item.department).label : 'N/A'}</td>  

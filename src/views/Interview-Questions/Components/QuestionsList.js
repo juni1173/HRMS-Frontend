@@ -1,8 +1,14 @@
 import {React, useState} from 'react'
-import { Card, CardBody, Table } from 'reactstrap'
+import { Col, Card, Table, CardHeader, CardTitle, Input } from 'reactstrap'
 import { read, utils, writeFile } from 'xlsx'
+import SearchHelper from '../../Helpers/SearchHelper/SearchByObject'
 const QuestionsList = () => {
+
     const [questions, setQuestions] = useState([])
+    const [searchResults, setSearchResults] = useState([])
+    // const [deleteModal, setDeleteModal] = useState(false)  
+    const [searchQuery] = useState([])
+   const searchHelper = SearchHelper()
     const handleImport = ($event) => {
         const files = $event.target.files
         if (files.length) {
@@ -15,6 +21,7 @@ const QuestionsList = () => {
                 if (sheets.length) {
                     const rows = utils.sheet_to_json(wb.Sheets[sheets[0]])
                     setQuestions(rows)
+                    setSearchResults(rows)
                 }
             }
             reader.readAsArrayBuffer(file)
@@ -40,7 +47,26 @@ const QuestionsList = () => {
         utils.book_append_sheet(wb, ws, 'Report')
         writeFile(wb, 'Questions Report.xlsx')
     }
-
+    const getSearch = options => {
+        if (options.value === '' || options.value === null || options.value === undefined) {
+    
+            if (options.key in searchQuery) {
+                delete searchQuery[options.key]
+            } 
+            if (Object.values(searchQuery).length > 0) {
+                options.value = {query: searchQuery}
+            } else {
+                options.value = {}
+            }
+            setSearchResults(searchHelper.searchObj(options))
+            
+        } else {
+            
+            searchQuery[options.key] = options.value
+            options.value = {query: searchQuery}
+            setSearchResults(searchHelper.searchObj(options))
+        }
+    }
     return (
         <>
              <div className="row">
@@ -60,51 +86,55 @@ const QuestionsList = () => {
                     </button>
                 </div>
             </div>
+           
+          <Col sm='12'>
             <Card>
-                <CardBody>
-                    <div className="row">
-                    <div className="col-sm-12">
-                        <Table bordered striped responsive>
-                            <thead className='table-dark text-center'>
-                                <tr>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Question</th>
-                                    <th scope="col">Option1</th>
-                                    <th scope="col">Option2</th>
-                                    <th scope="col">Option3</th>
-                                    <th scope="col">Option4</th>
-                                    <th scope="col">Answer</th>
-                                    <th scope="col">CLevel</th>
-                                    <th scope="col">Position</th>
-                                </tr>
-                            </thead>
-                            <tbody> 
-                                    {questions.length ? questions.map((question, index) => (
-                                            <tr key={index}>
-                                                <th scope="row">{ index + 1 }</th>
-                                                <td>{ question.Question }</td>
-                                                <td>{ question.Option1 }</td>
-                                                <td>{ question.Option2 }</td>
-                                                <td>{ question.Option3 }</td>
-                                                <td>{ question.Option4 }</td>
-                                                <td>{ question.Answer }</td>
-                                                <td>{ question.Clevel }</td>
-                                                <td>{ question.Position }</td>
-                                            </tr> 
-                                        )) : (
-                                            <tr>
-                                                <td colSpan="9" className="text-center">No Questions Found.</td>
-                                            </tr> 
-                                        )
-                                    
-                                    }
-                            </tbody>
-                        </Table>
-                    </div>
-                    </div>
-                </CardBody>
+              <CardHeader className='justify-content-between flex-wrap'>
+                <CardTitle tag='h4'></CardTitle>
+                <div className='d-flex align-items-center justify-content-end'>
+                  <Input id='search-input' placeholder='search question...' type='text' bsSize='sm' onChange={e => { getSearch({list: questions, key: 'Question', value: e.target.value }) } } />
+                </div>
+              </CardHeader>
+
+               <Table bordered striped responsive>
+                    <thead className='table-dark text-center'>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Question</th>
+                            <th scope="col">Option1</th>
+                            <th scope="col">Option2</th>
+                            <th scope="col">Option3</th>
+                            <th scope="col">Option4</th>
+                            <th scope="col">Answer</th>
+                            <th scope="col">CLevel</th>
+                            <th scope="col">Position</th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                            {searchResults.length ? searchResults.map((question, index) => (
+                                    <tr key={index}>
+                                        <th scope="row">{ index + 1 }</th>
+                                        <td>{ question.Question }</td>
+                                        <td>{ question.Option1 }</td>
+                                        <td>{ question.Option2 }</td>
+                                        <td>{ question.Option3 }</td>
+                                        <td>{ question.Option4 }</td>
+                                        <td>{ question.Answer }</td>
+                                        <td>{ question.Clevel }</td>
+                                        <td>{ question.Position }</td>
+                                    </tr> 
+                                )) : (
+                                    <tr>
+                                        <td colSpan="9" className="text-center">No Questions Found.</td>
+                                    </tr> 
+                                )
+                            
+                            }
+                    </tbody>
+                </Table>
             </Card>
-            
+          </Col>
+        
         </>
 
     )

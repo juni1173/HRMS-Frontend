@@ -1,11 +1,12 @@
 import { Fragment } from 'react'
 import {  X, Check } from 'react-feather'
-
+import Swal from "sweetalert2"
+import withReactContent from 'sweetalert2-react-content'
 // ** Reactstrap Imports
 import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
   const apiHelper = () => {
-
+    const MySwal = withReactContent(Swal)
     let token = localStorage.getItem('accessToken')
     if (!token) {
       window.location.url('/login')
@@ -111,6 +112,41 @@ import Avatar from '@components/avatar'
         options.method = "DELETE"
         return callAPI(endpointurl, options)
     }
+
+    const deleteModal = async () => {
+      return  MySwal.fire({  
+        title: 'Are you sure?',  
+        text: 'This entry will be deleted!',  
+        icon: 'warning',  
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-danger ms-1'
+        },
+        buttonsStyling: false
+      })
+    }
+    const successModal = (result) => {
+     return  MySwal.fire({
+        icon: 'success',
+        title: 'Deleted!',
+        text: result.message,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+    }
+    const cancelModal = (result) => {
+      return  MySwal.fire({
+         icon: 'success',
+         title: 'Not Deleted',
+         text: result.message,
+         customClass: {
+           confirmButton: 'btn btn-success'
+         }
+       })
+     }
     
     // const fetchDepartments = () => {
             
@@ -131,6 +167,9 @@ import Avatar from '@components/avatar'
         put,
         deleteData,
         Toast,
+        deleteModal,
+        successModal,
+        cancelModal,
         org,
         token,
         ApiBaseLink

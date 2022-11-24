@@ -6,7 +6,6 @@ import apiHelper from "../../../Helpers/ApiHelper"
 import JobHelper from "../../../Helpers/JobHelper"
 import UpdateJobList from "./UpdateJobList"
 import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
-import Swal from "sweetalert2"
 const ActiveJobsList = ({count, data, CallBack}) => {
     const Api = apiHelper()
     const Helper = JobHelper()
@@ -66,11 +65,18 @@ const ActiveJobsList = ({count, data, CallBack}) => {
     }
  
   const deleteModalOpen = (id) => {
-    Helper.sweetAlert(id).then(() => {
-            getActiveJobs()
-            CallBack()
-               
-        })
+    Api.deleteModal().then((result) => {
+        if (result.isConfirmed) {
+            Helper.deleteJob(id).then(() => { 
+                Api.successModal(result)
+               getActiveJobs()
+               CallBack()
+            })
+        } else {
+            Api.cancelModal(result)
+        }
+    })
+    
   }
 
   const getSearch = options => {

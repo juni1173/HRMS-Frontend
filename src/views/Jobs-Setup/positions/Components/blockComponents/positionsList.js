@@ -3,11 +3,13 @@ import {Form, Spinner, Table, Modal, ModalBody, ModalHeader, Input, InputGroup, 
   import {Edit, Search, XCircle} from 'react-feather'
   
   import PositionHelper from '../../../../Helpers/PositionHelper'
+  import apiHelper from '../../../../Helpers/ApiHelper'
   import UpdatePosition from './updatePosition'
   import SearchHelper from '../../../../Helpers/SearchHelper/SearchByObject'
 
 const positionsList = ({ count }) => {
     const Helper = PositionHelper()
+    const Api = apiHelper()
     const searchHelper = SearchHelper()
     // let [list] = useState(null)
     const [editModal, setEditModal] = useState(false)
@@ -37,9 +39,15 @@ const positionsList = ({ count }) => {
     }
 
     const deletePosition = (id) => {
-      Helper.sweetAlert(id).then(() => {
-        fetchList()
-           
+      Api.deleteModal().then((result) => {
+        if (result.isConfirmed) {
+            Helper.deletePosition(id).then(() => { 
+                Api.successModal(result)
+                fetchList()
+            })
+        } else {
+            Api.cancelModal(result)
+        }
       })
     } 
 

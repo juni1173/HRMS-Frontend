@@ -70,7 +70,7 @@ const CandidateListTable = (props) => {
            <div>
             <Card>
                 <CardBody>
-                    <Table bordered striped responsive>
+                    <Table bordered striped>
                         <thead className='table-dark text-center'>
                             <tr>
                                 <th>

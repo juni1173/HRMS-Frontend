@@ -37,7 +37,7 @@ const QuestionsList = () => {
             'Option4',
             'Answer',
             'CLevel',
-            'Position'
+            'Category'
             ]
         ]
         const wb = utils.book_new()
@@ -45,7 +45,7 @@ const QuestionsList = () => {
         utils.sheet_add_aoa(ws, headings)
         utils.sheet_add_json(ws, questions, { origin: 'A2', skipHeader: true })
         utils.book_append_sheet(wb, ws, 'Report')
-        writeFile(wb, 'Questions Report.xlsx')
+        writeFile(wb, 'Questions Paper.xlsx')
     }
     const getSearch = options => {
         if (options.value === '' || options.value === null || options.value === undefined) {
@@ -107,7 +107,7 @@ const QuestionsList = () => {
                             <th scope="col">Option4</th>
                             <th scope="col">Answer</th>
                             <th scope="col">CLevel</th>
-                            <th scope="col">Position</th>
+                            <th scope="col">Category</th>
                         </tr>
                     </thead>
                     <tbody> 
@@ -121,7 +121,7 @@ const QuestionsList = () => {
                                         <td>{ question.Option4 }</td>
                                         <td>{ question.Answer }</td>
                                         <td>{ question.Clevel }</td>
-                                        <td>{ question.Position }</td>
+                                        <td>{ question.Category }</td>
                                     </tr> 
                                 )) : (
                                     <tr>

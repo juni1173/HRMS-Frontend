@@ -77,7 +77,7 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organizations/1/`, {
+        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organizations/6/`, {
          headers: {
           Accept : 'application/json',
           Authorization : token

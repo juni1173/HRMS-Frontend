@@ -10,7 +10,7 @@ const JobsAddForm = ({ count, CallBack }) => {
   const Job_Helper = JobHelper()
   const Api = apiHelper()
 
-  const [departmentType, setDepartmentType] = useState('')
+  const [departmentType, setDepartmentType] = useState()
   const [staffClassification, setStaffClassification] = useState('')
   const [position, setPosition] = useState('')
   const [jobType, setJobType] = useState('')
@@ -40,6 +40,11 @@ const JobsAddForm = ({ count, CallBack }) => {
        formData.Position = data.Position
        formData.Job_Types = data.Job_Types
        formData.JD = data.JD
+       setDepartmentType(formData.Department[0].value)
+       setStaffClassification(formData.Staff_Classification[0].value)
+       setPosition(formData.Position[0].value)
+       setJobType(formData.Job_Types[0].value)
+       setJobDescription(formData.JD[0].value)
       }
       return formData
     })
@@ -95,7 +100,7 @@ const JobsAddForm = ({ count, CallBack }) => {
             const formInput = new FormData()
             formInput['department'] = departmentType
             formInput['position'] = position
-            formInput['Title'] = jobTitle
+            formInput['title'] = jobTitle
             formInput['staff_classification'] = staffClassification
             formInput['maximumSalary'] = parseInt(maxSalary)
             formInput['no_of_individuals'] = parseInt(individualNo)
@@ -104,16 +109,9 @@ const JobsAddForm = ({ count, CallBack }) => {
             formInput['job_type'] = jobType
             formInput['minimumSalary'] = parseInt(minSalary)
 
-            console.log(formInput)
-            const url = `${process.env.REACT_APP_API_URL}/jobs/`
-          fetch(url, {
-            headers: {'content-type': 'application/json', Authorization: Api.token},
-            method: "POST",
-            body:JSON.stringify(formInput)
-            })
-          .then((response) => response.json())
+            const url = `/jobs/`
+          Api.jsonPost(url, formInput)
           .then((result) => {
-              console.log(result)
               if (result.status === 200) {
                   Api.Toast('success', result.message)
                   CallBack()
@@ -123,16 +121,16 @@ const JobsAddForm = ({ count, CallBack }) => {
           })
        
     } else {
-      console.log(departmentType)
-      console.log(staffClassification)
-      console.log(position)
-      console.log(jobType)
-      console.log(jobTitle)
-      console.log(minSalary)
-      console.log(maxSalary)
-      console.log(jobCode)
-      console.log(individualNo)
-      console.log(jobDescription)
+      // console.log(departmentType)
+      // console.log(staffClassification)
+      // console.log(position)
+      // console.log(jobType)
+      // console.log(jobTitle)
+      // console.log(minSalary)
+      // console.log(maxSalary)
+      // console.log(jobCode)
+      // console.log(individualNo)
+      // console.log(jobDescription)
       Api.Toast('error',   "All Fields Are Required")
     }
     

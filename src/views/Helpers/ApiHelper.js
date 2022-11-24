@@ -82,7 +82,13 @@ import Avatar from '@components/avatar'
 
             const apiResponse = await fetch(endpointurl, options)
             // debugger
-            
+            if (!apiResponse.ok) {
+              if ([401, 403].includes(apiResponse.status)) {
+                  localStorage.clear()
+                  window.location.href = "/login"
+                  return false
+              }
+            }   
             return await apiResponse.json()
            
         } catch (err) {
@@ -98,6 +104,26 @@ import Avatar from '@components/avatar'
     const post = (endpointurl, options) => {
         options.method = "POST"
         return callAPI(endpointurl, options)
+    }
+    const jsonPost = async (url, formData) => {
+      url = ApiBaseLink + url
+      const options = {headers: null, method: null, body: null}
+      options.headers = {'content-type': 'application/json', Authorization: token}
+      options.method = "POST"
+      options.body = JSON.stringify(formData)
+      try {
+        const apiResult =  await fetch(url, options)
+        if (!apiResult.ok) {
+          if ([401, 403].includes(apiResult.status)) {
+              localStorage.clear()
+              window.location.href = "/login"
+              return false
+          }
+        }    
+        return await apiResult.json()
+      } catch (err) {
+          return err
+      }
     }
 
 
@@ -164,6 +190,7 @@ import Avatar from '@components/avatar'
     return {
         get,
         post,
+        jsonPost,
         put,
         deleteData,
         Toast,

@@ -48,6 +48,10 @@ const Routes = [
     component: lazy(() => import('../../views/Interview-Questions/index'))
   },
   {
+    path: '/exam',
+    component: lazy(() => import('../../views/timer/index'))
+  },
+  {
     path: '/apply/:uuid',
     component: lazy(() => import('../../views/Candidates/Components/applyform')),
     layout: 'BlankLayout',

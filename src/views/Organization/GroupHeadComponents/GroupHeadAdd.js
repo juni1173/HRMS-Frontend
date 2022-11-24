@@ -61,7 +61,7 @@ const OrganizationAdd = ({ stepper, fetchGroupHeads, stepperStatus, GroupHeadCal
           // console.warn(formData)
           // ** Api Post Request
     
-          fetch('http://127.0.0.1:8000/api/organization/grouphead/', {
+          fetch(`${process.env.REACT_APP_API_URL}/organization/grouphead/`, {
             method: "POST",
             headers: { "Content-Type": "Application/json", Authorization: token },
             body: JSON.stringify(formData)

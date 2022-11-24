@@ -57,7 +57,7 @@ const StaffClassificationAdd = ({ stepper, type, stepperStatus, fetchStaffClassi
           console.warn(formData)
           // ** Api Post Request
     
-          fetch('http://127.0.0.1:8000/api/organization/staff_classification/', {
+          fetch(`${process.env.REACT_APP_API_URL}/organization/staff_classification/`, {
             method: "POST",
             headers: { "Content-Type": "Application/json", Authorization: token },
             body: JSON.stringify(formData)

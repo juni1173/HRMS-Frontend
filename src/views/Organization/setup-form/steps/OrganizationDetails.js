@@ -77,7 +77,7 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const {data: response} = await axios.get('http://127.0.0.1:8000/api/organizations/6/', {
+        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organizations/1/`, {
          headers: {
           Accept : 'application/json',
           Authorization : token
@@ -148,7 +148,7 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
       formData.append('logo', selectedImage)
       formData.append('is_active', true)
       
-      fetch('http://127.0.0.1:8000/api/organizations/', {
+      fetch(`${process.env.REACT_APP_API_URL}/organizations/`, {
         method: "POST",
         headers: { Authorization: token },
         body: formData

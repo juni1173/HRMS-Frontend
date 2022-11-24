@@ -83,7 +83,7 @@ const Login = () => {
       formData['email'] =  data.loginEmail
       formData['password'] = data.password
       console.warn(formData)
-      fetch('http://127.0.0.1:8000/api/hrms_user/login/', {
+      fetch(`${process.env.REACT_APP_API_URL}/hrms_user/login/`, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

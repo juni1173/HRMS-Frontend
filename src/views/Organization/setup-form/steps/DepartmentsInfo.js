@@ -69,7 +69,7 @@ const DepartmentsInfo = ({ stepper, stepperStatus, count, createForm, list, fetc
     const fetchGHead = async () => {
       setGHeadLoading(true)
       try {
-        const {data: response} = await axios.get('http://127.0.0.1:8000/api/organization/grouphead/', {
+        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organization/grouphead/`, {
          headers: {
           Accept : 'application/json',
           Authorization : token
@@ -114,7 +114,7 @@ const DepartmentsInfo = ({ stepper, stepperStatus, count, createForm, list, fetc
     const fetchDepartments = async () => {
       setLoading(true)
       try {
-        const {data: response} = await axios.get('http://127.0.0.1:8000/api/organization/department/', {
+        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organization/department/`, {
          headers: {
           Accept : 'application/json',
           Authorization : token
@@ -161,7 +161,7 @@ const DepartmentsInfo = ({ stepper, stepperStatus, count, createForm, list, fetc
 const deleteDep = (id) => {
   if (id) {
     // ** Api DELETE Request
-    fetch(`http://127.0.0.1:8000/api/organization/department/${id}/`, {
+    fetch(`${process.env.REACT_APP_API_URL}/organization/department/${id}/`, {
       method: "DELETE",
       headers: { "Content-Type": "Application/json", Authorization: token }
     })

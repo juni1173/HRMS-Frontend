@@ -60,7 +60,7 @@ const DepartmentAdd = ({ stepper, groupHeadActive, stepperStatus, gHeadLoading, 
           console.warn(formData)
           // ** Api Post Request
       
-          fetch('http://127.0.0.1:8000/api/organization/department/', {
+          fetch(`${process.env.REACT_APP_API_URL}/organization/department/`, {
             method: "POST",
             headers: { "Content-Type": "Application/json", Authorization: token },
             body: JSON.stringify(formData)

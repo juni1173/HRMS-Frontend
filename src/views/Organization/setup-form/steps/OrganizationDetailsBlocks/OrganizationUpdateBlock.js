@@ -107,7 +107,7 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
         formData.append('user', 1)
          console.warn(formData)
          
-          fetch(`http://127.0.0.1:8000/api/organizations/${detail.id}/`, {
+          fetch(`${process.env.REACT_APP_API_URL}/organizations/${detail.id}/`, {
             method: "PATCH",
             headers: { Authorization: token },
             body: formData

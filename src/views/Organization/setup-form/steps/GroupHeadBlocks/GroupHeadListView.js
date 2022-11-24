@@ -84,7 +84,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
       } = useForm({ defaultValues })    
       const getGHeadByID = (id) => {
         if (id) {
-            fetch(`http://127.0.0.1:8000/api/organization/grouphead/${id}/`, {
+            fetch(`${process.env.REACT_APP_API_URL}/organization/grouphead/${id}/`, {
                 method: "GET",
                 headers: { "Content-Type": "Application/json", Authorization: token }
               })
@@ -137,7 +137,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
       const [updatedDescription, setUpdatedDescription] = useState(defaultValues.group_description)
       const updateGHead = (data, id) => {
         if (Object.values(data).length > 0 && id) {
-            fetch(`http://127.0.0.1:8000/api/organization/grouphead/${id}/`, {
+            fetch(`${process.env.REACT_APP_API_URL}/organization/grouphead/${id}/`, {
                 method: "PATCH",
                 headers: { "Content-Type": "Application/json", Authorization: token },
                 body: JSON.stringify(data) 

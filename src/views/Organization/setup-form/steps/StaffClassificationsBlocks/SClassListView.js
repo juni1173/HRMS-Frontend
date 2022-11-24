@@ -79,7 +79,7 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
       } = useForm({ defaultValues })    
       const getSClassByID = (id) => {
         if (id) {
-            fetch(`http://127.0.0.1:8000/api/organization/staff_classification/${id}/`, {
+            fetch(`${process.env.REACT_APP_API_URL}/organization/staff_classification/${id}/`, {
                 method: "GET",
                 headers: { "Content-Type": "Application/json", Authorization: token }
               })
@@ -130,7 +130,7 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
       const [updatedStatus, setUpdatedStatus] = useState(defaultValues.sclass_status)
       const updateSClass = (data, id) => {
         if (Object.values(data).length > 0 && id) {
-            fetch(`http://127.0.0.1:8000/api/organization/staff_classification/${id}/`, {
+            fetch(`${process.env.REACT_APP_API_URL}/organization/staff_classification/${id}/`, {
                 method: "PATCH",
                 headers: { "Content-Type": "Application/json", Authorization: token },
                 body: JSON.stringify(data) 

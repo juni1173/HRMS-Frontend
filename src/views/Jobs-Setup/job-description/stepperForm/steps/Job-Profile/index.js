@@ -2,16 +2,17 @@ import { useState, useEffect } from "react"
 // ** Icons Imports
 import { ArrowLeft, ArrowRight} from "react-feather" 
 // // ** Reactstrap Imports
-import { Label, Row, Col, Input, Form, Button, Spinner } from "reactstrap" 
+import { Label, Row, Col, Input, Form, Button, Spinner, Badge } from "reactstrap" 
 import Select from 'react-select'
 import { useForm, Controller } from 'react-hook-form'
 // import { toast, Slide } from 'react-toastify'
 import DepartmentsHelper from "../../../../../Helpers/DepartmentsHelper"
 import PositionHelper from "../../../../../Helpers/PositionHelper"
 import { Redirect } from "react-router-dom"
+import apiHelper from "../../../../../Helpers/ApiHelper"
 
 const Job_Profile = ({ stepper, count, CallBack}) => {
-  
+  const Api = apiHelper()
   const Department = DepartmentsHelper()
   const Position = PositionHelper()
   const [depActive] = useState([])
@@ -25,7 +26,6 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
   const fetchDepartments = (depData) => {
     setLoading(true)
       if (depData.dep.length > 0) {
-        
         depActive.splice(0, depActive.length)
         depNotActive.splice(0, depNotActive.length)
         for (let i = 0; i < depData.dep.length; i++) {
@@ -37,8 +37,8 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
               depNotActive.push({value: depData.dep[i].id, label: depData.dep[i].title})
           }
         }  
-        setLoading(false)
-      }
+      } 
+      setLoading(false)
   }
   const fetchPositions = (data) => {
       setLoading(true)
@@ -54,12 +54,9 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                     positionNotActive.push({value: data.position[i].id, label: data.position[i].title})
                   }
                 }  
-                setLoading(false)
           }
-          
-        } else {
-          <Redirect to={login} />
-        }
+        } 
+        setLoading(false)
   }
   const fetchSC = (data) => {
     setLoading(true)
@@ -75,12 +72,9 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                   SCNotActive.push({value: data.SC[i].id, label: data.SC[i].title})
                 }
               }  
-              setLoading(false)
         }
-        
-      } else {
-        <Redirect to={login} />
-      }
+      } 
+      setLoading(false)
 }
   const dep = () => {
       Department.fetchDepartments()
@@ -127,10 +121,17 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
     setLoading(false)
   }, [])
  const onSubmit = data => {
+  console.warn(data)
+   if (data.department !== undefined && data.position !== undefined && data.title !== '' && data.code !== '') {
     data.department = data.department.value
     data.position = data.position.value
+    data.staff_classification = data.staff_classification.value
     CallBack(data, '1')
     stepper.next()
+   } else {
+      Api.Toast('error', 'Please enter all required fields')
+   }
+  
   }
   return (
     <div>
@@ -142,7 +143,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
           <Row>
             <Col md='4' className='mb-1'>
               <Label className='form-label'>
-                Departments
+                Departments<Badge color='light-danger'>*</Badge>
               </Label>
               {!loading ? (
                 <Controller
@@ -174,7 +175,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
             </Col>
             <Col md='4' className='mb-1'>
               <Label className='form-label'>
-                Staff Classification
+                Staff Classification<Badge color='light-danger'>*</Badge>
               </Label>
               {!loading ? (
                 <Controller
@@ -204,7 +205,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
             </Col>
             <Col md='4' className='mb-1'>
               <Label className='form-label'>
-                Positions
+                Positions<Badge color='light-danger'>*</Badge>
               </Label>
               {!loading ? (
                 <Controller
@@ -254,7 +255,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
             </Col>
             <Col md='4' className='mb-1'>
               <label className='form-label'>
-                Title
+                Title<Badge color='light-danger'>*</Badge>
               </label>
               <Controller
                 control={control}
@@ -274,7 +275,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
             </Col>
             <Col md='4' className='mb-1'>
               <label className='form-label'>
-                Code
+                Code<Badge color='light-danger'>*</Badge>
               </label>
               <Controller
                 control={control}

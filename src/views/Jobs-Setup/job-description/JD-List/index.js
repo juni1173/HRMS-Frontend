@@ -38,7 +38,6 @@ const JDList = ({count, Canvas}) => {
             JDList.splice(0, JDList.length)
         }
         await Helper.fetchJDList().then(data => {
-            console.log(data)
             if (data) {
                 if (Object.values(data).length > 0) {
                     setJDList(data)
@@ -119,7 +118,7 @@ const JDList = ({count, Canvas}) => {
                 <button className='btn btn-primary float-right' onClick={Canvas} >Add Job Description</button> 
               </div>
             </div>
-        {searchResults ? (
+        {Object.values(searchResults).length > 0 ? (
             !loading ? (
                 Object.values(searchResults).map((item) => (
                     <Card key={item.id}>
@@ -234,7 +233,7 @@ const JDList = ({count, Canvas}) => {
         ) : (
             <Card>
             <CardBody>
-                <CardTitle tag='h4'>No Data Found</CardTitle>
+                No job descriptions found...
             </CardBody>
             </Card> 
         )}

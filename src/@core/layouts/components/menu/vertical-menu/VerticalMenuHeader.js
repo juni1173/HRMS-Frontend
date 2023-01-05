@@ -14,13 +14,21 @@ const VerticalMenuHeader = props => {
   const { menuCollapsed, setGroupOpen, menuHover } = props
   const [orgImgPath, setOrgImgPath] = useState(null)
   
-  
+  const checkImage = () => {
+    const imageUrl = process.env.REACT_APP_BACKEND_URL + JSON.parse(localStorage.getItem('organization')).logo
+    const img = new Image()
+      img.src = imageUrl
+      if (img.complete) {
+      setOrgImgPath(imageUrl)
+      } else {
+        setOrgImgPath(null)
+      }
+    }
   // ** Reset open group
   useEffect(() => {
     if (localStorage.getItem('organization')) {
-      setOrgImgPath(process.env.REACT_APP_BACKEND_URL + JSON.parse(localStorage.getItem('organization')).logo)
+      checkImage()
     }
-    
     if (!menuHover && menuCollapsed) setGroupOpen([])
   }, [menuHover, menuCollapsed])
 
@@ -55,7 +63,7 @@ const VerticalMenuHeader = props => {
             <span className='brand-logo'>
               <img src={orgImgPath !== null ? orgImgPath : themeConfig.app.appLogoImage} alt='logo' />
             </span>
-            <h2 className='brand-text mb-0'>{themeConfig.app.appName}</h2>
+            <h2 className='brand-text mb-0'>{(JSON.parse(localStorage.getItem('organization'))) ? JSON.parse(localStorage.getItem('organization')).name : themeConfig.app.appName}</h2>
           </NavLink>
         </li>
         {/* <li className='nav-item nav-toggle'>

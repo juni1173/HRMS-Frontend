@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Row, Col, Form, Input, Button, Table, Spinner } from 'reactstrap'
 import { ArrowLeft, ArrowRight, XCircle } from 'react-feather'
+import Select from 'react-select'
 import apiHelper from '../../../Helpers/ApiHelper'
 
 
-const UpdateJobSpecifiction = ({ stepper, preData, CallBack }) => {
+const UpdateJobSpecifiction = ({ stepper, preData, CallBack, Dimensions }) => {
   
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
@@ -14,7 +15,6 @@ const UpdateJobSpecifiction = ({ stepper, preData, CallBack }) => {
     const [Specifications] = useState([])
   const addmoreSubmit = () => {
       setLoading(true)
-      if (dimension !== null && desirable !== null && essential !== null) {
         if (Object.values(Specifications).length > 0) {
           for (let i = 0; i < Specifications.length; i++) {
             if (Specifications[i].dimension === dimension) {
@@ -30,13 +30,6 @@ const UpdateJobSpecifiction = ({ stepper, preData, CallBack }) => {
         } else {
           Specifications.push({dimension, desirable, essential})
         }
-        
-      } else {
-        Api.Toast('error', 'Please fill up all the fields required')
-      }
-      
-        console.warn(Specifications)
-    
         setTimeout(() => {
           setLoading(false)
         }, 1000)
@@ -84,13 +77,13 @@ const UpdateJobSpecifiction = ({ stepper, preData, CallBack }) => {
               <label className='form-label'>
                 Dimension
               </label>
-                <Input
-                  id="JD-dimension"
-                  name="JD-dimension"
-                  className="JD-dimension"
-                  placeholder="Dimension"
-                  onChange={e => setDimension(e.target.value)}
-                />
+                <Select
+                    isClearable={false}
+                    options={Dimensions}
+                    className='react-select'
+                    classNamePrefix='select'
+                    onChange={e => setDimension(e.value)} 
+                    />
                 <label className='form-label'>
                 Desirable
               </label>

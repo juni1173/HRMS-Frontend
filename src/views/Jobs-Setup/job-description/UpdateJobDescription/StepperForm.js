@@ -1,5 +1,5 @@
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import UpdateJobProfile from './UpdateJobProfile'
 import UpdateJobAdditionalInfo from './UpdateJobAdditionalInfo'
 import UpdateJobDescription from './UpdateJobDescription'
@@ -23,6 +23,21 @@ const StepperForm = ({eidtJdData, updateCallBack}) => {
 
   // ** State
   const [stepper, setStepper] = useState(null)
+  const [Dimensions, setDimensions] = useState({
+    all: {},
+    JDSpecifications: {},
+    JDAddInfo: {}
+    })
+  const getDimensions = () => {
+        Helper.fetchDimensions().then(data => {
+            setDimensions({all: data.dim, JDSpecifications: data.JDSpecifications, JDAddInfo: data.JDAddInfo})
+        })
+  }  
+  
+  useEffect(() => {
+    getDimensions()
+  }, [])
+  
   const  submitJD = async (data) => {
     console.warn(`updateData, ${data}`)
     console.warn(eidtJdData)
@@ -57,7 +72,6 @@ const StepperForm = ({eidtJdData, updateCallBack}) => {
     }
       
   }
-
   const steps = [
     {
       id: 'Job-Profile',
@@ -75,13 +89,13 @@ const StepperForm = ({eidtJdData, updateCallBack}) => {
       id: 'Job-Specification',
       title: 'Job Specification',
       subtitle: 'Enter Your Details.',
-      content: <UpdateJobSpecifiction stepper={stepper} CallBack={CallBack} preData={eidtJdData.jd_specifications}/>
+      content: <UpdateJobSpecifiction stepper={stepper} CallBack={CallBack} preData={eidtJdData.jd_specifications} Dimensions={Dimensions.JDSpecifications}/>
     },
     {
       id: 'Job-Additional-Info',
       title: 'Additional Info',
       subtitle: 'Enter Your Details.',
-      content: <UpdateJobAdditionalInfo stepper={stepper} CallBack={CallBack} preData={eidtJdData.jd_specifications}/>
+      content: <UpdateJobAdditionalInfo stepper={stepper} CallBack={CallBack} preData={eidtJdData.jd_specifications} Dimensions={Dimensions.JDAddInfo}/>
     }
   ]
 

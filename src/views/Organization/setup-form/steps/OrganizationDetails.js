@@ -12,8 +12,9 @@ import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
 import axios from 'axios'
 import OrganizationUpdateBlock from "./OrganizationDetailsBlocks/OrganizationUpdateBlock"
-
+import apiHelper from "../../../Helpers/ApiHelper"
 const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
+  const Api = apiHelper()
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState(null)
   // const [createdBy, setCreatedBy] = useState('junaid') 
@@ -77,7 +78,7 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organizations/6/`, {
+        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organizations/${Api.org.id}/`, {
          headers: {
           Accept : 'application/json',
           Authorization : token
@@ -122,15 +123,6 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
   }, [])
 
   const onSubmit = async data => {
-    // if (selectedImage) {
-    //   data['company_logo'] = selectedImage
-    // } else {
-      // alert('please select logo to proceed')
-    // }
-    
-    // console.warn(token)
-    
-    // return false
     
     if (data.company_name.length > 0 && data.company_tagline.length > 0 && data.company_vision.length > 0 && data.company_mission.length > 0 && data.city.length > 0 && data.address.length > 0) {
       
@@ -139,7 +131,7 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
       // const logoName = selectedImage.name
       const locations = {city_name: data.city, address: data.address}
       
-      // formData.append("user", user_id)
+      formData.append("user", Api.user_id)
       formData.append("name", data.company_name)
       formData.append('tagline', data.company_tagline)
       formData.append('locations', JSON.stringify(locations))
@@ -157,10 +149,13 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
       .then((result) => {
         const data = {status:result.status, result_data:result.data, message: result.message }
         if (data.status === 200) {
+          localStorage.removeItem('organization')
+          localStorage.setItem('organization', JSON.stringify(result_data))
           toast.success(
             <ToastContent type='success' message={data.message} />,
             { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
           )
+
         } else {
           toast.error(
             <ToastContent type='error' message={data.message} />,

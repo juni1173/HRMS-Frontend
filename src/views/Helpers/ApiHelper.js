@@ -9,12 +9,16 @@ import Avatar from '@components/avatar'
     const MySwal = withReactContent(Swal)
     let token = localStorage.getItem('accessToken')
     if (!token) {
-      window.location.url('/login')
-    }
-     token = token.replaceAll('"', '')
+      localStorage.clear()
+      // window.location.href = "/login"
+    } else {
+      token = token.replaceAll('"', '')
      token = `Bearer ${token}`
+    
+    }
     const org = JSON.parse(localStorage.getItem('organization'))
-   
+    const user_id = JSON.parse(localStorage.getItem('user_id'))
+     
     const ApiBaseLink = process.env.REACT_APP_API_URL
 
     const ToastContent = ({ type, message }) => (
@@ -88,6 +92,9 @@ import Avatar from '@components/avatar'
                   window.location.href = "/login"
                   return false
               }
+              if (apiResponse.status === 404) {
+                return false
+              }
             }   
             return await apiResponse.json()
            
@@ -105,12 +112,47 @@ import Avatar from '@components/avatar'
         options.method = "POST"
         return callAPI(endpointurl, options)
     }
-    const jsonPost = async (url, formData) => {
+    const jsonPost = async (url, formData, json = true) => {
       url = ApiBaseLink + url
       const options = {headers: null, method: null, body: null}
-      options.headers = {'content-type': 'application/json', Authorization: token}
+      
       options.method = "POST"
-      options.body = JSON.stringify(formData)
+      if (json) { 
+        options.headers = {'content-type': 'application/json', Authorization: token}
+        options.body = JSON.stringify(formData)
+      } else {
+        options.headers = {Authorization: token}
+        options.body = formData
+      }
+      
+      try {
+        const apiResult =  await fetch(url, options)
+        if (!apiResult.ok) {
+          if ([401, 403].includes(apiResult.status)) {
+              localStorage.clear()
+              window.location.href = "/login"
+              return false
+          }
+        }    
+        return await apiResult.json()
+      } catch (err) {
+          return err
+      }
+    }
+
+    const jsonPatch = async (url, formData, json = true) => {
+      url = ApiBaseLink + url
+      const options = {headers: null, method: null, body: null}
+      
+      options.method = "Patch"
+      if (json) { 
+        options.headers = {'content-type': 'application/json', Authorization: token}
+        options.body = JSON.stringify(formData)
+      } else {
+        options.headers = {Authorization: token}
+        options.body = formData
+      }
+      
       try {
         const apiResult =  await fetch(url, options)
         if (!apiResult.ok) {
@@ -130,12 +172,14 @@ import Avatar from '@components/avatar'
     //Put Api calling
     const put = (endpointurl, options) => {
         options.method = "PATCH"
+        options.headers = {Authorization: token}
         return callAPI(endpointurl, options)
     }
 
     //Delete Api calling
     const deleteData = (endpointurl, options) => {
         options.method = "DELETE"
+        options.headers = {Authorization: token}
         return callAPI(endpointurl, options)
     }
 
@@ -174,6 +218,24 @@ import Avatar from '@components/avatar'
        })
      }
     
+     // format date function
+
+    const formatDate = (date) => {
+      const d = new Date(date)
+        let month = (`${d.getMonth() + 1}`)
+        let day = `${d.getDate()}`
+        const year = d.getFullYear()
+  
+      if (month.length < 2) {
+        month = `0${month}`
+      }
+      if (day.length < 2) {
+        day = `0${day}`
+      }
+         
+      return [year, month, day].join('-')
+    }
+
     // const fetchDepartments = () => {
             
     //       get('/organization/department/')
@@ -191,13 +253,16 @@ import Avatar from '@components/avatar'
         get,
         post,
         jsonPost,
+        jsonPatch,
         put,
         deleteData,
         Toast,
         deleteModal,
         successModal,
         cancelModal,
+        formatDate,
         org,
+        user_id,
         token,
         ApiBaseLink
         

@@ -62,10 +62,10 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
         </Fragment>
         )
       )
-      const groupStatus = [
-        { value: 0, label: 'Inactive' },
-        { value: 1, label: 'Active' }
-      ]
+      // const groupStatus = [
+      //   { value: 0, label: 'Inactive' },
+      //   { value: 1, label: 'Active' }
+      // ]
       const groupType = [
         { value: 1, label: 'Non-Technical' },
         { value: 2, label: 'Technical' }
@@ -133,7 +133,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
       }
       const [updatedTitle, setUpdatedTitle] = useState(defaultValues.title)
       const [updatedType, setUpdatedType] = useState(defaultValues.group_type)
-      const [updatedStatus, setUpdatedStatus] = useState(defaultValues.group_status)
+      // const [updatedStatus, setUpdatedStatus] = useState(defaultValues.group_status)
       const [updatedDescription, setUpdatedDescription] = useState(defaultValues.group_description)
       const updateGHead = (data, id) => {
         if (Object.values(data).length > 0 && id) {
@@ -169,11 +169,11 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
         }
       }
       const onSubmit = () => {
-        if (updatedTitle !== undefined || updatedType !== undefined || updatedStatus !== undefined || updatedDescription !== undefined || organization.id !== undefined) {
+        if (updatedTitle !== undefined || updatedType !== undefined || updatedDescription !== undefined || organization.id !== undefined) {
           const formData = new FormData()
             formData['title'] =  !updatedTitle ? defaultValues.title : updatedTitle
             formData['grouphead_type'] = !updatedType ? defaultValues.group_type : updatedType
-            formData['is_status'] =  !updatedStatus ? defaultValues.group_status : updatedStatus
+            // formData['is_status'] =  !updatedStatus ? defaultValues.group_status : updatedStatus
             formData['description'] = !updatedDescription ? defaultValues.group_description : updatedDescription
             formData['organization_id'] = organization.id 
             // console.warn(formData)
@@ -201,7 +201,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
               Type
             </th>
             <th scope="col" className="text-nowrap">
-              Status
+              Description
             </th>
             <th scope="col" className="text-nowrap">
               Actions
@@ -209,14 +209,14 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
           </tr>
         </thead>
         <tbody className='text-center'>
-          {groupHeadList ? (
+          {Object.values(groupHeadList).length > 0 ? (
             <>
             {Object.values(groupHeadList).map((item, key) => (
                 !item.is_active ? null : (
                     <tr key={key}>
                   <td>{item.title}</td>
                   <td>{item.grouphead_type === 1 ? groupType[0].label : groupType[1].label}</td>
-                  <td>{item.is_active ? 'Active' : 'InActive'}</td>
+                  <td>{item.description}</td>
                   <td>
                     <div className="d-flex row">
                       <div className="col text-center">
@@ -245,7 +245,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
             </>
           ) : (
             <tr>
-              <td>No Data Found</td>
+              <td colSpan={4}>No Group Head Found...</td>
             </tr>
           )}
           
@@ -266,7 +266,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
             </Label>
             <Input type='text' name={`title`} id={`title`} placeholder='Group Title' defaultValue={defaultValues.title} onChange={e => setUpdatedTitle(e.target.value)}/>
           </Col>
-          <Col md='3' className='mb-1'>
+          <Col md='6' className='mb-1'>
             <Label className='form-label' for={`type`}>
               Type
             </Label>
@@ -282,7 +282,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
               onChange={type => setUpdatedType(type.value)}
             />
           </Col>
-          <Col md='3' className='mb-1'>
+          {/* <Col md='3' className='mb-1'>
             <Label className='form-label' for={`group-status`}>
               Status
             </Label>
@@ -297,7 +297,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
               defaultValue={defaultValues.group_status ? groupStatus[1] : groupStatus[0]}
               onChange={status => setUpdatedStatus(status.value)}
             />
-          </Col>
+          </Col> */}
         </Row>
         <Row>
           <Col md='12' className='mb-1'>

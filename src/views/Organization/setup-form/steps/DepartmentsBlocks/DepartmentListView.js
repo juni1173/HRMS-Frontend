@@ -3,9 +3,11 @@ import { Fragment, useState } from 'react'
 import Select from 'react-select'
 import { Check, X, XCircle, Edit, Save } from 'react-feather'
 import { useForm } from 'react-hook-form'
+import apiHelper from '../../../../Helpers/ApiHelper'
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
 import '@styles/react/libs/input-number/input-number.scss'
+
 import {
     Row,
     Form,
@@ -22,7 +24,7 @@ import {
   import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
 const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedDepID }) => {
-    // console.warn(groupHead)
+    const Api = apiHelper()
     const [editModal, setEditModal] = useState(false)
     const [editIDState, setEditIDState] = useState(null)
     const [editData, setData] = useState([
@@ -131,7 +133,7 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
         if (Object.values(data).length > 0 && id) {
             fetch(`${process.env.REACT_APP_API_URL}/organization/department/${id}/`, {
                 method: "PATCH",
-                headers: { "Content-Type": "Application/json" },
+                headers: { "Content-Type": "Application/json", Authorization: Api.token },
                 body: JSON.stringify(data) 
             })
             .then((response) => response.json())
@@ -161,10 +163,10 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
       const onSubmit = () => {
         if (updatedTitle !== undefined || updatedDescription !== undefined || updatedStatus !== undefined || updatedGHeadID !== undefined) {
           const formData = new FormData()
-          console.warn(updatedGHeadID)
+          // console.warn(updatedStatus)
             formData['grouphead'] = !updatedGHeadID ? editData.grouphead : updatedGHeadID
             formData['title'] =  !updatedTitle ? editData.departemnt_title : updatedTitle
-            formData['status'] =  !updatedStatus ? editData.department_status : updatedStatus
+            formData['status'] =   updatedStatus
             formData['description'] = !updatedDescription ? editData.department_description : updatedDescription
             // console.warn(formData)
             updateDep(formData, editIDState)
@@ -202,7 +204,7 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
           </tr>
         </thead>
         <tbody className='text-center'>
-          {DepList ? (
+          {Object.values(DepList).length > 0 ? (
             <>
             {Object.values(DepList).map((item, key) => (
                 !item.is_active ? null : (
@@ -241,7 +243,7 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
             </>
           ) : (
             <tr>
-              <td>No Data Found</td>
+              <td colSpan={5}>No Department Found...</td>
             </tr>
           )}
           

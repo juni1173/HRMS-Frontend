@@ -62,6 +62,7 @@ const Router = () => {
    */
   const FinalRoute = props => {
     const route = props.route
+    
     // let action, resource
 
     // ** Assign vars based on route meta
@@ -69,8 +70,7 @@ const Router = () => {
     //   action = route.meta.action ? route.meta.action : null
     //   resource = route.meta.resource ? route.meta.resource : null
     // }
-
-    if (
+     if (
       (!isUserLoggedIn() && route.meta === undefined) ||
       (!isUserLoggedIn() && route.meta && !route.meta.authRoute && !route.meta.publicRoute)
     ) {
@@ -80,14 +80,16 @@ const Router = () => {
        ** If user is not Logged in & route.meta.authRoute, !route.meta.publicRoute are undefined
        ** Then redirect user to login
        */
-
+      
       return <Redirect to='/login' />
+
     } else if (route.meta && route.meta.authRoute && isUserLoggedIn()) {
       // ** If route has meta and authRole and user is Logged in then redirect user to home page (DefaultRoute)
+      // console.warn(route.meta.authRoute)
       return <Redirect to='/organizationHome' />
-      // } else if (isUserLoggedIn() && !ability.can(action || 'read', resource)) {
-    //   // ** If user is Logged in and doesn't have ability to visit the page redirect the user to Not Authorized
-    //   return <Redirect to='/misc/not-authorized' />
+      // }  else if (isUserLoggedIn() && !ability.can(action || 'read', resource)) {
+      // // ** If user is Logged in and doesn't have ability to visit the page redirect the user to Not Authorized
+      // return <Redirect to='/misc/not-authorized' />
     } else {
       // ** If none of the above render component
       return <route.component {...props} />

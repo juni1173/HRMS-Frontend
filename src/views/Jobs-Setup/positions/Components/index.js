@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { Search } from "react-feather"
-import { Input, InputGroup, InputGroupText, TabContent, TabPane, Nav, NavItem, NavLink, Offcanvas, OffcanvasHeader, OffcanvasBody} from "reactstrap"
+import { Offcanvas, OffcanvasHeader, OffcanvasBody} from "reactstrap"
 import PositionsList from "./blockComponents/positionsList"
 import AddPosition from "./blockComponents/addPosition"
 import PositionHelper from "../../../Helpers/PositionHelper"

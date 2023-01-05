@@ -10,7 +10,7 @@ import Avatar from '@components/avatar'
 // import axios from 'axios'
 
 import GroupHeadList from './GroupHeadBlocks/GroupHeadListView'
-import OrganizationAdd from '../../GroupHeadComponents/GroupHeadAdd'
+import GroupHeadAdd from '../../GroupHeadComponents/GroupHeadAdd'
 import  apiHelper  from '../../../Helpers/ApiHelper'
 const GroupHead = ({ stepper, stepperStatus, list, createForm, fetchGroupHeads, count}) => {
 
@@ -118,7 +118,7 @@ const GroupHead = ({ stepper, stepperStatus, list, createForm, fetchGroupHeads, 
       
       {createForm && (
         <>
-          <OrganizationAdd stepper={stepper} fetchGroupHeads={fetchGroupHeads} stepperStatus={stepperStatus} GroupHeadCallBack={fetchingGroupHeads}/> 
+          <GroupHeadAdd stepper={stepper} fetchGroupHeads={fetchGroupHeads} stepperStatus={stepperStatus} GroupHeadCallBack={fetchingGroupHeads}/> 
         </>
       )}
       

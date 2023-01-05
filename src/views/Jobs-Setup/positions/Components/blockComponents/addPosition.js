@@ -31,7 +31,7 @@ const addPosition = ({ CallBack }) => {
     ]  
     const [depdropdown] = useState([])
     const [staffdropdown] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [gHead] = useState([])
     const [dep, setDep] = useState('Select')
     const [staff, setStaff] = useState('Select')
@@ -74,7 +74,7 @@ const addPosition = ({ CallBack }) => {
         
     }
     const getGHead = () => {
-        setLoading(true)
+        
         Helper.addPositionGHeadData()
         .then(data => {
              gHeadDropdown(data)  
@@ -83,10 +83,8 @@ const addPosition = ({ CallBack }) => {
         .then(data => { 
             staffDropdown(data)
         })
-        setLoading(false)
     }
     const gHeadChange = (id) => {
-        setLoading(true)
         if (id > 0) {
             Helper.getDepartmentbyGHeadid(id)
             .then(data => {
@@ -95,13 +93,9 @@ const addPosition = ({ CallBack }) => {
         } else {
             depDropdown(null)
         }
-        setLoading(false)
     }
     const depChange = (obj) => {
-        
-        setLoading(true)
         setDep(obj)
-        setLoading(false)
     }
     const formValues = {
         ghead: gHead[0],
@@ -179,8 +173,11 @@ const addPosition = ({ CallBack }) => {
             }
         }
     useEffect(() => {
+      setLoading(true)
         getGHead()
-         setLoading(false)
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000)
       }, [])
     return (
         <Fragment>
@@ -188,268 +185,253 @@ const addPosition = ({ CallBack }) => {
           <h5 className='mb-2'>Add Position</h5>
           {/* <small>Add position.</small> */}
         </div>
-        <Form onSubmit={handleSubmit(onSubmit)}  id="create-position-form">
-          <Row>
-            <Col md='4' className='mb-1'>
-              <Label className='form-label'>
-                Group Head
-              </Label>
-              <Controller
-                id='react-select'
-                control={control}
-                name='ghead'
-                render={({ field }) => (
-                    <Select
-                    isClearable={false}
-                    options={gHead}
-                    className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.ghead === undefined })}
-                    classNamePrefix='select'
-                    {...field}
-                    onChange={e => {
-                        field.onChange(e)
-                        gHeadChange(e.value)
-                    }} 
-                    />
-                )}
-              />
-              
-            </Col>
-            <Col md='4' className='mb-1'>
-              <Label className='form-label'>
-                Department
-              </Label>
-              <Controller
-                control={control}
-                id="department"
-                name="department"
-                render={({ field }) => (
-                    !loading ? (
-                        <Select
-                          isClearable={false}
-                          className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.department === undefined })}
-                          classNamePrefix='select'
-                          options={depdropdown}
-                          value={dep}
-                          {...field}
-                          onChange={obj => { 
-                            field.onChange(obj)
-                            depChange(obj)
-                         }}
-                        />
-                    ) : ( 
+        {!loading ? (
+            <Form onSubmit={handleSubmit(onSubmit)}  id="create-position-form">
+            <Row>
+              <Col md='4' className='mb-1'>
+                <Label className='form-label'>
+                  Group Head
+                </Label>
+                <Controller
+                  id='react-select'
+                  control={control}
+                  name='ghead'
+                  defaultValue={gHead[0]}
+                  render={({ field }) => (
                       <Select
                       isClearable={false}
-                      id='staff-type'
-                      name='staff-type'
-                      className='react-select'
+                      options={gHead}
+                      className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.ghead === undefined })}
                       classNamePrefix='select'
-                    //   onChange={type => { setType(type.value) }}
-                    />
-                    )
-                )}
+                      {...field}
+                      onChange={e => {
+                          field.onChange(e)
+                          gHeadChange(e.value)
+                      }} 
+                      />
+                  )}
                 />
-            </Col>
-            <Col md='4' className='mb-1'>
-              <Label className='form-label'>
-                Staff Classification
-              </Label>
-              <Controller
-                control={control}
-                id="staff_id"
-                name="staff_id"
-                render={({ field }) => (
-                    !loading ? (
-                        <Select
-                          isClearable={false}
-                          className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.staff_id === undefined })}
-                          classNamePrefix='select'
-                          options={staffdropdown}
-                          value={staff}
-                          {...field}
-                          onChange={obj => { 
-                            field.onChange(obj)
-                            setStaff(obj)
-                         }}
-                        />
-                        
-                    ) : ( 
-                        <Spinner />
-                    )
-                )}
-              />
-            </Col>
-            <Col md='4' className='mb-1'>
-              <label className='form-label'>
-                Position Title
-              </label>
-              <Controller
-                control={control}
-                name="position_title"
-                defaultValue=""
-                render={({ field }) => (
-                    <Input
-                    type="text"
-                    placeholder="Position Title"
-                    invalid={errors.position_title && true}
-                    {...field}
-                  />  
-                )}
-              />
-                {errors.position_title && <FormFeedback>{errors.position_title.message}</FormFeedback>}
-            </Col>
-            <Col md='4' className='mb-1'>
-              <label className='form-label'>
-                Position Code
-              </label>
-              <Controller
-                control={control}
-                id="position_code"
-                name="position_code"
-                defaultValue=""
-                render={({ field }) => (
-                    <Input
-                    type="text"
-                    className="position-code"
-                    placeholder="Position Code"
-                    invalid={errors.position_code && true}
-                    {...field}
-                  />
-                )}
-              />
-               {errors.position_code && <FormFeedback>{errors.position_code.message}</FormFeedback>}
-            </Col>
-            <Col md='4' className='mb-1'>
-              <Label className='form-label'>
-                Qualification
-              </Label>
-              <Controller
-                control={control}
-                id="qualification"
-                name="qualification"
-                render={({ field }) => (
-                    !loading ? (
-                        <Select
-                          isClearable={false}
-                          className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.qualification === undefined })}
-                          classNamePrefix='select'
-                          options={Qualification}
-                          {...field}
-                        //   onChange={type => { setType(type.value) }}
-                        />
-                    ) : ( 
-                        <Spinner />
-                    )
-                )}
-              />
-            </Col>
-            <Col md='4' className='mb-1'>
-              <Label className='form-label'>
-                Years of Experience
-              </Label>
-              <Controller
-                control={control}
-                id="experience"
-                name="experience"
-                render={({ field }) => (
-                    !loading ? (
-                        <Select
-                          isClearable={false}
-                          className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.experience === undefined })}
-                          classNamePrefix='select'
-                          options={experience}
-                          {...field}
-                        //   onChange={type => { setType(type.value) }}
-                        />
-                    ) : ( 
-                        <Spinner />
-                    )
-                )}
-              />
-              
-              
-            </Col>
-            <Col md='4' className='mb-1'>
-            <label className='form-label'>
-                Salary Range
-              </label>
-                <div className="d-flex">
-                  <Col md='6' className="mb-1 mr-1">
-                    <Controller
-                        control={control}
-                        id="salary_range_min"
-                        name="min_salary"
-                        defaultValue={0}
-                        render={({field}) => (
-                            <Input
-                                type="number"
-                                min={0}
-                                className="salary-range-min"
-                                placeholder="Min Salary Range"
-                                invalid = {errors.min_salary && true}
-                                {...field}
-                            />
-                        )}
-                    /> 
-                    {errors.min_salary && <FormFeedback>{errors.min_salary.message}</FormFeedback>}
-                  </Col>
-                  <Col md='6' className="mb-1">
-                    <Controller
-                        control={control}
-                        name="max_salary"
-                        defaultValue={0}
-                        render={({field}) => (
-                            <Input
-                                type="number"
-                                min={0}
-                                className="salary-range-max"
-                                placeholder="Max Salary Range"
-                                invalid = {errors.max_salary && true}
-                                {...field}
-                            />
-                        )}
-                    />
-                    {errors.max_salary && <FormFeedback>{errors.max_salary.message}</FormFeedback>}
-                  </Col>
-                </div>
+                
               </Col>
               <Col md='4' className='mb-1'>
                 <Label className='form-label'>
-                    Status
+                  Department
                 </Label>
-                    <Controller
-                        control={control}
-                        id="status"
-                        name="status"
-                        render={({field}) => (
-                            <Select
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={Status}
-                                defaultValue={Status[0]}
-                                {...field}
-                            //   onChange={type => { setType(type.value) }}
-                            />
-                        )}
-                    />
-                  
+                <Controller
+                  control={control}
+                  id="department"
+                  name="department"
+                  defaultValue={depdropdown[0]}
+                  render={({ field }) => (
+                          <Select
+                            isClearable={false}
+                            className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.department === undefined })}
+                            classNamePrefix='select'
+                            options={depdropdown}
+                            {...field}
+                            onChange={obj => { 
+                              field.onChange(obj)
+                              depChange(obj)
+                           }}
+                          />
+                  )}
+                  />
               </Col>
-              
-              <div className="row text-center">
-            <div className="col-lg-12">
-            <Button color="primary" className="btn-next">
-              <span className="align-middle d-sm-inline-block d-none">
-                Save
-              </span>
-              <Save
-                size={14}
-                className="align-middle ms-sm-25 ms-0"
-              ></Save>
-            </Button>
+              <Col md='4' className='mb-1'>
+                <Label className='form-label'>
+                  Staff Classification
+                </Label>
+                <Controller
+                  control={control}
+                  id="staff_id"
+                  name="staff_id"
+                  defaultValue={staffdropdown[0]}
+                  render={({ field }) => (
+                          <Select
+                            isClearable={false}
+                            className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.staff_id === undefined })}
+                            classNamePrefix='select'
+                            options={staffdropdown}
+                            {...field}
+                            onChange={obj => { 
+                              field.onChange(obj)
+                              setStaff(obj)
+                           }}
+                          />
+                  )}
+                />
+              </Col>
+              <Col md='4' className='mb-1'>
+                <label className='form-label'>
+                  Position Title
+                </label>
+                <Controller
+                  control={control}
+                  name="position_title"
+                  defaultValue=""
+                  render={({ field }) => (
+                      <Input
+                      type="text"
+                      placeholder="Position Title"
+                      invalid={errors.position_title && true}
+                      {...field}
+                    />  
+                  )}
+                />
+                  {errors.position_title && <FormFeedback>{errors.position_title.message}</FormFeedback>}
+              </Col>
+              <Col md='4' className='mb-1'>
+                <label className='form-label'>
+                  Position Code
+                </label>
+                <Controller
+                  control={control}
+                  id="position_code"
+                  name="position_code"
+                  defaultValue=""
+                  render={({ field }) => (
+                      <Input
+                      type="text"
+                      className="position-code"
+                      placeholder="Position Code"
+                      invalid={errors.position_code && true}
+                      {...field}
+                    />
+                  )}
+                />
+                 {errors.position_code && <FormFeedback>{errors.position_code.message}</FormFeedback>}
+              </Col>
+              <Col md='4' className='mb-1'>
+                <Label className='form-label'>
+                  Qualification
+                </Label>
+                <Controller
+                  control={control}
+                  id="qualification"
+                  name="qualification"
+                  defaultValue={Qualification[0]}
+                  render={({ field }) => (
+                          <Select
+                            isClearable={false}
+                            className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.qualification === undefined })}
+                            classNamePrefix='select'
+                            options={Qualification}
+                            {...field}
+                          //   onChange={type => { setType(type.value) }}
+                          />
+                  )}
+                />
+              </Col>
+              <Col md='4' className='mb-1'>
+                <Label className='form-label'>
+                  Years of Experience
+                </Label>
+                <Controller
+                  control={control}
+                  id="experience"
+                  name="experience"
+                  defaultValue={experience[0]}
+                  render={({ field }) => (
+                          <Select
+                            isClearable={false}
+                            className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.experience === undefined })}
+                            classNamePrefix='select'
+                            options={experience}
+                            {...field}
+                          //   onChange={type => { setType(type.value) }}
+                          />
+                  )}
+                />
+                
+                
+              </Col>
+              <Col md='4' className='mb-1'>
+              <label className='form-label'>
+                  Salary Range
+                </label>
+                  <div className="d-flex">
+                    <Col md='6' className="mb-1 mr-1">
+                      <Controller
+                          control={control}
+                          id="salary_range_min"
+                          name="min_salary"
+                          defaultValue={0}
+                          render={({field}) => (
+                              <Input
+                                  type="number"
+                                  min={0}
+                                  className="salary-range-min"
+                                  placeholder="Min Salary Range"
+                                  invalid = {errors.min_salary && true}
+                                  {...field}
+                              />
+                          )}
+                      /> 
+                      {errors.min_salary && <FormFeedback>{errors.min_salary.message}</FormFeedback>}
+                    </Col>
+                    <Col md='6' className="mb-1">
+                      <Controller
+                          control={control}
+                          name="max_salary"
+                          defaultValue={0}
+                          render={({field}) => (
+                              <Input
+                                  type="number"
+                                  min={0}
+                                  className="salary-range-max"
+                                  placeholder="Max Salary Range"
+                                  invalid = {errors.max_salary && true}
+                                  {...field}
+                              />
+                          )}
+                      />
+                      {errors.max_salary && <FormFeedback>{errors.max_salary.message}</FormFeedback>}
+                    </Col>
+                  </div>
+                </Col>
+                <Col md='4' className='mb-1'>
+                  <Label className='form-label'>
+                      Status
+                  </Label>
+                      <Controller
+                          control={control}
+                          id="status"
+                          name="status"
+                          defaultValue={Status[0]}
+                          render={({field}) => (
+                              <Select
+                                  isClearable={false}
+                                  className='react-select'
+                                  classNamePrefix='select'
+                                  options={Status}
+                                  defaultValue={Status[0]}
+                                  {...field}
+                              //   onChange={type => { setType(type.value) }}
+                              />
+                          )}
+                      />
+                    
+                </Col>
+                
+                <div className="row text-center">
+              <div className="col-lg-12">
+              <Button color="primary" className="btn-next">
+                <span className="align-middle d-sm-inline-block d-none">
+                  Save
+                </span>
+                <Save
+                  size={14}
+                  className="align-middle ms-sm-25 ms-0"
+                ></Save>
+              </Button>
+              </div>
             </div>
-          </div>
-          </Row>
-        </Form>
+            </Row>
+            </Form>
+        ) : (
+          <div className="text-center"><Spinner /></div>
+        )}
+        
       </Fragment>
     )
 }

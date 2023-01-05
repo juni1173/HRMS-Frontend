@@ -33,9 +33,7 @@ const positionsList = ({ count }) => {
                     
                 }
             })
-            setTimeout(() => {
-                setLoading(false)
-              }, 1000)
+        setLoading(false)
     }
 
     const deletePosition = (id) => {
@@ -137,50 +135,51 @@ const positionsList = ({ count }) => {
           
           <tbody className='text-center'>
           {loading && <tr><td colSpan={5}><Spinner /></td></tr>}
-            {(searchResults && !loading) ? (
-              <>
-              {Object.values(searchResults).map((item, key) => (
+            {!loading && (
+              Object.values(searchResults).length > 0 ? (
+                  <>
+                  {Object.values(searchResults).map((item, key) => (
+                          
+                          <tr key={key}>
+                        <td>{item.title}</td>
+                        <td>{item.code}</td>
+                        {/* { const experience = item.experience } */}
+                        <td>{Helper.experience[item.years_of_experience - 1].label ? Helper.experience[item.years_of_experience - 1].label : `N/A`}</td>
+                        <td>Min Salary: {item.min_salary ? item.min_salary : `N/A`} <br/><hr/> Max Salary: {item.max_salary ? item.max_salary : `N/A`}</td>
+                        <td>
+                          <div className="d-flex row">
+                            <div className="col text-center">
+                              <button
+                                className="border-0"
+                                onClick={() => {
+                                  updateModal(item) 
+                                }}
+                              >
+                                <Edit color="orange" />
+                              </button>
+                            </div>
+                            <div className="col">
+                              <button
+                                className="border-0"
+                                onClick={() => deletePosition(item.id)}
+                              >
+                                <XCircle color="red" />
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                        </tr>
                       
-                      <tr key={key}>
-                    <td>{item.title}</td>
-                    <td>{item.code}</td>
-                    {/* { const experience = item.experience } */}
-                    <td>{Helper.experience[item.years_of_experience - 1].label ? Helper.experience[item.years_of_experience - 1].label : `N/A`}</td>
-                    <td>Min Salary: {item.min_salary ? item.min_salary : `N/A`} <br/><hr/> Max Salary: {item.max_salary ? item.max_salary : `N/A`}</td>
-                    <td>
-                      <div className="d-flex row">
-                        <div className="col text-center">
-                          <button
-                            className="border-0"
-                            onClick={() => {
-                              updateModal(item) 
-                            }}
-                          >
-                            <Edit color="orange" />
-                          </button>
-                        </div>
-                        <div className="col">
-                          <button
-                            className="border-0"
-                            onClick={() => deletePosition(item.id)}
-                          >
-                            <XCircle color="red" />
-                          </button>
-                        </div>
-                      </div>
-                    </td>
-                    </tr>
-                  
-                ))}
-              </>
-            ) : (
-              !loading && (
+                    ))}
+                  </>
+                ) : (
                   <tr>
-                      <td colSpan={5}>No Data Found</td>
+                      <td colSpan={5}>No Positions Found...</td>
                   </tr>
-              )
-              
-            )}
+                )
+            ) 
+            
+            }
             
           </tbody>
               </Table>

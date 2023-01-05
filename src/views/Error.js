@@ -19,7 +19,7 @@ const Error = () => {
   return (
     <div className='misc-wrapper'>
       <a className='brand-logo' href='/'>
-        <svg viewBox='0 0 139 95' version='1.1' height='28'>
+        {/* <svg viewBox='0 0 139 95' version='1.1' height='28'>
           <defs>
             <linearGradient x1='100%' y1='10.5120544%' x2='50%' y2='89.4879456%' id='linearGradient-1'>
               <stop stopColor='#000000' offset='0%'></stop>
@@ -66,8 +66,8 @@ const Error = () => {
               </g>
             </g>
           </g>
-        </svg>
-        <h2 className='brand-text text-primary ms-1'>Vuexy</h2>
+        </svg> */}
+        <h2 className='brand-text text-primary ms-1'>HRMS</h2>
       </a>
       <div className='misc-inner p-2 p-sm-3'>
         <div className='w-100 text-center'>

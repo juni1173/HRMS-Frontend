@@ -200,7 +200,7 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
           </tr>
         </thead>
         <tbody className='text-center'>
-          {SClassList ? (
+          {Object.values(SClassList).length > 0 ? (
             <>
             {Object.values(SClassList).map((item, key) => (
                 !item.is_active ? null : (
@@ -236,7 +236,7 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
             </>
           ) : (
             <tr>
-              <td>No Data Found</td>
+              <td colSpan={4}>No Staff Classification Found...</td>
             </tr>
           )}
           

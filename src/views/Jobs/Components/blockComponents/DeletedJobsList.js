@@ -18,17 +18,16 @@ const DeletedJobsList = ({data, count, CallBack}) => {
         setLoading(true)
         Api.get(`/jobs/`)
             .then((result) => {
+              console.warn(result)
                 if (result.status === 200) {
-                     
                     if (result.data.length > 0) {
                         
                         for (let i = 0; i < result.data.length; i++) {
-                            if (result.data[i].is_active === false) {
+                            if (result.data[i].job_is_active === false) {
                                 notActiveListArray.push(result.data[i]) 
                             }
                             
                         }
-                       
                         setLoading(false)
                         setNotActiveJobList(notActiveListArray)
                         setSearchResults(notActiveListArray)
@@ -45,16 +44,9 @@ const DeletedJobsList = ({data, count, CallBack}) => {
      
     const ActivateJob = (item) => {
       
-         item.is_active = true
-         const url = `${process.env.REACT_APP_API_URL}/jobs/${item.uuid}/`
-         fetch(url, {
-           method: "Patch",
-           headers:{'Content-Type': 'application/json', Authorization: Api.token},
-           body:JSON.stringify(item)
-           })
-         .then((response) => response.json())
+         item.job_is_active = true
+         Api.jsonPatch(`/jobs/${item.job_uuid}/`, item)
          .then((result) => {
-             console.log(result)
              if (result.status === 200) {
                  Api.Toast('success', result.message)
                  getNotActiveJobs()
@@ -63,8 +55,6 @@ const DeletedJobsList = ({data, count, CallBack}) => {
                      Api.Toast('error', result.message)
                  }
          })
-         
-         console.log(item)
           
     }
       
@@ -157,16 +147,17 @@ const DeletedJobsList = ({data, count, CallBack}) => {
         <tbody className='text-center'>
 
         { !Loading ? (
-        Object.values(searchResults).map((item, key) => ( 
+             Object.values(searchResults).length > 0 ? (
+              Object.values(searchResults).map((item, key) => ( 
                 <tr key={key}>
-                  <td>{item.title}</td>      
+                  <td>{item.title ? item.title : 'N/A'}</td>      
                   <td>{data.Department.find(pre => pre.value === item.department) ? data.Department.find(pre => pre.value === item.department).label : 'N/A'}</td>  
                   <td>{data.Staff_Classification.find(pre => pre.value === item.staff_classification) ? data.Staff_Classification.find(pre => pre.value === item.staff_classification).label : 'N/A'}</td>
                   <td>{data.Position.find(pre => pre.value === item.position) ? data.Position.find(pre => pre.value === item.position).label : 'N/A'}</td>
-                  <td>{data.Job_Types.find(pre => pre.value === item['job_posts'][0].job_type) ? data.Job_Types.find(pre => pre.value === item['job_posts'][0].job_type).label : 'N/A'}</td>
-                  <td>{item['job_posts'][0].no_of_individuals}</td>
-                  <td>{item['job_posts'][0].job_post_code}</td>
-                  <td>{data.JD_Selection.find(pre => pre.value === item['job_posts'][0].jd_selection) ? data.JD_Selection.find(pre => pre.value === item['job_posts'][0].jd_selection).label : 'N/A'}</td>
+                  <td>{data.Job_Types.find(pre => pre.value === item.job_type) ? data.Job_Types.find(pre => pre.value === item.job_type).label : 'N/A'}</td>
+                  <td>{item.no_of_individuals}</td>
+                  <td>{item.job_post_code}</td>
+                  <td>{data.JD_Selection.find(pre => pre.value === item.jd_selection) ? data.JD_Selection.find(pre => pre.value === item.jd_selection).label : 'N/A'}</td>
                   <td>
                     <div className="d-flex row">
                        
@@ -182,14 +173,19 @@ const DeletedJobsList = ({data, count, CallBack}) => {
                     </div>
                   </td>
                   </tr>
-        ))
-        ) : (
-            <tr>
-              <td colSpan={9}><Spinner /></td>
-            </tr>
+                 ))
+             ) : (
+              <tr>
+                <td colSpan={9}>No Jobs Found...</td>
+              </tr>
+             )
+          ) : (
+              <tr>
+                <td colSpan={9}><Spinner /></td>
+              </tr>
+              
             
-          
-        )
+          )
         }
             
         </tbody>

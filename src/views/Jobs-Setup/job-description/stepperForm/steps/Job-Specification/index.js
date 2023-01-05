@@ -13,7 +13,6 @@ const Job_Specification = ({ stepper, CallBack, Dimensions }) => {
     const [Specifications] = useState([])
   const addmoreSubmit = () => {
       setLoading(true)
-      if (jd_dimension !== null && desirable !== null && essential !== null) {
         const DimensionObject = Dimensions.find(x => x.value === jd_dimension)
         const DimensionLabel = DimensionObject.label
           
@@ -26,12 +25,6 @@ const Job_Specification = ({ stepper, CallBack, Dimensions }) => {
             Specifications.push({jd_dimension, desirable, essential, DimensionLabel})  
           }
         
-      } else {
-        Api.Toast('error', 'Please fill up all the fields required')
-      }
-      
-        console.warn(Specifications)
-    
         setTimeout(() => {
           setLoading(false)
         }, 1000)

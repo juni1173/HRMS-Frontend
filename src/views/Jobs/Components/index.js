@@ -16,17 +16,19 @@ const JobsIndexComp = () => {
     // Tabs Toggle State Set
     const fetchPreData = async () => {
         setLoading(true)
-        await Job_Helper.fetchFormPreData().then(data => {
-          if (data) {
-           formData['Staff_Classification'] = data.Staff_Classification
-           formData['Department'] = data.Department
-           formData['Position'] = data.Position
-           formData['Job_Types'] = data.Job_Types
-           formData['JD_Selection'] = data.JD
+        await Job_Helper.fetchFormPreData().then(dataResult => {
+          if (dataResult) {
+                formData['Staff_Classification'] = dataResult.Staff_Classification
+                formData['Department'] = dataResult.Department
+                formData['Position'] = dataResult.Position
+                formData['Job_Types'] = dataResult.Job_Types
+                formData['JD_Selection'] = dataResult.JD
           }
-          setLoading(false)
           return formData
         })
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
       }
     const toggle = tab => {
         setActive(tab)
@@ -104,18 +106,36 @@ const JobsIndexComp = () => {
             <TabContent className='py-50' activeTab={active}>
                 <TabPane tabId='1'>
                     <div>
-                        {Object.values(formData).length > 0 && !loading ? (
-                            <ActiveJobsList data={formData} count={count} CallBack={CallBack}/>
+                        {!loading ? (
+                            Object.values(formData).length > 0 ? (
+                                <ActiveJobsList data={formData} count={count} CallBack={CallBack}/>
+                            ) : (
+                                <Card>
+                                    <CardBody>
+                                        <p>No Active Jobs Found</p>
+                                    </CardBody>
+                                </Card>
+                            )
+                            
                         ) : (
-                            <Spinner />
+                           <div className="text-center"> <Spinner /></div>
                         )}
                         
                     </div>
                 </TabPane>
                 <TabPane tabId='2'>
                     <div>
-                    {Object.values(formData).length > 0 && !loading ? (
-                            <DeletedJobsList data={formData} count={count} CallBack={CallBack}/>
+                    {!loading ? (
+                            Object.values(formData).length > 0 ? (
+                                <DeletedJobsList data={formData} count={count} CallBack={CallBack}/>
+                            ) : (
+                                <Card>
+                                    <CardBody>
+                                        <p>No Deleted Jobs Found...</p>
+                                    </CardBody>
+                                </Card>
+                            )
+                            
                         ) : (
                             <Spinner />
                         )}

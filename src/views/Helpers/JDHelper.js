@@ -24,7 +24,6 @@ const JDHelper = () => {
 
         const dim = response
         
-        console.warn(dim)
         if (Object.values(dim).length > 0) {
             for (let i = 0; i < dim.length; i++) {
                 if (dim[i].jd_type === 1) {

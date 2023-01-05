@@ -6,7 +6,7 @@ import { Label, Row, Col, Input, Form, Button } from "reactstrap"
 import Select from 'react-select'
 import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
-const OrganizationAdd = ({ stepper, fetchGroupHeads, stepperStatus, GroupHeadCallBack }) => {
+const GroupHeadAdd = ({ stepper, fetchGroupHeads, stepperStatus, GroupHeadCallBack }) => {
     const groupStatus = [
         { value: 0, label: 'Inactive' },
         { value: 1, label: 'Active' }
@@ -191,7 +191,7 @@ return (
 )
 
 }
-OrganizationAdd.defaultProps = {
+GroupHeadAdd.defaultProps = {
   stepperStatus: true
 }
-export default OrganizationAdd
+export default GroupHeadAdd

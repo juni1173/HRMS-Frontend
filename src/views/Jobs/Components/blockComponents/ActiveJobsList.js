@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react"
-import { Item } from "react-contexify"
-import { Edit, User, XCircle, Search} from "react-feather"
-import { Card, CardBody, CardTitle, CardText, Spinne, Table, Modal, ModalBody, ModalHeader, Input, InputGroup, InputGroupText} from "reactstrap"
+import { Edit, XCircle, Search} from "react-feather"
+import { Card, CardBody, Table, Modal, ModalBody, ModalHeader, Input, InputGroup, InputGroupText, Button, Spinner} from "reactstrap"
 import apiHelper from "../../../Helpers/ApiHelper"
 import JobHelper from "../../../Helpers/JobHelper"
 import UpdateJobList from "./UpdateJobList"
 import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
+import { useHistory } from "react-router-dom"
 const ActiveJobsList = ({count, data, CallBack}) => {
+    const history = useHistory()
     const Api = apiHelper()
     const Helper = JobHelper()
     const searchHelper = SearchHelper()
@@ -25,45 +26,42 @@ const ActiveJobsList = ({count, data, CallBack}) => {
         setUpdateModalData(data)
         setEditModal(true)
       }
-    const getActiveJobs = () => {
+    const getActiveJobs = async () => {
         const activeListArray = []
         setLoading(true)
-        const url = `${process.env.REACT_APP_API_URL}/jobs/`
-        fetch(url, {
-            method: "GET",
-            headers: {Authorization: Api.token }
-            })
-            .then((response) => response.json())
+            await Api.get(`/jobs/`)
             .then((result) => {
-                if (result.status === 200) {
-                    if (result.data.length > 0) {
-                      for (let i = 0; i < result.data.length; i++) {
-                        console.log(result.data[i].is_active)
-                        if (result.data[i].is_active === true) {
-                          activeListArray.push(result.data[i]) 
+                if (result) {
+                    if (result.status === 200) {
+                        if (result.data.length > 0) {
+                          for (let i = 0; i < result.data.length; i++) {
+                            if (result.data[i].job_is_active === true) {
+                              activeListArray.push(result.data[i]) 
+                            }
+                            
+                          }
+                          setLoading(false)
+                          searchResults.splice(0, searchResults.length)
+                          activeJobsList.splice(0, activeJobsList.length)
+                          setActiveJobList(activeListArray)
+                          setSearchResults(activeListArray)
                         }
+                    } else {
+                            Api.Toast('error', result.message)
                         
-                      }
-                      setLoading(false)
-                      setActiveJobList(activeListArray)
-                      setSearchResults(activeListArray)
                     }
                 } else {
-                    Api.Toast('error', result.message)
+                    Api.Toast('error', 'Server not responding')
                 }
-              
             })
             setTimeout(() => {
                 setLoading(false)
               }, 1000)
     }
-
-    
     const updateCallBack = () => {
         setEditModal(false)
         getActiveJobs()
     }
- 
   const deleteModalOpen = (id) => {
     Api.deleteModal().then((result) => {
         if (result.isConfirmed) {
@@ -76,9 +74,7 @@ const ActiveJobsList = ({count, data, CallBack}) => {
             Api.cancelModal(result)
         }
     })
-    
   }
-
   const getSearch = options => {
     if (options.value === '' || options.value === null || options.value === undefined) {
 
@@ -99,16 +95,14 @@ const ActiveJobsList = ({count, data, CallBack}) => {
         setSearchResults(searchHelper.searchObj(options))
     }
 }
-
-
-    useEffect(() => {
-        if (count !== 0) {
-            getActiveJobs()
-        } else {
-            getActiveJobs()
-        }
-        
-    }, [count])
+useEffect(() => {
+    if (count !== 0) {
+        getActiveJobs()
+    } else {
+        getActiveJobs()
+    }
+    
+}, [count])
     return (
         
         <>
@@ -155,48 +149,67 @@ const ActiveJobsList = ({count, data, CallBack}) => {
                     <th scope="col" className="text-nowrap">
                     Job Description
                     </th>
-                    
+                    <th>Apply</th>
                     <th scope="col" className="text-nowrap">
                     Actions
                     </th>
                 </tr>
                 </thead>
                 <tbody className='text-center'>
-                    {Object.values(searchResults).map((item, key) => (
+
+                { !Loading ? (
+                    Object.values(searchResults).length > 0 ? (
+                         Object.values(searchResults).map((item, key) => (
                         
-                        <tr key={key}>
-                        <td>{item.title}</td>      
-                        <td>{data.Department.find(pre => pre.value === item.department) ? data.Department.find(pre => pre.value === item.department).label : 'N/A'}</td>  
-                        <td>{data.Staff_Classification.find(pre => pre.value === item.staff_classification) ? data.Staff_Classification.find(pre => pre.value === item.staff_classification).label : 'N/A'}</td>
-                        <td>{data.Position.find(pre => pre.value === item.position) ? data.Position.find(pre => pre.value === item.position).label : 'N/A'}</td>
-                        <td>{data.Job_Types.find(pre => pre.value === item['job_posts'][0].job_type) ? data.Job_Types.find(pre => pre.value === item['job_posts'][0].job_type).label : 'N/A'}</td>
-                        <td>{item['job_posts'][0].no_of_individuals}</td>
-                        <td>{item['job_posts'][0].job_post_code}</td>
-                        <td>{data.JD_Selection.find(pre => pre.value === item['job_posts'][0].jd_selection) ? data.JD_Selection.find(pre => pre.value === item['job_posts'][0].jd_selection).label : 'N/A'}</td>
-                        <td>
-                            <div className="d-flex row">
-                            <div className="col text-center">
-                                <button
-                                className="border-0"
-                                onClick={() => {
-                                    updateModal(item) 
-                                }}
-                                >
-                                <Edit color="orange" />
-                                </button>
-                            </div>
-                            <div className="col">
-                                <button
-                                className="border-0"
-                                onClick={() => deleteModalOpen(item.uuid)}
-                                >
-                                <XCircle color="red" />
-                                </button>
-                            </div>
-                            </div>
-                        </td>
+                            <tr key={key}>
+                            <td>{item.title ? item.title : 'N/A'}</td>      
+                            <td>{data.Department.find(pre => pre.value === item.department) ? data.Department.find(pre => pre.value === item.department).label : 'N/A'}</td>  
+                            <td>{data.Staff_Classification.find(pre => pre.value === item.staff_classification) ? data.Staff_Classification.find(pre => pre.value === item.staff_classification).label : 'N/A'}</td>
+                            <td>{data.Position.find(pre => pre.value === item.position) ? data.Position.find(pre => pre.value === item.position).label : 'N/A'}</td>
+                            <td>{data.Job_Types.find(pre => pre.value === item.job_type) ? data.Job_Types.find(pre => pre.value === item.job_type).label : 'N/A'}</td>
+                            <td>{item.no_of_individuals}</td>
+                            <td>{item.job_post_code}</td>
+                            <td>{data.JD_Selection.find(pre => pre.value === item.jd_selection) ? data.JD_Selection.find(pre => pre.value === item.jd_selection).label : 'N/A'}</td>
+                            <td><Button color='primary' className='btn-next' onClick={() => history.push(`apply/${item.uuid}`)}>
+                                    <span className='align-middle d-sm-inline-block d-none'>Apply</span>
+                                </Button></td>
+                            <td>
+                                <div className="d-flex row">
+                                <div className="col text-center">
+                                    <button
+                                    className="border-0"
+                                    onClick={() => {
+                                        updateModal(item) 
+                                    }}
+                                    >
+                                    <Edit color="orange" />
+                                    </button>
+                                </div>
+                                <div className="col">
+                                    <button
+                                    className="border-0"
+                                    onClick={() => deleteModalOpen(item.job_uuid)}
+                                    >
+                                    <XCircle color="red" />
+                                    </button>
+                                </div>
+                                </div>
+                            </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={9}>No Jobs Found...</td>
                         </tr>
-                    ))}
+                    )
+                    ) : (
+                        <tr>
+                          <td colSpan={9}><Spinner /></td>
+                        </tr>
+                        
+                      
+                    )
+                  }
                 
                 </tbody>
                 </Table>
@@ -210,5 +223,8 @@ const ActiveJobsList = ({count, data, CallBack}) => {
       </Modal>
         </>
     )
+}
+ActiveJobsList.defaultProps = {
+    count: 1
 }
 export default ActiveJobsList

@@ -49,14 +49,26 @@ const Routes = [
   },
   {
     path: '/exam',
-    component: lazy(() => import('../../views/timer/index'))
+    component: lazy(() => import('../../views/timer/index')),
+    layout: 'BlankLayout',
+    meta: {
+      authRoute: true
+    }
   },
   {
     path: '/apply/:uuid',
     component: lazy(() => import('../../views/Candidates/Components/applyform')),
     layout: 'BlankLayout',
     meta: {
-      authRoute: false
+      publicRoute: true
+    }
+  },
+  {
+    path: '/assessment/test/:uuid',
+    component: lazy(() => import('../../views/Candidates/Components/AssessmentTest/index')),
+    layout: 'BlankLayout',
+    meta: {
+      publicRoute: true
     }
   },
   {
@@ -74,6 +86,35 @@ const Routes = [
     meta: {
       authRoute: true
     }
+  },
+  // employee routes
+  {
+    path: '/employeeInformation',
+    component: lazy(() => import('../../views/Employee-Information/index'))
+  },
+  {
+    path: '/employeeList',
+    component: lazy(() => import('../../views/Employee-Information/EmployeeList/index'))
+  },
+  {
+    path: '/employeeDetail/:uuid',
+    component: lazy(() => import('../../views/Employee-Information/EmployeeDetail/index'))
+  },
+  {
+    path: '/email_templates',
+    component: lazy(() => import('../../views/SettingsModule/index'))
+  },
+  {
+    path: '/subjects',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Subjects'))
+  },
+  {
+    path: '/programs',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Programs'))
+  },
+  {
+    path: '/courses',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Courses'))
   },
   {
     path: '/error',

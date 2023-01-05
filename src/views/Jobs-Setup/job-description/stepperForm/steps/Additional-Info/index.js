@@ -12,7 +12,6 @@ const Job_Additional_Info = ({ stepper, CallBack, Dimensions }) => {
     const [Add_info] = useState([])
   const addmoreSubmit = () => {
       setLoading(true)
-      if (jd_dimension !== null && desirable !== null && essential !== null) {
         const DimensionObject = Dimensions.find(x => x.value === jd_dimension)
         const DimensionLabel = DimensionObject.label
         if (Add_info.find(x => x.jd_dimension === jd_dimension)) {
@@ -24,10 +23,6 @@ const Job_Additional_Info = ({ stepper, CallBack, Dimensions }) => {
           Add_info.push({jd_dimension, desirable, essential, DimensionLabel})  
         }
         
-      } else {
-        Api.Toast('error', 'Please fill up all the fields required')
-      }
-
         setTimeout(() => {
           setLoading(false)
         }, 1000)

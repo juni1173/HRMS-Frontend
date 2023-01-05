@@ -9,7 +9,7 @@ import { useSkin } from '@hooks/useSkin'
 import { useDispatch } from 'react-redux'
 import { toast, Slide } from 'react-toastify'
 import { useForm, Controller } from 'react-hook-form'
-import { Facebook, Twitter, Mail, GitHub, HelpCircle, Coffee } from 'react-feather'
+import { Coffee, Key } from 'react-feather'
 
 // ** Actions
 import { handleLogin } from '@store/authentication'
@@ -26,7 +26,6 @@ import InputPasswordToggle from '@components/input-password-toggle'
 
 // ** Reactstrap Imports
 import { Row, Col, Form, Input, Label, Alert, Button, CardText, CardTitle, UncontrolledTooltip } from 'reactstrap'
-
 // ** Styles
 import '@styles/react/pages/page-authentication.scss'
 
@@ -47,12 +46,12 @@ const ToastError = () => (
   <Fragment>
     <div className='toastify-header'>
       <div className='title-wrapper'>
-        <Avatar size='sm' color='success' icon={<Coffee size={12} />} />
+        <Avatar size='sm' color='danger' icon={<Key size={12} />} />
         <h6 className='toast-title fw-bold'>Error</h6>
       </div>
     </div>
     <div className='toastify-body'>
-      <span>Something Went Wrong! Try Again</span>
+      <span>Server not responding!</span>
     </div>
   </Fragment>
 )
@@ -82,7 +81,6 @@ const Login = () => {
     if (Object.values(data).every(field => field.length > 0)) {
       formData['email'] =  data.loginEmail
       formData['password'] = data.password
-      console.warn(formData)
       fetch(`${process.env.REACT_APP_API_URL}/hrms_user/login/`, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
@@ -90,25 +88,32 @@ const Login = () => {
       })
       .then((response) => response.json())
       .then((result) => {
-        
-        const data = {status:result.status, accessToken: result.token.accessToken, refreshToken: result.token.refreshToken, userID: result.uid }
+        const data = {status:result.status, accessToken: result.token.accessToken, refreshToken: result.token.refreshToken, org_id: result.org_id, user_id: result.user_id }
         dispatch(handleLogin(data))
         // ability.update(result.data.userData.ability)
-        data.status === 200 ? history.push('organizationHome') : history.push('/')//history.push(getHomeRouteForLoggedInUser(data.role))
-        toast.success(
-          <ToastContent name={data.fullName || data.username || 'John Doe'} role={data.role || 'admin'} />,
-          { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-        )
-      })
-      .catch((error) => {
-        console.error(error)
+        if (data.status === 200) {
+          localStorage.setItem('organization', JSON.stringify({id: data.org_id}))
+          localStorage.setItem('user_id', data.user_id)
+          history.push('organizationHome')
+         } else {
+          history.push('/')
+          toast.error(
+            <ToastError />,
+            { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
+          )
+         }//history.push(getHomeRouteForLoggedInUser(data.role))
+          toast.success(
+            <ToastContent name={data.fullName || data.username || 'HR Manager'} role={data.role || 'admin'} />,
+            { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
+          )
+        })
+      .catch(() => {
         toast.error(
-          <ToastError  />,
+          <ToastError />,
           { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
         )
       })
     } else {
-      console.warn(data)
         for (const key in data) {
           if (data[key].length === 0) {
             setError(key, {
@@ -182,7 +187,7 @@ const Login = () => {
         <Col className='d-flex align-items-center auth-bg px-2 p-lg-5' lg='4' sm='12'>
           <Col className='px-xl-2 mx-auto' sm='8' md='6' lg='12'>
             <CardTitle tag='h2' className='fw-bold mb-1'>
-              Welcome to HRMS! 👋
+               Welcome to HRMS! {/*👋 */}
             </CardTitle>
             <CardText className='mb-2'>Sign in</CardText>
             <Form className='auth-login-form mt-2' onSubmit={handleSubmit(onSubmit)}>

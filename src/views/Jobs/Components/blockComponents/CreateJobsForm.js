@@ -15,8 +15,8 @@ const JobsAddForm = ({ count, CallBack }) => {
   const [position, setPosition] = useState('')
   const [jobType, setJobType] = useState('')
   const [jobTitle, setJobTitle] = useState('')
-  const [minSalary, setMinSalary] = useState('')
-  const [maxSalary, setMaxSalary] = useState('')
+  // const [minSalary, setMinSalary] = useState('')
+  // const [maxSalary, setMaxSalary] = useState('')
   const [jobCode, setJobCode] = useState('')
   const [individualNo, setIndividualNo] = useState('')
   const [jobDescription, setJobDescription] = useState('')
@@ -32,19 +32,18 @@ const JobsAddForm = ({ count, CallBack }) => {
   
   const fetchPreData = async () => {
     setLoading(true)
-    await Job_Helper.fetchFormPreData().then(data => {
-      console.warn(data)
+     await Job_Helper.fetchFormPreData().then(data => {
       if (data) {
        formData.Staff_Classification = data.Staff_Classification
        formData.Department = data.Department
        formData.Position = data.Position
        formData.Job_Types = data.Job_Types
        formData.JD = data.JD
-       setDepartmentType(formData.Department[0].value)
-       setStaffClassification(formData.Staff_Classification[0].value)
-       setPosition(formData.Position[0].value)
-       setJobType(formData.Job_Types[0].value)
-       setJobDescription(formData.JD[0].value)
+       setDepartmentType(formData.Department[0] ? formData.Department[0].value : '')
+       setStaffClassification(formData.Staff_Classification[0] ? formData.Staff_Classification[0].value : '')
+       setPosition(formData.Position[0] ? formData.Position[0].value : '')
+       setJobType(formData.Job_Types[0] ? formData.Job_Types[0].value : '')
+       setJobDescription(formData.JD[0] ? formData.JD[0].value : '')
       }
       return formData
     })
@@ -77,12 +76,12 @@ const JobsAddForm = ({ count, CallBack }) => {
   const onChangeTitleHandler = (event) => {
     setJobTitle(event.target.value)
   }
-  const onChangeMinSalaryHandler = (event) => {
-    setMinSalary(event.target.value)
-  }
-  const onChangeMaxSalaryHandler = (event) => {
-    setMaxSalary(event.target.value)
-  }
+  // const onChangeMinSalaryHandler = (event) => {
+  //   setMinSalary(event.target.value)
+  // }
+  // const onChangeMaxSalaryHandler = (event) => {
+  //   setMaxSalary(event.target.value)
+  // }
   const onChangeJobCodeHandler = (event) => {
     setJobCode(event.target.value)
   }
@@ -94,20 +93,19 @@ const JobsAddForm = ({ count, CallBack }) => {
   }
   const onSubmit = async () => {
       
-    if (departmentType !== '' && staffClassification !== '' && position !== '' && jobType !== '' && jobTitle !== '' && minSalary !== '' &&
-           maxSalary !== '' && jobCode !== '' && individualNo !== '' && jobDescription !== '') {
+    if (departmentType !== '' && staffClassification !== '' && position !== '' && jobType !== '' && jobTitle !== '' && jobCode !== '' && individualNo !== '' && jobDescription !== '') {
 
             const formInput = new FormData()
             formInput['department'] = departmentType
             formInput['position'] = position
             formInput['title'] = jobTitle
             formInput['staff_classification'] = staffClassification
-            formInput['maximumSalary'] = parseInt(maxSalary)
+            // formInput['maximumSalary'] = parseInt(maxSalary)
             formInput['no_of_individuals'] = parseInt(individualNo)
             formInput['job_code'] = parseInt(jobCode)
             formInput['jd_selection'] = jobDescription
             formInput['job_type'] = jobType
-            formInput['minimumSalary'] = parseInt(minSalary)
+            // formInput['minimumSalary'] = parseInt(minSalary)
 
             const url = `/jobs/`
           Api.jsonPost(url, formInput)
@@ -209,7 +207,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                 )}
               
             </Col>
-            <Col md='4' className='mb-1'>
+            <Col md='6' className='mb-1'>
               <label className='form-label'>
                 Job Type
               </label>
@@ -232,7 +230,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                   <p>No Positions Available</p>
                 )}
             </Col>
-            <Col md='4' className='mb-1'>
+            <Col md='6' className='mb-1'>
               <label className='form-label'>
                 Job Title
               </label>
@@ -244,7 +242,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                   onChange={onChangeTitleHandler}
                 />
             </Col>
-            <Col md='4' className='mb-1'>
+            {/* <Col md='4' className='mb-1'>
             <label className='form-label'>
                 Salary Range
               </label>
@@ -270,7 +268,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                       />
                   </Col>
                 </div>
-              </Col>
+              </Col> */}
               <Col md='4' className='mb-1'>
                 <label className='form-label'>
                   Job Code

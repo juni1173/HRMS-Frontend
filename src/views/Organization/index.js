@@ -26,7 +26,7 @@
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
     const [count, setCount] = useState(0)
-    const [dashCount, setDashcount] = useState(null)
+    const [dashCount, setDashcount] = useState([])
     // Tabs Toggle State Set
     
     const toggle = tab => {
@@ -52,9 +52,8 @@
       Api.get(`/organizations/data/count/`).then(result => {
         if (result.status === 200) {
           setDashcount(result.data)
-          console.warn(result.data)
         } else {
-          Api.Toast('error', result.message)
+          Api.Toast('error', 'No Count Data Available')
         }
       })
       setTimeout(() => {
@@ -121,7 +120,7 @@
                 color="success"
                 statTitle="Organization"
                 icon={<Home size={40} />}
-                renderStats={<h3 className="fw-bolder mb-75">{(dashCount && !loading) ? dashCount.org_count : <Spinner/>}</h3>}
+                renderStats={<h3 className="fw-bolder mb-75">{!loading ? (Object.values(dashCount).length > 0 ? dashCount.org_count : 0) : <Spinner/>}</h3>}
               />
               </NavLink>
             </NavItem>
@@ -138,7 +137,7 @@
                 color="danger"
                 statTitle="Group Head"
                 icon={<Briefcase size={40} />}
-                renderStats={<h3 className="fw-bolder mb-75">{(dashCount && !loading) ? dashCount.grouphead_count : <Spinner/>}</h3>}
+                renderStats={<h3 className="fw-bolder mb-75">{!loading ? (Object.values(dashCount).length > 0 ? dashCount.grouphead_count : 0) : <Spinner/>}</h3>}
               />
               </NavLink>
             </NavItem>
@@ -155,7 +154,7 @@
                 color="warning"
                 statTitle="Staff Classification"
                 icon={<Users size={40}/>}
-                renderStats={<h3 className="fw-bolder mb-75">{(dashCount && !loading) ? dashCount.staff_count : <Spinner/>}</h3>}
+                renderStats={<h3 className="fw-bolder mb-75">{!loading ? (Object.values(dashCount).length > 0 ? dashCount.staff_count : 0) : <Spinner/>}</h3>}
               />
               </NavLink>
             </NavItem>
@@ -172,7 +171,7 @@
                 color="info"
                 statTitle="Department"
                 icon={<Server size={40} />}
-                renderStats={<h3 className="fw-bolder mb-75">{(dashCount && !loading) ? dashCount.department_count : <Spinner/>}</h3>}
+                renderStats={<h3 className="fw-bolder mb-75">{!loading ? (Object.values(dashCount).length > 0 ? dashCount.department_count : 0) : <Spinner/>}</h3>}
               />
               </NavLink>
             </NavItem>

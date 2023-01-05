@@ -13,6 +13,9 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 .float-right{
 	float: right;
 }
+.float-left{
+	float: left;
+}
 .white-heading{
 	color:white;
 }
@@ -131,11 +134,12 @@ svg {
 	margin: auto 0;
 }
 .bg-blue{
-	background-color: #315180c7;
+	background-color: #315180;
 	padding : 10px 0;
 	text-align: center;
+	margin: auto;
 }
-.bg-blue h4{
+.bg-blue h4, .bg-warning h4, .bg-grey h4{
 	color:white
 }
 p.label{
@@ -147,3 +151,52 @@ p.label{
 	font-size: medium;
 	font-weight: 500;
 }
+.questions-table-header.card-header {
+	display: initial;
+}
+.apply-form-border{
+	border-right: 1px solid lightgrey;
+	padding-left: 8rem;
+	padding-right: 8rem;
+}
+.already-applied-form{
+	padding-left: 8rem;
+	padding-right: 8rem;
+}
+.editor :global(.public-DraftEditor-content) {
+	max-height: 200px;
+	overflow: auto;
+  }
+  .bg-warning{
+	background-color: orange;
+	padding : 10px 0;
+	text-align: center;
+	margin: auto;
+  }
+  .bg-lightblue{
+	background-color: lightblue;
+	padding : 10px 0;
+	text-align: center;
+	margin: auto;
+  }
+  .bg-grey {
+	background-color: #4b4b4be0;
+	padding : 10px 0;
+	text-align: center;
+	margin: auto;
+  }
+  .cursor-pointer{
+	cursor:pointer;
+  }
+  .min-width-200{
+	min-width: 200px;
+  } 
+  .min-width-225{
+	min-width: 225px;
+  } 
+  .min-width-300{
+	min-width: 300px;
+  }
+  .border-right{
+	border-right:lightgrey solid 1px;
+  }

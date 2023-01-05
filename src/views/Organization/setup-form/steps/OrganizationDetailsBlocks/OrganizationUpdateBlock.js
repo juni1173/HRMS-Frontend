@@ -40,9 +40,10 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
         </Fragment>
         )
       )
+   
       const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
-          setUpdatedImage(e.target.files[0]) 
+          setUpdatedImage(e.target.files[0])
         }
       } 
       const removeUpdatedImage = () => {
@@ -92,12 +93,10 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
          if (updatedImage !== null) {
           formData.append('logo', updatedImage)
         } 
-        if (data.updatedCity !== undefined) {
-          formData.append('city_name', data.updatedCity)
+        if (data.updatedCity !== undefined && data.updatedAddress !== undefined) {
+          const locations = {city_name: data.updatedCity, address: data.updatedAddress}
+          formData.append('locations', JSON.stringify(locations))
         }
-        if (data.updatedAddress !== undefined) {
-          formData.append('address', data.updatedAddress)
-        } 
         if (data.updatedVision !== undefined) {
           formData.append('vision', data.updatedVision)
         }
@@ -105,7 +104,6 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
           formData.append('mission', data.updatedMission)
         }  
         formData.append('user', 1)
-         console.warn(formData)
          
           fetch(`${process.env.REACT_APP_API_URL}/organizations/${detail.id}/`, {
             method: "PATCH",
@@ -117,7 +115,7 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
             const data = {status:result.status, result_data:result.data, message: result.message }
             if (data.status === 200) {
               localStorage.removeItem('organization')
-              localStorage.setItem('organization', JSON.stringify(data))
+              localStorage.setItem('organization', JSON.stringify(data.result_data))
               toast.success(
                 <ToastContent type='success' message={data.message} />,
                 { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
@@ -140,7 +138,6 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
             
           }) 
         } else {
-          console.warn(data)
           for (const key in data) {
             if (data[key].length === 0) {
               setError(key, {
@@ -252,11 +249,11 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
               control={control}
               id="updatedCity"
               name="updatedCity"
+              defaultValue={detail.locations[0] ? detail.locations[0].city_name : ''}
               render={({ field }) => (
                 <Input
                   type="text"
                   placeholder="City"
-                  defaultValue={detail.locations[0].city_name}
                   invalid={errors.updatedCity && true}
                   {...field}
                 />
@@ -272,11 +269,11 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
               control={control}
               id="updatedAddress"
               name="updatedAddress"
+              defaultValue={detail.locations[0] ? detail.locations[0].address : ''}
               render={({ field }) => (
                 <Input
                   type="text"
                   placeholder="Address"
-                  defaultValue={detail.locations[0].address}
                   invalid={errors.updatedAddress && true}
                   {...field}
                 />

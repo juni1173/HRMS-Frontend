@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from "react"
-import { Edit, Eye, Search, XCircle } from "react-feather"
+import { Edit, Eye, Search, Trash2 } from "react-feather"
 import {Card, CardBody, CardTitle, Spinner, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody, CardSubtitle, InputGroup, Input, InputGroupText} from "reactstrap"
 import JDHelper from "../../../Helpers/JDHelper"
 import StepperForm from "../../job-description/UpdateJobDescription/StepperForm"
@@ -56,11 +56,6 @@ const JDList = ({count, Canvas}) => {
             setLoading(false)
           }, 1000)
     }
-    // const handleSearchChange = (e) => {
-    //     if (!e.target.value) return setSearchResults(JDList)
-    //     const resultsArray =  JDList.filter(jdList => jdList.title.toLowerCase().includes((e.target.value).toLowerCase()))
-    //     setSearchResults(resultsArray)
-    // }
     const getSearch = options => {
         
             if (options.value === '' || options.value === null || options.value === undefined) {
@@ -148,79 +143,28 @@ const JDList = ({count, Canvas}) => {
                                 <div className="float-right">
                                 <button
                                         className="border-0 no-background"
-                                        title="Edit Job"
+                                        title="View"
                                         onClick={() => toggleViewCanvasEnd(item)}
                                         >
                                         <Eye color="green"/>
                                     </button>
                                     <button
                                         className="border-0 no-background"
-                                        title="Edit Job"
+                                        title="Edit"
                                         onClick={() => toggleUpdateCanvasEnd(item)}
                                         >
                                         <Edit color="orange"/>
                                     </button>
                                     <button
                                         className="border-0 no-background"
-                                        title="Delete JD"
+                                        title="Delete"
                                         onClick={() => deleteJD(item.id)}
                                         >
-                                        <XCircle color="red"/>
+                                        <Trash2 color="red"/>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                         {/* <hr></hr> */}
-                        {/* <div className="row">
-                           
-                            <div className="col-lg-6 text-center">
-                                <Badge color='light-danger'>
-                                    Specification
-                                </Badge> 
-                                <table className="table mt-2 JD-Card-table">
-                                    <thead className='table-dark'>
-                                        <tr>
-                                        <th>Dimension</th>
-                                        <th>Essentail</th>
-                                        <th>Desirable</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {Object.values(item.jd_specifications).map((specification) => ( 
-                                        <tr key={specification.id}>
-                                            <td>{specification.jd_dimension}</td> 
-                                            <td>{specification.desirable}</td>
-                                            <td>{specification.desirable}</td> 
-                                        </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="col-lg-6 text-center">
-                                <Badge color='light-primary'>
-                                    Additional Information
-                                </Badge>
-                                <table className="table mt-2 JD-Card-table">
-                                    <thead className='table-dark'>
-                                        <tr>
-                                        <th>Dimension</th>
-                                        <th>Essentail</th>
-                                        <th>Desirable</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {Object.values(item.jd_specifications).map((specification, index) => ( 
-                                        <tr key={index}>
-                                            <td>{specification.jd_dimension}</td> 
-                                            <td>{specification.desirable}</td>
-                                            <td>{specification.desirable}</td> 
-                                        </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> */}
-                         
                             
                     </CardBody>
                     </Card> 

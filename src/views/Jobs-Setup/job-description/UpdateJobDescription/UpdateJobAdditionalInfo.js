@@ -1,40 +1,28 @@
 import { useEffect, useState } from 'react'
 import { Row, Col, Form, Input, Button, Table, Spinner } from 'reactstrap'
 import { ArrowLeft, ArrowRight, XCircle } from 'react-feather'
+import Select from 'react-select'
 import apiHelper from '../../../Helpers/ApiHelper'
 
-const UpdateJobAdditionalInfo = ({ stepper, preData, CallBack}) => {
+const UpdateJobAdditionalInfo = ({ stepper, preData, CallBack, Dimensions}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(true)
-    const [dimension, setDimension] = useState(null)
+    const [jd_dimension, setDimension] = useState(null)
     const [desirable, setDesirable] = useState(null)
     const [essential, setEssential] = useState(null)
     const [Add_info] = useState([])
   const addmoreSubmit = () => {
       setLoading(true)
-      if (dimension !== null && desirable !== null && essential !== null) {
-        if (Object.values(Add_info).length > 0) {
-          for (let i = 0; i < Add_info.length; i++) {
-            if (Add_info[i].dimension === dimension) {
-              Api.Toast('error', 'Dimension Already Exist')
-              setTimeout(() => {
-                setLoading(false)
-              }, 1000)
-              return false
-            } else {
-              Add_info.push({dimension, desirable, essential})   
-            }
-          } 
-        } else {
-          Add_info.push({dimension, desirable, essential})
-        }
-        
+      const DimensionObject = Dimensions.find(x => x.value === jd_dimension)
+      const DimensionLabel = DimensionObject.label
+      if (Add_info.find(x => x.jd_dimension === jd_dimension)) {
+        Api.Toast('error', 'Dimension Already Exist')
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000)
       } else {
-        Api.Toast('error', 'Please fill up all the fields required')
+        Add_info.push({jd_dimension, desirable, essential, DimensionLabel})  
       }
-      
-        console.warn(Add_info)
-    
         setTimeout(() => {
           setLoading(false)
         }, 1000)
@@ -60,7 +48,6 @@ const UpdateJobAdditionalInfo = ({ stepper, preData, CallBack}) => {
         Add_info.push(preData[i])
       }
     }
-    console.warn(Add_info)
     setTimeout(() => {
       setLoading(false)
     }, 1000)
@@ -81,13 +68,13 @@ const UpdateJobAdditionalInfo = ({ stepper, preData, CallBack}) => {
               <label className='form-label'>
                 Dimension
               </label>
-                <Input
-                  id="additional-dimension"
-                  name="additional-dimension"
-                  className="additional-dimension"
-                  placeholder="Dimension"
-                  onChange={e => setDimension(e.target.value)}
-                />
+              <Select
+                    isClearable={false}
+                    options={Dimensions}
+                    className='react-select'
+                    classNamePrefix='select'
+                    onChange={e => setDimension(e.value)} 
+                    />
                 <label className='form-label'>
                 Desirable
               </label>
@@ -165,9 +152,9 @@ const UpdateJobAdditionalInfo = ({ stepper, preData, CallBack}) => {
                       item.jd_dimension > 4 && ( 
                         !loading && (
                             <tr key={key}>
-                            <td>{item.jd_dimension_title}</td>
-                            <td>{item.desirable}</td>
-                            <td>{item.essential}</td>
+                            <td>{item.DimensionLabel}</td>
+                            <td>{item.desirable !== null ? item.desirable : ''}</td>
+                            <td>{item.essential !== null ? item.essential : ''}</td>
                             <td>
                               <div className="d-flex row">
                                 <div className="col">

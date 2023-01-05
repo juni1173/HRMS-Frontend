@@ -15,13 +15,14 @@ const UpdateJobList = ({ CallBack, data }) => {
   const [departmentType, setDepartmentType] = useState(data.department)
   const [staffClassification, setStaffClassification] = useState(data.staff_classification)
   const [position, setPosition] = useState(data.position)
-  const [jobType, setJobType] = useState(data.job_posts[0].job_type)
+  const [jobType, setJobType] = useState(data.job_type)
   const [jobTitle, setJobTitle] = useState(data.title)
   const [minSalary, setMinSalary] = useState('')
   const [maxSalary, setMaxSalary] = useState('')
-  const [jobCode, setJobCode] = useState(data.job_posts[0].job_post_code)
-  const [individualNo, setIndividualNo] = useState(data.job_posts[0].no_of_individuals)
-  const [jobDescription, setJobDescription] = useState(data.job_posts[0].jd_selection)
+  const [jobCode, setJobCode] = useState(data.job_post_code)
+  const [individualNo, setIndividualNo] = useState(data.no_of_individuals)
+  const [jobDescription, setJobDescription] = useState(data.jd_selection)
+  const [job_post_id] = useState(data.job_post_id)
 
   const [formData] = useState({
     Staff_Classification:{},
@@ -89,7 +90,7 @@ const UpdateJobList = ({ CallBack, data }) => {
   const onSubmit = async () => {
       
     if (departmentType !== '' && staffClassification !== '' && position !== '' && jobType !== '' && jobTitle !== '' && jobCode !== '' && jobDescription !== '') {
-
+           
             const formInput = new FormData()
             formInput['department'] = departmentType
             formInput['position'] = position
@@ -100,10 +101,11 @@ const UpdateJobList = ({ CallBack, data }) => {
             formInput['job_code'] = parseInt(jobCode)
             formInput['jd_selection'] = jobDescription
             formInput['job_type'] = jobType
+            formInput['job_post_id'] = job_post_id
             // formInput['minimumSalary'] = parseInt(minSalary)
 
             console.warn(`formData ${JSON.stringify(formInput)}`)
-            const url = `${process.env.REACT_APP_API_URL}/jobs/${data.uuid}/`
+            const url = `${process.env.REACT_APP_API_URL}/jobs/${data.job_uuid}/`
           fetch(url, {
             method: "Patch",
             headers:{'Content-Type': 'application/json', Authorization: Api.token},
@@ -215,7 +217,7 @@ const UpdateJobList = ({ CallBack, data }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.Job_Types}
-                    defaultValue={formData.Job_Types.find(pre => pre.value === data['job_posts'][0].job_type) ? formData.Job_Types.find(pre => pre.value === data['job_posts'][0].job_type) : formData.Job_Types[0]}
+                    defaultValue={formData.Job_Types.find(pre => pre.value === data.job_type) ? formData.Job_Types.find(pre => pre.value === data.job_type) : formData.Job_Types[0]}
                     onChange={onChangeJobTypeHandler}
                   />
                   ) : <Spinner />
@@ -274,7 +276,7 @@ const UpdateJobList = ({ CallBack, data }) => {
                     name="jobCode"
                     className="job_code"
                     placeholder="Job Code"
-                    defaultValue={data['job_posts'][0].job_post_code}
+                    defaultValue={data.job_post_code}
                     onChange={onChangeJobCodeHandler}
                   />
               </Col>
@@ -287,7 +289,7 @@ const UpdateJobList = ({ CallBack, data }) => {
                     name="individual-required"
                     className="individual-required"
                     placeholder="No of Individual Required"
-                    defaultValue={data['job_posts'][0].no_of_individuals}
+                    defaultValue={data.no_of_individuals}
                     onChange={onChangeIndividualHandler}
                   />
               </Col>
@@ -305,7 +307,7 @@ const UpdateJobList = ({ CallBack, data }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.JD}
-                    defaultValue={formData.JD.find(pre => pre.value === data['job_posts'][0].jd_selection) ? formData.JD.find(pre => pre.value === data['job_posts'][0].jd_selection) : formData.JD[0]}
+                    defaultValue={formData.JD.find(pre => pre.value === data.jd_selection) ? formData.JD.find(pre => pre.value === data.jd_selection) : formData.JD[0]}
                     onChange={onChangeJobDescroptionHandler}
                   />
                   ) : <Spinner />

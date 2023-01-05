@@ -12,7 +12,7 @@ import PositionHelper from "../../../Helpers/PositionHelper"
 import { Redirect } from "react-router-dom"
 
 const UpdateJobProfile = ({stepper, count, CallBack, jobDescription}) => {
-
+console.warn(jobDescription)
     const Department = DepartmentsHelper()
   const Position = PositionHelper()
   const [depActive] = useState([])
@@ -225,7 +225,7 @@ const UpdateJobProfile = ({stepper, count, CallBack, jobDescription}) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={SCActive}
-                    defaultValue={SCActive[0]}
+                    defaultValue={SCActive.find(({value}) => value === jobDescription.staff_classification) ? SCActive.find(({value}) => value === jobDescription.staff_classification) : SCActive[0]}
                     {...field}
                     //   onChange={type => { setType(type.value) }}
                     />

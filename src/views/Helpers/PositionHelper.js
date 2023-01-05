@@ -57,10 +57,8 @@ const PositionHelper = () => {
         if (Object.values(position).length > 0) {
             for (let i = 0; i < position.length; i++) {
                 if (position[i].is_active) {
-                    
                   positionActive.push(position[i])
                 } else {
-                  
                    positionNotActive.push(position[i])
                     
                 }
@@ -83,7 +81,7 @@ const PositionHelper = () => {
       // console.warn(response)
       if (response.status === 200) {
       
-          // emptying the array
+          // emptying the array   
       
       SCActive.splice(0, SCActive.length)
       SCNotActive.splice(0, SCNotActive.length)

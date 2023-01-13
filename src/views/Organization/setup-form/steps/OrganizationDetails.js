@@ -2,50 +2,21 @@
 import { Fragment, useEffect, useState } from "react" 
 
 // ** Icons Imports
-import { ArrowLeft, ArrowRight, Check, Save, X, XCircle } from "react-feather" 
+import { ArrowLeft, ArrowRight, Save, XCircle } from "react-feather" 
 
 // ** Reactstrap Imports
 import { Label, Row, Col, Input, Form, Button, FormFeedback, Spinner } from "reactstrap" 
 
 import { useForm, Controller } from 'react-hook-form'
-import { toast, Slide } from 'react-toastify'
-import Avatar from '@components/avatar'
-import axios from 'axios'
 import OrganizationUpdateBlock from "./OrganizationDetailsBlocks/OrganizationUpdateBlock"
 import apiHelper from "../../../Helpers/ApiHelper"
 const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
   const Api = apiHelper()
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState(null)
-  // const [createdBy, setCreatedBy] = useState('junaid') 
   const [detail, setDetail] = useState([])
  
-  const ToastContent = ({ type, message }) => (
-    type === 'success' ? (
-    <Fragment>
-      <div className='toastify-header'>
-        <div className='title-wrapper'>
-          <Avatar size='sm' color='success' icon={<Check size={12} />} />
-          <h6 className='toast-title fw-bold'>Succesfull</h6>
-        </div>
-      </div>
-      <div className='toastify-body'>
-        <span>{message}</span>
-      </div>
-    </Fragment>) : (
-    <Fragment>
-      <div className='toastify-header'>
-        <div className='title-wrapper'>
-          <Avatar size='sm' color='danger' icon={<X size={12} />} />
-          <h6 className='toast-title fw-bold'>Error</h6>
-        </div>
-      </div>
-      <div className='toastify-body'>
-        <span>{message}</span>
-      </div>
-    </Fragment>
-    )
-  )
+  
   const imageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedImage(e.target.files[0]) 
@@ -70,48 +41,22 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
   } = useForm({
     defaultValues
   })
-  let token = localStorage.getItem('accessToken')
-    token = token.replaceAll('"', '')
-    token = `Bearer ${token}`
-  // const userData = localStorage.getItem('userData')
-  // const user_id = parseInt(userData.userID)
     const fetchData = async () => {
       setLoading(true)
-      try {
-        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organizations/${Api.org.id}/`, {
-         headers: {
-          Accept : 'application/json',
-          Authorization : token
-         }
-        })
-        if (response.status === 200) {
-          
-            setDetail(response.data)
-            localStorage.setItem('organization', JSON.stringify(response.data))
-        
+      await Api.get(`/organizations/${Api.org.id}/`)
+      .then(result => {
+        console.warn(result)
+        if (result) {
+          if (result.status === 200) {
+            setDetail(result.data)
+            localStorage.setItem('organization', JSON.stringify(result.data))
+          } else {
+            Api.Toast('error', result.message)
+          }
         } else {
-          toast.error(
-            <ToastContent type='error' message={response.message} />,
-            { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-          )
-          setDetail([])
+          Api.Toast('error', 'Server not responding!')
         }
-        // dataLength = Object.keys(data).length
-        
-      } catch (error) {
-        // console.warn(error)
-        if (error.response) {
-          toast.error(
-            <ToastContent type='error' message='No Organization Found! Please enter info...' />,
-            { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-          )
-          console.warn(detail.length)
-          console.log(error.response.data)
-          console.log(error.response.status)
-          console.log(error.response.headers)
-          setDetail([])
-        }
-      }
+      })
       setTimeout(() => {
         setLoading(false)
       }, 1000)
@@ -124,11 +69,11 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
 
   const onSubmit = async data => {
     
-    if (data.company_name.length > 0 && data.company_tagline.length > 0 && data.company_vision.length > 0 && data.company_mission.length > 0 && data.city.length > 0 && data.address.length > 0) {
+    if (data.company_name.length > 0 && data.company_tagline.length > 0
+       && data.company_vision.length > 0 && data.company_mission.length > 0
+        && data.city.length > 0 && data.address.length > 0) {
       
       const formData = new FormData()
-      // const logo = selectedImage
-      // const logoName = selectedImage.name
       const locations = {city_name: data.city, address: data.address}
       
       formData.append("user", Api.user_id)
@@ -139,41 +84,22 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
       formData.append('mission', data.company_mission)
       formData.append('logo', selectedImage)
       formData.append('is_active', true)
-      
-      fetch(`${process.env.REACT_APP_API_URL}/organizations/`, {
-        method: "POST",
-        headers: { Authorization: token },
-        body: formData
-      })
-      .then((response) => response.json())
+      await Api.jsonPost(`/organizations/`, formData, false)
       .then((result) => {
-        const data = {status:result.status, result_data:result.data, message: result.message }
-        if (data.status === 200) {
-          localStorage.removeItem('organization')
-          localStorage.setItem('organization', JSON.stringify(result_data))
-          toast.success(
-            <ToastContent type='success' message={data.message} />,
-            { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-          )
-
+        if (result) {
+          if (result.status === 200) {
+            localStorage.removeItem('organization')
+            localStorage.setItem('organization', JSON.stringify(result.data))
+            Api.Toast('success', result.message)
+            fetchData()
+          } else {
+            Api.Toast('error', result.message)
+          }
         } else {
-          toast.error(
-            <ToastContent type='error' message={data.message} />,
-            { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-          )
+          Api.Toast('error', 'Server not responding!')
         }
-        
-        // stepper.next()
       })
-      .catch((error) => {
-        console.error(error)
-        toast.error(
-          <ToastContent type='error' message={data.message} />,
-          { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-        )
-
-        
-      }) 
+    
     } else {
       console.warn(data)
       stepper.next()
@@ -284,8 +210,6 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
             />
             {errors.city && <FormFeedback>{errors.city.message}</FormFeedback>}
           </Col>
-          {/* <Col md="4" className="mt-2">
-          </Col> */}
           <Col md="6" className="mb-1">
           <Label className="form-label" for={`company-address`}>
               Address

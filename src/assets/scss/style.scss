@@ -142,6 +142,9 @@ svg {
 .bg-blue h4, .bg-warning h4, .bg-grey h4{
 	color:white
 }
+.bg-blue p.text-white, .bg-warning p.text-white, .bg-grey p.text-white{
+	color:white
+}
 p.label{
 	color: #82868bcf;
 }
@@ -199,4 +202,13 @@ p.label{
   }
   .border-right{
 	border-right:lightgrey solid 1px;
+  }
+  td {
+	border-color: #00000036;
+  }
+  [dir] .table-bordered > :not(caption) > * > *{
+	border-width: 1px 1px;
+  }
+  .evaluationForm .form-check {
+	margin-bottom: 1.5rem !important;
   }

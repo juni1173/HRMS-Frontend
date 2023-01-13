@@ -17,20 +17,26 @@ const CandidateList = () => {
   
     const Api = apiHelper() 
     const searchHelper = SearchHelper()
-    const getCandidate = () => {
+    const getCandidate = async () => {
         // setLoading(true)
-        Api.get(`/recruitment/stages/`).then(stages => {
-            if (stages) {
+       await Api.get(`/stages/`).then(result => {
+        if (result) {
+            if (result.status === 200) {
+                const stages = result.data
                 Stages.splice(0, Stages.length)
-                for (let i = 0; i < Object.values(stages).length; i++) {
-                    Stages.push({value: stages[i].id, label: stages[i].title})
-                }
+                    Stages.splice(0, Stages.length)
+                    for (let i = 0; i < Object.values(stages).length; i++) {
+                        Stages.push({value: stages[i].id, label: stages[i].title})
+                    }
             } else {
-                Stages.splice(0, Stages.length)
+                Api.Toast('error', result.message)
             }
-            
+        } else {
+           
+            Api.Toast('error', 'Server not respnding')
+        }
         })
-        Api.get(`/candidates/`)
+       await Api.get(`/candidates/`)
             .then((result) => {
                 if (result) {
                     if (result.status === 200) {

@@ -9,6 +9,7 @@ import { Clock, Edit, XCircle, FileText, Plus } from "react-feather"
 import ScheduleForm from "./InterviewComponents/ScheduleForm"
 import EvaluationForm from "./EvaluationComponents/EvaluationForm"
 import InterviewDetail from "./InterviewComponents/InterviewDetail"
+import EvaluationDetail from "./EvaluationComponents/EvaluationDetail"
 const CandidateListTable = (props) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
@@ -18,6 +19,7 @@ const CandidateListTable = (props) => {
     const [currentStage, setCurrentStage] = useState(null)
     const [activeInterviewModal, setInterviewModal] = useState(1)
     const [activeEvaluationModal, setEvaluationModal] = useState(1)
+    
     const onStageUpdate = async (uuid, stage_id) => {
 
         const formData = new FormData()
@@ -72,16 +74,19 @@ const CandidateListTable = (props) => {
         setInterviewModal(active)
         setFormModal(true)
         } 
-    const openEvaluateModal = (uuid, active) => {
+    const openEvaluateModal = (uuid, stage_id, active) => {
         setcand_uuid(uuid)
+        if (stage_id) setCurrentStage(stage_id)
         setEvaluationModal(active)
         setEvaluateModal(true)
         } 
+    const CallBack = () => {
+        props.getCandidate()
+    }    
     const interviewModal = (active) => {
-        console.warn(active)
         switch (active) {
             case 1:
-                return <ScheduleForm uuid={cand_uuid} stage_id={currentStage}/>
+                return <ScheduleForm uuid={cand_uuid} stage_id={currentStage} CallBack={CallBack}/>
             case 2:
                 return <InterviewDetail uuid={cand_uuid} />
             default:
@@ -92,11 +97,9 @@ const CandidateListTable = (props) => {
         switch (active) {
         
             case 1:
-                return <EvaluationForm uuid={cand_uuid} />
+                return <EvaluationForm uuid={cand_uuid} stage_id={currentStage} CallBack={CallBack} />
             case 2:
-            //   return <InterviewDetail uuid={cand_uuid} />
-            return false
-
+              return <EvaluationDetail uuid={cand_uuid} />
             default:
               return <p>No Data Found</p>
           }
@@ -211,14 +214,14 @@ const CandidateListTable = (props) => {
                                     <div className="row" style={{width: "160px"}}>
                                             {candidate.stage_is_evaluation && (
                                                 <div className="col-lg-6 p-1">
-                                                    <Button className='btn btn-sm btn-primary' onClick={() => openEvaluateModal(candidate.uuid, 1)}>
+                                                    <Button className='btn btn-sm btn-primary' onClick={() => openEvaluateModal(candidate.uuid, candidate.stage, 1)}>
                                                         <Plus/>
                                                     </Button>
                                                 </div>
-                                            )}
+                                            )}  
                                             
                                             <div className={candidate.stage_is_evaluation ? "col-lg-6 p-1" : "col-lg-12 text-center"}>
-                                                <Button className='btn btn-sm btn-primary' onClick={() => openEvaluateModal(candidate.uuid, 2)}>
+                                                <Button className='btn btn-sm btn-primary' onClick={() => openEvaluateModal(candidate.uuid, null, 2)}>
                                                     <FileText />
                                                 </Button>
                                             </div>
@@ -242,13 +245,13 @@ const CandidateListTable = (props) => {
                 
             </div>
             
-            <Modal isOpen={formModal} toggle={() => setFormModal(!formModal)} className='modal-dialog-centered modal-lg'>
+            <Modal isOpen={formModal} toggle={() => setFormModal(!formModal)} className='modal-dialog-centered modal-xl'>
                 <ModalHeader className='bg-transparent' toggle={() => setFormModal(!formModal)}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     {interviewModal(activeInterviewModal)}
                 </ModalBody>
             </Modal>  
-            <Modal isOpen={evaluateModal} toggle={() => setEvaluateModal(!evaluateModal)} className='modal-dialog-centered modal-lg'>
+            <Modal isOpen={evaluateModal} toggle={() => setEvaluateModal(!evaluateModal)} className='modal-dialog-centered modal-xl'>
                 <ModalHeader className='bg-transparent' toggle={() => setEvaluateModal(!evaluateModal)}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     {evaluationModal(activeEvaluationModal)}

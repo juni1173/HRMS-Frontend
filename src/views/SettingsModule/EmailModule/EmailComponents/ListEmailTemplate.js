@@ -5,9 +5,12 @@ import UpdateEmailTemplate from './UpdateEmailTemplate'
 import ViewEmailTemplate from "./ViewEmailTemplate"
 import EmailTemplateHelper from "../../../Helpers/EmailTemplateHelper"
 import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 const ListEmailTemplate = ({count, CreateFormToggle}) => {
     const Helper = EmailTemplateHelper()
     const searchHelper = SearchHelper()
+    const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(true)
     const [EmailList, setEmailList] = useState([])
     const [editEmailList, setEditEmailList] = useState(null)
@@ -34,7 +37,7 @@ const ListEmailTemplate = ({count, CreateFormToggle}) => {
     
     const getEmails = async () => {
         setLoading(true)
-        if (EmailList !== null) {
+        if (EmailList.length > 0) {
             EmailList.splice(0, EmailList.length)
         }
         await Helper.fetchEmailList().then(data => {
@@ -81,6 +84,39 @@ const ListEmailTemplate = ({count, CreateFormToggle}) => {
     const CallBack = () => {
         setCanvasUpdateOpen(false)
         getEmails()
+    }
+    const removeEmail = (id) => {
+        MySwal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to delete the Email Template!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete it!',
+            customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.value) {
+              Helper.deleteEmailTemplate(id).then(() => {
+               
+                        MySwal.fire({
+                            icon: 'success',
+                            title: 'Email Template Deleted!',
+                            text: 'Email Template is deleted.',
+                            customClass: {
+                            confirmButton: 'btn btn-success'
+                            }
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                getEmails()
+                            }
+                        })
+                     
+                    })
+            } 
+        })
     }
     useEffect(() => {
         if (count > 0) {
@@ -154,7 +190,7 @@ const ListEmailTemplate = ({count, CreateFormToggle}) => {
                                                 <button
                                                     className="border-0 no-background"
                                                     title="Delete"
-                                                    // onClick={() => deleteJD(item.id)}
+                                                    onClick={() => removeEmail(item.uuid)}
                                                     >
                                                     <Trash2 color="red"/>
                                                 </button>

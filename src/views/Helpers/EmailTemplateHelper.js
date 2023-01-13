@@ -133,12 +133,12 @@ const EmailTemplateHelper = () => {
   } 
   const deleteEmailTemplate = async id => {
     if (id) {
-        await  Api.deleteData(`/EmailTemplate/${id}/`, {method: 'Delete'})
+        await  Api.deleteData(`/email/templates/${id}/`, {method: 'Delete'})
         .then((result) => {
           const data = {status:result.status, result_data:result.data, message: result.message }
           if (data.status === 200) {
-         
             Api.Toast('success', result.message)
+            return true
             
           } else {
             Api.Toast('error', result.message)

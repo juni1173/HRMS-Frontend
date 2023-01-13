@@ -16,7 +16,7 @@ const ToggleComponent = ({ data, id, CallBack, courseData }) => {
         MySwal.fire({
             title: 'Are you sure?',
             text: "Do you want to delete the Course!",
-            icon: 'danger',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, Delete it!',
             customClass: {

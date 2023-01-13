@@ -3,17 +3,17 @@ import {  Badge, Spinner, Table } from 'reactstrap'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import apiHelper from '../../../Helpers/ApiHelper'
 
-const InterviewDetail = ({uuid}) => {
+const EvaluationDetail = ({uuid}) => {
     const Api = apiHelper()
-    const [interviewData, setInterviewData] = useState([])
+    const [EvaluationData, setEvaluationData] = useState([])
     const [loading, setLoading] = useState(false)
    
-    const getInterviewData = async () => {
+    const getEvaluationData = async () => {
         setLoading(true)
-        await Api.get(`/interviews/candidate/job/${uuid}/`).then(result => {
+        await Api.get(`/evaluations/candidate/job/list/${uuid}/`).then(result => {
             if (result) {
                 if (result.status === 200) {
-                    setInterviewData(result.data)
+                    setEvaluationData(result.data)
                 } else {
                     Api.Toast('error', result.message)
                 }
@@ -26,40 +26,38 @@ const InterviewDetail = ({uuid}) => {
         }, 1000)
     }
     useEffect(() => {
-        getInterviewData()
+        getEvaluationData()
     }, [])
   return (
     <Fragment>
                 <Table bordered striped responsive>
                 <thead className='table-dark text-center'>
                     <tr>
-                        <th>Interviewer</th>
-                        <th>Date</th>
-                        <th>Time Slot</th>
-                        <th>Mode</th>
-                        <th>Stage</th>
+                        <th>Title</th>
+                        <th>Evaluated by</th>
+                        <th>Recommendation</th>
+                        <th>Comment</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
             {!loading ? (                    
-            Object.values(interviewData).length > 0 ? (
-                interviewData.map((data, index) => (
+            Object.values(EvaluationData).length > 0 ? (
+                EvaluationData.map((data, index) => (
                     <tr key={index}>
-                        <td>{data.interviewer_name}</td>
-                        <td>{data.interview_date}</td>
-                        <td>{data.time_slot_title}</td>
-                        <td>{data.mode_title}</td>
-                        <td>{data.stage_title}</td>
-                        <td>{(!data.is_cancel && !data.reschedule_date && !data.start_date_time
-                            && !data.complete_date_time) && 'N/A'}
+                        <td>{data.evaluation_title}</td>
+                        <td>{data.evaluated_by_name}</td>
+                        <td>{data.recommendation}</td>
+                        <td>{data.comment}</td>
+                        <td>{(!data.is_cancel && !data.is_rechecked && !data.is_start
+                            && !data.is_completed) && 'N/A'}
                             {data.is_cancel && <p><Badge color='danger'>Cancelled</Badge></p>}
                             {/* <br/> */}
-                            {data.reschedule_date && <p><Badge color='warning'>Reschedule at</Badge> {data.reschedule_date}</p>}
+                            {data.is_rechecked && <p><Badge color='warning'>Rechecked</Badge></p>}
                             {/* <br/> */}
-                            {data.start_date_time && <p><Badge color='primary'>Started at</Badge> {data.start_date_time}</p>}
+                            {data.is_start && <p><Badge color='primary'>Started</Badge></p>}
                             {/* <br/> */}
-                            {data.complete_date_time && <p><Badge color='success'>Completed at</Badge> {data.complete_date_time}</p>}
+                            {data.is_completed && <p><Badge color='success'>Completed</Badge></p>}
                             </td>
                     </tr>
                 )
@@ -68,7 +66,7 @@ const InterviewDetail = ({uuid}) => {
             ) : (
                 
                 <tr className="text-center">
-                <td colSpan={6}>No Interview Data</td>
+                <td colSpan={6}>No Evaluation Data</td>
             </tr>
             )
         ) : (
@@ -82,4 +80,4 @@ const InterviewDetail = ({uuid}) => {
   )
 }
 
-export default InterviewDetail
+export default EvaluationDetail

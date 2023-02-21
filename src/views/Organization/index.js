@@ -10,7 +10,7 @@
   import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
 
   // ** Icons Imports
-  import { Home, Briefcase, Users, Server } from "react-feather"
+  import { Home, Briefcase, Users, Server, Award } from "react-feather"
 
   // ** Styles
   import "@styles/react/apps/app-users.scss"
@@ -18,6 +18,7 @@
   import GroupHead from './setup-form/steps/GroupHead'
   import StaffClassification from './setup-form/steps/StaffClassification'
   import DepartmentsInfo from './setup-form/steps/DepartmentsInfo'
+  import Positions from '../Jobs-Setup/positions'
   import apiHelper from '../Helpers/ApiHelper'
   const Organization = () => {
     const Api = apiHelper()
@@ -79,6 +80,8 @@
           return <StaffClassification stepperStatus={false} createForm={true} fetchStaffClassification={CallBack} />
         case '4':
           return <DepartmentsInfo stepperStatus={false} createForm={true} fetchDepCallBack={CallBack} />
+        case '5':
+        return <DepartmentsInfo stepperStatus={false} createForm={true} fetchDepCallBack={CallBack} />
         
         default:
           return <p>No Data Found</p>
@@ -118,7 +121,8 @@
         {/* NavBar of Tabs */}
 
         <Nav className='justify-content-center' pills>
-          <div className='col-md-3'>
+          <div className='row organization-tabs'>
+          <div className='col'>
             <NavItem>
               <NavLink
                 active={active === '1'}
@@ -135,7 +139,7 @@
               </NavLink>
             </NavItem>
           </div>
-          <div className='col-md-3'>
+          <div className='col'>
             <NavItem>
               <NavLink
                 active={active === '2'}
@@ -152,7 +156,7 @@
               </NavLink>
             </NavItem>
           </div>
-          <div className='col-md-3'>
+          <div className='col'>
             <NavItem>
             <NavLink
                 active={active === '3'}
@@ -169,7 +173,7 @@
               </NavLink>
             </NavItem>
           </div>
-          <div className='col-md-3'>
+          <div className='col'>
             <NavItem>
               <NavLink
                 active={active === '4'}
@@ -185,6 +189,24 @@
               />
               </NavLink>
             </NavItem>
+          </div>
+          <div className='col'>
+            <NavItem>
+              <NavLink
+                active={active === '5'}
+                onClick={() => {
+                  toggle('5')
+                }}
+              >
+                <StatsHorizontal
+                color="secondary"
+                statTitle="Positions"
+                icon={<Award size={40} />}
+                renderStats={<h3 className="fw-bolder mb-75">{!loading ? (Object.values(dashCount).length > 0 ? dashCount.position_count : 0) : <Spinner/>}</h3>}
+              />
+              </NavLink>
+            </NavItem>
+          </div>
           </div>
         </Nav>
 
@@ -205,6 +227,9 @@
           <TabPane tabId='4'>
             <button className='btn btn-primary float-right' onClick={toggleCanvasEnd}>Add Department</button> 
           <DepartmentsInfo stepperStatus={false} count={count} list={true} fetchDepCallBack={CallBack}/>
+          </TabPane>
+          <TabPane tabId='5'>
+            <Positions/>
           </TabPane>
         </TabContent> 
 

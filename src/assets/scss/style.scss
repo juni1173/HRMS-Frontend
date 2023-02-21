@@ -270,3 +270,11 @@ div.configuration_panel .tab-pane-blue {
 	background-color: #315180;
 	color: #fff;
 }
+.organization-tabs .col, .organization-tabs a.nav-link {
+	padding: 1px; 
+}
+.organization-tabs .card {
+	min-width: 14rem;
+	max-width: 15rem;
+	height: 9rem;
+}

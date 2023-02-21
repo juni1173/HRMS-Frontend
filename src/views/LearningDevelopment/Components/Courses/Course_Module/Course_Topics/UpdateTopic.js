@@ -40,14 +40,13 @@ const UpdateTopic = ({ topicData, CallBack, module_id }) => {
 
      const Submit = async (e) => {
         e.preventDefault()
-        if (topicDetail.title !== '' && topicDetail.description !== ''
-         && topicDetail.credit_hours !== '') {
+        if (topicDetail.title !== '') {
             setLoading(true)
             const formData = new FormData()
             formData['course_module'] = module_id
             formData['title'] = topicDetail.title
-            formData['description'] = topicDetail.description
-            formData['credit_hours'] = topicDetail.credit_hours
+            if (topicDetail.description !== '') formData['description'] = topicDetail.description
+            if (topicDetail.credit_hours !== '') formData['credit_hours'] = topicDetail.credit_hours
         await Api.jsonPatch(`/courses/details/module/${module_id}/topics/${topicData.id}/`, formData)
             .then(result => {
                 if (result) {
@@ -65,7 +64,7 @@ const UpdateTopic = ({ topicData, CallBack, module_id }) => {
                 setLoading(false)
             }, 1000)
          } else {
-            Api.Toast('error', 'Please fill all required fields')
+            Api.Toast('error', 'Title is required!')
          }
         
     }
@@ -89,7 +88,7 @@ const UpdateTopic = ({ topicData, CallBack, module_id }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Description<Badge color='light-danger'>*</Badge>
+                        Description
                         </Label>
                         <Input
                             type="text"
@@ -102,7 +101,7 @@ const UpdateTopic = ({ topicData, CallBack, module_id }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Total Hours<Badge color='light-danger'>*</Badge>
+                        Total Hours
                         </Label>
                         <Input
                             type="number"

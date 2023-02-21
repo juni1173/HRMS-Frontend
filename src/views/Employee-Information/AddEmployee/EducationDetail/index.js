@@ -241,12 +241,6 @@ const EducationDetail = ({emp_state}) => {
                             <th scope="col" className="text-nowrap">
                             Completion Date
                             </th>
-                            {/* <th scope="col" className="text-nowrap">
-                            Leaving Date
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Leaving Reason
-                            </th> */}
                             <th scope="col" className="text-nowrap">
                             Actions
                             </th>
@@ -258,10 +252,8 @@ const EducationDetail = ({emp_state}) => {
                                 
                                     <tr key={key}>
                                     <td>{item.degree_title}</td>
-                                    <td>{item.institute_name}</td>
+                                    <td>{item.selected_institute_name}</td>
                                     <td>{item.year_of_completion}</td>
-                                    {/* <td>{item.leavingDate}</td>
-                                    <td>{item.leavingReason}</td> */}
                                     <td>
                                         <div className="d-flex row">
                                         <div className="col">

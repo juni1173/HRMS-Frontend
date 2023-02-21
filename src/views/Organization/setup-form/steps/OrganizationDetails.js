@@ -43,20 +43,22 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
   })
     const fetchData = async () => {
       setLoading(true)
-      await Api.get(`/organizations/${Api.org.id}/`)
-      .then(result => {
-        console.warn(result)
-        if (result) {
-          if (result.status === 200) {
-            setDetail(result.data)
-            localStorage.setItem('organization', JSON.stringify(result.data))
+      if (Api.org.id) {
+        await Api.get(`/organizations/${Api.org.id}/`)
+        .then(result => {
+          if (result) {
+            if (result.status === 200) {
+              setDetail(result.data)
+              localStorage.setItem('organization', JSON.stringify(result.data))
+            } else {
+              Api.Toast('error', result.message)
+            }
           } else {
-            Api.Toast('error', result.message)
+            Api.Toast('error', 'Server not responding!')
           }
-        } else {
-          Api.Toast('error', 'Server not responding!')
-        }
-      })
+        })
+      }
+      
       setTimeout(() => {
         setLoading(false)
       }, 1000)
@@ -70,7 +72,6 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
   const onSubmit = async data => {
     
     if (data.company_name.length > 0 && data.company_tagline.length > 0
-       && data.company_vision.length > 0 && data.company_mission.length > 0
         && data.city.length > 0 && data.address.length > 0) {
       
       const formData = new FormData()
@@ -80,8 +81,8 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
       formData.append("name", data.company_name)
       formData.append('tagline', data.company_tagline)
       formData.append('locations', JSON.stringify(locations))
-      formData.append('vision', data.company_vision)
-      formData.append('mission', data.company_mission)
+      if (data.company_vision.length > 0) formData.append('vision', data.company_vision)
+      if (data.company_mission.length > 0) formData.append('mission', data.company_mission)
       formData.append('logo', selectedImage)
       formData.append('is_active', true)
       await Api.jsonPost(`/organizations/`, formData, false)
@@ -92,6 +93,7 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
             localStorage.setItem('organization', JSON.stringify(result.data))
             Api.Toast('success', result.message)
             fetchData()
+            stepper.next()
           } else {
             Api.Toast('error', result.message)
           }
@@ -101,8 +103,6 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
       })
     
     } else {
-      console.warn(data)
-      stepper.next()
       for (const key in data) {
         if (data[key].length === 0) {
           setError(key, {

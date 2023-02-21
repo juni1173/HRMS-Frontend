@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from "react"
-import { Card, CardBody, Label, Input, Spinner } from "reactstrap"
+import { Card, CardBody, Label, Input, Spinner, CardTitle } from "reactstrap"
 import {useParams} from "react-router-dom" 
 import apiHelper from "../../../Helpers/ApiHelper"
 const AssessmentTest = () => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [url_params] = useState(useParams())
-    const [timer, setTimer] = useState(0) // 25 minutes
+    const [timer, setTimer] = useState(0)
     const [start, setStart] = useState(false)
     const firstStart = useRef(true)
     const tick = useRef() 
@@ -149,8 +149,11 @@ const AssessmentTest = () => {
     }, [])
   return (
     <div className="container">
-        <div className="row my-1">
-            
+        
+     {result === '' ? (
+        <>
+            <div className="row my-1">
+                
                 <div className="col-lg-4"></div>
                 <div className="col-lg-4">
                     <h2 className="text-center">Assessment Test</h2>
@@ -158,47 +161,62 @@ const AssessmentTest = () => {
                 <div className="col-lg-4">
                     <span className="float-right">Time: <strong>{start ? dispSecondsAsMins(timer) : '00:00'}</strong></span>
                 </div>
-                
-        </div>
-        <hr></hr>
-     {result === '' ? (
-        <Card className="p-1">
-        <CardBody>
-        {!loading ? (
-            Object.values(data).length > 0 ? (
-               <>
-                   <h3 className="mb-3">{data.question.question}</h3>
-                       {Object.values(data.question.question_options).map((option, optionKey) => (
-                           <div className='form-check mb-1' key={optionKey}>
-                           <Input type='radio' name='ex1' value={option.value} onChange={e => setAnswerState({question: data.question.id, answer_option: (optionKey + 1), answer: e.target.value})}/>
-                           <Label className='form-check-label' for='ex1-active'>
-                               <strong>{option.value}</strong>
-                           </Label>
-                       </div>
-                       ))}
-                </>
-               ) : (
-                   <div className="text-center">
-                       <p>No Data Found</p>
-                   </div>
-               )
-        ) : (
-                <div className="text-center">
-                    <Spinner />
-                </div>
-        )
-         
-        }            
-                
-        {!is_last_question ? <button className="float-right btn btn-warning" onClick={onNext}>Next</button> : <button className="float-right btn btn-success" onClick={onNext}>Finish</button>}
-        </CardBody>
-        </Card>
+            
+            </div>
+            <hr></hr>
+            <Card className="p-1">
+            <CardBody>
+            {!loading ? (
+                Object.values(data).length > 0 ? (
+                <>
+                    <h3 className="mb-3">{data.question.question}</h3>
+                        {Object.values(data.question.question_options).map((option, optionKey) => (
+                            <div className='form-check mb-1' key={optionKey}>
+                            <Input type='radio' name='ex1' value={option.value} onChange={e => setAnswerState({question: data.question.id, answer_option: (optionKey + 1), answer: e.target.value})}/>
+                            <Label className='form-check-label' for='ex1-active'>
+                                <strong>{option.value}</strong>
+                            </Label>
+                        </div>
+                        ))}
+                    </>
+                ) : (
+                    <div className="text-center">
+                        <p>No Data Found</p>
+                    </div>
+                )
+            ) : (
+                    <div className="text-center">
+                        <Spinner />
+                    </div>
+            )
+            
+            }            
+                    
+            {!is_last_question ? <button className="float-right btn btn-warning" onClick={onNext}>Next</button> : <button className="float-right btn btn-success" onClick={onNext}>Finish</button>}
+            </CardBody>
+            </Card>
+        </>
      ) : (
         <>
         {/* {getPercentage(result.correct_questions, result.total_questions) > 50 ? ( */}
-            <h3>Thanks for your interest.</h3>
-            <h2 className="mt-1">You have achieved {getPercentage(result.correct_questions, result.total_questions)}%.</h2>
-            <p className="mt-1">Our HR official will contact you soon.</p>
+        <div className="row my-1">
+                
+                <div className="col-lg-4"></div>
+                <div className="col-lg-4">
+                    <h2 className="text-center">Assessment Test Result</h2>
+                </div>
+                <div className="col-lg-4">
+                </div>
+            
+            </div>
+            <hr></hr>
+        <Card>
+            <CardBody>
+                <h3>Thanks for your interest.</h3>
+                <h2 className="mt-1">You have achieved {getPercentage(result.correct_questions, result.total_questions)}%.</h2>
+                {getPercentage(result.correct_questions, result.total_questions) ? <p className="mt-1">Our HR official will contact you soon.</p> : <p className="mt-1">Better luck next time!</p>}
+            </CardBody>
+        </Card>
         {/* ) : {
 
         }} */}

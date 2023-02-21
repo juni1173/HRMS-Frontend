@@ -18,6 +18,8 @@ import CreateEmpBank from "../CreateEmployeeComponents/CreateEmpBank"
 import {useParams} from "react-router-dom" 
 import apiHelper from "../../Helpers/ApiHelper"
 import EmployeeHelper from "../../Helpers/EmployeeHelper"
+import user_blank  from "../../../assets/images/avatars/user_blank.png"
+
 const EmployeeDetail = () => {
     const Api = apiHelper()
     const EmpHelper = EmployeeHelper()
@@ -39,13 +41,19 @@ const EmployeeDetail = () => {
     })
 
     const BloodGrup = [
-        {value: '1', label: "O+"},
-        {value: '2', label: "O-"}
+        {value: "A+", label: "A+"},
+        {value: "A-", label: "A-"},
+        {value: "B+", label: "B+"},
+        {value: "B-", label: "B-"},
+        {value: "AB+", label: "AB+"},
+        {value: "AB-", label: "AB-"},
+        {value: "O+", label: "O+"},
+        {value: "O-", label: "O-"}
      ]
-     const MeritalStatus = [
-        {value: 1, label: "Not Married"},
-        {value: 2, label: "Married"}
-     ]
+    //  const MaritalStatus = [
+    //     {value: 1, label: "Not Married"},
+    //     {value: 2, label: "Married"}
+    //  ]
      const Gender = [
         {value: 1, label: "Male"},
         {value: 2, label: "Female"}
@@ -178,21 +186,21 @@ const EmployeeDetail = () => {
                             <div className="row my-1">
                                 <div className='col-lg-4 col-md-4 col-sm-4'>
                                     <p className='label'>Name: &nbsp;  &nbsp;<strong>{empData.employee.name ? empData.employee.name : 'N/A'}</strong></p>
+                                    <p className='label'>Personal Email: &nbsp;  &nbsp; <strong>{empData.employee.personal_email ? empData.employee.personal_email : 'N/A'}</strong></p>
                                     <p className='label'>Father Name: &nbsp;  &nbsp; <strong>{empData.employee.father_name ? empData.employee.father_name : 'N/A'}</strong></p>
                                     <p className='label'>DOB: &nbsp;  &nbsp; <strong>{empData.employee.dob ? empData.employee.dob : 'N/A'}</strong></p>
                                     <p className='label'>Cnic: &nbsp;  &nbsp; <strong>{empData.employee.cnic_no ? empData.employee.cnic_no : 'N/A'}</strong></p>
-                                    <p className='label'>Gender: &nbsp;  &nbsp; <strong>{Gender.find(pre => pre.value === empData.employee.gender) ? Gender.find(pre => pre.value === empData.employee.gender).label : 'N/A'}</strong></p>
 
                             </div>
                                 <div className='col-lg-4 col-md-4 col-sm-4'>
-                                    <p className='label'>Email Adress: &nbsp;  &nbsp; <strong>{empData.employee.email ? empData.employee.email : 'N/A'}</strong></p>
                                     <p className='label'>Passport Number: &nbsp;  &nbsp; <strong>{empData.employee['passport_data'][0] ? empData.employee['passport_data'][0].passport_no : 'N/A'}</strong></p>
                                     <p className='label'>Passport Expiry Date: &nbsp;  &nbsp; <strong>{empData.employee['passport_data'][0] ? empData.employee['passport_data'][0].date_of_expiry : 'N/A'} </strong></p>
                                     <p className='label'>Blood Group: &nbsp;  &nbsp;<strong>{BloodGrup.find(pre => pre.value === empData.employee.blood_group) ? BloodGrup.find(pre => pre.value === empData.employee.blood_group).label : 'N/A'}</strong></p>
-                                    <p className='label'>Martial Status: &nbsp;  &nbsp; <strong>{MeritalStatus.find(pre => pre.value === empData.employee.martial_status) ? MeritalStatus.find(pre => pre.value === empData.employee.martial_status).label : 'N/A'}</strong></p>
+                                    <p className='label'>Gender: &nbsp;  &nbsp; <strong>{Gender.find(pre => pre.value === empData.employee.gender) ? Gender.find(pre => pre.value === empData.employee.gender).label : 'N/A'}</strong></p>
+                                    <p className='label'>Marital Status: &nbsp;  &nbsp;<strong>{empData.employee.marital_status_type ? empData.employee.marital_status_type : 'N/A'}</strong></p>
                                 </div>
                                 <div className='col-lg-4 col-md-4 col-sm-4' >
-                                    {empData.employee.profile_image ? <img src={`${process.env.REACT_APP_BACKEND_URL}/${empData.employee.profile_image}`} className="float-right" width={150} height={150}/> : <img src="#"  style={{marginRright: '40px', marginTop: '20px'}}
+                                    {empData.employee.profile_image ? <img src={`${process.env.REACT_APP_BACKEND_URL}/${empData.employee.profile_image}`} className="float-right" width={150} height={150}/> : <img src={user_blank}  style={{marginRright: '40px', marginTop: '20px'}}
                                     className="float-right" width={150} height={150}/>}
                                     
                                 </div>
@@ -239,7 +247,7 @@ const EmployeeDetail = () => {
                                         <p className='label'>Staff Classification: &nbsp;  &nbsp; <strong>{empData.employee.staff_classification_title ? empData.employee.staff_classification_title : 'N/A'}</strong></p>
                                         <p className='label'>Department: &nbsp;  &nbsp; <strong>{empData.employee.department_title ? empData.employee.department_title : 'N/A'}</strong></p>
                                         <p className='label'>Position: &nbsp;  &nbsp; <strong>{empData.employee.position_title ? empData.employee.position_title : 'N/A'}</strong></p>
-                                        <p className='label'>Official Email: &nbsp;  &nbsp; <strong>{empData.employee.email ? empData.employee.email : 'N/A'}</strong></p>
+                                        <p className='label'>Official Email: &nbsp;  &nbsp; <strong>{empData.employee.official_email ? empData.employee.official_email : 'N/A'}</strong></p>
                                         <p className='label'>Leaving Reason: &nbsp;  &nbsp; <strong>{empData.employee.leaving_reason ? empData.employee.leaving_reason : 'N/A'}</strong></p>
                                 </div>
                                     <div className='col-lg-6 col-md-6 col-sm-6'>

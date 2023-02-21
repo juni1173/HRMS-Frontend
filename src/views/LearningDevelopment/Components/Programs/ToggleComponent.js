@@ -1,12 +1,14 @@
 import { useState } from "react"
 import { ChevronDown, Edit, Eye, XCircle, Plus } from "react-feather"
 import { Card, CardBody, CardTitle, Offcanvas, OffcanvasHeader, OffcanvasBody } from "reactstrap"
-import ProgramHelper from "../../../Helpers/LearningDevelopmentHelper/ProgramHelper"
+// import ProgramHelper from "../../../Helpers/LearningDevelopmentHelper/ProgramHelper"
+import apiHelper from "../../../Helpers/ApiHelper"
 import UpdateProgram from "./UpdateProgram"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const ToggleComponent = ({ data, id, CallBack }) => {
-    const Helper = ProgramHelper()
+    // const Helper = ProgramHelper()
+    const Api = apiHelper()
     const [toggleThisElement, setToggleThisElement] = useState(false)
     const [updateCanvasPlacement, setupdateCanvasPlacement] = useState('end')
     const [updateCanvasOpen, setupdateCanvasOpen] = useState(false)
@@ -28,8 +30,9 @@ const ToggleComponent = ({ data, id, CallBack }) => {
             buttonsStyling: false
         }).then(function (result) {
             if (result.value) {
-                Helper.deleteProgram(uuid, slug)
-                    .then(() => {
+                Api.deleteData(`/courses/programs/${slug}/${uuid}/`, {method: 'Delete'})
+                .then((deleteResult) => {
+                        if (deleteResult.status === 200) {
                             MySwal.fire({
                                 icon: 'success',
                                 title: 'Program Deleted!',
@@ -42,6 +45,17 @@ const ToggleComponent = ({ data, id, CallBack }) => {
                                     CallBack()
                                 }
                             })
+                        } else {
+                            MySwal.fire({
+                                icon: 'error',
+                                title: deleteResult.message ? deleteResult.message : 'Program can not be deleted!',
+                                text: 'Program is not deleted.',
+                                customClass: {
+                                confirmButton: 'btn btn-danger'
+                                }
+                            })
+                        }
+                            
                     })
             } 
         })
@@ -90,14 +104,14 @@ const ToggleComponent = ({ data, id, CallBack }) => {
                         <b>Subject</b> <br/>
                         {data.subject_title}
                     </div>
-                    <div className="col-lg-6">
+                    {/* <div className="col-lg-6">
                         <b>Slug</b> <br/>
                         {data.slug_title}
-                    </div>
+                    </div> */}
                     <hr></hr>
-                    <div className="col-lg-12">
+                    <div className="col-lg-6">
                         <h4>Description</h4>
-                        <p>{data.description}</p>
+                        <p>{data.description ? data.description : 'N/A'}</p>
                     </div>
                     
                 </div>

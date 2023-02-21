@@ -24,6 +24,9 @@ import Avatar from '@components/avatar'
 const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroupHeads }) => {
     const [editModal, setEditModal] = useState(false)
     const [editIDState, setEditIDState] = useState(null)
+    const [updatedTitle, setUpdatedTitle] = useState('')
+      const [updatedType, setUpdatedType] = useState(null) 
+      const [updatedDescription, setUpdatedDescription] = useState('')
     const [editData, setEditData] = useState({
         title: "",
         grouphead_type: 1,
@@ -67,8 +70,8 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
       //   { value: 1, label: 'Active' }
       // ]
       const groupType = [
-        { value: 1, label: 'Non-Technical' },
-        { value: 2, label: 'Technical' }
+        { value: 1, label: 'Technical' },
+        { value: 2, label: 'Non-Technical' }
       ]
       const defaultValues = {
         title: editData.title,
@@ -94,13 +97,10 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
                 if (data.status === 200) {
                 //   console.warn(data.result_data)
                   setEditData(data.result_data)
+                  setUpdatedDescription(data.result_data.description)
                   setEditIDState(id)
                 //   const defaultValues = data.result_data
                 setEditModal(true)
-                  toast.success(
-                    <ToastContent type='success' message={data.message} />,
-                    { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-                  )
                 } else {
                   toast.error(
                     <ToastContent type='error' message={data.message} />,
@@ -131,10 +131,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
             }
         
       }
-      const [updatedTitle, setUpdatedTitle] = useState(defaultValues.title)
-      const [updatedType, setUpdatedType] = useState(defaultValues.group_type)
-      // const [updatedStatus, setUpdatedStatus] = useState(defaultValues.group_status)
-      const [updatedDescription, setUpdatedDescription] = useState(defaultValues.group_description)
+      
       const updateGHead = (data, id) => {
         if (Object.values(data).length > 0 && id) {
             fetch(`${process.env.REACT_APP_API_URL}/organization/grouphead/${id}/`, {
@@ -169,12 +166,13 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
         }
       }
       const onSubmit = () => {
-        if (updatedTitle !== undefined || updatedType !== undefined || updatedDescription !== undefined || organization.id !== undefined) {
+        if (updatedTitle !== undefined || updatedDescription !== undefined || organization.id !== undefined) {
           const formData = new FormData()
+          // return false
             formData['title'] =  !updatedTitle ? defaultValues.title : updatedTitle
-            formData['grouphead_type'] = !updatedType ? defaultValues.group_type : updatedType
+            if (updatedType) formData['grouphead_type'] =  updatedType
             // formData['is_status'] =  !updatedStatus ? defaultValues.group_status : updatedStatus
-            formData['description'] = !updatedDescription ? defaultValues.group_description : updatedDescription
+            formData['description'] =  updatedDescription
             formData['organization_id'] = organization.id 
             // console.warn(formData)
             updateGHead(formData, editIDState)
@@ -215,7 +213,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
                 !item.is_active ? null : (
                     <tr key={key}>
                   <td>{item.title}</td>
-                  <td>{item.grouphead_type === 1 ? groupType[0].label : groupType[1].label}</td>
+                  <td>{groupType.find(pre => pre.value === item.grouphead_type) ? groupType.find(pre => pre.value === item.grouphead_type).label : 'N/A'}</td>
                   <td>{item.description}</td>
                   <td>
                     <div className="d-flex row">
@@ -278,7 +276,7 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
               className='react-select'
               classNamePrefix='select'
               options={groupType}
-              defaultValue={defaultValues.group_type === 1 ? groupType[0] : groupType[1]}
+              defaultValue={editData.grouphead_type === 1 ? groupType[0] : groupType[1]}
               onChange={type => setUpdatedType(type.value)}
             />
           </Col>

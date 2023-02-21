@@ -280,7 +280,7 @@ const getQuestions = async (paperType, quesPosition = null) => {
                             <th scope="col">Option3</th>
                             <th scope="col">Option4</th>
                             <th scope="col">Answer</th>
-                            <th scope="col">CLevel</th>
+                            <th scope="col">Complexity Level</th>
                             <th scope="col">TIME (Sec)</th>
                         </tr>
                     </thead>
@@ -290,12 +290,12 @@ const getQuestions = async (paperType, quesPosition = null) => {
                                     <tr key={index}>
                                         <th scope="row">{ index + 1 }</th>
                                         <td>{ question.question }</td>
-                                        <td>{ question.question_options[0].value}</td>
-                                        <td>{ question.question_options[1].value}</td>
-                                        <td>{ question.question_options[2].value }</td>
-                                        <td>{ question.question_options[3].value }</td>
+                                        <td>{ question.question_options[0] && question.question_options[0].value}</td>
+                                        <td>{ question.question_options[1] && question.question_options[1].value}</td>
+                                        <td>{ question.question_options[2] && question.question_options[2].value}</td>
+                                        <td>{ question.question_options[3] && question.question_options[3].value}</td>
                                         <td>{ question.answer }</td>
-                                        <td>{ question.clevel }</td>
+                                        <td>{ question.complexity_level }</td>
                                         <td>{ question.time }</td>
                                     </tr> 
                                 )) : (

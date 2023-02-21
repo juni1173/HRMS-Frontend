@@ -13,7 +13,7 @@ const CancelEvaluation = ({ uuid, evaluationID, CallBack }) => {
                 if (result) {
                     if (result.status === 200) {
                         // const resultData = result.data
-                        Api.Toast('error', result.message)
+                        Api.Toast('success', result.message)
                         CallBack()
                     } else {
                         Api.Toast('error', result.message)

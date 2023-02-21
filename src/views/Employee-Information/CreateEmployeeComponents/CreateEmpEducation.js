@@ -121,6 +121,7 @@ const CreateEmpEducation = ({uuid, CallBack}) => {
                         <Input
                             type="text"
                             name="degree type"
+                            placeholder="Degree Title"
                             onChange={ (e) => { onChangeEducationHandler('degreeTitle', 'input', e) }}
                             />
                     </Col>
@@ -147,6 +148,7 @@ const CreateEmpEducation = ({uuid, CallBack}) => {
                               className='form-control'
                                id='default-picker'
                                defaultValue={educationDetail.degreeCompletionDate ? educationDetail.degreeCompletionDate : ''}
+                               placeholder="Completion Year"
                                options={{
                                   altInput: true,
                                   altFormat: 'F j, Y',
@@ -179,9 +181,6 @@ const CreateEmpEducation = ({uuid, CallBack}) => {
                 </Row>
             <Row>
                 
-                {/* <Col md="2" className="mb-1">
-                       <button className="btn-next float-right btn btn-success" onClick={(e) => addmoreSubmit(e)}><span className="align-middle d-sm-inline-block d-none">Add </span></button>
-                </Col> */}
                 <Col md="12" className="mb-1">
                        <button className="btn-next float-right btn btn-success" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
                     </Col>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
-import { Search } from "react-feather"
-import { Input, InputGroup, InputGroupText, TabContent, TabPane, Nav, NavItem, NavLink, Offcanvas, OffcanvasHeader, OffcanvasBody, Card, CardBody, CardTitle, CardText, Spinner } from "reactstrap"
+import { TabContent, TabPane, Nav, NavItem, NavLink, Offcanvas, OffcanvasHeader, OffcanvasBody, Card, CardBody, CardTitle, CardText, Spinner } from "reactstrap"
 import ActiveJobsList from "./blockComponents/ActiveJobsList"
 import DeletedJobsList from "./blockComponents/DeletedJobsList"
 import JobsAddForm from "./blockComponents/CreateJobsForm"
@@ -102,7 +101,6 @@ const JobsIndexComp = () => {
 
         <div className="row">
             <div className="col-lg-12">
-            
             <TabContent className='py-50' activeTab={active}>
                 <TabPane tabId='1'>
                     <div>

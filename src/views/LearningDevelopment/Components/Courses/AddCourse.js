@@ -82,28 +82,30 @@ const AddCourse = ({ CallBack }) => {
     const Submit = async (e) => {
         e.preventDefault()
         if (courseDetail.title !== '' && courseDetail.program !== ''
-         && courseDetail.description !== '' && courseDetail.program_level !== ''
-         && courseDetail.what_will_you_learn !== '' && courseDetail.skills_you_gain !== ''
-         && courseDetail.credit_hours !== 0 && courseDetail.mode_of_course !== ''
-         && courseDetail.complexity_level !== '' && courseDetail.offered_by !== '') {
-            setLoading(true)
+        && courseDetail.description !== '' && courseDetail.program_level !== ''
+        && courseDetail.mode_of_course !== ''
+        && courseDetail.complexity_level !== '') {
             const formData = new FormData()
             formData['title'] = courseDetail.title
             formData['code'] = courseDetail.code
             formData['program'] = courseDetail.program.value
             formData['program_level'] = courseDetail.program_level
-            formData['what_will_you_learn'] = courseDetail.what_will_you_learn
-            formData['skills_you_gain'] = courseDetail.skills_you_gain
-            formData['credit_hours'] = courseDetail.credit_hours
+           if (courseDetail.what_will_you_learn !== '') formData['what_will_you_learn'] = courseDetail.what_will_you_learn
+           if (courseDetail.skills_you_gain !== '') formData['skills_you_gain'] = courseDetail.skills_you_gain
+           if (courseDetail.credit_hours !== 0) formData['credit_hours'] = courseDetail.credit_hours
             formData['mode_of_course'] = courseDetail.mode_of_course.value
             formData['complexity_level'] = courseDetail.complexity_level.value
-            formData['offered_by'] = courseDetail.offered_by
+            if (courseDetail.offered_by !== '') formData['offered_by'] = courseDetail.offered_by
         await Api.jsonPost(`/courses/`, formData)
             .then(result => {
                 if (result) {
                     if (result.status === 200) { 
                         Api.Toast('success', result.message)
-                        CallBack()
+                        setLoading(true)
+                            CallBack()
+                        setTimeout(() => {
+                            setLoading(false)
+                        }, 1000)
                     } else {
                         Api.Toast('error', result.message)
                     }
@@ -111,9 +113,7 @@ const AddCourse = ({ CallBack }) => {
                     Api.Toast('error', 'Server Not Responding')
                 }
             })
-            setTimeout(() => {
-                setLoading(false)
-            }, 1000)
+            
          } else {
             Api.Toast('error', 'Please fill all required fields')
          }
@@ -176,7 +176,7 @@ const AddCourse = ({ CallBack }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        What will you learn ? <Badge color='light-danger'>*</Badge>
+                        What will you learn ?
                         </Label>
                         <Input
                             type="text"
@@ -188,7 +188,7 @@ const AddCourse = ({ CallBack }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Skills you will gain ? <Badge color='light-danger'>*</Badge>
+                        Skills you will gain ?
                         </Label>
                         <Input
                             type="text"
@@ -200,7 +200,7 @@ const AddCourse = ({ CallBack }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Credit Hours<Badge color='light-danger'>*</Badge>
+                        Credit Hours
                         </Label>
                         <Input
                             type="number"
@@ -234,7 +234,7 @@ const AddCourse = ({ CallBack }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                       Offered By<Badge color='light-danger'>*</Badge>
+                       Offered By
                         </Label>
                         <Input
                             type="text"

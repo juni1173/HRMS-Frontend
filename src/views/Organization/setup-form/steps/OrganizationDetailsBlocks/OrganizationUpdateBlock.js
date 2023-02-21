@@ -9,7 +9,6 @@ import Avatar from '@components/avatar'
 const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
     const [updatedImage, setUpdatedImage] = useState(null)
     const [updatedCreatedBy, setUpdatedCreatedBy] = useState('junaid')
-    // console.warn(detail) 
     const [imgPath, setImgPath] = useState(detail.logo !== null ? process.env.REACT_APP_BACKEND_URL + detail.logo : null)
     let token = localStorage.getItem('accessToken')
     token = token.replaceAll('"', '')
@@ -78,11 +77,9 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
         
         if (data) {
           const formData = new FormData()
-          console.warn(data)
           if (updatedImage !== null) {
             setImgPath(process.env.REACT_APP_BACKEND_URL + updatedImage)
           }
-         console.warn(data.updatedTagline)
          console.warn(updatedCreatedBy)
          if (data.updatedName !== undefined) {
           formData.append('name', data.updatedName)

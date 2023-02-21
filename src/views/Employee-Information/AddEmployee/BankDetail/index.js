@@ -9,7 +9,7 @@ const BankDetail = ({emp_state}) => {
     const [data, setData] = useState([])
     const [bankList] = useState([])
     const [bankDetail, setBankDetail] = useState({
-        bankName : bankList[0],
+        bankName : '',
         accountNo : '',
         branchName : '',
         accountTitle : '',
@@ -50,8 +50,6 @@ const BankDetail = ({emp_state}) => {
         
         
         }))
-    
-        console.log(bankDetail)
     }
 
     const onSubmitHandler = (e) => {
@@ -60,13 +58,13 @@ const BankDetail = ({emp_state}) => {
         setLoading(true)
         e.preventDefault()
         if (bankDetail.bankName !== '' && bankDetail.accountNo !== '' && bankDetail.branchName !== ''
-        && bankDetail.accountTitle !== '' && bankDetail.ibanNo !== '') {
+        && bankDetail.accountTitle !== '') {
             const formData = new FormData()
             formData['bank'] = bankDetail.bankName.value
             formData['branch_name'] = bankDetail.branchName
             formData['account_no'] = bankDetail.accountNo
             formData['account_title'] = bankDetail.accountTitle
-            formData['iban'] = bankDetail.ibanNo
+            if (bankDetail.ibanNo !== '') formData['iban'] = bankDetail.ibanNo
             Api.jsonPost(`/employee/${uuid}/banks/details/`, formData).then(result => {
                 if (result) {
                     if (result.status === 200) {
@@ -105,10 +103,10 @@ const BankDetail = ({emp_state}) => {
                                 </Label>
                                 <Select
                                     type="text"
-                                    placeholder="bank name"
+                                    placeholder="Select Bank"
                                     name="bankName"
                                     options={bankList}
-                                    defaultValue={bankList[0]}
+                                    defaultValue={bankList.find(pre => pre.value === bankDetail.bankName) && bankList.find(pre => pre.value === bankDetail.bankName)}
                                     onChange={ (e) => { onChangeBankDetailHandler('bankName', 'select', e) }}
                                     />
                             </Col>
@@ -118,8 +116,9 @@ const BankDetail = ({emp_state}) => {
                                 </Label>
                                 <Input
                                     type="text"
-                                    placeholder="account name"
+                                    placeholder="Account No"
                                     name="accountNo"
+                                    defaultValue={bankDetail.accountNo !== '' && bankDetail.accountNo}
                                     onChange={ (e) => { onChangeBankDetailHandler('accountNo', 'input', e) }}
                                     />
                             </Col>
@@ -129,8 +128,9 @@ const BankDetail = ({emp_state}) => {
                                 </Label>
                                 <Input
                                     type="text"
-                                    placeholder="branch name"
+                                    placeholder="Branch Information"
                                     name="branchName"
+                                    defaultValue={bankDetail.branchName !== '' && bankDetail.branchName}
                                     onChange={ (e) => { onChangeBankDetailHandler('branchName', 'input', e) }}
                                     />
                             </Col>
@@ -142,8 +142,9 @@ const BankDetail = ({emp_state}) => {
                                 </Label>
                                 <Input
                                     type="text"
-                                    placeholder="account title"
+                                    placeholder="Account Title"
                                     name="accountTitle"
+                                    defaultValue={bankDetail.accountTitle !== '' && bankDetail.accountTitle}
                                     onChange={ (e) => { onChangeBankDetailHandler('accountTitle', 'input', e) }}
                                     />
                             </Col>
@@ -153,8 +154,9 @@ const BankDetail = ({emp_state}) => {
                                 </Label>
                                 <Input
                                     type="text"
-                                    placeholder="Iban No"
+                                    placeholder="IBAN No"
                                     name="ibanNo"
+                                    defaultValue={bankDetail.ibanNo !== '' && bankDetail.ibanNo}
                                     onChange={ (e) => { onChangeBankDetailHandler('ibanNo', 'input', e) }}
                                     />
                             </Col>

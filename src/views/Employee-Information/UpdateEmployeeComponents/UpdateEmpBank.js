@@ -56,14 +56,14 @@ const UpdateEmpBank = ({empData, uuid, CallBack}) => {
         setLoading(true)
         e.preventDefault()
         if (bankDetail.bankName !== '' && bankDetail.accountNo !== '' && bankDetail.branchName !== ''
-        && bankDetail.accountTitle !== '' && bankDetail.ibanNo !== '') {
+        && bankDetail.accountTitle !== '') {
             const formData = new FormData()
             formData['bank'] = bankDetail.bankName.value
             formData['branch_name'] = bankDetail.branchName
             formData['account_no'] = bankDetail.accountNo
             formData['account_title'] = bankDetail.accountTitle
             formData['iban'] = bankDetail.ibanNo
-            Api.jsonPost(`/employee/${uuid}/banks/details/`, formData).then(result => {
+            Api.jsonPatch(`/employee/${uuid}/banks/details/${empData.id}/`, formData).then(result => {
                 if (result) {
                     if (result.status === 200) {
                         CallBack()
@@ -161,7 +161,7 @@ const UpdateEmpBank = ({empData, uuid, CallBack}) => {
 
                         </Col>
                         <Col md="4" className="mb-1">
-                        <button className="btn-next float-right btn btn-success"  onClick={(e) => onSubmitHandler(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
+                        <button className="btn-next float-right btn btn-warning"  onClick={(e) => onSubmitHandler(e)}><span className="align-middle d-sm-inline-block d-none">Update</span></button>
                         </Col>
                     </Row>
                 </Form>

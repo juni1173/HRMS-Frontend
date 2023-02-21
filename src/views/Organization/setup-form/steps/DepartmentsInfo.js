@@ -27,16 +27,6 @@ const DepartmentsInfo = ({ stepper, stepperStatus, count, createForm, list, fetc
   const [groupHeadNotActive] = useState([])
   const [loading, setLoading] = useState(true)
   const [gHeadLoading, setGHeadLoading] = useState(true)
-  // const [gHeadID, setGHeadID] = useState(null)
-  // const [dep_title, setDepTitle] = useState(null)
-  // const [dep_status, setDepStatus] = useState(0)
-  // const [dep_description, setDepDescription] = useState(null)
- 
-  // const depStatus = [
-  //   { value: '0', label: 'Inactive' },
-  //   { value: '1', label: 'Active' }
-  // ]
-  // const organization = JSON.parse(localStorage.getItem('organization'))
   const ToastContent = ({ type, message }) => (
     type === 'success' ? (
     <Fragment>
@@ -66,6 +56,7 @@ const DepartmentsInfo = ({ stepper, stepperStatus, count, createForm, list, fetc
   let token = localStorage.getItem('accessToken')
     token = token.replaceAll('"', '')
     token = `Bearer ${token}`
+    const org = localStorage.getItem('organization').id
     const fetchGHead = async () => {
       setGHeadLoading(true)
       try {
@@ -91,10 +82,12 @@ const DepartmentsInfo = ({ stepper, stepperStatus, count, createForm, list, fetc
         }  
         
         } else {
-          toast.error(
-            <ToastContent type='error' message={response.message} />,
-            { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-          )
+          if (org !== undefined) {
+            toast.error(
+              <ToastContent type='error' message={response.message} />,
+              { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
+            )
+          }
           setGHeadLoading([])
         }
       } catch (error) {

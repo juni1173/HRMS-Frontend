@@ -144,7 +144,7 @@ const UpdateEmpDependent = ({CallBack, empData, uuid}) => {
                 </Row>
                 <Row>
                     <Col md="12" className="mb-1">
-                       <button className="btn-next float-right btn btn-success" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
+                       <button className="btn-next float-right btn btn-warning" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Update</span></button>
                     </Col>
                 </Row>
             </Form>

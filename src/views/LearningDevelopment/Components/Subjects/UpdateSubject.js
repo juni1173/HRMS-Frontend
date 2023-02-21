@@ -59,13 +59,12 @@ const UpdateSubject = ({ subjectData, CallBack }) => {
      } 
      const UpdateSubjectApi = async (e) => {
         e.preventDefault()
-        if (subjectData.title !== '' && subjectData.type !== ''
-         && subjectData.description !== '') {
+        if (subjectData.title !== '' && subjectData.type !== '') {
             setLoading(true)
             const formData = new FormData()
             formData['title'] = subjectDetail.title
             formData['type'] = subjectDetail.type.value
-            formData['description'] = subjectDetail.description
+            if (subjectDetail.description !== '') formData['description'] = subjectDetail.description
         await Api.jsonPatch(`/courses/subjects/${subjectData.slug_title}/${subjectData.uuid}/`, formData)
             .then(result => {
                 if (result) {

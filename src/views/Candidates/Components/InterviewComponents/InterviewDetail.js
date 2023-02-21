@@ -25,6 +25,7 @@ const InterviewDetail = ({uuid}) => {
             setLoading(false)
         }, 1000)
     }
+    
     useEffect(() => {
         getInterviewData()
     }, [])
@@ -53,13 +54,17 @@ const InterviewDetail = ({uuid}) => {
                         <td>{data.stage_title}</td>
                         <td>{(!data.is_cancel && !data.reschedule_date && !data.start_date_time
                             && !data.complete_date_time) && 'N/A'}
-                            {data.is_cancel && <p><Badge color='danger'>Cancelled</Badge></p>}
+                            {data.is_cancel && (
+                                <p><Badge color='danger'>Cancelled</Badge> {data.reason_for_cancel && data.reason_for_cancel}</p>
+                            )}
                             {/* <br/> */}
-                            {data.reschedule_date && <p><Badge color='warning'>Reschedule at</Badge> {data.reschedule_date}</p>}
+                            {data.reschedule_date && (
+                                <p><Badge color='secondary'>Reschedule at</Badge> {Api.convertUTCtoDate(data.reschedule_date)}</p>
+                            )}
                             {/* <br/> */}
-                            {data.start_date_time && <p><Badge color='primary'>Started at</Badge> {data.start_date_time}</p>}
+                            {data.start_date_time && <p><Badge color='primary'>Started at</Badge> {Api.convertUTCtoDate(data.start_date_time)}</p>}
                             {/* <br/> */}
-                            {data.complete_date_time && <p><Badge color='success'>Completed at</Badge> {data.complete_date_time}</p>}
+                            {data.complete_date_time && <p><Badge color='success'>Completed at</Badge> {Api.convertUTCtoDate(data.complete_date_time)}</p>}
                             </td>
                     </tr>
                 )

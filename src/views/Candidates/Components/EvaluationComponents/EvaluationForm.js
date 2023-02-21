@@ -69,7 +69,6 @@ const EvaluationForm = ({uuid, stage_id}) => {
         .then(result => {
             if (result) {
                 if (result.status === 200) {
-                    console.warn(result.data)
                     setEvaluationStatus(result.data)
                 } else {
                     Api.Toast('error', result.message)
@@ -88,7 +87,6 @@ const EvaluationForm = ({uuid, stage_id}) => {
         .then(result => {
             if (result) {
                 if (result.status === 200) {
-                    console.warn(result.data)
                     setEvaluationForm(result.data)
                 } else {
                     Api.Toast('error', result.message)
@@ -114,7 +112,6 @@ const EvaluationForm = ({uuid, stage_id}) => {
         getEvaluationData()
     }  
     const onChangeAnswer = (id, score) => {
-        console.warn(id)
         if (Object.values(answers).length > 0) {
             const valueGroupIdx = answers.findIndex(el => el.id === id)
             

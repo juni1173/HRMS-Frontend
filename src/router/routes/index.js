@@ -117,6 +117,42 @@ const Routes = [
     component: lazy(() => import('../../views/LearningDevelopment/Components/Courses'))
   },
   {
+    path: '/course-sessions',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Sessions'))
+  },
+  {
+    path: '/instructor',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Instructors'))
+  },
+  {
+    path: '/applicants/trainees',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Sessions/ApplicantsAndTrainees'))
+  },
+  {
+    path: '/learning_development/dashboard',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Dashboard'))
+  },
+  {
+    path: '/kind_notes',
+    component: lazy(() => import('../../views/Kind-Notes'))
+  },
+  {
+    path: '/public/kind_notes',
+    component: lazy(() => import('../../views/Public-Kind-Notes')),
+    layout: 'BlankLayout',
+    meta: {
+      publicRoute: true
+    }
+  },
+  {
+    path: '/projects',
+    component: lazy(() => import('../../views/Projects'))
+  },
+  {
+    path: '/configurations',
+    component: lazy(() => import('../../views/SettingsModule/ConfigurationModule/Configuration'))
+  },
+  {
     path: '/error',
     component: lazy(() => import('../../views/Error')),
     layout: 'BlankLayout'

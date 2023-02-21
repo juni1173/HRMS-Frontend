@@ -106,7 +106,7 @@ const CreateEmpDependent = ({uuid, CallBack}) => {
                         name="dependentName"
                         defaultValue={employeeDependent.dependentName}
                         onChange={ (e) => { onChangeDependentHandler('dependentName', 'input', e) }}
-                        placeholder="name"
+                        placeholder="Dependent Name"
                         
                         />
                 </Col>
@@ -130,6 +130,7 @@ const CreateEmpDependent = ({uuid, CallBack}) => {
                         className='form-control' 
                         value={employeeDependent.dependentDOB ? employeeDependent.dependentDOB : ''}
                         defaultValue={employeeDependent.dependentDOB ? employeeDependent.dependentDOB : ''} 
+                        placeholder="Date Of Birth"
                         onChange={ (date) => { onChangeDependentHandler('dependentDOB', 'date', date) }} 
                         id='default-picker' />
                     </div> 

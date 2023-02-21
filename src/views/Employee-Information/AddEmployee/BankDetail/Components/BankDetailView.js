@@ -20,29 +20,14 @@ const BankDetailView = ({data}) => {
         Object.values(data).length > 0 ? (
             <Row>
                 <Col md="6" className="mb-1">
-                    <Label className="form-label"  >
-                       <strong>Bank </strong>   
-                    </Label>
-                    <p className="form-control">{data.bank_name ? data.bank_name : "N/A" }</p>
-                    <Label className="form-label mt-2"  >
-                    Account No 
-                    </Label>
-                    <p className="form-control">{data.account_no ? data.account_no : "N/A" }</p>
-                    <Label className="form-label mt-2"  >
-                        Branch Name
-                    </Label>
-                    <p className="form-control">{data.branch_name ? data.branch_name : "N/A" }</p>
+                    <p className='label'>Bank: &nbsp;  &nbsp;<strong>{data.bank_name ? data.bank_name : "N/A"}</strong></p>
+                    <p className='label'>Account No : &nbsp;  &nbsp;<strong>{data.account_no ? data.account_no : "N/A"}</strong></p>
+                    <p className='label'>Branch Name: &nbsp;  &nbsp;<strong>{data.branch_name ? data.branch_name : "N/A" }</strong></p>
                     
                 </Col>
                 <Col md="6" className="">
-                    <Label className="form-label"  >
-                        Account Title
-                    </Label>
-                    <p className="form-control">{data.account_title ? data.account_title : "N/A" }</p>
-                    <Label className="form-label mt-2"  >
-                        IBAN No
-                    </Label>
-                    <p className="form-control">{data.iban ? data.iban : "N/A" }</p>
+                    <p className='label'>Account Title: &nbsp;  &nbsp;<strong>{data.account_title ? data.account_title : "N/A"}</strong></p>
+                    <p className='label'>IBAN No: &nbsp;  &nbsp;<strong>{data.iban ? data.iban : "N/A"}</strong></p>
                 </Col>
             </Row>
         ) : (

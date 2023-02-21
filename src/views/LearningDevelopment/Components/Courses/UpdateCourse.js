@@ -78,21 +78,20 @@ const updateCourse = ({ CourseData, CallBack }) => {
         e.preventDefault()
         if (CourseData.title !== '' && CourseData.program !== ''
         && CourseData.description !== '' && CourseData.program_level !== ''
-        && CourseData.what_will_you_learn !== '' && CourseData.skills_you_gain !== ''
-        && CourseData.credit_hours !== 0 && CourseData.mode_of_course !== ''
-        && CourseData.complexity_level !== '' && CourseData.offered_by !== '') {
+        && CourseData.mode_of_course !== ''
+        && CourseData.complexity_level !== '') {
             setLoading(true)
             const formData = new FormData()
             formData['title'] = courseDetail.title
             formData['code'] = courseDetail.code
             formData['program'] = courseDetail.program.value
             formData['program_level'] = courseDetail.program_level
-            formData['what_will_you_learn'] = courseDetail.what_will_you_learn
-            formData['skills_you_gain'] = courseDetail.skills_you_gain
-            formData['credit_hours'] = courseDetail.credit_hours
+            if (courseDetail.what_will_you_learn !== '') formData['what_will_you_learn'] = courseDetail.what_will_you_learn
+            if (courseDetail.skills_you_gain !== '') formData['skills_you_gain'] = courseDetail.skills_you_gain
+            if (courseDetail.credit_hours !== 0) formData['credit_hours'] = courseDetail.credit_hours
             formData['mode_of_course'] = courseDetail.mode_of_course.value
             formData['complexity_level'] = courseDetail.complexity_level.value
-            formData['offered_by'] = courseDetail.offered_by
+            if (courseDetail.offered_by !== '') formData['offered_by'] = courseDetail.offered_by
         await Api.jsonPatch(`/courses/${CourseData.slug_title}/${CourseData.uuid}/`, formData)
             .then(result => {
                 if (result) {
@@ -175,7 +174,7 @@ const updateCourse = ({ CourseData, CallBack }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        What will you learn ? <Badge color='light-danger'>*</Badge>
+                        What will you learn ?
                         </Label>
                         <Input
                             type="text"
@@ -188,7 +187,7 @@ const updateCourse = ({ CourseData, CallBack }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Skills you will gain ? <Badge color='light-danger'>*</Badge>
+                        Skills you will gain ?
                         </Label>
                         <Input
                             type="text"
@@ -201,7 +200,7 @@ const updateCourse = ({ CourseData, CallBack }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Credit Hours<Badge color='light-danger'>*</Badge>
+                        Credit Hours
                         </Label>
                         <Input
                             type="number"
@@ -238,7 +237,7 @@ const updateCourse = ({ CourseData, CallBack }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                       Offered By<Badge color='light-danger'>*</Badge>
+                       Offered By
                         </Label>
                         <Input
                             type="text"

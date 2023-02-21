@@ -97,6 +97,7 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
                <Flatpickr 
                  name="joiningDate" 
                  value={experienceDetail.joiningDate ? experienceDetail.joiningDate : ''}
+                 placeholder="Joining Date"
                  onChange={ (date) => { onChangeExperienceHandler('joiningDate', 'date', date) }}
                  className="form-control"    />
             </div>  
@@ -109,6 +110,7 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
                <Flatpickr
                 name="leavingDate"  
                 value={experienceDetail.leavingDate ? experienceDetail.leavingDate : ''}
+                placeholder="Leaving Date"
                 onChange={ (date) => { onChangeExperienceHandler('leavingDate', 'date', date) }}
                 className="form-control"    />
             </div> 
@@ -121,7 +123,7 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
             </Label>
             <Input
                 type="text"
-                placeholder="leaving reason"
+                placeholder="Leaving Reason"
                 name="leavingReason"
                 onChange={ (e) => { onChangeExperienceHandler('leavingReason', 'input', e) }}
                 
@@ -137,10 +139,6 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
         </Col>
     </Row>
     <Row>
-        
-        {/* <Col md="2" className="mb-1">
-           <button className="btn-next float-right btn btn-success" onClick={(e) => addmoreSubmit(e)}><span className="align-middle d-sm-inline-block d-none">Add </span></button>
-        </Col> */}
         <Col md="12" className="mb-1">
            <button className="btn-next float-right btn btn-success" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
         </Col>

@@ -11,10 +11,6 @@ import apiHelper from "../../../../Helpers/ApiHelper"
 const addPosition = ({ CallBack }) => {
     const Helper = CustomHelper()
     const Api = apiHelper() 
-    const Status = [
-        { value: 0, label: 'Inactive' },
-        { value: 1, label: 'Active' }
-      ]
     const experience = [
         {value: 1, label: '0-2 years'},
         {value: 2, label: '2-4 years'},
@@ -106,14 +102,13 @@ const addPosition = ({ CallBack }) => {
         qualification: Qualification[0],
         experience: experience[0],
         min_salary: 0,
-        max_salary: 0,
-        status: Status[0]
+        max_salary: 0
 
     }
     
         const FormSchema = yup.object().shape({
-          position_title: yup.string().min(3, 'Title must be more than 3 characters').required('Position Title Required'),
-          position_code: yup.number().min(3, 'Code must be more than 3 digits').required('Position Code Required'),
+          // position_title: yup.string().min(3, 'Title must be more than 3 characters').required('Position Title Required'),
+          // position_code: yup.number().min(3, 'Code must be more than 3 digits').required('Position Code Required'),
           min_salary: yup.number().required('Min Salary Required'),
           max_salary: yup.number().required('Max Salary Required'),
           max_salary: yup.mixed().test('isLarger', 'Max Salary must be larger than Min Salary', (value, testContext) => {
@@ -133,11 +128,11 @@ const addPosition = ({ CallBack }) => {
         formState:{ errors }
       } = useForm({formValues, mode: 'onChange', resolver: yupResolver(FormSchema) 
       })
-        const onSubmit = data => {
+        const onSubmit = async (data) => {
             const formData = new FormData()
             setStateData(data)
             
-            if (data && data.ghead !== undefined && data.department !== undefined && data.staff_id !== undefined && data.qualification !== undefined && data.experience !== undefined && data.status !== undefined) {
+            if (data && data.ghead !== undefined && data.department !== undefined && data.staff_id !== undefined && data.qualification !== undefined && data.experience !== undefined) {
                 if (data.ghead !== undefined) formData['grouphead'] = data.ghead.value
                 if (data.department !== undefined) formData['department'] = data.department.value
                 if (data.staff_id !== undefined) formData['staff_classification'] = data.staff_id.value
@@ -147,16 +142,9 @@ const addPosition = ({ CallBack }) => {
                 if (data.experience !== undefined)  formData['years_of_experience'] = data.experience.value
                 if (data.min_salary !== undefined)  formData['min_salary'] = parseInt(data.min_salary)
                 if (data.max_salary !== undefined)  formData['max_salary'] = parseInt(data.max_salary)
-                if (data.status !== undefined)  formData['is_active'] = data.status.value
                 
                 // const finalData = JSON.stringify(formData)
-                const url = `${process.env.REACT_APP_API_URL}/organization/${Api.org.id}/positions/`
-                fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "Application/json", Authorization: Api.token },
-                body: JSON.stringify(formData)
-                })
-                .then((response) => response.json())
+               await Api.jsonPost(`/organization/positions/`, formData)
                 .then((result) => {
                     // const data = {status:result.status, result_data:result.data, message: result.message }
                     if (result.status === 200) {
@@ -196,7 +184,7 @@ const addPosition = ({ CallBack }) => {
                   id='react-select'
                   control={control}
                   name='ghead'
-                  defaultValue={gHead[0]}
+                  // defaultValue={gHead[0]}
                   render={({ field }) => (
                       <Select
                       isClearable={false}
@@ -221,7 +209,7 @@ const addPosition = ({ CallBack }) => {
                   control={control}
                   id="department"
                   name="department"
-                  defaultValue={depdropdown[0]}
+                  // defaultValue={depdropdown[0]}
                   render={({ field }) => (
                           <Select
                             isClearable={false}
@@ -245,7 +233,7 @@ const addPosition = ({ CallBack }) => {
                   control={control}
                   id="staff_id"
                   name="staff_id"
-                  defaultValue={staffdropdown[0]}
+                  // defaultValue={staffdropdown[0]}
                   render={({ field }) => (
                           <Select
                             isClearable={false}
@@ -309,7 +297,7 @@ const addPosition = ({ CallBack }) => {
                   control={control}
                   id="qualification"
                   name="qualification"
-                  defaultValue={Qualification[0]}
+                  // defaultValue={Qualification[0]}
                   render={({ field }) => (
                           <Select
                             isClearable={false}
@@ -322,7 +310,7 @@ const addPosition = ({ CallBack }) => {
                   )}
                 />
               </Col>
-              <Col md='4' className='mb-1'>
+              <Col md='6' className='mb-1'>
                 <Label className='form-label'>
                   Years of Experience
                 </Label>
@@ -330,7 +318,7 @@ const addPosition = ({ CallBack }) => {
                   control={control}
                   id="experience"
                   name="experience"
-                  defaultValue={experience[0]}
+                  // defaultValue={experience[0]}
                   render={({ field }) => (
                           <Select
                             isClearable={false}
@@ -345,7 +333,7 @@ const addPosition = ({ CallBack }) => {
                 
                 
               </Col>
-              <Col md='4' className='mb-1'>
+              <Col md='6' className='mb-1'>
               <label className='form-label'>
                   Salary Range
                 </label>
@@ -388,29 +376,6 @@ const addPosition = ({ CallBack }) => {
                       {errors.max_salary && <FormFeedback>{errors.max_salary.message}</FormFeedback>}
                     </Col>
                   </div>
-                </Col>
-                <Col md='4' className='mb-1'>
-                  <Label className='form-label'>
-                      Status
-                  </Label>
-                      <Controller
-                          control={control}
-                          id="status"
-                          name="status"
-                          defaultValue={Status[0]}
-                          render={({field}) => (
-                              <Select
-                                  isClearable={false}
-                                  className='react-select'
-                                  classNamePrefix='select'
-                                  options={Status}
-                                  defaultValue={Status[0]}
-                                  {...field}
-                              //   onChange={type => { setType(type.value) }}
-                              />
-                          )}
-                      />
-                    
                 </Col>
                 
                 <div className="row text-center">

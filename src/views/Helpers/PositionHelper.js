@@ -42,7 +42,7 @@ const PositionHelper = () => {
     ] 
   const fetchPositions = async () => {
     
-    const response = await Api.get(`/organization/${Api.org.id}/positions/`)
+    const response = await Api.get(`/organization/positions/`)
     // console.warn(response)
     if (response.status === 200) {
     
@@ -113,7 +113,7 @@ const PositionHelper = () => {
       }
   const deletePosition = async id => {
     if (id) {
-        await  Api.deleteData(`/organization/${Api.org.id}/positions/${id}/`, {method: 'Delete'})
+        await  Api.deleteData(`/organization/positions/${id}/`, {method: 'Delete'})
         .then((result) => {
           const data = {status:result.status, result_data:result.data, message: result.message }
           if (data.status === 200) {

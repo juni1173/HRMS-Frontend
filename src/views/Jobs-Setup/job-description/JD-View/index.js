@@ -1,7 +1,7 @@
 import {React} from 'react'
 import {Table } from 'reactstrap'
 const JDView = ({data}) => {
-  
+  console.warn(data)
   return (
     <>
     <div className='row'>

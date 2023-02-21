@@ -39,13 +39,18 @@ const positionsList = ({ count }) => {
     const deletePosition = (id) => {
       Api.deleteModal().then((result) => {
         if (result.isConfirmed) {
-            Helper.deletePosition(id).then(() => { 
-                Api.successModal(result)
-                fetchList()
-            })
-        } else {
-            Api.cancelModal(result)
-        }
+          Api.deleteData(`/organization/positions/${id}/`, {method: 'Delete'})
+          .then(apiResult => { 
+              if (apiResult) {
+                      Api.successModal(apiResult)
+              } else {
+                  Api.Toast('error', 'Server not responding!')
+              }
+             fetchList()
+          })
+      } else {
+          Api.cancelModal(result)
+      }
       })
     } 
 

@@ -171,16 +171,13 @@ useEffect(() => {
           </Card>
         </Col>
       </Row>
-      
-       
       <div className='d-flex justify-content-between float-right'>
           
           <Button color='primary'  onClick={handleSubmit}>
           <Plus size={14} className='align-middle ms-sm-25 ms-0'></Plus>
             <span className='align-middle d-sm-inline-block d-none'>Email Template</span>            
           </Button>
-        </div>
-   
+      </div>
     </Fragment>
   )
 }

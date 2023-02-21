@@ -95,8 +95,8 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
     })
   }
   const defaultProfileValues = {
-    departmentType: depActive[0],
-    positionType: positionActive[0],
+    departmentType: '',
+    positionType: '',
     project: '',
     title: '',
     code: 0
@@ -150,7 +150,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                 id='react-select'
                 control={control}
                 name='department'
-                defaultValue={depActive[0]}
+                // defaultValue={depActive[0]}
                 render={({ field }) => (
                   <Select
                   theme={depActive}
@@ -160,7 +160,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={depActive}
-                    defaultValue={depActive[0]}
+                    // defaultValue={depActive[0]}
                     {...field}
                     
                   //   onChange={type => { setType(type.value) }}
@@ -182,7 +182,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                 id='react-select'
                 control={control}
                 name='staff_classification'
-                defaultValue={SCActive[0]}
+                // defaultValue={SCActive[0]}
                 render={({ field }) => (
                   <Select
                   theme={SCActive}
@@ -192,7 +192,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={SCActive}
-                    defaultValue={SCActive[0]}
+                    // defaultValue={SCActive[0]}
                     {...field}
                     //   onChange={type => { setType(type.value) }}
                     />
@@ -212,7 +212,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                 id='react-select'
                 control={control}
                 name='position'
-                defaultValue={positionActive[0]}
+                // defaultValue={positionActive[0]}
                 render={({ field }) => (
                   <Select
                   theme={positionActive}
@@ -222,7 +222,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={positionActive}
-                    defaultValue={positionActive[0]}
+                    // defaultValue={positionActive[0]}
                     {...field}
                     //   onChange={type => { setType(type.value) }}
                     />

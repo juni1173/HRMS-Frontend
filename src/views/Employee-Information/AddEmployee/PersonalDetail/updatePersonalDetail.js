@@ -10,10 +10,17 @@ import { XCircle } from "react-feather"
  
 const UpdatePersonalDetail = ({CallBack, empData}) => {
     console.warn(empData)
-      const [profileImage, setProfileImage] = useState(empData.profile_image ? empData.profile_image : null)
-     const BloodGrup = [
-        {value: '1', label: "O+"},
-        {value: '2', label: "O-"}
+      const [profileImage, setProfileImage] = useState(null)
+      const [imageUpload, setImageUpload] = useState(false)
+      const BloodGrup = [
+        {value: "A+", label: "A+"},
+        {value: "A-", label: "A-"},
+        {value: "B+", label: "B+"},
+        {value: "B-", label: "B-"},
+        {value: "AB+", label: "AB+"},
+        {value: "AB-", label: "AB-"},
+        {value: "O+", label: "O+"},
+        {value: "O-", label: "O-"}
      ]
      const MeritalStatus = [
         {value: 1, label: "Not Married"},
@@ -28,11 +35,12 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
      const org_id = Api.org.id
      const defaultValues = {
         organization : org_id,
-        name : empData.name ? empData.name : '',
+        first_name : empData.first_name ? empData.first_name : '',
+        last_name : empData.last_name ? empData.last_name : '',
         father_name : empData.father_name ? empData.father_name : '',
         profile_image: empData.profile_image ? empData.profile_image : '',
-        email : empData.email ? empData.email : '',
-        dob : empData.dob ? new Date(empData.dob) : new Date(),
+        email : empData.personal_email ? empData.personal_email : '',
+        dob : empData.dob ? new Date(empData.dob) : '',
         cnic_no : empData.cnic_no ? empData.cnic_no : '',
         blood_group : BloodGrup.find(pre => pre.value === empData.blood_group) ? BloodGrup.find(pre => pre.value === empData.blood_group) : BloodGrup[0],
         passport_no : empData['passport_data'][0] ? empData['passport_data'][0].passport_no : '',
@@ -55,11 +63,20 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
             
             const formData = new FormData()
             formData.append("organization", org_id)
-            formData.append("name", data.name)
+            formData.append("first_name", data.first_name)
+            formData.append("last_name", data.last_name)
             formData.append("gender", data.gender ? data.gender.value : defaultValues.gender.value)
-            formData.append("email", data.email)
+            formData.append("personal_email", data.email)
             formData.append("cnic_no", data.cnic_no)
-            formData.append("dob", emp_dob)
+            if (data.dob.length > 0) {
+                formData.append("dob", emp_dob)
+            } else {
+                if (defaultValues.dob) {
+                    formData.append("dob", Api.formatDate(defaultValues.dob))
+                } else {
+                    formData.append("dob", '')
+                }
+            }
             formData.append("father_name", data.father_name)
             formData.append("blood_group", data.blood_group.value)
             formData.append("martial_status", data.martial_status.value)
@@ -70,12 +87,7 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
             if (profileImage !== empData.profile_image && profileImage !== null) {
                 formData.append("profile_image", profileImage ? profileImage : null)
             }
-            fetch(`${process.env.REACT_APP_API_URL}/employees/${empData.uuid}/`, {
-                method: "patch",
-                headers: { Authorization: Api.token },
-                body: formData
-              })
-              .then((response) => response.json())
+              Api.jsonPatch(`/employees/${empData.uuid}/`, formData, false)
               .then((result) => { 
                 if (result.status === 200) {
                     Api.Toast('success', result.message)
@@ -97,23 +109,82 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
               <Row>
                   <Col md="4" className="mb-1">
                   <Label className="form-label"  >
-                      Name <Badge color='light-danger'>*</Badge>
+                      First Name <Badge color='light-danger'>*</Badge>
                   </Label>
                   <Controller
                   control={control}
-                  id="name"
-                  name="name"
-                  defaultValue={defaultValues.name}
+                  id="first_name"
+                  name="first_name"
+                  defaultValue={defaultValues.first_name}
                   render={({ field }) => (
                       <Input
                       type="text"
-                      placeholder="Name"
+                      placeholder="First Name"
                       {...field}
                       />
                   )}
                   />
                   </Col>
                   <Col md="4" className="mb-1">
+                  <Label className="form-label"  >
+                      Last Name <Badge color='light-danger'>*</Badge>
+                  </Label>
+                  <Controller
+                  control={control}
+                  id="last_name"
+                  name="last_name"
+                  defaultValue={defaultValues.last_name}
+                  render={({ field }) => (
+                      <Input
+                      type="text"
+                      placeholder="Last Name"
+                      {...field}
+                      />
+                  )}
+                  />
+                  </Col>
+                  <Col md="4" className="mb-1">
+                      
+                      {!profileImage ? (
+                        
+                        (empData.profile_image && !imageUpload) ? (
+                            <>
+                                <img
+                                src={`${process.env.REACT_APP_BACKEND_URL}/${empData.profile_image}`}
+                                alt="Thumb"
+                                width="100"
+                                />
+                                <XCircle color="red" onClick={() => setImageUpload(true)}/>
+                            </>
+                        ) : (
+                            <>
+                                <Label className="form-label">
+                                Profile Pic
+                                </Label>
+                                <Input
+                                type="file"
+                                name="profile_image"
+                                onChange={ (e) => { setProfileImage(e.target.files[0]) }}
+                                placeholder=""
+                                />
+                            </>
+                        )
+                          
+                      ) : (
+                        <>
+                          <img
+                          src={URL.createObjectURL(profileImage)}
+                          alt="Thumb"
+                          width="100"
+                          />
+                          <XCircle color="red" onClick={() => setProfileImage(null)}/>
+                          </>  
+                      )}
+                      
+                  </Col>
+              </Row>
+              <Row className="mt-1">
+                    <Col md="4" className="mb-1">
                       <Label className="form-label">
                           Father Name
                       </Label>
@@ -133,42 +204,14 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
                     
                   </Col>
                   <Col md="4" className="mb-1">
-                      
-                      {!profileImage ? (
-                        <>
-                        <Label className="form-label">
-                            Profile Pic
-                        </Label>
-                          <Input
-                          type="file"
-                          name="profile_image"
-                          onChange={ (e) => { setProfileImage(e.target.files[0]) }}
-                          placeholder=""
-                          />
-                        </>  
-                      ) : (
-                        <>
-                          <img
-                          src={`${process.env.REACT_APP_BACKEND_URL}/${empData.profile_image}`}
-                          alt="Thumb"
-                          width="50"
-                          />
-                          <XCircle color="red" onClick={() => setProfileImage(null)}/>
-                          </>  
-                      )}
-                      
-                  </Col>
-              </Row>
-              <Row className="mt-1">
-                  <Col md="4" className="mb-1">
                       <Label className="form-label">
-                          Official Email <Badge color='light-danger'>*</Badge>
+                          Personal Email <Badge color='light-danger'>*</Badge>
                       </Label>
                       <Controller
                           control={control}
                           id="email"
                           name="email"
-                          defaultValue={defaultValues.email}
+                          defaultValue={defaultValues.personal_email}
                           render={({ field }) => (
                               <Input
                               type="email"
@@ -177,9 +220,6 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
                               />
                           )}
                           />
-                      {/* <Input type="text" name="email"
-                      onChange={ (e) => { onChangedefaultValuesHandler('email', 'input', e) }}
-                          placeholder="email" /> */}
                   </Col>
                   <Col md="4" className="mb-1">
                       <Label className="form-label">
@@ -206,8 +246,9 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
                           />
                           
                   </Col>
-                  
-                  
+              </Row>
+              <Row> 
+                                
                   <Col md="4" className="mb-1">
                       <Label className="form-label">
                       Cnic No <Badge color='light-danger'>*</Badge>
@@ -228,9 +269,6 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
                           )}
                           />
                   </Col>
-                 
-              </Row>
-              <Row> 
                   <Col md="4" className="mb-1">
                       <Label className="form-label">
                       Blood Group
@@ -266,6 +304,9 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
                           )}
                           />
                   </Col>
+              </Row>
+              <Row className="mt-1">
+                            
                   <Col md="4" className="mb-1">
                       <Label className="form-label">
                           Passport Expiry Date
@@ -289,9 +330,6 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
                           )}
                           />
                   </Col>
-              </Row>
-              <Row className="mt-1">
-              
                   <Col md="4" className="mb-1">
                       <Label className="form-label">
                           Gender <Badge color='light-danger'>*</Badge>

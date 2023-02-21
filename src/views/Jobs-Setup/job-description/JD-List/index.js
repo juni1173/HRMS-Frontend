@@ -5,6 +5,7 @@ import JDHelper from "../../../Helpers/JDHelper"
 import StepperForm from "../../job-description/UpdateJobDescription/StepperForm"
 import JDView from "../JD-View"
 import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
+import Masonry from 'react-masonry-component'
 const JDList = ({count, Canvas}) => {
     const Helper = JDHelper()
     const searchHelper = SearchHelper()
@@ -32,12 +33,12 @@ const JDList = ({count, Canvas}) => {
         setCanvasViewOpen(!canvasViewOpen)
     }
     
-    const getJD = async () => {
+    const getJD = () => {
         setLoading(true)
         if (JDList !== null) {
             JDList.splice(0, JDList.length)
         }
-        await Helper.fetchJDList().then(data => {
+        Helper.fetchJDList().then(data => {
             if (data) {
                 if (Object.values(data).length > 0) {
                     setJDList(data)
@@ -97,79 +98,80 @@ const JDList = ({count, Canvas}) => {
     return (        
         <Fragment>
         <div className='row  my-1'>
-              <div className='col-lg-6'>
-                <div className="col-lg-6">
+            <div className='col-lg-6'>
+            <div className="col-lg-6">
+            
+                <InputGroup className='input-group-merge mb-2'>
+                    <InputGroupText>
+                    <Search size={14} />
+                    </InputGroupText>
+                    <Input placeholder='search title...' onChange={e => { getSearch({list: JDList, key: 'title', value: e.target.value }) } }/>
+                </InputGroup>
                 
-                  <InputGroup className='input-group-merge mb-2'>
-                      <InputGroupText>
-                      <Search size={14} />
-                      </InputGroupText>
-                      <Input placeholder='search title...' onChange={e => { getSearch({list: JDList, key: 'title', value: e.target.value }) } }/>
-                  </InputGroup>
-                 
-                </div>
-              </div>
-              <div className='col-lg-6'>
-                <button className='btn btn-primary float-right' onClick={Canvas} >Add Job Description</button> 
-              </div>
             </div>
+            </div>
+            <div className='col-lg-6'>
+            <button className='btn btn-primary float-right' onClick={Canvas} >Add Job Description</button> 
+            </div>
+        </div>
         {Object.values(searchResults).length > 0 ? (
             !loading ? (
-                Object.values(searchResults).map((item) => (
-                    <Card key={item.id}>
-                    <CardBody>
-                        <div className="row">
-                            <div className="col-md-3">
-                              <CardTitle tag='h1'>{item.title}</CardTitle>
-                              <CardSubtitle><Badge color='light-warning'>
-                                        code 
-                                </Badge>{`${item.code}`}</CardSubtitle>
-                            </div>
-                            <div className="col-md-3">
-                                <Badge color='light-info'>
-                                        Position 
-                                </Badge><br></br>
-                                <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{item.position_title && item.position_title}</span>
-                            </div>
-                            <div className="col-md-3">
-                                <Badge color='light-success'>
-                                    Department
-                                </Badge><br></br>
-                                <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.department_title && item.department_title}</span>
-                                
-                            </div>
-                            <div className="col-lg-3 float-right">
-                                
-                                <div className="float-right">
-                                <button
-                                        className="border-0 no-background"
-                                        title="View"
-                                        onClick={() => toggleViewCanvasEnd(item)}
-                                        >
-                                        <Eye color="green"/>
-                                    </button>
-                                    <button
-                                        className="border-0 no-background"
-                                        title="Edit"
-                                        onClick={() => toggleUpdateCanvasEnd(item)}
-                                        >
-                                        <Edit color="orange"/>
-                                    </button>
-                                    <button
-                                        className="border-0 no-background"
-                                        title="Delete"
-                                        onClick={() => deleteJD(item.id)}
-                                        >
-                                        <Trash2 color="red"/>
-                                    </button>
+                    <Masonry className="row js-animation">
+                        {Object.values(searchResults).map((item) => (
+                            <Card key={item.id}>
+                            <CardBody>
+                                <div className="row">
+                                    <div className="col-md-3">
+                                    <CardTitle tag='h1'>{item.title}</CardTitle>
+                                    <CardSubtitle><Badge color='light-warning'>
+                                                code 
+                                        </Badge>{`${item.code}`}</CardSubtitle>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <Badge color='light-info'>
+                                                Position 
+                                        </Badge><br></br>
+                                        <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{item.position_title && item.position_title}</span>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <Badge color='light-success'>
+                                            Department
+                                        </Badge><br></br>
+                                        <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.department_title && item.department_title}</span>
+                                        
+                                    </div>
+                                    <div className="col-lg-3 float-right">
+                                        
+                                        <div className="float-right">
+                                        <button
+                                                className="border-0 no-background"
+                                                title="View"
+                                                onClick={() => toggleViewCanvasEnd(item)}
+                                                >
+                                                <Eye color="green"/>
+                                            </button>
+                                            <button
+                                                className="border-0 no-background"
+                                                title="Edit"
+                                                onClick={() => toggleUpdateCanvasEnd(item)}
+                                                >
+                                                <Edit color="orange"/>
+                                            </button>
+                                            <button
+                                                className="border-0 no-background"
+                                                title="Delete"
+                                                onClick={() => deleteJD(item.id)}
+                                                >
+                                                <Trash2 color="red"/>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                            
-                    </CardBody>
-                    </Card> 
-                ))
-                
+                                    
+                            </CardBody>
+                            </Card> 
+                        ))}
+                    </Masonry>
             ) : (
                 <div className="text-center"><Spinner /></div>
             )

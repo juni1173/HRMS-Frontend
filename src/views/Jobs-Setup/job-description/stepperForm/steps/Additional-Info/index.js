@@ -28,13 +28,13 @@ const Job_Additional_Info = ({ stepper, CallBack, Dimensions }) => {
         }, 1000)
         
       }
-  const removeAction = value => {
-    setLoading(true)
-    Add_info.splice(value)
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
-  }      
+  // const removeAction = value => {
+  //   setLoading(true)
+  //   Add_info.splice(value)
+  //   setTimeout(() => {
+  //     setLoading(false)
+  //   }, 1000)
+  // }      
   const onSubmit = data => {
     CallBack(data, '4')
   }
@@ -123,9 +123,9 @@ const Job_Additional_Info = ({ stepper, CallBack, Dimensions }) => {
                 <th scope="col" className="text-nowrap">
                   Essential
                 </th>
-                <th scope="col" className="text-nowrap">
+                {/* <th scope="col" className="text-nowrap">
                   Actions
-                </th>
+                </th> */}
               </tr>
             </thead>
             
@@ -137,7 +137,7 @@ const Job_Additional_Info = ({ stepper, CallBack, Dimensions }) => {
                           <td>{item.DimensionLabel}</td>
                           <td>{item.desirable}</td>
                           <td>{item.essential}</td>
-                          <td>
+                          {/* <td>
                             <div className="d-flex row">
                               <div className="col">
                                 <button
@@ -148,7 +148,7 @@ const Job_Additional_Info = ({ stepper, CallBack, Dimensions }) => {
                                 </button>
                               </div>
                             </div>
-                          </td>
+                          </td> */}
                           </tr>
                           ) 
                     )

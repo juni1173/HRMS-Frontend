@@ -60,13 +60,12 @@ const updateProgram = ({ programData, CallBack }) => {
      } 
      const updateProgramApi = async (e) => {
         e.preventDefault()
-        if (programData.title !== '' && programData.subject !== ''
-         && programData.description !== '') {
+        if (programData.title !== '' && programData.subject !== '') {
             setLoading(true)
             const formData = new FormData()
             formData['title'] = programDetail.title
             formData['subject'] = programDetail.subject.value
-            formData['description'] = programDetail.description
+            if (programDetail.description !== '') formData['description'] = programDetail.description
         await Api.jsonPatch(`/courses/programs/${programData.slug_title}/${programData.uuid}/`, formData)
             .then(result => {
                 if (result) {

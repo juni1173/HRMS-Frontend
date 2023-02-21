@@ -13,10 +13,6 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
   console.warn(updateIdData)
     const Helper = CustomHelper()
     const Api = apiHelper() 
-    const Status = [
-        { value: 0, label: 'Inactive' },
-        { value: 1, label: 'Active' }
-      ]
     const experience = [
         {value: 1, label: '0-2 years'},
         {value: 2, label: '2-4 years'},
@@ -106,56 +102,21 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
     }
     
     const formValues = updateIdData[0]
-    // const getPosByID = (id) => {
-    //     if (id) {
-    //        Api.get(`/organization/${Api.org.id}/position/${updateID}`).then((result) => {
-    //             if (result.status === 200) {
-    //               setData(result.data)
-    //             //   setEditIDState(id)
-    //              formValues = {
-    //                 ghead: result.data.grouphead,
-    //                 department: result.data.department,
-    //                 staff_id: result.data.staff_classification,
-    //                 position_title: result.data.position_title,
-    //                 position_code: result.data.position_code,
-    //                 qualification: result.data.qualification,
-    //                 experience: result.data.experience,
-    //                 min_salary: result.data.min_salary,
-    //                 max_salary: result.data.max_salary,
-    //                 status: result.data.is_active
-            
-    //             }
-    //              Api.Toast('success', result.message)
-    //             } else {
-    //              Api.Toast('error', result.message)
-    //             }
-                
-    //           })
-    //           .catch((error) => {
-    //             console.error(error)
-    //             Api.Toast('error', 'Invalid Request')
-    //           }) 
-    //         } else {
-    //             Api.Toast('error', 'Invalid Request')
-    //         }
-    //   }
-    
-   
-        const FormSchema = yup.object().shape({
-          position_title: yup.string().min(3, 'Title must be more than 3 characters').required('Position Title Required'),
-          position_code: yup.number().min(3, 'Code must be more than 3 characters').required('Position Code Required'),
-          min_salary: yup.number().required('Min Salary Required'),
-          max_salary: yup.number().required('Max Salary Required'),
-          max_salary: yup.mixed().test('isLarger', 'Max Salary must be larger than Min Salary', (value, testContext) => {
-            if (testContext.parent.min_salary > value) return false
-            return true
-            })
-
-        //   ghead: yup.string().required('Group Head Required').oneOf(Object.values(gHead))
-        //   
-          
-        //   ghead: yup.string().min(3).required()
+    const FormSchema = yup.object().shape({
+      position_title: yup.string().min(3, 'Title must be more than 3 characters').required('Position Title Required'),
+      position_code: yup.number().min(3, 'Code must be more than 3 characters').required('Position Code Required'),
+      min_salary: yup.number().required('Min Salary Required'),
+      max_salary: yup.number().required('Max Salary Required'),
+      max_salary: yup.mixed().test('isLarger', 'Max Salary must be larger than Min Salary', (value, testContext) => {
+        if (testContext.parent.min_salary > value) return false
+        return true
         })
+
+    //   ghead: yup.string().required('Group Head Required').oneOf(Object.values(gHead))
+    //   
+      
+    //   ghead: yup.string().min(3).required()
+    })
     
       const {
         control,
@@ -164,11 +125,11 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
       } = useForm({formValues, mode: 'onChange', resolver: yupResolver(FormSchema) 
       })
      
-        const onSubmit = data => {
+        const onSubmit = async (data) => {
             const formData = new FormData()
             setStateData(data)
             
-            if (data && data.ghead !== undefined && data.department !== undefined && data.staff_id !== undefined && data.qualification !== undefined && data.experience !== undefined && data.status !== undefined) {
+            if (data && data.ghead !== undefined && data.department !== undefined && data.staff_id !== undefined && data.qualification !== undefined && data.experience !== undefined) {
                 if (data.ghead !== undefined && data.ghead.value !== updateIdData.grouphead) formData['grouphead'] = data.ghead.value
                 if (data.department !== undefined && data.department.value !== updateIdData.department) formData['department'] = data.department.value
                 if (data.staff_id !== undefined && data.staff_id.value !== updateIdData.staff_classification) formData['staff_classification'] = data.staff_id.value
@@ -178,16 +139,10 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                 if (data.experience !== undefined && data.experience.value !== updateIdData.years_of_experience)  formData['years_of_experience'] = data.experience.value
                 if (data.min_salary !== undefined && data.min_salary !== updateIdData.min_salary)  formData['min_salary'] = parseInt(data.min_salary)
                 if (data.max_salary !== undefined && data.max_salary !== updateIdData.max_salary)  formData['max_salary'] = parseInt(data.max_salary)
-                if (data.status !== undefined)  formData['is_active'] = data.status.value
-                console.warn(formData)
                 
                 // const finalData = JSON.stringify(formData)
-                fetch(`${process.env.REACT_APP_API_URL}/organization/${Api.org.id}/positions/${updateIdData.id}/`, {
-                method: "PATCH",
-                headers: { "Content-Type": "Application/json", Authorization: Api.token },
-                body: JSON.stringify(formData) 
-                    })
-                    .then((response) => response.json())
+                
+              await  Api.jsonPatch(`/organization/positions/${updateIdData.id}/`, formData)
                 .then((result) => {
                     // const data = {status:result.status, result_data:result.data, message: result.message }
                     if (result.status === 200) {
@@ -207,6 +162,7 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
         // getPosByID(updateID)
         setLoading(true)
         getGHead()
+       if (updateIdData.grouphead) gHeadChange(updateIdData.grouphead)
         // stegheadDefault(gHead[gHead.map(function(o) { return o.value }).indexOf(updateIdData.grouphead)])
         setTimeout(() => {
           setLoading(false)
@@ -377,7 +333,7 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                   )}
                 />
               </Col>
-              <Col md='4' className='mb-1'>
+              <Col md='6' className='mb-1'>
                 <Label className='form-label'>
                   Years of Experience
                 </Label>
@@ -404,7 +360,7 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                 
                 
               </Col>
-              <Col md='4' className='mb-1'>
+              <Col md='6' className='mb-1'>
               <label className='form-label'>
                   Salary Range
                 </label>
@@ -447,28 +403,6 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                       {errors.max_salary && <FormFeedback>{errors.max_salary.message}</FormFeedback>}
                     </Col>
                   </div>
-                </Col>
-                <Col md='4' className='mb-1'>
-                  <Label className='form-label'>
-                      Status
-                  </Label>
-                      <Controller
-                          control={control}
-                          id="status"
-                          name="status"
-                          defaultValue={Status[updateIdData.is_active ? 1 : 0]}
-                          render={({field}) => (
-                              <Select
-                                  isClearable={false}
-                                  className='react-select'
-                                  classNamePrefix='select'
-                                  options={Status}
-                                  {...field}
-                              //   onChange={type => { setType(type.value) }}
-                              />
-                          )}
-                      />
-                    
                 </Col>
                 
                 <div className="row text-center">

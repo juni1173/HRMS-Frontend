@@ -1,4 +1,4 @@
-import { Circle, Home, Briefcase, User, Settings, Mail, BookOpen } from 'react-feather'
+import { Circle, Home, Briefcase, User, Settings, CheckSquare, BookOpen, Bookmark } from 'react-feather'
 
 export default [
   {
@@ -81,6 +81,12 @@ export default [
     icon: <BookOpen size={30}/>,
     children: [     
       {
+        id: 'L&D_Dashboard',
+        title: 'Dashboard',
+        icon: <Circle size={12} />,
+        navLink: '/learning_development/dashboard'
+      },
+      {
         id: 'Subjects',
         title: 'Subjects',
         icon: <Circle size={12} />,
@@ -97,21 +103,53 @@ export default [
         title: 'Courses',
         icon: <Circle size={12} />,
         navLink: '/courses'
+      },
+      {
+        id: 'Instructor',
+        title: 'Instructors',
+        icon: <Circle size={12} />,
+        navLink: '/instructor'
+      },
+      {
+        id: 'Sessions',
+        title: 'Sessions',
+        icon: <Circle size={12} />,
+        navLink: '/course-sessions'
+      },
+      {
+        id: 'applicants_trainees',
+        title: 'Applicants/Trainees',
+        icon: <Circle size={12} />,
+        navLink: '/applicants/trainees'
       }
     ] 
     
   },
+
+  {
+    id: 'nav-projects',
+    title: 'Projects',
+    icon: <CheckSquare size={30} />,
+    navLink: '/projects'
+  },
   
+  {
+    id: 'nav-kind_notes',
+    title: 'Kind Notes',
+    icon: <Bookmark size={30} />,
+    navLink: '/kind_notes'
+  },
+
   {
     id: 'nav-settings',
     title: 'Settings',
     icon: <Settings size={30} />,
     children: [     
       {
-        id: 'nav-email-templates',
-        title: 'Email Templates',
-        icon: <Mail size={12} />,
-        navLink: '/email_templates'
+        id: 'nav-configurations',
+        title: 'Configurations',
+        icon: <Settings size={12} />,
+        navLink: '/configurations'
       }
     ] 
     

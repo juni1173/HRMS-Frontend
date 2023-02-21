@@ -39,26 +39,32 @@
       setCanvasPlacement('end')
       setCanvasOpen(!canvasOpen)
     }
-  
-    // CallBack Function to call async ajax requests
-
-    const CallBack = () => {
-      setCanvasOpen(false)
-      setCount(current => current + 1)
-    }
-  
-    useEffect(() => {
+    
+    const getDashCount = () => {
       setLoading(true)
       Api.get(`/organizations/data/count/`).then(result => {
         if (result.status === 200) {
           setDashcount(result.data)
         } else {
-          Api.Toast('error', 'No Count Data Available')
+          if (Api.org.id) Api.Toast('error', 'No Count Data Available')
         }
       })
       setTimeout(() => {
         setLoading(false)
       }, 1000)
+    }
+
+    // CallBack Function to call async ajax requests
+
+    const CallBack = () => {
+      setCanvasOpen(false)
+      getDashCount()
+      setCount(current => current + 1)
+
+    }
+    
+    useEffect(() => {
+      getDashCount()
       
     }, [])
 
@@ -83,26 +89,30 @@
       <div className="app-user-list">
 
         {/* Organization Setup Button Row */}
-      {(dashCount && dashCount.org_count === 0) && (
-         <Row>
-         <Col lg="12" sm="12">
-           <Card className='warning-setup'>
-             <CardBody>
-                 <Row>
-                     <Col lg='6' sm='6'>
-                         <h3 className='white-heading'>Setup Organization</h3>
-                     </Col>
-                     <Col lg='6' sm='6'>
-                     <Button.Ripple className='float-right btn-lg' color='light' tag={Link} to='/organization-setup' outline>
-                         Setup
-                     </Button.Ripple>
-                     </Col>
-                 </Row>
-             </CardBody>
-           </Card>
-         </Col>
-       </Row> 
-      )}
+      {!loading && (
+        ((dashCount.length === 0) || dashCount.org_count === 0) && (
+          <Row>
+          <Col lg="12" sm="12">
+            <Card className='warning-setup'>
+              <CardBody>
+                  <Row>
+                      <Col lg='6' sm='6'>
+                          <h3 className='white-heading'>Setup Organization</h3>
+                      </Col>
+                      <Col lg='6' sm='6'>
+                      <Button.Ripple className='float-right btn-lg' color='light' tag={Link} to='/organization-setup' outline>
+                          Setup
+                      </Button.Ripple>
+                      </Col>
+                  </Row>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row> 
+       )
+      )
+      
+      }
         
 
         {/* NavBar of Tabs */}

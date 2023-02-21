@@ -55,6 +55,7 @@ const StaffClassification = ({ stepper, list, createForm, stepperStatus, fetchSt
   let token = localStorage.getItem('accessToken')
     token = token.replaceAll('"', '')
     token = `Bearer ${token}`
+    const org = localStorage.getItem('organization').id
   const fetchData = async () => {
       setLoading(true)
       try {
@@ -69,10 +70,12 @@ const StaffClassification = ({ stepper, list, createForm, stepperStatus, fetchSt
           
             setList(response.data)        
         } else {
-          toast.error(
-            <ToastContent type='error' message={response.message} />,
-            { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-          )
+          if (org !== undefined) {
+            toast.error(
+              <ToastContent type='error' message={response.message} />,
+              { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
+            )
+          }
           setList([])
         }
       } catch (error) {
@@ -135,7 +138,6 @@ const StaffClassification = ({ stepper, list, createForm, stepperStatus, fetchSt
       }) 
       
     } else {
-      console.warn(formData)
       toast.error(
         <ToastContent type='error' message='Something Went Wrong. Try Again!' />,
         { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }

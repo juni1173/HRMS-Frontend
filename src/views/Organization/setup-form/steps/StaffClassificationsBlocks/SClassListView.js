@@ -1,6 +1,5 @@
 // ** Reactstrap Imports
 import { Fragment, useState } from 'react'
-import Select from 'react-select'
 import { Check, X, XCircle, Edit, Save, Plus, Minus } from 'react-feather'
 import { useForm } from 'react-hook-form'
 import InputNumber from 'rc-input-number'
@@ -23,13 +22,14 @@ import {
   import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
 const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
-    
     const [editModal, setEditModal] = useState(false)
     const [editIDState, setEditIDState] = useState(null)
+    const [updatedTitle, setUpdatedTitle] = useState('')
+      const [updatedLevel, setUpdatedLevel] = useState('')
     const [editData, setEditData] = useState({
         title: "",
         level: 1,
-        sclass_status: 0,
+        // sclass_status: 0,
         organization_id: null
     })
     const organization = JSON.parse(localStorage.getItem('organization'))
@@ -62,14 +62,14 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
         </Fragment>
         )
       )
-      const sclassStatus = [
-        { value: 0, label: 'Inactive' },
-        { value: 1, label: 'Active' }
-      ]
+      // const sclassStatus = [
+      //   { value: 0, label: 'Inactive' },
+      //   { value: 1, label: 'Active' }
+      // ]
       const defaultValues = {
         title: editData.title,
-        level: editData.level,
-        sclass_status: editData.is_status
+        level: editData.level
+        // sclass_status: editData.is_status
       }
     const {
         // control,
@@ -86,15 +86,10 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
               .then((response) => response.json())
               .then((result) => {
                 if (result.status === 200) {
-                //   console.warn(data.result_data)
                   setEditData(result.data)
                   setEditIDState(id)
-                //   const defaultValues = data.result_data
+                  setUpdatedLevel(result.data.level)
                 setEditModal(true)
-                  toast.success(
-                    <ToastContent type='success' message={result.message} />,
-                    { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-                  )
                 } else {
                   toast.error(
                     <ToastContent type='error' message={result.message} />,
@@ -112,7 +107,6 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
                 )
               }) 
             } else {
-              console.warn(data)
               stepper.next()
               for (const key in data) {
                 if (data[key].length === 0) {
@@ -125,9 +119,8 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
             }
         
       }
-      const [updatedTitle, setUpdatedTitle] = useState(defaultValues.title)
-      const [updatedLevel, setUpdatedLevel] = useState(defaultValues.level)
-      const [updatedStatus, setUpdatedStatus] = useState(defaultValues.sclass_status)
+      
+      // const [updatedStatus, setUpdatedStatus] = useState(defaultValues.sclass_status)
       const updateSClass = (data, id) => {
         if (Object.values(data).length > 0 && id) {
             fetch(`${process.env.REACT_APP_API_URL}/organization/staff_classification/${id}/`, {
@@ -159,15 +152,12 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
         }
       }
       const onSubmit = () => {
-        console.warn(editData)
-        console.warn(updatedTitle)
-        if (updatedTitle !== undefined || updatedLevel !== undefined || updatedStatus !== undefined) {
+        if (updatedTitle !== undefined || updatedLevel !== undefined) {
           const formData = new FormData()
             formData['title'] =  !updatedTitle ? defaultValues.title : updatedTitle
             formData['level'] = !updatedLevel ? defaultValues.level : updatedLevel
-            formData['is_status'] =  !updatedStatus ? defaultValues.sclass_status : updatedStatus
+            // formData['is_status'] =  !updatedStatus ? defaultValues.sclass_status : updatedStatus
             formData['organization_id'] = organization.id 
-            console.warn(formData)
             updateSClass(formData, editIDState)
             
         } else {
@@ -192,9 +182,6 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
               Level
             </th>
             <th scope="col" className="text-nowrap">
-              Status
-            </th>
-            <th scope="col" className="text-nowrap">
               Actions
             </th>
           </tr>
@@ -207,7 +194,6 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
                     <tr key={key}>
                   <td>{item.title}</td>
                   <td>{item.level}</td>
-                  <td>{item.is_active ? 'Active' : 'InActive'}</td>
                   <td>
                     <div className="d-flex row">
                       <div className="col text-center">
@@ -246,8 +232,7 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
         <ModalHeader className='bg-transparent' toggle={() => setEditModal(!editModal)}></ModalHeader>
         <ModalBody className='px-sm-5 mx-50 pb-5'>
           <div className='text-center mb-2'>
-            <h1 className='mb-1'>Edit Staff Classification Head</h1>
-            {/* <p>Updating details will receive a privacy audit.</p> */}
+            <h1 className='mb-1'>Edit Staff Classification</h1>
           </div>
           <Form onSubmit={handleSubmit(onSubmit)}  id="sclassHeadForm">
         <Row>
@@ -257,7 +242,7 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
             </Label>
             <Input type='text' name={`title`} id={`title`} placeholder='SClass Title' defaultValue={defaultValues.title} onChange={e => setUpdatedTitle(e.target.value)}/>
           </Col>
-          <Col md='3' className='mb-1'>
+          <Col md='6' className='mb-1'>
             <Label className='form-label' for='min-max-number-input'>
                     Priority Level [ 1 - 30 ]
                 </Label>
@@ -272,28 +257,8 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
                     onChange={value => setUpdatedLevel(value)}
                   />
           </Col>
-          <Col md='3' className='mb-1'>
-            <Label className='form-label' for={`sclass-status`}>
-              Status
-            </Label>
-            <Select
-              theme={sclassStatus}
-              isClearable={false}
-              id='sclass-status'
-              name='sclass-status'
-              className='react-select'
-              classNamePrefix='select'
-              options={sclassStatus}
-              defaultValue={sclassStatus[defaultValues.sclass_status]}
-              onChange={status => setUpdatedStatus(status.value)}
-            />
-          </Col>
         </Row>
         <div className='d-flex justify-content-between'>
-          {/* <Button color='primary' className='btn-prev' onClick={() => stepper.previous()}>
-            <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
-            <span className='align-middle d-sm-inline-block d-none'>Previous</span>
-          </Button> */}
           <div className='d-flex'>
               <Button color='success' className='btn-next me-1' onClick={onSubmit}>
                 <span className='align-middle d-sm-inline-block d-none'>Update</span>

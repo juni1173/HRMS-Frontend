@@ -59,13 +59,12 @@ const AddSubject = ({ CallBack }) => {
      } 
     const Submit = async (e) => {
         e.preventDefault()
-        if (subjectDetail.title !== '' && subjectDetail.type
-         && subjectDetail.description !== '') {
+        if (subjectDetail.title !== '' && subjectDetail.type) {
             setLoading(true)
             const formData = new FormData()
             formData['title'] = subjectDetail.title
             formData['type'] = subjectDetail.type.value
-            formData['description'] = subjectDetail.description
+            if (subjectDetail.description !== '') formData['description'] = subjectDetail.description
         await Api.jsonPost(`/courses/subjects/`, formData)
             .then(result => {
                 if (result) {

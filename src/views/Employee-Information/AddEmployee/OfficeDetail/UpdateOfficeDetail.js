@@ -7,11 +7,6 @@ import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import EmployeeHelper from "../../../Helpers/EmployeeHelper"
 const UpdateOfficeDetail = ({ CallBack, empData}) => {
-     console.warn(empData)
-      const employee_status = [
-        {value: 1, label: 'Active'},
-        {value: 2, label: 'Not-Active'}
-      ]
       
     const Api = apiHelper()
     const Emp_Helper = EmployeeHelper()
@@ -25,7 +20,7 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
         department : empData.department_title ? {value: empData.department, label: empData.department_title} : '',
         employee_type : empData.employee_type ? empData.employee_type : '',
         position: empData.position_title ? {value: empData.position, label: empData.position_title} : '',
-        code : empData.code ? empData.code : '',
+        official_email : empData.official_email ? empData.official_email : '',
         joining_date : empData.joining_date ? empData.joining_date : '',
         leaving_date : empData.leaving_date ? empData.leaving_date : '',
         starting_salary : empData.starting_salary ? empData.starting_salary : 0,
@@ -33,8 +28,6 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
         skype : empData.skype ? empData.skype : '',
         title : empData.title ? empData.title : '',
         staff_classification : empData.staff_classification_title ? {value: empData.staff_classification, label: empData.staff_classification_title} : '',
-        username : empData.username ? empData.username : '',
-        status : employee_status[0],
         hiring_comment : empData.hiring_comment ? empData.hiring_comment : '',
         leaving_reason : empData.leaving_reason ? empData.leaving_reason : ''
     }
@@ -85,28 +78,25 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
       })
 
     const onSubmitHandler = (data) => {
-        if (data.code !== '') {
-            const emp_joining_date = Api.formatDate(data.joining_date)
-            const emp_leaving_date =  Api.formatDate(data.leaving_date)
+        if (data.official_email !== '') {
+            const emp_joining_date = data.joining_date ? Api.formatDate(data.joining_date) : ''
+            const emp_leaving_date =  data.leaving_date ? Api.formatDate(data.leaving_date) : ''
             const uuid = empData.uuid
-            const emp_code = `emp_${data.code}`
             const formData = new FormData()
             formData["organization"] = Api.org.id
-            formData["department"] = data.department.value
-            formData["employee_type"]  = data.employee_type.value
-            formData["position"] = data.position.value
-            formData["starting_salary"] = data.starting_salary !== 0 ? data.starting_salary : 0
-            formData["code"] = emp_code
-            formData["joining_date"] = emp_joining_date
-            formData["leaving_date"] = emp_leaving_date
-            formData["current_salary"] = data.current_salary  
-            formData["hiring_comment"] = data.hiring_comment          
-            formData["skype"] =  data.skype
-            formData["staff_classification"] = data.staff_classification.value
-            formData["username"] =  data.username
-            formData["title"] = data.title
-            formData["leaving_reason"] = data.leaving_reason
-            formData["status"] =  data.status.value
+            if (data.department) formData["department"] = data.department.value
+            if (data.employee_type) formData["employee_type"]  = data.employee_type.value
+            if (data.position) formData["position"] = data.position.value
+            if (data.starting_salary) formData["starting_salary"] = data.starting_salary !== 0 ? data.starting_salary : 0
+            formData["official_email"] = data.official_email
+            if (emp_joining_date !== '') formData["joining_date"] = emp_joining_date
+            if (emp_leaving_date !== '') formData["leaving_date"] = emp_leaving_date
+            if (data.current_salary) formData["current_salary"] = data.current_salary
+            if (data.hiring_comment) formData["hiring_comment"] = data.hiring_comment
+            if (data.skype) formData["skype"] =  data.skype
+            if (data.staff_classification) formData["staff_classification"] = data.staff_classification.value
+            if (data.title) formData["title"] = data.title
+            if (data.leaving_reason) formData["leaving_reason"] = data.leaving_reason
            
             Api.jsonPatch(`/employees/${uuid}/`, formData)
             .then((result) => { 
@@ -153,17 +143,17 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                     </Col>
                     <Col md="4" className="mb-1">
                         <Label className="form-label">
-                          Employee Code
+                          Official Email
                           </Label> <Badge color='light-danger'>*</Badge>
                           <Controller
                               control={control}
-                              id="code"
-                              name="code"
-                              defaultValue={defaultValues.code}
+                              id="official_email"
+                              name="official_email"
+                              defaultValue={defaultValues.official_email}
                               render={({ field }) => (
                                   <Input
                                   type="text"
-                                  placeholder="Name"
+                                  placeholder="Employee official_email"
                                   {...field}
                                   />
                               )}
@@ -188,46 +178,8 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                           />
                     </Col>
                     <Col md="4" className="mb-1">
-                           <Label className="form-label">
-                        Job Title
-                        </Label>
-                        <Controller
-                          control={control}
-                          id="job_ttitle"
-                          name="title"
-                          defaultValue={defaultValues.title}
-                          render={({ field }) => (
-                              <Input
-                              type="text"
-                              placeholder="job_title"
-                              {...field}
-                              />
-                          )}
-                          />
-                    </Col>
-                    <Col md="4" className="mb-1">
-                           <Label className="form-label">
-                        Employee Status
-                        </Label>
-                        <Controller
-                          control={control}
-                          id="status"
-                          name="status"
-                          defaultValue={employee_status[0]}
-                          render={({ field }) => (
-                              <Select
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                options={employee_status}
-                                {...field}
-                              />
-                          )}
-                          />
-                    </Col>
-                    <Col md="4" className="mb-1">
                         <Label className="form-label">
-                            position
+                            Position
                         </Label>
                         <Controller
                           control={control}
@@ -258,6 +210,7 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                               <Flatpickr 
                               className='form-control'
                                id='default-picker'
+                               placeholder="Joining Date"
                                options={{
                                   altInput: true,
                                   altFormat: 'F j, Y',
@@ -281,13 +234,13 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                           render={({ field }) => (
                               <Input
                               type="number"
-                              placeholder="current Salary"
+                              placeholder="Current Salary"
                               {...field}
                               />
                           )}
                           />
                     </Col>
-                    <Col md="4" className="mb-1">
+                    <Col md="6" className="mb-1">
                             <Label className="form-label">
                         Staff Classification
                         </Label>
@@ -307,22 +260,25 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                           )}
                           />
                     </Col>
-                    <Col md="4" className="mb-1">
-                           <label htmlFor="company-vision" className="form-label form-label">Hiring Comment</label>
+                    <Col md="6" className="mb-1">
+                          <Label className="form-label">
+                        Skype ID
+                        </Label>
                         <Controller
                           control={control}
-                          id="hiring_comment"
-                          name="hiring_comment"
-                          defaultValue={defaultValues.hiring_comment}
+                          id="skype"
+                          name="skype"
+                          defaultValue={defaultValues.skype}
                           render={({ field }) => (
-                            <textarea row="3" placeholder="hiring comment" 
-                           className="form-control"
-                            {...field}
-                            />
+                              <Input
+                              type="text"
+                              placeholder="Skype ID"
+                              {...field}
+                              />
                           )}
                           />
-                    </Col>
-                    <Col md="4" className="mb-1">
+                      </Col>
+                    <Col md="6" className="mb-1">
                         <Label className="form-label">
                         Employee Type
                         </Label>
@@ -342,7 +298,7 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                           )}
                           />
                       </Col>
-                      <Col md="4" className="mb-1">
+                      <Col md="6" className="mb-1">
                            <Label className="form-label">
                             Leaving Date
                         </Label>
@@ -355,6 +311,7 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                               <Flatpickr 
                               className='form-control'
                                id='default-picker'
+                               placeholder="Leaving Date"
                                options={{
                                
                                   altInput: true,
@@ -367,43 +324,24 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                           )}
                           />
                       </Col>
-                      <Col md="4" className="mb-1">
-                          <Label className="form-label">
-                        Skype ID
-                        </Label>
+                      <Col md="6" className="mb-1">
+                           <label htmlFor="company-vision" className="form-label form-label">Hiring Comment</label>
                         <Controller
                           control={control}
-                          id="skype"
-                          name="skype"
-                          defaultValue={defaultValues.skype}
+                          id="hiring_comment"
+                          name="hiring_comment"
+                          defaultValue={defaultValues.hiring_comment}
                           render={({ field }) => (
-                              <Input
-                              type="text"
-                              placeholder="Skype Id"
-                              {...field}
-                              />
+                            <textarea
+                             row="3" 
+                            placeholder="hiring comment" 
+                           className="form-control"
+                            {...field}
+                            />
                           )}
                           />
-                      </Col>
-                      <Col md="4" className="mb-1">
-                      <Label className="form-label">
-                        HRM UserName
-                        </Label>
-                        <Controller
-                          control={control}
-                          id="username"
-                          name="username"
-                          defaultValue={defaultValues.username}
-                          render={({ field }) => (
-                              <Input
-                              type="text"
-                              placeholder="username"
-                              {...field}
-                              />
-                          )}
-                          /> 
-                      </Col>
-                      <Col md="4" className="mb-1">
+                    </Col>
+                      <Col md="6" className="mb-1">
                           <label htmlFor="company-vision" className="form-label form-label">Leaving Reason</label>
                         <Controller
                           control={control}
@@ -411,7 +349,7 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                           name="leaving_reason"
                           defaultValue={defaultValues.leaving_reason}
                           render={({ field }) => (
-                            <textarea row="3" placeholder="leaving reasont" 
+                            <textarea row="3" placeholder="Leaving Reason" 
                            className="form-control"
                             {...field}
                             />

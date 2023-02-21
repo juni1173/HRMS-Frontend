@@ -6,29 +6,45 @@ import apiHelper from '../../../Helpers/ApiHelper'
 
 
 const UpdateJobSpecifiction = ({ stepper, preData, CallBack, Dimensions }) => {
-  
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [dimension, setDimension] = useState(null)
     const [desirable, setDesirable] = useState(null)
     const [essential, setEssential] = useState(null)
     const [Specifications] = useState([])
+    const dimensionExist = () => {
+      let size = false
+      for (let i = 0; i < Specifications.length; i++) {
+        if (Specifications[i].jd_dimension === dimension) {
+          size = true
+          return size
+        }
+      }
+      return size
+    }
   const addmoreSubmit = () => {
       setLoading(true)
         if (Object.values(Specifications).length > 0) {
-          for (let i = 0; i < Specifications.length; i++) {
-            if (Specifications[i].dimension === dimension) {
-              Api.Toast('error', 'Dimension Already Exist')
+          if (dimensionExist()) {
+            Api.Toast('error', 'Dimension Already Exist')
               setTimeout(() => {
                 setLoading(false)
               }, 1000)
-              return false
-            } else {
-              Specifications.push({dimension, desirable, essential})   
-            }
-          } 
+          } else {
+            Specifications.push({jd_dimension: dimension,
+              dimension_title: Dimensions.find(pre => pre.value === dimension).label,
+              desirable,
+              essential})
+              setTimeout(() => {
+                setLoading(false)
+              }, 1000)
+          }
+          
         } else {
-          Specifications.push({dimension, desirable, essential})
+          Specifications.push({jd_dimension: dimension,
+            dimension_title: Dimensions.find(pre => pre.value === dimension).label,
+            desirable,
+            essential})
         }
         setTimeout(() => {
           setLoading(false)
@@ -48,12 +64,14 @@ const UpdateJobSpecifiction = ({ stepper, preData, CallBack, Dimensions }) => {
   } 
   const specData = () => {
     setLoading(true)
-    // Specifications.splice(0, Specifications.length)
-    console.warn(preData.length)
+    Specifications.splice(0, Specifications.length)
     for (let i = 0; i < preData.length; i++) {
       if (preData[i].jd_dimension < 5) {
-        console.warn(preData[i].jd_dimension)
-        Specifications.push(preData[i])
+        // console.warn(preData[i].jd_dimension)
+        Specifications.push({jd_dimension: preData[i].jd_dimension,
+          dimension_title: preData[i].jd_dimension_title,
+          desirable: preData[i].desirable,
+        essential: preData[i].essential})
       }
     }
     setTimeout(() => {
@@ -164,7 +182,7 @@ const UpdateJobSpecifiction = ({ stepper, preData, CallBack, Dimensions }) => {
                     item.jd_dimension < 5 && ( 
                       !loading && (
                           <tr key={key}>
-                          <td>{item.jd_dimension_title}</td>
+                          <td>{item.dimension_title}</td>
                           <td>{item.desirable}</td>
                           <td>{item.essential}</td>
                           <td>

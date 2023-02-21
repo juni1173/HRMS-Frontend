@@ -158,6 +158,7 @@ const UpdateEmpContact = ({CallBack, empData, uuid}) => {
                              mask="+\929999999999"
                              name="landline"
                              className="phone form-control"
+                             defaultValue={empData.landline}
                              onChange={ (e) => { onChangeContactDetailHandler('landline', 'input', e) }}
                         />
                     </Col>
@@ -165,7 +166,7 @@ const UpdateEmpContact = ({CallBack, empData, uuid}) => {
                 <Row>
                     
                     <Col md="12" className="mb-1">
-                    <button className="btn-next float-right btn btn-success" onClick={(e) => onSubmitHandler(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
+                    <button className="btn-next float-right btn btn-warning" onClick={(e) => onSubmitHandler(e)}><span className="align-middle d-sm-inline-block d-none">Update</span></button>
                     </Col>
                 </Row>
             </Form>

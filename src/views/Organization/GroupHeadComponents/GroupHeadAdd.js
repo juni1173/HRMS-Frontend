@@ -7,17 +7,17 @@ import Select from 'react-select'
 import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
 const GroupHeadAdd = ({ stepper, fetchGroupHeads, stepperStatus, GroupHeadCallBack }) => {
-    const groupStatus = [
-        { value: 0, label: 'Inactive' },
-        { value: 1, label: 'Active' }
-      ]
+    // const groupStatus = [
+    //     { value: 0, label: 'Inactive' },
+    //     { value: 1, label: 'Active' }
+    //   ]
       const groupType = [
-        { value: 1, label: 'Non-Technical' },
-        { value: 2, label: 'Technical' }
+        { value: 1, label: 'Technical' },
+        { value: 2, label: 'Non-Technical' }
       ]
       const [title, setTitle] = useState('')
       const [group_type, setType] = useState(0)
-      const [group_status, setStatus] = useState(0)
+      // const [group_status, setStatus] = useState(0)
       const [group_description, setdescription] = useState('')
       const organization = JSON.parse(localStorage.getItem('organization'))
     const ToastContent = ({ type, message }) => (
@@ -54,7 +54,7 @@ const GroupHeadAdd = ({ stepper, fetchGroupHeads, stepperStatus, GroupHeadCallBa
         if (title.length > 0) {
           formData['title'] =  title
           formData['grouphead_type'] = !group_type ? groupType[0].value : group_type
-          formData['is_status'] =  !group_status ? groupStatus[0].value : group_status
+          // formData['is_status'] =  !group_status ? groupStatus[0].value : group_status
           formData['description'] = group_description
           formData['organization'] = organization.id
     
@@ -116,7 +116,7 @@ return (
             </Label>
             <Input type='text' name={`title`} id={`title`} placeholder='Group Title' onChange={e => setTitle(e.target.value)}/>
           </Col>
-          <Col md='3' className='mb-1'>
+          <Col md='6' className='mb-1'>
             <Label className='form-label' for={`type`}>
               Type
             </Label>
@@ -128,11 +128,10 @@ return (
               className='react-select'
               classNamePrefix='select'
               options={groupType}
-              defaultValue={groupType[0]}
               onChange={type => { setType(type.value) }}
             />
           </Col>
-          <Col md='3' className='mb-1'>
+          {/* <Col md='3' className='mb-1'>
             <Label className='form-label' for={`group-status`}>
               Status
             </Label>
@@ -147,7 +146,7 @@ return (
               defaultValue={groupStatus[0]}
               onChange={status => { setStatus(status.value) }}
             />
-          </Col>
+          </Col> */}
         </Row>
         <Row>
           <Col md='12' className='mb-1'>

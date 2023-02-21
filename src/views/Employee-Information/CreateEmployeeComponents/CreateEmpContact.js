@@ -103,7 +103,7 @@ const CreateEmpContact = ({uuid, CallBack}) => {
                         <Input type="text" 
                         name="name"
                         onChange={ (e) => { onChangeContactDetailHandler('name', 'input', e) }}
-                        placeholder="name"  />
+                        placeholder="Name"  />
                     </Col>
                 </Row>
                 <Row className="mt-1">
@@ -114,7 +114,7 @@ const CreateEmpContact = ({uuid, CallBack}) => {
                         <Input type="email"
                          name="email"
                          onChange={ (e) => { onChangeContactDetailHandler('email', 'input', e) }}
-                         placeholder="email"  />
+                         placeholder="Email"  />
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
@@ -123,7 +123,7 @@ const CreateEmpContact = ({uuid, CallBack}) => {
                         <Input type="text"
                          name="address"
                          onChange={ (e) => { onChangeContactDetailHandler('address', 'input', e) }}
-                         placeholder="address"  />
+                         placeholder="Address"  />
                         
                     </Col>
                 </Row>
@@ -136,6 +136,7 @@ const CreateEmpContact = ({uuid, CallBack}) => {
                             mask="+\929999999999"
                             name="mobile_no"
                             className="phone form-control"
+                            placeholder="Mobile Number"
                             onChange={ (e) => { onChangeContactDetailHandler('mobile_no', 'input', e) }}
                             
                             />
@@ -148,6 +149,7 @@ const CreateEmpContact = ({uuid, CallBack}) => {
                             mask="+\929999999999"
                             name="landline"
                             className="phone form-control"
+                            placeholder="Landline Number"
                             onChange={ (e) => { onChangeContactDetailHandler('landline', 'input', e) }}
                             
                             />

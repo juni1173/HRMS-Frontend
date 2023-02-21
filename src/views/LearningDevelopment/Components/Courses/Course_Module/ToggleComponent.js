@@ -1,13 +1,14 @@
 import { useState } from "react"
 import { ChevronDown, Edit, Eye, XCircle, Plus } from "react-feather"
 import { Card, CardBody, CardTitle, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody } from "reactstrap"
-import ModuleHelper from "../../../../Helpers/LearningDevelopmentHelper/Course-subModules/ModuleHelper"
+import apiHelper from "../../../../Helpers/ApiHelper"
 import UpdateModule from "./UpdateModule"
 import Module_Topics from "./Course_Topics/index"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const ToggleComponent = ({ data, id, CallBack, courseData }) => {
-    const Helper = ModuleHelper()
+    console.warn(courseData)
+    const Api = apiHelper()
     const [toggleThisElement, setToggleThisElement] = useState(false)
     const [updateCanvasPlacement, setupdateCanvasPlacement] = useState('end')
     const [updateCanvasOpen, setupdateCanvasOpen] = useState(false)
@@ -15,7 +16,7 @@ const ToggleComponent = ({ data, id, CallBack, courseData }) => {
     const removeModule = (uuid, slug, id) => {
         MySwal.fire({
             title: 'Are you sure?',
-            text: "Do you want to delete the Course!",
+            text: "Do you want to delete the Module!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, Delete it!',
@@ -26,20 +27,32 @@ const ToggleComponent = ({ data, id, CallBack, courseData }) => {
             buttonsStyling: false
         }).then(function (result) {
             if (result.value) {
-                Helper.deleteModule(uuid, slug, id)
-                    .then(() => {
-                            MySwal.fire({
-                                icon: 'success',
-                                title: 'Course Deleted!',
-                                text: 'Course is deleted.',
-                                customClass: {
-                                confirmButton: 'btn btn-success'
-                                }
-                            }).then(function (result) {
-                                if (result.isConfirmed) {
-                                    CallBack()
-                                }
-                            }) 
+                Api.deleteData(`/courses/details/${slug}/${uuid}/modules/${id}/`, {method: 'Delete'})
+                .then((deleteResult) => {
+                    if (deleteResult.status === 200) {
+                        MySwal.fire({
+                            icon: 'success',
+                            title: 'Module Deleted!',
+                            text: 'Module is deleted.',
+                            customClass: {
+                            confirmButton: 'btn btn-success'
+                            }
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                CallBack()
+                            }
+                        }) 
+                    } else {
+                        MySwal.fire({
+                            icon: 'error',
+                            title: deleteResult.message ? deleteResult.message : 'Module can not be deleted!',
+                            text: 'Module is not deleted.',
+                            customClass: {
+                            confirmButton: 'btn btn-danger'
+                            }
+                        })
+                    }
+                            
                     })
             } 
         })
@@ -50,7 +63,7 @@ const ToggleComponent = ({ data, id, CallBack, courseData }) => {
         }
     return (
         <>
-            <div className="course-single-card" key={id}>
+            <div className="Module-single-card" key={id}>
                 <Card key={id}>
                     <CardTitle className="mb-0">
                         <div className="row bg-grey">
@@ -63,15 +76,15 @@ const ToggleComponent = ({ data, id, CallBack, courseData }) => {
                                     <div className="col-lg-4 col-md-4 col-sm-4">
                                         <button
                                             className="border-0 no-background float-right"
-                                            title="Delete Course"
-                                            onClick={() => removeModule(data.uuid, data.slug_title, data.id)}
+                                            title="Delete Module"
+                                            onClick={() => removeModule(courseData.uuid, data.course_slug_title, data.id)}
                                             >
                                             <XCircle color="white"/>
                                         </button>
                                         
                                         <button
                                             className="border-0 no-background float-right"
-                                            title="Edit Course"
+                                            title="Edit Module"
                                             onClick={toggleCanvasEnd}
                                             >
                                             <Edit color="white"/>

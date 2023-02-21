@@ -1,12 +1,13 @@
 import { useState, useEffect, Fragment } from "react"
 import { Edit, Eye, Search, Trash2} from "react-feather"
-import {Card, CardTitle, CardBody, Badge, Spinner, Offcanvas, OffcanvasHeader, OffcanvasBody, InputGroup, Input, InputGroupText} from "reactstrap"
+import {Container, Card, CardTitle, CardBody, Spinner, Offcanvas, OffcanvasHeader, OffcanvasBody, InputGroup, Input, InputGroupText} from "reactstrap"
 import UpdateEmailTemplate from './UpdateEmailTemplate'
 import ViewEmailTemplate from "./ViewEmailTemplate"
 import EmailTemplateHelper from "../../../Helpers/EmailTemplateHelper"
 import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import Masonry from 'react-masonry-component'
 const ListEmailTemplate = ({count, CreateFormToggle}) => {
     const Helper = EmailTemplateHelper()
     const searchHelper = SearchHelper()
@@ -129,7 +130,6 @@ const ListEmailTemplate = ({count, CreateFormToggle}) => {
     <Fragment>
         <div className='row  my-1'>
               <div className='col-lg-6'>
-                <div className="col-lg-6">
                 
                   <InputGroup className='input-group-merge mb-2'>
                       <InputGroupText>
@@ -137,18 +137,17 @@ const ListEmailTemplate = ({count, CreateFormToggle}) => {
                       </InputGroupText>
                       <Input placeholder='search title...' onChange={e => { getSearch({list: EmailList, key: 'title', value: e.target.value }) } }/>
                   </InputGroup>
-                 
-                </div>
               </div>
               <div className='col-lg-6'>
-                <button className='btn btn-primary float-right' onClick={CreateFormToggle} >Add Email Template</button> 
+                <button className='btn btn-success float-right' onClick={CreateFormToggle} >Add Email Template</button> 
               </div>
             </div>
             <div className="row">
         {Object.values(searchResults).length > 0 ? (
             !loading ? (
-                Object.values(searchResults).map((item, index) => (
-                    
+                <Container>
+                    <Masonry className="row js-animation">
+                    {Object.values(searchResults).map((item, index) => (
                         <div className="col-lg-6" key={index}>
                             <Card >
                                 <CardBody>
@@ -201,19 +200,23 @@ const ListEmailTemplate = ({count, CreateFormToggle}) => {
                                 </CardBody>
                             </Card> 
                         </div>
-                   
-                ))
+                    ))}
+                    </Masonry>
+                </Container>
+                
                 
             ) : (
-                <div className="text-center"><Spinner /></div>
+                <div className="text-center"><Spinner type="grow" color="white"/></div>
             )
            
         ) : (
-            <Card>
-            <CardBody>
-                No Email Template found...
-            </CardBody>
-            </Card> 
+            <Container>
+                <Card>
+                <CardBody>
+                    No Email Template found...
+                </CardBody>
+                </Card> 
+            </Container>
         )}
          </div>
         <Offcanvas direction={canvasUpdatePlacement} isOpen={canvasUpdateOpen} toggle={toggleUpdateCanvasEnd} className="largeCanvas">

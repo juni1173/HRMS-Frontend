@@ -1,12 +1,12 @@
 import { useState } from "react"
 import { ChevronDown, Edit, Eye, XCircle, Plus } from "react-feather"
 import { Card, CardBody, CardTitle, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody } from "reactstrap"
-import TopicHelper from "../../../../../Helpers/LearningDevelopmentHelper/Course-subModules/TopicsHelper"
+import apiHelper from "../../../../../Helpers/ApiHelper"
 import UpdateTopic from "./UpdateTopic"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const ToggleComponent = ({ data, id, CallBack, module_id }) => {
-    const Helper = TopicHelper()
+    const Api = apiHelper()
     const [toggleThisElement, setToggleThisElement] = useState(false)
     const [updateCanvasPlacement, setupdateCanvasPlacement] = useState('end')
     const [updateCanvasOpen, setupdateCanvasOpen] = useState(false)
@@ -25,20 +25,32 @@ const ToggleComponent = ({ data, id, CallBack, module_id }) => {
             buttonsStyling: false
         }).then(function (result) {
             if (result.value) {
-                Helper.deleteTopic(uuid, slug, id)
-                    .then(() => {
-                            MySwal.fire({
-                                icon: 'success',
-                                title: 'Course Deleted!',
-                                text: 'Course is deleted.',
-                                customClass: {
-                                confirmButton: 'btn btn-success'
-                                }
-                            }).then(function (result) {
-                                if (result.isConfirmed) {
-                                    CallBack()
-                                }
-                            }) 
+                Api.deleteData(`/courses/details/module/${module_id}/topics/${id}/`, {method: 'Delete'})
+                .then((deleteResult) => {
+                    if (deleteResult.status === 200) {
+                        MySwal.fire({
+                            icon: 'success',
+                            title: 'Topic Deleted!',
+                            text: 'Topic is deleted.',
+                            customClass: {
+                            confirmButton: 'btn btn-success'
+                            }
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                CallBack()
+                            }
+                        }) 
+                    } else {
+                        MySwal.fire({
+                            icon: 'error',
+                            title: deleteResult.message ? deleteResult.message : 'Topic can not be deleted!',
+                            text: 'Topic is not deleted.',
+                            customClass: {
+                            confirmButton: 'btn btn-danger'
+                            }
+                        })
+                    }
+                            
                     })
             } 
         })
@@ -49,7 +61,7 @@ const ToggleComponent = ({ data, id, CallBack, module_id }) => {
         }
     return (
         <>
-            <div className="course-single-card" key={id}>
+            <div className="Topic-single-card" key={id}>
                 <Card key={id}>
                     <CardTitle className="mb-0">
                         <div className="row bg-warning">
@@ -62,7 +74,7 @@ const ToggleComponent = ({ data, id, CallBack, module_id }) => {
                                     <div className="col-lg-3 col-md-3 col-sm-3">
                                         <button
                                             className="border-0 no-background float-right"
-                                            title="Delete Course"
+                                            title="Delete Topic"
                                             onClick={() => removeTopic(data.uuid, data.slug_title, data.id)}
                                             >
                                             <XCircle color="white"/>
@@ -70,7 +82,7 @@ const ToggleComponent = ({ data, id, CallBack, module_id }) => {
                                         
                                         <button
                                             className="border-0 no-background float-right"
-                                            title="Edit Course"
+                                            title="Edit Topic"
                                             onClick={toggleCanvasEnd}
                                             >
                                             <Edit color="white"/>
@@ -90,17 +102,17 @@ const ToggleComponent = ({ data, id, CallBack, module_id }) => {
                                         </Badge><br></br>
                                         <span className="mode" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{data.course_module_title && data.course_module_title}</span>
                                     </div> */}
-                                    {/* <div className="col-md-4">
-                                        <Badge color='light-warning'>
-                                            Total Hours
-                                        </Badge><br></br>
-                                        <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{data.credit_hours && data.credit_hours}</span>
-                                    </div> */}
-                                    <div className="col-md-12">
+                                    <div className="col-md-8">
                                         <Badge color='light-warning'>
                                             Description
                                         </Badge><br></br>
                                         <span className="mode" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{data.description && data.description}</span>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <Badge color='light-warning'>
+                                            Total Hours
+                                        </Badge><br></br>
+                                        <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{data.credit_hours && data.credit_hours}</span>
                                     </div>
                                 </div>
                                 <hr></hr>

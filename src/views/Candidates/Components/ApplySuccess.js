@@ -88,8 +88,9 @@ const ApplySuccess = (props) => {
 
                 </div>
                 <hr></hr>
-                        
-                <div className="row">
+                {(Object.values(props.successData.candidate_non_test).length > 0 &&
+                Object.values(props.successData.candidate_tech_test).length > 0) && (
+                    <div className="row">
                     <div className="col-lg-12">
                         <h3>Assessment Instruction</h3>
                         <ul>
@@ -114,7 +115,8 @@ const ApplySuccess = (props) => {
                         </ul>
                         <p className="mt-2">You are expected to follow the above instructions in true letter and spirit. Best of Luck!</p>
                     </div>
-                </div>
+                    </div>
+                )}        
                 
                 </>
             ) : (

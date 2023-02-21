@@ -30,10 +30,10 @@ const ModuleHelper = () => {
     
             await Api.jsonPost(`/courses/details/${slug}/${uuid}/modules/`, data)
                 .then((result) => {
-                    if (result.status === 200) {
+                    if (result) {
                     return result
                     } else {
-                        Api.Toast('error', 'not working')
+                        Api.Toast('error', 'Server Not Responding')
                     }
                 })
             .catch((error) => {

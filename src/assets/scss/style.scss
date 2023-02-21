@@ -45,6 +45,12 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 	border-color: #315180 !important;
 	background-color: #315180 !important;
 }
+.main-menu .navbar-header {
+	height: auto !important;
+}
+.brand-text {
+	white-space: normal;
+}
 .main-menu .navbar-header .navbar-brand .brand-text,
 .bs-stepper .bs-stepper-header .step.active .step-trigger .bs-stepper-label .bs-stepper-title {
 	color: #315180 !important;
@@ -139,10 +145,16 @@ svg {
 	text-align: center;
 	margin: auto;
 }
+.bg-green{
+	background-color: #6db433;
+	padding : 10px 0;
+	text-align: center;
+	margin: auto;
+}
 .bg-blue h4, .bg-warning h4, .bg-grey h4{
 	color:white
 }
-.bg-blue p.text-white, .bg-warning p.text-white, .bg-grey p.text-white{
+.bg-blue p.text-white, .bg-warning p.text-white, .bg-grey p.text-white, .bg-green p.text-white{
 	color:white
 }
 p.label{
@@ -212,3 +224,49 @@ p.label{
   .evaluationForm .form-check {
 	margin-bottom: 1.5rem !important;
   }
+div.configuration_panel ul.nav.nav-tabs.nav-left {
+	min-width: 25%;
+}
+div.configuration_panel .nav-link {
+	background-color: white;
+	padding: 20px 15px;
+	border-bottom: 1px lightgrey solid;
+}
+div.configuration_panel a.nav-link.active {
+	color: white;
+	background-color: #315180;
+	box-shadow: 0 0 10px 1px rgb(115 103 240 / 70%);
+    border-radius: 4px;
+}
+div.configuration_panel .nav-tabs .nav-link:after {
+	background: none !important;
+}
+div.configuration_panel .tab-pane-blue {
+	overflow-x: hidden;
+    background: #315180;
+    padding: 20px;
+    border-radius: 5px;
+}
+.pagination {
+	list-style: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 3rem;
+	gap: 5px;
+}
+.pagination .page-num {
+	padding: 8px 15px;
+	cursor: pointer;
+	border-radius: 5rem;
+	font-weight: 400;
+	background-color: #fff;
+}
+.pagination .page-num:hover {
+	background-color: #315180;
+	color: #fff;
+}
+.pagination .active {
+	background-color: #315180;
+	color: #fff;
+}

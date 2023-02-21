@@ -90,7 +90,6 @@ const GroupHead = ({ stepper, stepperStatus, list, createForm, fetchGroupHeads, 
       }) 
       
     } else {
-      console.warn(formData)
       api.Toast('error', "Something Went Wrong. Try Again!")
     }
   } 

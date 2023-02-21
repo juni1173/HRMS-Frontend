@@ -7,21 +7,21 @@ import apiHelper from '../../../Helpers/ApiHelper'
 const UpdateJobAdditionalInfo = ({ stepper, preData, CallBack, Dimensions}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(true)
-    const [jd_dimension, setDimension] = useState(null)
+    const [dimension, setDimension] = useState(null)
     const [desirable, setDesirable] = useState(null)
     const [essential, setEssential] = useState(null)
     const [Add_info] = useState([])
   const addmoreSubmit = () => {
       setLoading(true)
-      const DimensionObject = Dimensions.find(x => x.value === jd_dimension)
+      const DimensionObject = Dimensions.find(x => x.value === dimension)
       const DimensionLabel = DimensionObject.label
-      if (Add_info.find(x => x.jd_dimension === jd_dimension)) {
+      if (Add_info.find(x => x.jd_dimension === dimension)) {
         Api.Toast('error', 'Dimension Already Exist')
         setTimeout(() => {
           setLoading(false)
         }, 1000)
       } else {
-        Add_info.push({jd_dimension, desirable, essential, DimensionLabel})  
+        Add_info.push({jd_dimension: dimension, desirable, essential, DimensionLabel})  
       }
         setTimeout(() => {
           setLoading(false)
@@ -36,16 +36,17 @@ const UpdateJobAdditionalInfo = ({ stepper, preData, CallBack, Dimensions}) => {
     }, 1000)
   }      
   const onSubmit = data => {
-    console.warn(data)
     CallBack(data, '4')
   }
   const additionalData = () => {
     setLoading(true)
-    console.warn(preData)
+    Add_info.splice(0, Add_info.length)
     for (let i = 0; i < preData.length; i++) {
       if (preData[i].jd_dimension > 4) {
-        console.warn(preData[i].jd_dimension)
-        Add_info.push(preData[i])
+        Add_info.push({jd_dimension: preData[i].jd_dimension,
+          desirable: preData[i].desirable,
+        essential: preData[i].essential,
+        DimensionLabel: preData[i].jd_dimension_title}) 
       }
     }
     setTimeout(() => {

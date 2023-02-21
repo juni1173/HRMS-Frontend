@@ -35,7 +35,7 @@ const ActiveJobsList = ({count, data, CallBack}) => {
                     if (result.status === 200) {
                         if (result.data.length > 0) {
                           for (let i = 0; i < result.data.length; i++) {
-                            if (result.data[i].job_is_active === true) {
+                            if (result.data[i].is_active === true) {
                               activeListArray.push(result.data[i]) 
                             }
                             
@@ -62,11 +62,17 @@ const ActiveJobsList = ({count, data, CallBack}) => {
         setEditModal(false)
         getActiveJobs()
     }
-  const deleteModalOpen = (id) => {
+  const deleteModalOpen = (uuid) => {
     Api.deleteModal().then((result) => {
         if (result.isConfirmed) {
-            Helper.deleteJob(id).then(() => { 
-                Api.successModal(result)
+            Api.get(`/jobs/${uuid}/deactivate/`)
+            .then(apiResult => { 
+                if (apiResult) {
+                        Api.successModal(apiResult)
+                } else {
+                    Api.Toast('error', 'Server not responding!')
+                }
+                
                getActiveJobs()
                CallBack()
             })
@@ -188,7 +194,7 @@ useEffect(() => {
                                 <div className="col">
                                     <button
                                     className="border-0"
-                                    onClick={() => deleteModalOpen(item.job_uuid)}
+                                    onClick={() => deleteModalOpen(item.uuid)}
                                     >
                                     <XCircle color="red" />
                                     </button>

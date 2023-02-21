@@ -60,13 +60,12 @@ const AddProgram = ({ CallBack }) => {
      } 
     const Submit = async (e) => {
         e.preventDefault()
-        if (programDetail.title !== '' && programDetail.subject
-         && programDetail.description !== '') {
+        if (programDetail.title !== '' && programDetail.subject) {
             setLoading(true)
             const formData = new FormData()
             formData['title'] = programDetail.title
             formData['subject'] = programDetail.subject.value
-            formData['description'] = programDetail.description
+            if (programDetail.description !== '') formData['description'] = programDetail.description
         await Api.jsonPost(`/courses/programs/`, formData)
             .then(result => {
                 if (result) {

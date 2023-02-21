@@ -85,6 +85,7 @@ const ContactDetail = ({emp_state}) => {
 
     const onSubmitHandler = async (e) => {
         e.preventDefault()
+        setLoading(true)
             const uuid = emp_state['emp_data'].uuid
             await Api.jsonPost(`/employees/${uuid}/emergency/contact/`, contactDetail)
             .then(result => {
@@ -99,151 +100,160 @@ const ContactDetail = ({emp_state}) => {
                     Api.Toast('error', 'Server Not Responding')
                 }
             })
+            setTimeout(() => {
+                setLoading(false)
+            }, 1000)
     }
      
     useEffect(() => {
-         
         fetchContactRelations()
-        
     }, [])
     return (
         <Fragment>
-            <Form >
+             {!loading ? (
                 <Row>
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                        Contact Relation
-                        </Label>
-                        <Select
-                            isClearable={false}
-                            className='react-select'
-                            classNamePrefix='select'
-                            name="relation"
-                            options={relations}
-                            defaultValue= {relations[0]}
-                            onChange={ (e) => { onChangeContactDetailHandler('relation', 'select', e.value) }}
-                        />
-                    </Col>
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                         Name
-                        </Label>
-                        <Input type="text" 
-                        name="name"
-                        onChange={ (e) => { onChangeContactDetailHandler('name', 'input', e) }}
-                        placeholder="name"  />
+                    <Col md={12}>
+                        <Form >
+                            <Row>
+                                <Col md="6" className="mb-1">
+                                    <Label className="form-label">
+                                    Contact Relation
+                                    </Label>
+                                    <Select
+                                        isClearable={false}
+                                        className='react-select'
+                                        classNamePrefix='select'
+                                        name="relation"
+                                        options={relations}
+                                        onChange={ (e) => { onChangeContactDetailHandler('relation', 'select', e.value) }}
+                                    />
+                                </Col>
+                                <Col md="6" className="mb-1">
+                                    <Label className="form-label">
+                                    Name
+                                    </Label>
+                                    <Input type="text" 
+                                    name="name"
+                                    onChange={ (e) => { onChangeContactDetailHandler('name', 'input', e) }}
+                                    placeholder="Name"  />
+                                </Col>
+                            </Row>
+                            <Row className="mt-1">
+                                <Col md="6" className="mb-1">
+                                    <Label className="form-label">
+                                    Email
+                                    </Label>
+                                    <Input type="email"
+                                    name="email"
+                                    onChange={ (e) => { onChangeContactDetailHandler('email', 'input', e) }}
+                                    placeholder="Email"  />
+                                </Col>
+                                <Col md="6" className="mb-1">
+                                    <Label className="form-label">
+                                Address
+                                    </Label>
+                                    <Input type="text"
+                                    name="address"
+                                    onChange={ (e) => { onChangeContactDetailHandler('address', 'input', e) }}
+                                    placeholder="Address"  />
+                                    
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md="6" className="mb-1">
+                                    <Label className="form-label">
+                                    Mobile Number
+                                    </Label>
+                                    <InputMask
+                                        mask="+\929999999999"
+                                        name="mobile_no"
+                                        className="phone form-control"
+                                        placeholder="Mobile Number"
+                                        onChange={ (e) => { onChangeContactDetailHandler('mobile_no', 'input', e) }}
+                                        
+                                        />
+                                </Col>
+                                <Col md="6" className="mb-1">
+                                    <Label className="form-label">
+                                    Landline Number
+                                    </Label>
+                                    <InputMask
+                                        mask="+\929999999999"
+                                        name="landline"
+                                        className="phone form-control"
+                                        placeholder="Landline Number"
+                                        onChange={ (e) => { onChangeContactDetailHandler('landline', 'input', e) }}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md="12" className="mb-1">
+                                <button className="btn-next float-right btn btn-success"  onClick={(e) => onSubmitHandler(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
+                                </Col>
+                            </Row>
+                        </Form>
                     </Col>
                 </Row>
-                <Row className="mt-1">
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                         Email
-                        </Label>
-                        <Input type="email"
-                         name="email"
-                         onChange={ (e) => { onChangeContactDetailHandler('email', 'input', e) }}
-                         placeholder="email"  />
-                    </Col>
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                       Address
-                        </Label>
-                        <Input type="text"
-                         name="address"
-                         onChange={ (e) => { onChangeContactDetailHandler('address', 'input', e) }}
-                         placeholder="address"  />
-                        
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                         Mobile Number
-                        </Label>
-                        <InputMask
-                            mask="+\929999999999"
-                            name="mobile_no"
-                            className="phone form-control"
-                            onChange={ (e) => { onChangeContactDetailHandler('mobile_no', 'input', e) }}
-                            
-                            />
-                    </Col>
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                        Landline Number
-                        </Label>
-                        <InputMask
-                             mask="+\929999999999"
-                             name="landline"
-                             className="phone form-control"
-                             onChange={ (e) => { onChangeContactDetailHandler('landline', 'input', e) }}
-                        />
-                    </Col>
-                </Row>
-                <Row>
-                    
-                    <Col md="12" className="mb-1">
-                    <button className="btn-next float-right btn btn-success"  onClick={(e) => onSubmitHandler(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
-                    </Col>
-                </Row>
-                
-            </Form>
-            {!loading ? (
-                Object.values(employeeContactArray).length > 0 ? (
-          
-                    <Table bordered striped responsive className='my-1'>
-                        <thead className='table-dark text-center'>
-                        <tr>
-                            <th scope="col" className="text-nowrap">
-                             Contact Name
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Contact Type
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Contact Email
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Actions
-                            </th>
-                        </tr>
-                        </thead>
-                        
-                        <tbody className='text-center'>
-                            {Object.values(employeeContactArray).map((item, key) => (
-                                
-                                !loading && (
-                                    <tr key={key}>
-                                    <td>{item.name}</td>
-                                    <td>{relations.find(pre => pre.value === item.relation) ? relations.find(pre => pre.value === item.relation).label : 'N/A'}</td>
-                                    <td>{item.email}</td>
-                                    <td>
-                                        <div className="d-flex row">
-                                        <div className="col">
-                                            <button
-                                            className="border-0"
-                                            onClick={() => removeAction(key, item.id)}
-                                            >
-                                            <XCircle color="red" />
-                                            </button>
-                                        </div>
-                                        </div>
-                                    </td>
-                                    </tr>
-                                    ) 
-                                )
-                            )}
-                        
-                        </tbody>
-                        
-                    </Table>
-                
-                 ) : null
             ) : (
                 <div className="text-center"><Spinner/></div>
             )
-            
+                
              } 
+             {!loading && (
+                Object.values(employeeContactArray).length > 0 ? (
+                    <Row>
+                        <Col md={12}>
+                            <Table bordered striped responsive className='my-1'>
+                                    <thead className='table-dark text-center'>
+                                    <tr>
+                                        <th scope="col" className="text-nowrap">
+                                        Contact Name
+                                        </th>
+                                        <th scope="col" className="text-nowrap">
+                                        Contact Type
+                                        </th>
+                                        <th scope="col" className="text-nowrap">
+                                        Contact Email
+                                        </th>
+                                        <th scope="col" className="text-nowrap">
+                                        Actions
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    
+                                    <tbody className='text-center'>
+                                        {Object.values(employeeContactArray).map((item, key) => (
+                                            
+                                            !loading && (
+                                                <tr key={key}>
+                                                <td>{item.name}</td>
+                                                <td>{relations.find(pre => pre.value === item.relation) ? relations.find(pre => pre.value === item.relation).label : 'N/A'}</td>
+                                                <td>{item.email}</td>
+                                                <td>
+                                                    <div className="d-flex row">
+                                                    <div className="col">
+                                                        <button
+                                                        className="border-0"
+                                                        onClick={() => removeAction(key, item.id)}
+                                                        >
+                                                        <XCircle color="red" />
+                                                        </button>
+                                                    </div>
+                                                    </div>
+                                                </td>
+                                                </tr>
+                                                ) 
+                                            )
+                                        )}
+                                    
+                                    </tbody>
+                                    
+                            </Table>
+                        </Col>
+                    </Row>
+                 ) : null
+             )
+            }
         </Fragment>
      )
 }

@@ -67,7 +67,6 @@ const ExperienceDetail = ({emp_state}) => {
     const Submit = async (e) => {
         e.preventDefault()
         const uuid = emp_state['emp_data'].uuid
-        // const uuid = '38e1aa09-1b3e-4f4f-a4e3-8909907bd3da'
         if (experienceDetail.companyName !== '' && experienceDetail.designation !== ''
          && experienceDetail.joiningDate !== '' && experienceDetail.leavingDate !== '') {
             setLoading(true)
@@ -132,6 +131,7 @@ const ExperienceDetail = ({emp_state}) => {
                            <Flatpickr 
                              name="joiningDate" 
                              value={experienceDetail.joiningDate ? experienceDetail.joiningDate : ''}
+                             placeholder="Joining Date"
                              onChange={ (date) => { onChangeExperienceHandler('joiningDate', 'date', date) }}
                              className="form-control"    />
                         </div>  
@@ -144,6 +144,7 @@ const ExperienceDetail = ({emp_state}) => {
                            <Flatpickr
                             name="leavingDate"  
                             value={experienceDetail.leavingDate ? experienceDetail.leavingDate : ''}
+                            placeholder="Leaving Date"
                             onChange={ (date) => { onChangeExperienceHandler('leavingDate', 'date', date) }}
                             className="form-control"    />
                         </div> 
@@ -156,7 +157,7 @@ const ExperienceDetail = ({emp_state}) => {
                         </Label>
                         <Input
                             type="text"
-                            placeholder="leaving reason"
+                            placeholder="Leaving Reason"
                             name="leavingReason"
                             onChange={ (e) => { onChangeExperienceHandler('leavingReason', 'input', e) }}
                             
@@ -172,10 +173,6 @@ const ExperienceDetail = ({emp_state}) => {
                     </Col>
                 </Row>
                 <Row>
-                    
-                    {/* <Col md="2" className="mb-1">
-                       <button className="btn-next float-right btn btn-success" onClick={(e) => addmoreSubmit(e)}><span className="align-middle d-sm-inline-block d-none">Add </span></button>
-                    </Col> */}
                     <Col md="12" className="mb-1">
                        <button className="btn-next float-right btn btn-success" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
                     </Col>

@@ -27,11 +27,14 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
     const Api = apiHelper()
     const [editModal, setEditModal] = useState(false)
     const [editIDState, setEditIDState] = useState(null)
+    const [updatedGHeadID, setGHeadID] = useState(null)
+    const [updatedTitle, setUpdatedTitle] = useState('')
+    const [updatedDescription, setUpdatedDescription] = useState('')
     const [editData, setData] = useState([
         {
             grouphead: null,
             department_title: '',
-            department_status: true,
+            // department_status: true,
             department_description:''
         }
     ])
@@ -71,7 +74,7 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
       const defaultValues = {
         gHeadID: editData.grouphead,
         title: editData.title,
-        Dep_status: editData.status,
+        // Dep_status: editData.status,
         Dep_description: editData.description
       }
     const {
@@ -93,10 +96,7 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
                   setData(result.data)
                   setEditIDState(id)
                   setEditModal(true)
-                  toast.success(
-                    <ToastContent type='success' message={result.message} />,
-                    { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-                  )
+                  setUpdatedDescription(result.data.description)
                 } else {
                   toast.error(
                     <ToastContent type='error' message={result.message} />,
@@ -125,10 +125,8 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
               }
             }
       }
-      const [updatedGHeadID, setGHeadID] = useState()
-      const [updatedTitle, setUpdatedTitle] = useState(defaultValues.title)
-      const [updatedDescription, setUpdatedDescription] = useState(defaultValues.Dep_description)
-      const [updatedStatus, setUpdatedStatus] = useState(defaultValues.Dep_status)
+      
+      // const [updatedStatus, setUpdatedStatus] = useState(defaultValues.Dep_status)
       const updateDep = (data, id) => {
         if (Object.values(data).length > 0 && id) {
             fetch(`${process.env.REACT_APP_API_URL}/organization/department/${id}/`, {
@@ -161,12 +159,12 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
       }
      
       const onSubmit = () => {
-        if (updatedTitle !== undefined || updatedDescription !== undefined || updatedStatus !== undefined || updatedGHeadID !== undefined) {
+        if (updatedTitle !== undefined || updatedDescription !== undefined || updatedGHeadID !== undefined) {
           const formData = new FormData()
           // console.warn(updatedStatus)
             formData['grouphead'] = !updatedGHeadID ? editData.grouphead : updatedGHeadID
             formData['title'] =  !updatedTitle ? editData.departemnt_title : updatedTitle
-            formData['status'] =   updatedStatus
+            // formData['status'] =   updatedStatus
             formData['description'] = !updatedDescription ? editData.department_description : updatedDescription
             // console.warn(formData)
             updateDep(formData, editIDState)
@@ -192,9 +190,9 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
             <th scope="col" className="text-nowrap">
               Group Head
             </th>
-            <th scope="col" className="text-nowrap">
+            {/* <th scope="col" className="text-nowrap">
               Status
-            </th>
+            </th> */}
             <th scope="col" className="text-nowrap">
               Description
             </th>
@@ -213,7 +211,7 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
                   <td>
                   {Object.values(groupHead).map((gitem) => (gitem.value === item.grouphead ? gitem.label : null))}
                   </td>
-                  <td>{item.status ? 'Active' : 'InActive'}</td>
+                  {/* <td>{item.status ? 'Active' : 'InActive'}</td> */}
                   <td>{item.description}</td>
                   <td>
                     <div className="d-flex row">
@@ -258,7 +256,7 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
           </div>
           <Form onSubmit={handleSubmit(onSubmit)}  id="DepHeadForm">
         <Row>
-        <Col md='3' className='mb-1'>
+        <Col md='6' className='mb-1'>
             
               <Label className='form-label' for={`country`}>
                 Group Head
@@ -278,22 +276,6 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
               Title
             </Label>
             <Input type='text' name={`title`} id={`title`} placeholder='Dep Title' defaultValue={defaultValues.title} onChange={e => setUpdatedTitle(e.target.value)}/>
-          </Col>
-          <Col md='3' className='mb-1'>
-            <Label className='form-label' for={`Dep-status`}>
-              Status
-            </Label>
-            <Select
-              theme={DepStatus}
-              isClearable={false}
-              id='Dep-status'
-              name='Dep-status'
-              className='react-select'
-              classNamePrefix='select'
-              options={DepStatus}
-              defaultValue={DepStatus[defaultValues.Dep_status ? 1 : 0]}
-              onChange={status => setUpdatedStatus(status.value)}
-            />
           </Col>
         </Row>
         <Row>

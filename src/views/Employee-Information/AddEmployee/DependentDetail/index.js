@@ -128,101 +128,107 @@ const DependentDetail = ({emp_state}) => {
     }, [])
     return (
         <Fragment>
-             <Form >
-                <Row>
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                        Name<Badge color='light-danger'>*</Badge>
-                        </Label>
-                        <Input
-                            type="text"
-                            name="dependentName"
-                            onChange={ (e) => { onChangeDependentHandler('dependentName', 'input', e) }}
-                            placeholder="name"
-                            
-                            />
-                    </Col>
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                       RelationShip<Badge color='light-danger'>*</Badge>
-                        </Label>
-                        <Select
-                            type="text"
-                            name="dependentRelationship"
-                            options={relationshipsArr}
-                            onChange={ (e) => { onChangeDependentHandler('dependentRelationship', 'select', e) }}
-                            />
-                    </Col>
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                       Date Of Birth
-                        </Label>
-                        <div className='calendar-container'>
-                             <Flatpickr className='form-control' value={employeeDependent.dependentDOB ? employeeDependent.dependentDOB : ''} onChange={ (date) => { onChangeDependentHandler('dependentDOB', 'date', date) }} id='default-picker' />
-                        </div> 
-                        
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md="12" className="mb-1">
-                       <button className="btn-next float-right btn btn-success" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
-                    </Col>
-                </Row>
-            </Form>
+            <Row>
+                <Col md={12}>
+                    <Form >
+                        <Row>
+                            <Col md="6" className="mb-1">
+                                <Label className="form-label">
+                                Name<Badge color='light-danger'>*</Badge>
+                                </Label>
+                                <Input
+                                    type="text"
+                                    name="dependentName"
+                                    onChange={ (e) => { onChangeDependentHandler('dependentName', 'input', e) }}
+                                    placeholder="name"
+                                    
+                                    />
+                            </Col>
+                            <Col md="6" className="mb-1">
+                                <Label className="form-label">
+                            RelationShip<Badge color='light-danger'>*</Badge>
+                                </Label>
+                                <Select
+                                    type="text"
+                                    name="dependentRelationship"
+                                    options={relationshipsArr}
+                                    onChange={ (e) => { onChangeDependentHandler('dependentRelationship', 'select', e) }}
+                                    />
+                            </Col>
+                            <Col md="6" className="mb-1">
+                                <Label className="form-label">
+                            Date Of Birth
+                                </Label>
+                                <div className='calendar-container'>
+                                    <Flatpickr className='form-control' value={employeeDependent.dependentDOB ? employeeDependent.dependentDOB : ''} onChange={ (date) => { onChangeDependentHandler('dependentDOB', 'date', date) }} id='default-picker' />
+                                </div> 
+                                
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="12" className="mb-1">
+                            <button className="btn-next float-right btn btn-success" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
+                            </Col>
+                        </Row>
+                    </Form>
+                </Col>
+            </Row>
             {!loading ? (
                 Object.values(employeeDependentArray).length > 0 ? (
-          
-                    <Table bordered striped responsive className='my-1'>
-                        <thead className='table-dark text-center'>
-                        <tr>
-                            <th scope="col" className="text-nowrap">
-                           Dependent Name
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                             Dependent Relationship
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Date of Birth
-                            </th>
-                            {/* <th scope="col" className="text-nowrap">
-                            Leaving Date
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Leaving Reason
-                            </th> */}
-                            <th scope="col" className="text-nowrap">
-                            Actions
-                            </th>
-                        </tr>
-                        </thead>
-                        
-                        <tbody className='text-center'>
-                            {Object.values(employeeDependentArray).map((item, key) => (
-                                    <tr key={key}>
-                                    <td>{item.name}</td>
-                                    <td>{item.relationship_name}</td>
-                                    <td>{item.date_of_birth}</td>
-                                    {/* <td>{item.leavingDate}</td>
-                                    <td>{item.leavingReason}</td> */}
-                                    <td>
-                                        <div className="d-flex row">
-                                        <div className="col">
-                                            <button
-                                            className="border-0"
-                                            onClick={() => removeAction(key, item.id)}
-                                            >
-                                            <XCircle color="red" />
-                                            </button>
-                                        </div>
-                                        </div>
-                                    </td>
-                                    </tr>
-                                    ) 
-                            )}
-                        </tbody>
-                        
-                    </Table>
-                
+                    <Row>
+                        <Col md={12}>
+                            <Table bordered striped responsive className='my-1'>
+                                <thead className='table-dark text-center'>
+                                <tr>
+                                    <th scope="col" className="text-nowrap">
+                                Dependent Name
+                                    </th>
+                                    <th scope="col" className="text-nowrap">
+                                    Dependent Relationship
+                                    </th>
+                                    <th scope="col" className="text-nowrap">
+                                    Date of Birth
+                                    </th>
+                                    {/* <th scope="col" className="text-nowrap">
+                                    Leaving Date
+                                    </th>
+                                    <th scope="col" className="text-nowrap">
+                                    Leaving Reason
+                                    </th> */}
+                                    <th scope="col" className="text-nowrap">
+                                    Actions
+                                    </th>
+                                </tr>
+                                </thead>
+                                
+                                <tbody className='text-center'>
+                                    {Object.values(employeeDependentArray).map((item, key) => (
+                                            <tr key={key}>
+                                            <td>{item.name}</td>
+                                            <td>{item.relationship_name}</td>
+                                            <td>{item.date_of_birth}</td>
+                                            {/* <td>{item.leavingDate}</td>
+                                            <td>{item.leavingReason}</td> */}
+                                            <td>
+                                                <div className="d-flex row">
+                                                <div className="col">
+                                                    <button
+                                                    className="border-0"
+                                                    onClick={() => removeAction(key, item.id)}
+                                                    >
+                                                    <XCircle color="red" />
+                                                    </button>
+                                                </div>
+                                                </div>
+                                            </td>
+                                            </tr>
+                                            ) 
+                                    )}
+                                </tbody>
+                                
+                            </Table>
+                        </Col>
+                    </Row>
                 ) : null
             ) : (
                 <div className="text-center"><Spinner/></div>

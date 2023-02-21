@@ -1,107 +1,46 @@
 import { Fragment, useState } from "react" 
 // ** Icons Imports
-import { ArrowLeft, Save, Check, X } from "react-feather" 
+import { Redirect } from "react-router-dom"
+import { ArrowLeft, Save} from "react-feather" 
 // ** Reactstrap Imports
 import { Label, Row, Col, Input, Form, Button, Spinner } from "reactstrap" 
 import Select from 'react-select'
-import { toast, Slide } from 'react-toastify'
-import Avatar from '@components/avatar'
-import { selectThemeColors } from '@utils'
+import apiHelper from "../../Helpers/ApiHelper"
 const DepartmentAdd = ({ stepper, groupHeadActive, stepperStatus, gHeadLoading, fetchDepartments, fetchDepCallBack }) => {
-    
-      const [gHeadID, setGHeadID] = useState(null)
-      const [dep_title, setDepTitle] = useState(null)
-      const [dep_status, setDepStatus] = useState(0)
-      const [dep_description, setDepDescription] = useState(null)
-     
-      const depStatus = [
-        { value: '0', label: 'Inactive' },
-        { value: '1', label: 'Active' }
-      ]
-    //   const organization = JSON.parse(localStorage.getItem('organization'))
-    const ToastContent = ({ type, message }) => (
-        type === 'success' ? (
-        <Fragment>
-          <div className='toastify-header'>
-            <div className='title-wrapper'>
-              <Avatar size='sm' color='success' icon={<Check size={12} />} />
-              <h6 className='toast-title fw-bold'>Succesfull</h6>
-            </div>
-          </div>
-          <div className='toastify-body'>
-            <span>{message}</span>
-          </div>
-        </Fragment>) : (
-        <Fragment>
-          <div className='toastify-header'>
-            <div className='title-wrapper'>
-              <Avatar size='sm' color='danger' icon={<X size={12} />} />
-              <h6 className='toast-title fw-bold'>Error</h6>
-            </div>
-          </div>
-          <div className='toastify-body'>
-            <span>{message}</span>
-          </div>
-        </Fragment>
-        )
-    )
-    let token = localStorage.getItem('accessToken')
-    token = token.replaceAll('"', '')
-    token = `Bearer ${token}`
+      const Api = apiHelper()
+      const [gHeadID, setGHeadID] = useState('')
+      const [dep_title, setDepTitle] = useState('')
+      const [dep_description, setDepDescription] = useState('')
+
     function saveData() {
-        if ((gHeadID !== undefined || groupHeadActive[0].value !== null) && dep_title !== undefined) {
+        if ((gHeadID !== '') && dep_title !== '') {
           const formData = new FormData()
           
-          formData['grouphead'] = !gHeadID ? groupHeadActive[0].value : gHeadID
+          formData['grouphead'] = gHeadID
           formData['title'] = dep_title
-          formData['status'] = dep_status
-          formData['description'] = dep_description
-      
-          console.warn(formData)
+          if (dep_description !== '') formData['description'] = dep_description
+          
           // ** Api Post Request
       
-          fetch(`${process.env.REACT_APP_API_URL}/organization/department/`, {
-            method: "POST",
-            headers: { "Content-Type": "Application/json", Authorization: token },
-            body: JSON.stringify(formData)
-          })
-          .then((response) => response.json())
+          Api.jsonPost(`/organization/department/`, formData)
           .then((result) => {
             if (result.status === 200) {
-              toast.success(
-                <ToastContent type='success' message={result.message} />,
-                { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-              )
+              Api.Toast('success', result.message)
               fetchDepartments()
-              console.warn(typeof fetchDepCallBack)
               if (typeof fetchDepCallBack !== "undefined") { 
                 fetchDepCallBack()
               }
+              //  window.location.href = "/"
               
             } else {
-              toast.error(
-                <ToastContent type='error' message={result.message} />,
-                { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-              )
+              Api.Toast('error', result.message)
             }
             
             // stepper.next()
           })
-          .catch((error) => {
-            console.error(error)
-            toast.error(
-              <ToastContent type='error' message="Not getting data" />,
-              { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-            )
-      
-            
-          }) 
           
         } else {
-          toast.error(
-            <ToastContent type='error' message="Not Valid Information Please Try Agian!" />,
-            { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-          )
+          Api.Toast('error', 'Please fill all required fields')
         }
       }
 return (
@@ -112,7 +51,7 @@ return (
       </div>
       <Form onSubmit={e => e.preventDefault()}>
         <Row>
-        <Col md='3' className='mb-1'>
+        <Col md='6' className='mb-1'>
             {!gHeadLoading ? ( 
               <>
               <Label className='form-label' for={`country`}>
@@ -124,7 +63,6 @@ return (
                 className='react-select'
                 classNamePrefix='select'
                 options={groupHeadActive}
-                defaultValue={groupHeadActive[0]}
                 onChange={ ghead => setGHeadID(ghead.value)}
               />
             </>
@@ -140,7 +78,7 @@ return (
             </Label>
             <Input type='text' id={`department-title`} name='department-title' placeholder='Add Title' onChange={e => setDepTitle(e.target.value)}/>
           </Col>
-          <Col md='3' className='mb-1'>
+          {/* <Col md='3' className='mb-1'>
             <Label className='form-label' for={`status`}>
               Status
             </Label>
@@ -155,7 +93,7 @@ return (
             onChange={status => setDepStatus(status.value)}
             >  
             </Select>
-          </Col>
+          </Col> */}
         </Row>
         <Row>
           <Col md='12' className='mb-1'>
@@ -178,7 +116,7 @@ return (
             <span className='align-middle d-sm-inline-block d-none'>Previous</span>
           </Button>
           <Button color='success' className='btn-next' onClick={saveData}>
-            <span className='align-middle d-sm-inline-block d-none'>Save</span>
+            <span className='align-middle d-sm-inline-block d-none'>Save & Done</span>
             <Save size={14} className='align-middle ms-sm-25 ms-0'></Save>
           </Button>
         </div>

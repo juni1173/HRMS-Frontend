@@ -41,15 +41,14 @@ const UpdateModule = ({ moduleData, CallBack, courseData }) => {
 
      const Submit = async (e) => {
         e.preventDefault()
-        if (moduleDetail.title !== '' && moduleDetail.description !== ''
-        && moduleDetail.what_we_learn !== '' && moduleDetail.total_hours !== '') {
+        if (moduleDetail.title !== '') {
             setLoading(true)
             const formData = new FormData()
             formData['course'] = moduleDetail.course
             formData['title'] = moduleDetail.title
-            formData['description'] = moduleDetail.description
-            formData['what_we_learn'] = moduleDetail.what_we_learn
-            formData['total_hours'] = moduleDetail.total_hours
+            if (moduleDetail.description !== '') formData['description'] = moduleDetail.description
+           if (moduleDetail.what_we_learn !== '') formData['what_we_learn'] = moduleDetail.what_we_learn
+           if (moduleDetail.total_hours !== '') formData['total_hours'] = moduleDetail.total_hours
         await Api.jsonPatch(`/courses/details/${courseData.slug_title}/${courseData.uuid}/modules/${moduleData.id}/`, formData)
             .then(result => {
                 if (result) {
@@ -67,7 +66,7 @@ const UpdateModule = ({ moduleData, CallBack, courseData }) => {
                 setLoading(false)
             }, 1000)
          } else {
-            Api.Toast('error', 'Please fill all required fields')
+            Api.Toast('error', 'Title is required!')
          }
         
     }
@@ -91,11 +90,11 @@ const UpdateModule = ({ moduleData, CallBack, courseData }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Description<Badge color='light-danger'>*</Badge>
+                        Description
                         </Label>
                         <Input
                             type="text"
-                            name="description"
+                            name="Description"
                             defaultValue={moduleData.description}
                             onChange={ (e) => { onChangeModuleHandler('description', 'input', e) }}
                             placeholder="Description"
@@ -104,7 +103,7 @@ const UpdateModule = ({ moduleData, CallBack, courseData }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        What we learn ?<Badge color='light-danger'>*</Badge>
+                        What we learn ?
                         </Label>
                         <Input
                             type="text"
@@ -117,7 +116,7 @@ const UpdateModule = ({ moduleData, CallBack, courseData }) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Total Hours<Badge color='light-danger'>*</Badge>
+                        Total Hours
                         </Label>
                         <Input
                             type="number"

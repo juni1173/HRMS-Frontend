@@ -154,7 +154,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.Department}
-                    defaultValue={formData.Department[0]}
+                    // defaultValue={formData.Department[0]}
                     onChange={onChangeDepartmentHandler}
                   />
               ) : ( 
@@ -175,7 +175,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.Staff_Classification}
-                    defaultValue={formData.Staff_Classification[0]}
+                    // defaultValue={formData.Staff_Classification[0]}
                     onChange={onChangeStaffHandler}
                   />
               ) : ( 
@@ -197,7 +197,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.Position}
-                    defaultValue={formData.Position[0]}
+                    // defaultValue={formData.Position[0]}
                     onChange={onChangePositionHandler}
                   />
                   ) : <Spinner />
@@ -221,7 +221,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.Job_Types}
-                    defaultValue={formData.Job_Types[0]}
+                    // defaultValue={formData.Job_Types[0]}
                     onChange={onChangeJobTypeHandler}
                   />
                   ) : <Spinner />
@@ -308,7 +308,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     className='react-select'
                     classNamePrefix='select'
                     options={formData.JD}
-                    defaultValue={formData.JD[0]}
+                    // defaultValue={formData.JD[0]}
                     onChange={onChangeJobDescroptionHandler}
                   />
                   ) : <Spinner />

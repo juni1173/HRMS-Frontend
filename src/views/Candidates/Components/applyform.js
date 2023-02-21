@@ -1,11 +1,12 @@
 import { Fragment, useState } from "react"
 import { Row, Col, Form, Input, Button, Modal, ModalHeader, ModalBody, ModalFooter, Spinner, Label } from 'reactstrap'
-import { Save, XCircle, X, Check, Clock} from "react-feather"
+import { Save, XCircle, Clock} from "react-feather"
 import InputMask from 'react-input-mask'
 import validator from "validator"
 import {useParams} from "react-router-dom" 
 import ApplySuccess from "./ApplySuccess"
 import apiHelper from "../../Helpers/ApiHelper"
+import pdfImage from "../../../assets/images/icons/pdf-icon.png"
  
 const applyForm = () => {
     const Api = apiHelper() 
@@ -25,7 +26,7 @@ const applyForm = () => {
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [linkedin, setLinkedin] = useState('')
-    const [selectedImage, setSelectedImage] = useState('')
+    const [selectedImage, setSelectedImage] = useState(null)
     const [applySuccessData, setApplySuccessData] = useState([])
     const [successMsg, setSuccessMsg] = useState('')
     const [url_params] = useState(useParams())
@@ -67,10 +68,10 @@ const applyForm = () => {
         return true
     }
 
-    const validateLinkedIn = (event) => {
-          const url = event.target.value
-          validateUrl(url)
-    }
+    // const validateLinkedIn = (event) => {
+    //       const url = event.target.value
+    //       validateUrl(url)
+    // }
 
     const onchangeLinkedIn = (event) => {
         setLinkedin(event.target.value)
@@ -157,13 +158,14 @@ const applyForm = () => {
                 Api.Toast('error',   "Enter the Valid Email")
                  return
             }
-            
-            const isLinkedValid =   validateUrl(linkedin)
-            if (!isLinkedValid) {
-                Api.Toast('error',   "Enter The Valid LinkedIn Url")
-                return
+            if (linkedin !== '') {
+                const isLinkedValid =   validateUrl(linkedin)
+                if (!isLinkedValid) {
+                    Api.Toast('error',   "Enter The Valid LinkedIn Url")
+                    return
+                }
             }
-
+            
             const isResumeValid = validateResume(selectedImage)
             if (!isResumeValid) {
                 Api.Toast('error',   "Only pdf and word file are allowed")
@@ -175,7 +177,7 @@ const applyForm = () => {
             formData.append("cnic_no", cnic)
             formData.append("email", email)
             formData.append("mobile_no", phone)
-            formData.append("linkedin_profile", linkedin)
+            if (linkedin !== '') formData.append("linkedin_profile", linkedin)
             formData.append("resume", selectedImage)
             
                 Api.jsonPost(`/candidates/apply/form/${job_uuid}/`, formData, false)
@@ -351,7 +353,7 @@ const applyForm = () => {
                             value={linkedin}
                             className="essential"
                             placeholder="LinkedIn Url"
-                            onBlur={validateLinkedIn}
+                            // onBlur={validateLinkedIn}
                             onChange={onchangeLinkedIn}
                             
                             />
@@ -359,11 +361,11 @@ const applyForm = () => {
                         </Col>
                         <Col md='12' className="mb-1">
                         {selectedImage ? (
-                        <div className="float-right">
+                        <div>
                             <img
-                            src={URL.createObjectURL(selectedImage)}
+                            src={pdfImage}
                             alt="Thumb"
-                            width="50"
+                            width="100"
                             />
                             <button className="btn" onClick={removeSelectedImage}>
                             <XCircle />
@@ -372,15 +374,27 @@ const applyForm = () => {
                         ) : (
                         <div>
                             <Label className="form-label">Upload Resume</Label>
-                            <Input
+                            {!selectedImage ? (
+                                <Input
                                 type="file"
                                 value={selectedImage}
                                 id="company_logo"
                                 name="company_logo"
-                                accept="image/*"
+                                accept="pdf/image/*"
                             
                                 onChange={imageChange}
                                 />
+                            ) : (
+                                <>
+                                <img
+                                src={`${process.env.REACT_APP_BACKEND_URL}/${empData.profile_image}`}
+                                alt="Thumb"
+                                width="100"
+                                />
+                                <XCircle color="red" onClick={() => setSelectedImage(null)}/>
+                                </>
+                            )}
+                           
                         </div>
                         )}
                         </Col>

@@ -1,20 +1,17 @@
 import { useState } from "react"
 import { ChevronDown, Edit, Eye, XCircle, Plus } from "react-feather"
 import { Card, CardBody, CardTitle, Offcanvas, OffcanvasHeader, OffcanvasBody } from "reactstrap"
-import SubjectHelper from "../../../Helpers/LearningDevelopmentHelper/SubjectHelper"
+import apiHelper from "../../../Helpers/ApiHelper"
 import UpdateSubject from "./UpdateSubject"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const ToggleComponent = ({ data, id, CallBack }) => {
-    const Helper = SubjectHelper()
+    const Api = apiHelper()
     const [toggleThisElement, setToggleThisElement] = useState(false)
     const [updateCanvasPlacement, setupdateCanvasPlacement] = useState('end')
     const [updateCanvasOpen, setupdateCanvasOpen] = useState(false)
     const MySwal = withReactContent(Swal)
     const removeSubject = (uuid, slug) => {
-        // Helper.deleteSubject(uuid, slug).then(() => {
-        //     CallBack()
-        // })
         MySwal.fire({
             title: 'Are you sure?',
             text: "Do you want to delete the Subject!",
@@ -28,7 +25,9 @@ const ToggleComponent = ({ data, id, CallBack }) => {
             buttonsStyling: false
         }).then(function (result) {
             if (result.value) {
-              Helper.deleteSubject(uuid, slug).then(() => {
+                Api.deleteData(`/courses/subjects/${slug}/${uuid}/`, {method: 'Delete'})
+                .then((deleteResult) => {
+                    if (deleteResult.status === 200) {
                         MySwal.fire({
                             icon: 'success',
                             title: 'Subject Deleted!',
@@ -41,6 +40,17 @@ const ToggleComponent = ({ data, id, CallBack }) => {
                                 CallBack()
                             }
                         })
+                    } else {
+                        MySwal.fire({
+                            icon: 'error',
+                            title: deleteResult.message ? deleteResult.message : 'Subject can not be deleted!',
+                            text: 'Subject is not deleted.',
+                            customClass: {
+                            confirmButton: 'btn btn-danger'
+                            }
+                        })
+                    }
+                        
                     })
             } 
         })
@@ -90,14 +100,14 @@ const ToggleComponent = ({ data, id, CallBack }) => {
                         <b>Type</b> <br/>
                         {data.type_title}
                     </div>
-                    <div className="col-lg-6">
+                    {/* <div className="col-lg-6">
                         <b>Slug</b> <br/>
                         {data.slug_title}
-                    </div>
+                    </div> */}
                     <hr></hr>
-                    <div className="col-lg-12">
+                    <div className="col-lg-6">
                         <h4>Description</h4>
-                        <p>{data.description}</p>
+                        <p>{data.description ? data.description : 'N/A'}</p>
                     </div>
                     
                 </div>

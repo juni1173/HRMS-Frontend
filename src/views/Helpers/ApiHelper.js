@@ -5,6 +5,7 @@ import withReactContent from 'sweetalert2-react-content'
 // ** Reactstrap Imports
 import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
+import ReactPaginate from 'react-paginate'
   const apiHelper = () => {
     const MySwal = withReactContent(Swal)
     let token = localStorage.getItem('accessToken')
@@ -20,6 +21,8 @@ import Avatar from '@components/avatar'
     const user_id = JSON.parse(localStorage.getItem('user_id'))
      
     const ApiBaseLink = process.env.REACT_APP_API_URL
+
+    const BackendBaseLink = process.env.REACT_APP_BACKEND_URL 
 
     const ToastContent = ({ type, message }) => (
         type === 'success' ? (
@@ -112,6 +115,7 @@ import Avatar from '@components/avatar'
         options.method = "POST"
         return callAPI(endpointurl, options)
     }
+    
     const jsonPost = async (url, formData, json = true) => {
       url = ApiBaseLink + url
       const options = {headers: null, method: null, body: null}
@@ -142,9 +146,9 @@ import Avatar from '@components/avatar'
 
     const jsonPatch = async (url, formData, json = true) => {
       url = ApiBaseLink + url
-      const options = {headers: null, method: null, body: null}
+      const options = {headers: null, method: "PATCH", body: null}
       
-      options.method = "Patch"
+      options.method = "PATCH"
       if (json) { 
         options.headers = {'content-type': 'application/json', Authorization: token}
         options.body = JSON.stringify(formData)
@@ -152,7 +156,6 @@ import Avatar from '@components/avatar'
         options.headers = {Authorization: token}
         options.body = formData
       }
-      
       try {
         const apiResult =  await fetch(url, options)
         if (!apiResult.ok) {
@@ -168,7 +171,6 @@ import Avatar from '@components/avatar'
       }
     }
 
-
     //Put Api calling
     const put = (endpointurl, options) => {
         options.method = "PATCH"
@@ -183,6 +185,7 @@ import Avatar from '@components/avatar'
         return callAPI(endpointurl, options)
     }
 
+    //Modal Functions 
     const deleteModal = async () => {
       return  MySwal.fire({  
         title: 'Are you sure?',  
@@ -198,20 +201,42 @@ import Avatar from '@components/avatar'
       })
     }
     const successModal = (result) => {
-     return  MySwal.fire({
-        icon: 'success',
-        title: 'Deleted!',
-        text: result.message,
-        customClass: {
-          confirmButton: 'btn btn-success'
+      if (result) {
+        if (result.status === 200) {
+          return  MySwal.fire({
+            icon: 'success',
+            title: result.message ? result.message : 'Successfully Processed',
+            // text: result.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          })
+        } else {
+          return  MySwal.fire({
+            icon: 'error',
+            title: result.message ? result.message : 'Something went wrong!',
+            // text: result.message,
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          })
         }
-      })
+      } else {
+        return  MySwal.fire({
+          icon: 'error',
+          title: 'Server not responding!',
+          // text: result.message,
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        })
+      }
     }
-    const cancelModal = (result) => {
+    const cancelModal = () => {
       return  MySwal.fire({
          icon: 'success',
-         title: 'Not Deleted',
-         text: result.message,
+         title: 'Cencelled',
+         text: 'Request aborted!',
          customClass: {
            confirmButton: 'btn btn-success'
          }
@@ -236,19 +261,30 @@ import Avatar from '@components/avatar'
       return [year, month, day].join('-')
     }
 
-    // const fetchDepartments = () => {
-            
-    //       get('/organization/department/')
-    //         .then(res => {
-    //         if (res && res.data) {
-    //         setList({result: res.data})   
-    //         } 
-    //     })
-    //     .catch(err => console.log(err))
-    //     // console.warn(list)
-    //     return list
-        
-    //   }  
+    //format time function
+
+    const formatTime = (date) => {
+      const d = new Date(date)
+      let hours = `${d.getHours()}`
+      let mins = `${d.getMinutes()}`
+      if (hours.length < 2) {
+        hours = `0${hours}`
+      }
+      if (mins.length < 2) {
+        mins = `0${mins}`
+      }
+      const hoursMin = `${hours}:${mins}`
+         
+      return hoursMin
+    }
+    const convertUTCtoDate = date => {
+      if (date) {
+          let d = new Date(date)
+          d = formatDate(d)
+          return d
+      }
+  }
+    
     return {
         get,
         post,
@@ -261,10 +297,13 @@ import Avatar from '@components/avatar'
         successModal,
         cancelModal,
         formatDate,
+        formatTime,
+        convertUTCtoDate,
         org,
         user_id,
         token,
-        ApiBaseLink
+        ApiBaseLink,
+        BackendBaseLink
         
     }
 }

@@ -4,6 +4,8 @@ import { Check, Search } from "react-feather"
 import { Spinner, Table, Input, InputGroup, InputGroupText } from "reactstrap"
 import apiHelper from "../../../Helpers/ApiHelper"
 import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 const DeletedJobsList = ({data, count, CallBack}) => {
     const Api = apiHelper()
     const searchHelper = SearchHelper()
@@ -11,50 +13,95 @@ const DeletedJobsList = ({data, count, CallBack}) => {
     const [notActiveJobsList, setNotActiveJobList] = useState([])
     const [searchResults, setSearchResults] = useState([])
     const [searchQuery] = useState([])
+    const MySwal = withReactContent(Swal)
 
-
-    const getNotActiveJobs = () => {
+    const getNotActiveJobs = async () => {
         const notActiveListArray = []
         setLoading(true)
-        Api.get(`/jobs/`)
+        await Api.get(`/jobs/`)
             .then((result) => {
-              console.warn(result)
+              if (result) {
                 if (result.status === 200) {
-                    if (result.data.length > 0) {
-                        
-                        for (let i = 0; i < result.data.length; i++) {
-                            if (result.data[i].job_is_active === false) {
-                                notActiveListArray.push(result.data[i]) 
-                            }
-                            
-                        }
-                        setLoading(false)
-                        setNotActiveJobList(notActiveListArray)
-                        setSearchResults(notActiveListArray)
-                    }
-                } else {
-                    Api.Toast('error', result.message)
-                }
-              
+                  if (result.data.length > 0) {
+                      
+                      for (let i = 0; i < result.data.length; i++) {
+                          if (result.data[i].is_active === false) {
+                              notActiveListArray.push(result.data[i]) 
+                          }
+                      }
+                      searchResults.splice(0, searchResults.length)
+                      notActiveJobsList.splice(0, notActiveJobsList.length)
+                      setNotActiveJobList(notActiveListArray)
+                      setSearchResults(notActiveListArray)
+                  }
+              } else {
+                  Api.Toast('error', result.message)
+              }
+              } else {
+                Api.Toast('error', 'Server not responding')
+              }
+                
             })
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
     }
      
-    const ActivateJob = (item) => {
-      
-         item.job_is_active = true
-         Api.jsonPatch(`/jobs/${item.job_uuid}/`, item)
-         .then((result) => {
-             if (result.status === 200) {
-                 Api.Toast('success', result.message)
-                 getNotActiveJobs()
-                 CallBack()
-                 } else {
-                     Api.Toast('error', result.message)
-                 }
-         })
+    const ActivateJob = async (item) => {
+      MySwal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to ReActivate the Job!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Activate it!',
+        customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ms-1'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.value) {
+           Api.jsonPatch(`/jobs/${item.uuid}/activate/`, item)
+            .then((deleteResult) => {
+                if (deleteResult.status === 200) {
+                    MySwal.fire({
+                        icon: 'success',
+                        title: 'Job Activated!',
+                        text: 'Acvtivation Successfull',
+                        customClass: {
+                        confirmButton: 'btn btn-success'
+                        }
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                          Api.Toast('success', deleteResult.message)
+                          getNotActiveJobs()
+                          CallBack()
+                        }
+                    }) 
+                } else {
+                    MySwal.fire({
+                        icon: 'error',
+                        title: deleteResult.message ? deleteResult.message : 'Job can not be activated!',
+                        text: 'Job activation unsuccessfull.',
+                        customClass: {
+                        confirmButton: 'btn btn-danger'
+                        }
+                    })
+                }
+                        
+                })
+        } 
+    })
+    // await Api.jsonPatch(`/jobs/${item.uuid}/activate/`, item)
+    // .then((result) => {
+    //     if (result.status === 200) {
+    //         Api.Toast('success', result.message)
+    //         getNotActiveJobs()
+    //         CallBack()
+    //         } else {
+    //             Api.Toast('error', result.message)
+    //         }
+    // })
           
     }
       

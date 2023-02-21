@@ -86,21 +86,19 @@ const JDHelper = () => {
   } 
   const updateJD = async (data, id) => {
     let formData = new FormData()
-        formData = JSON.stringify(Object.assign(data))
-        console.warn(Object.assign(data))
-    const url = `${Api.ApiBaseLink}/jd/${id}/`
-                fetch(url, {
-                method: "Patch",
-                headers: { "Content-Type": "Application/json", Authorization: Api.token },
-                body: formData
-                })
-                .then((response) => response.json())
+        formData = Object.assign(data)
+                Api.jsonPatch(`/jd/${id}/`, formData)
                 .then((result) => {
-                    if (result.status === 200) {
-                    Api.Toast('success', result.message)
+                    if (result) {
+                        if (result.status === 200) {
+                            Api.Toast('success', result.message)
+                            } else {
+                                Api.Toast('error', result.message)
+                            }
                     } else {
-                        Api.Toast('error', 'not working')
+                        Api.Toast('error', 'Server not responding!')
                     }
+                    
                 })
             .catch((error) => {
                 Api.Toast('error', error)

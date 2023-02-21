@@ -17,8 +17,6 @@ const UpdateJobList = ({ CallBack, data }) => {
   const [position, setPosition] = useState(data.position)
   const [jobType, setJobType] = useState(data.job_type)
   const [jobTitle, setJobTitle] = useState(data.title)
-  const [minSalary, setMinSalary] = useState('')
-  const [maxSalary, setMaxSalary] = useState('')
   const [jobCode, setJobCode] = useState(data.job_post_code)
   const [individualNo, setIndividualNo] = useState(data.no_of_individuals)
   const [jobDescription, setJobDescription] = useState(data.jd_selection)
@@ -35,7 +33,6 @@ const UpdateJobList = ({ CallBack, data }) => {
   const fetchPreData = async () => {
     setLoading(true)
     await Job_Helper.fetchFormPreData().then(data => {
-      console.warn(data)
       if (data) {
        formData.Staff_Classification = data.Staff_Classification
        formData.Department = data.Department
@@ -72,12 +69,6 @@ const UpdateJobList = ({ CallBack, data }) => {
   const onChangeTitleHandler = (event) => {
     setJobTitle(event.target.value)
   }
-  const onChangeMinSalaryHandler = (event) => {
-    setMinSalary(event.target.value)
-  }
-  const onChangeMaxSalaryHandler = (event) => {
-    setMaxSalary(event.target.value)
-  }
   const onChangeJobCodeHandler = (event) => {
     setJobCode(event.target.value)
   }
@@ -96,24 +87,14 @@ const UpdateJobList = ({ CallBack, data }) => {
             formInput['position'] = position
             formInput['title'] = jobTitle
             formInput['staff_classification'] = staffClassification
-            // formInput['maximumSalary'] = parseInt(maxSalary)
             formInput['no_of_individuals'] = parseInt(individualNo)
             formInput['job_code'] = parseInt(jobCode)
             formInput['jd_selection'] = jobDescription
             formInput['job_type'] = jobType
             formInput['job_post_id'] = job_post_id
-            // formInput['minimumSalary'] = parseInt(minSalary)
 
-            console.warn(`formData ${JSON.stringify(formInput)}`)
-            const url = `${process.env.REACT_APP_API_URL}/jobs/${data.job_uuid}/`
-          fetch(url, {
-            method: "Patch",
-            headers:{'Content-Type': 'application/json', Authorization: Api.token},
-            body:JSON.stringify(formInput)
-            })
-          .then((response) => response.json())
+           Api.jsonPatch(`/jobs/${data.job_uuid}/`, formInput)
           .then((result) => {
-              console.log(result)
               if (result.status === 200) {
                   Api.Toast('success', result.message)
                   CallBack()
@@ -123,8 +104,6 @@ const UpdateJobList = ({ CallBack, data }) => {
           })
        
     } else {
-      console.log(minSalary)
-      console.log(maxSalary)
       Api.Toast('error',   "Please fill all required fields with *")
     }
     
@@ -203,7 +182,7 @@ const UpdateJobList = ({ CallBack, data }) => {
                 )}
               
             </Col>
-            <Col md='4' className='mb-1'>
+            <Col md='6' className='mb-1'>
               <label className='form-label'>
                 Job Type<span className="required">*</span>
               </label>
@@ -226,7 +205,7 @@ const UpdateJobList = ({ CallBack, data }) => {
                   <p>No Positions Available</p>
                 )}
             </Col>
-            <Col md='4' className='mb-1'>
+            <Col md='6' className='mb-1'>
               <label className='form-label'>
                 Job Title<span className="required">*</span>
               </label>
@@ -239,33 +218,7 @@ const UpdateJobList = ({ CallBack, data }) => {
                   onChange={onChangeTitleHandler}
                 />
             </Col>
-            <Col md='4' className='mb-1'>
-            <label className='form-label'>
-                Salary Range
-              </label>
-                <div className="d-flex">
-                  <Col md='4' className="mb-1 mr-1">
-                      <Input
-                        id="salary-range-min"
-                        type="number"
-                        name="salary-range-min"
-                        className="salary-range-min"
-                        placeholder="Min Salary Range"
-                        onChange={onChangeMinSalaryHandler}
-                      />
-                  </Col>
-                  <Col md='4' className="mb-1">
-                      <Input
-                        id="salary-range-max"
-                        type="number"
-                        name="salary-range-max"
-                        className="salary-range-max"
-                        placeholder="Max Salary Range"
-                        onChange={onChangeMaxSalaryHandler}
-                      />
-                  </Col>
-                </div>
-              </Col>
+           
               <Col md='4' className='mb-1'>
                 <label className='form-label'>
                   Job Code<span className="required">*</span>

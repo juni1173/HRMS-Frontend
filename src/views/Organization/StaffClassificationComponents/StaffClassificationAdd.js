@@ -11,11 +11,11 @@ import Avatar from '@components/avatar'
 const StaffClassificationAdd = ({ stepper, type, stepperStatus, fetchStaffClassification, fetchingStaffClassification }) => {
     const [title, setTitle] = useState('')
     const [plevel, setPLevel] = useState(5)
-    const [sclass_status, setStatus] = useState(0)
-  const staffStatus = [
-    { value: '0', label: 'Inactive' },
-    { value: '1', label: 'Active' }
-    ]
+    // const [sclass_status, setStatus] = useState(0)
+  // const staffStatus = [
+  //   { value: '0', label: 'Inactive' },
+  //   { value: '1', label: 'Active' }
+  //   ]
     const organization = JSON.parse(localStorage.getItem('organization'))
     const ToastContent = ({ type, message }) => (
         type === 'success' ? (
@@ -51,7 +51,7 @@ const StaffClassificationAdd = ({ stepper, type, stepperStatus, fetchStaffClassi
         if (title.length > 0) {
           formData['title'] =  title
           formData['level'] = plevel
-          formData['is_status'] =  sclass_status
+          // formData['is_status'] =  sclass_status
           formData['organization'] = organization.id
     
           console.warn(formData)
@@ -131,7 +131,7 @@ return (
                   />
           </Col>
         </Row>
-        <Row>
+        {/* <Row>
           <Col md='6' className='mb-1'>
             <Label className='form-label' for={`staff-status`}>
               Status
@@ -148,7 +148,7 @@ return (
               onChange={status => setStatus(status.value)}
             />
           </Col>
-        </Row>
+        </Row> */}
         {stepperStatus ? (
         <div className='d-flex justify-content-between'>
           

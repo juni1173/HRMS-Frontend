@@ -1,22 +1,19 @@
 import { useState } from "react"
 import { ChevronDown, Edit, Eye, XCircle, Plus } from "react-feather"
 import { Card, CardBody, CardTitle, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody } from "reactstrap"
-import CourseHelper from "../../../Helpers/LearningDevelopmentHelper/CourseHelper"
+import apiHelper from "../../../Helpers/ApiHelper"
 import UpdateCourse from "./UpdateCourse"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Course_Module from './Course_Module/index'
 const ToggleComponent = ({ data, id, CallBack }) => {
-    const Helper = CourseHelper()
+    const Api = apiHelper()
     const [toggleThisElement, setToggleThisElement] = useState(false)
     const [updateCanvasPlacement, setupdateCanvasPlacement] = useState('end')
     const [updateCanvasOpen, setupdateCanvasOpen] = useState(false)
     const MySwal = withReactContent(Swal)
 
     const removeCourse = (uuid, slug) => {
-        // Helper.deleteCourse(uuid, slug).then(() => {
-        //     CallBack()
-        // })
         MySwal.fire({
             title: 'Are you sure?',
             text: "Do you want to delete the Course!",
@@ -30,21 +27,32 @@ const ToggleComponent = ({ data, id, CallBack }) => {
             buttonsStyling: false
         }).then(function (result) {
             if (result.value) {
-                Helper.deleteCourse(uuid, slug)
-                    .then(() => {
-                            MySwal.fire({
-                                icon: 'success',
-                                title: 'Course Deleted!',
-                                text: 'Course is deleted.',
-                                customClass: {
-                                confirmButton: 'btn btn-success'
-                                }
-                            }).then(function (result) {
-                                if (result.isConfirmed) {
-                                    // setBtn(false)
-                                    CallBack()
-                                }
-                            }) 
+                Api.deleteData(`/courses/${slug}/${uuid}/`, {method: 'Delete'})
+                .then((deleteResult) => {
+                    if (deleteResult.status === 200) {
+                        MySwal.fire({
+                            icon: 'success',
+                            title: 'Course Deleted!',
+                            text: 'Course is deleted.',
+                            customClass: {
+                            confirmButton: 'btn btn-success'
+                            }
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                CallBack()
+                            }
+                        }) 
+                    } else {
+                        MySwal.fire({
+                            icon: 'error',
+                            title: 'Course can not be deleted!',
+                            text: deleteResult.message ? deleteResult.message : 'Course is not deleted.',
+                            customClass: {
+                            confirmButton: 'btn btn-danger'
+                            }
+                        })
+                    }
+                            
                     })
             } 
         })

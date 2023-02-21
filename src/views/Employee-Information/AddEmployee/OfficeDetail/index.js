@@ -6,13 +6,9 @@ import { useForm, Controller } from 'react-hook-form'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import EmployeeHelper from "../../../Helpers/EmployeeHelper"
+
 const OfficeDetail = ({emp_state}) => {
-    
-      const employee_status = [
-        {value: 1, label: 'Active'},
-        {value: 2, label: 'Not-Active'}
-      ]
-      
+     
     const Api = apiHelper()
     const Emp_Helper = EmployeeHelper()
     const [loading, setLoading] = useState(false)
@@ -25,7 +21,7 @@ const OfficeDetail = ({emp_state}) => {
         moduleName : 'officeDetail',
         department : '',
         employee_type : '',
-        code : '',
+        official_email : '',
         joining_date : '',
         leaving_date : '',
         starting_salary : 0,
@@ -33,8 +29,6 @@ const OfficeDetail = ({emp_state}) => {
         skype : '',
         title : '',
         staff_classification : '',
-        username : '',
-        status : employee_status[0],
         hiring_comment : '',
         leaving_reason : ''
     }
@@ -86,28 +80,25 @@ const OfficeDetail = ({emp_state}) => {
 
     const onSubmitHandler = async (data) => {
       setLoading(true)
-        if (data.code !== '') {
-            const emp_joining_date = Api.formatDate(data.joining_date)
-            const emp_leaving_date =  Api.formatDate(data.leaving_date)
+        if (data.official_email !== '') {
+            const emp_joining_date = data.joining_date ? Api.formatDate(data.joining_date) : ''
+            const emp_leaving_date =  data.leaving_date ? Api.formatDate(data.leaving_date) : ''
             const uuid = emp_state['emp_data'].uuid
-            const emp_code = `emp_${data.code}`
             const formData = new FormData()
             formData["organization"] = Api.org.id
-            formData["department"] = data.department.value
-            formData["employee_type"]  = data.employee_type.value
-            formData["position"] = data.position.value
-            formData["starting_salary"] = data.starting_salary !== 0 ? data.starting_salary : 0
-            formData["code"] = emp_code
-            formData["joining_date"] = emp_joining_date
-            formData["leaving_date"] = emp_leaving_date
-            formData["current_salary"] = data.current_salary
-            formData["hiring_comment"] = data.hiring_comment
-            formData["skype"] =  data.skype
-            formData["staff_classification"] = data.staff_classification.value
-            formData["username"] =  data.username
-            formData["title"] = data.title
-            formData["leaving_reason"] = data.leaving_reason
-            formData["status"] =  data.status.value
+            if (data.department) formData["department"] = data.department.value
+            if (data.employee_type) formData["employee_type"]  = data.employee_type.value
+            if (data.position) formData["position"] = data.position.value
+            if (data.starting_salary) formData["starting_salary"] = data.starting_salary !== 0 ? data.starting_salary : 0
+            formData["official_email"] = data.official_email
+            if (emp_joining_date !== '') formData["joining_date"] = emp_joining_date
+            if (emp_leaving_date !== '') formData["leaving_date"] = emp_leaving_date
+            if (data.current_salary) formData["current_salary"] = data.current_salary
+            if (data.hiring_comment) formData["hiring_comment"] = data.hiring_comment
+            if (data.skype) formData["skype"] =  data.skype
+            if (data.staff_classification) formData["staff_classification"] = data.staff_classification.value
+            if (data.title) formData["title"] = data.title
+            if (data.leaving_reason) formData["leaving_reason"] = data.leaving_reason
 
            await Api.jsonPatch(`/employees/${uuid}/`, formData)
             .then((result) => { 
@@ -156,7 +147,7 @@ const OfficeDetail = ({emp_state}) => {
                                 <p className='label'>Staff Classification: &nbsp;  &nbsp; <strong>{data.staff_classification_title ? data.staff_classification_title : 'N/A'}</strong></p>
                                 <p className='label'>Department: &nbsp;  &nbsp; <strong>{data.department_title ? data.department_title : 'N/A'}</strong></p>
                                 <p className='label'>Position: &nbsp;  &nbsp; <strong>{data.position_title ? data.position_title : 'N/A'}</strong></p>
-                                <p className='label'>Official Email: &nbsp;  &nbsp; <strong>{data.email ? data.email : 'N/A'}</strong></p>
+                                <p className='label'>Official Email: &nbsp;  &nbsp; <strong>{data.official_email ? data.official_email : 'N/A'}</strong></p>
                                 <p className='label'>Leaving Reason: &nbsp;  &nbsp; <strong>{data.leaving_reason ? data.leaving_reason : 'N/A'}</strong></p>
                         </div>
                             <div className='col-lg-6 col-md-6 col-sm-6'>
@@ -182,7 +173,7 @@ const OfficeDetail = ({emp_state}) => {
                         control={control}
                         id="department"
                         name="department"
-                        defaultValue={defaultValues[0]}
+                        // defaultValue={defaultValues[0]}
                         render={({ field }) => (
                             <Select
                               isClearable={false}
@@ -196,17 +187,17 @@ const OfficeDetail = ({emp_state}) => {
                   </Col>
                   <Col md="4" className="mb-1">
                       <Label className="form-label">
-                        Employee Code
+                        Official Email
                         </Label> <Badge color='light-danger'>*</Badge>
                         <Controller
                             control={control}
-                            id="code"
-                            name="code"
-                            defaultValue={defaultValues.code}
+                            id="official_email"
+                            name="official_email"
+                            defaultValue={defaultValues.official_email}
                             render={({ field }) => (
                                 <Input
                                 type="text"
-                                placeholder="Name"
+                                placeholder="Official Email"
                                 {...field}
                                 />
                             )}
@@ -231,44 +222,6 @@ const OfficeDetail = ({emp_state}) => {
                         />
                   </Col>
                   <Col md="4" className="mb-1">
-                         <Label className="form-label">
-                      Job Title
-                      </Label>
-                      <Controller
-                        control={control}
-                        id="job_ttitle"
-                        name="title"
-                        defaultValue={defaultValues.job_ttitle}
-                        render={({ field }) => (
-                            <Input
-                            type="text"
-                            placeholder="job_title"
-                            {...field}
-                            />
-                        )}
-                        />
-                  </Col>
-                  <Col md="4" className="mb-1">
-                         <Label className="form-label">
-                      Employee Status
-                      </Label>
-                      <Controller
-                        control={control}
-                        id="status"
-                        name="status"
-                        defaultValue={employee_status[0]}
-                        render={({ field }) => (
-                            <Select
-                              isClearable={false}
-                              className='react-select'
-                              classNamePrefix='select'
-                              options={employee_status}
-                              {...field}
-                            />
-                        )}
-                        />
-                  </Col>
-                  <Col md="4" className="mb-1">
                       <Label className="form-label">
                           position
                       </Label>
@@ -276,7 +229,7 @@ const OfficeDetail = ({emp_state}) => {
                         control={control}
                         id="position"
                         name="position"
-                        defaultValue={position[0]}
+                        // defaultValue={position[0]}
                         render={({ field }) => (
                             <Select
                               isClearable={false}
@@ -338,7 +291,7 @@ const OfficeDetail = ({emp_state}) => {
                         control={control}
                         id="staff_classification"
                         name="staff_classification"
-                        defaultValue={staffClassification[0]}
+                        // defaultValue={staffClassification[0]}
                         render={({ field }) => (
                             <Select
                               isClearable={false}
@@ -373,7 +326,7 @@ const OfficeDetail = ({emp_state}) => {
                         control={control}
                         id="employee_type"
                         name="employee_type"
-                        defaultValue={empType[0]}
+                        // defaultValue={empType[0]}
                         render={({ field }) => (
                             <Select
                               isClearable={false}
@@ -393,7 +346,7 @@ const OfficeDetail = ({emp_state}) => {
                         control={control}
                         id="leavng_date"
                         name="leaving_date"
-                        defaultValue={defaultValues.joining_date}
+                        defaultValue={defaultValues.leaving_date}
                         render={({ field }) => (
                             <Flatpickr 
                             className='form-control'
@@ -428,24 +381,7 @@ const OfficeDetail = ({emp_state}) => {
                         )}
                         />
                     </Col>
-                    <Col md="4" className="mb-1">
-                    <Label className="form-label">
-                      HRM UserName
-                      </Label>
-                      <Controller
-                        control={control}
-                        id="username"
-                        name="username"
-                        defaultValue={defaultValues.username}
-                        render={({ field }) => (
-                            <Input
-                            type="text"
-                            placeholder="username"
-                            {...field}
-                            />
-                        )}
-                        /> 
-                    </Col>
+                    
                     <Col md="4" className="mb-1">
                         <label htmlFor="company-vision" className="form-label form-label">Leaving Reason</label>
                       <Controller

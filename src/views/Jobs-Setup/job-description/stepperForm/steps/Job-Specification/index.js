@@ -15,7 +15,6 @@ const Job_Specification = ({ stepper, CallBack, Dimensions }) => {
       setLoading(true)
         const DimensionObject = Dimensions.find(x => x.value === jd_dimension)
         const DimensionLabel = DimensionObject.label
-          
           if (Specifications.find(x => x.jd_dimension === jd_dimension)) {
             Api.Toast('error', 'Dimension Already Exist')
             setTimeout(() => {
@@ -30,16 +29,16 @@ const Job_Specification = ({ stepper, CallBack, Dimensions }) => {
         }, 1000)
         
       }
-   const removeAction = value => {
-      setLoading(true)
-      Specifications.splice(value)
-      setTimeout(() => {
-        setLoading(false)
-      }, 1000)
-   }   
+  //  const removeAction = value => {
+  //     setLoading(true)
+  //     Specifications.splice(value)
+  //     setTimeout(() => {
+  //       setLoading(false)
+  //     }, 1000)
+  //  }   
   const specSubmit = data => {
-    const spe = CallBack(data, '3')
-    console.warn(spe)
+     CallBack(data, '3')
+    // console.warn(spe)
     stepper.next()
   }
   
@@ -130,9 +129,9 @@ const Job_Specification = ({ stepper, CallBack, Dimensions }) => {
                 <th scope="col" className="text-nowrap">
                   Essential
                 </th>
-                <th scope="col" className="text-nowrap">
+                {/* <th scope="col" className="text-nowrap">
                   Actions
-                </th>
+                </th> */}
               </tr>
             </thead>
             
@@ -147,7 +146,7 @@ const Job_Specification = ({ stepper, CallBack, Dimensions }) => {
                           <td>{item.DimensionLabel}</td>
                           <td>{item.desirable}</td>
                           <td>{item.essential}</td>
-                          <td>
+                          {/* <td>
                             <div className="d-flex row">
                               <div className="col">
                                 <button
@@ -158,7 +157,7 @@ const Job_Specification = ({ stepper, CallBack, Dimensions }) => {
                                 </button>
                               </div>
                             </div>
-                          </td>
+                          </td> */}
                           </tr>
                           ) 
                     )

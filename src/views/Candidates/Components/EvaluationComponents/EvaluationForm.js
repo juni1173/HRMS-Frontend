@@ -70,6 +70,7 @@ const EvaluationForm = ({uuid, stage_id}) => {
             if (result) {
                 if (result.status === 200) {
                     setEvaluationStatus(result.data)
+                    console.warn(result.data)
                 } else {
                     Api.Toast('error', result.message)
                 }
@@ -126,13 +127,13 @@ const EvaluationForm = ({uuid, stage_id}) => {
         return answers
     }
     const OnSubmitEvaluation = async (id) => {
-        setLoading(true)
         if (Object.values(answers).length > 0 && recommendation !== ''
         && comment !== '') {
             const formData = new FormData()
             formData['evaluation_questions_remarks'] = answers
             formData['recommendation'] = recommendation
             formData['comment'] = comment
+            setLoading(true)
             await Api.jsonPost(`/evaluations/candidate/job/submit/questions/remarks/${uuid}/${id}/`, formData)
             .then(result => {
                 if (result) {
@@ -237,6 +238,7 @@ const EvaluationForm = ({uuid, stage_id}) => {
                     
             ) : (
                 Object.values(evaluationStatus).length > 0 ? (
+                    
                     <div className='row'>
                             <div className='col-lg-6 text-center'>
                                 <Button className='btn btn-primary' onClick={() => onStartEvaluation(evaluationStatus.id)}>

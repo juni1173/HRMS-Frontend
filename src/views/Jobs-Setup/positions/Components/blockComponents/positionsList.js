@@ -125,6 +125,9 @@ const positionsList = ({ count }) => {
               <th scope="col" className="text-nowrap">
                 Code
               </th>
+              <th scrope="col" className='text-nowrap'>
+                Department
+              </th>
               <th scope="col" className="text-nowrap">
                 Experience
               </th>
@@ -149,6 +152,7 @@ const positionsList = ({ count }) => {
                         <td>{item.title}</td>
                         <td>{item.code}</td>
                         {/* { const experience = item.experience } */}
+                        <td>{item.department_title ? item.department_title : 'N/A'}</td>
                         <td>{Helper.experience[item.years_of_experience - 1].label ? Helper.experience[item.years_of_experience - 1].label : `N/A`}</td>
                         <td>Min Salary: {item.min_salary ? item.min_salary : `N/A`} <br/><hr/> Max Salary: {item.max_salary ? item.max_salary : `N/A`}</td>
                         <td>

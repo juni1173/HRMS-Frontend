@@ -200,7 +200,7 @@ const EmployeeDetail = () => {
                                     <p className='label'>Marital Status: &nbsp;  &nbsp;<strong>{empData.employee.marital_status_type ? empData.employee.marital_status_type : 'N/A'}</strong></p>
                                 </div>
                                 <div className='col-lg-4 col-md-4 col-sm-4' >
-                                    {empData.employee.profile_image ? <img src={`${process.env.REACT_APP_BACKEND_URL}/${empData.employee.profile_image}`} className="float-right" width={150} height={150}/> : <img src={user_blank}  style={{marginRright: '40px', marginTop: '20px'}}
+                                    {empData.employee.profile_image ? <img src={`${process.env.REACT_APP_BACKEND_URL}${empData.employee.profile_image}`} className="float-right" width={150} height={150}/> : <img src={user_blank}  style={{marginRright: '40px', marginTop: '20px'}}
                                     className="float-right" width={150} height={150}/>}
                                     
                                 </div>

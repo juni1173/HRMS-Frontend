@@ -3,6 +3,7 @@ import ToggleComponent from "./ToggleComponent"
 import { Plus } from "react-feather"
 import { Card, CardBody, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from "reactstrap"
 import AddProgram from "./AddProgram"
+import ProgramList from "./ProgramList"
 import ProgramHelper from "../../../Helpers/LearningDevelopmentHelper/ProgramHelper"
 const index = () => {
     const Helper = ProgramHelper()
@@ -31,7 +32,7 @@ const index = () => {
   }
   
   const CallBack = () => {
-      toggleCanvasEnd()  
+      setCanvasOpen(false)  
       fetchPrograms()
   }
   useEffect(() => {
@@ -41,7 +42,6 @@ const index = () => {
     <>
         <div className="row mb-1">
             <div className="col-lg-6">
-                <h2>Programs</h2>
             </div>
             <div className="col-lg-6">
                 <button
@@ -55,9 +55,12 @@ const index = () => {
         </div>
         {!loading ? (
         programList.length > 0 ? (
-            programList.map((d, id) => {
+            <>
+            <ProgramList data={programList} CallBack={CallBack} />
+            {/* {programList.map((d, id) => {
                 return <ToggleComponent id={id} data={d} key={id} CallBack={fetchPrograms}/>
-              })
+              })} */}
+            </>
           ) : (
             <Card>
                 <CardBody>

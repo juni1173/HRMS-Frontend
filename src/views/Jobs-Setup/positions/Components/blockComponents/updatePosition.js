@@ -10,7 +10,6 @@ import CustomHelper from "../../../../Helpers/customHelper"
 import apiHelper from "../../../../Helpers/ApiHelper"
 
 const UpdatePosition = ({ CallBack, updateIdData }) => {
-  console.warn(updateIdData)
     const Helper = CustomHelper()
     const Api = apiHelper() 
     const experience = [
@@ -31,8 +30,9 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
     const [depdropdown] = useState([])
     const [staffdropdown] = useState([])
     const [loading, setLoading] = useState(false)
+    const [dropdownLoad, setDropdownLoad] = useState(false)
     const [gHead] = useState([])
-    const [dep, setDep] = useState('Select')
+    const [dep, setDep] = useState('')
     // const [staff, setStaff] = useState('Select')
     const [stateData, setStateData] = useState(null)
     // const [gheadDefault, stegheadDefault] = useState(null)
@@ -47,11 +47,9 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
             }  
             
         }
-        
-        console.warn(gHead)
     }
     const depDropdown = (data) => {
-
+      setDropdownLoad(true)
         if (data !== null) {
             depdropdown.splice(0, depdropdown.length)
             for (let i = 0; i < data.length; i++) {
@@ -59,10 +57,15 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                     depdropdown.push({value:data[i].id, label: data[i].title})
                 }
             }
+            const departmentValue = depdropdown.find(pre => pre.value === updateIdData.department) ? depdropdown.find(pre => pre.value === updateIdData.department) : ''
+            setDep(departmentValue) 
         } else {
             depdropdown.splice(1, depdropdown.length)
-            setDep('Select')
+            setDep('')
         }
+        setTimeout(() => {
+          setDropdownLoad(false)
+        }, 500)
     }
     const staffDropdown = (data) => {
         if (data) {
@@ -87,9 +90,9 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
             staffDropdown(data)
         })
     }
-    const gHeadChange = (id) => {
+    const gHeadChange = async (id) => {
         if (id > 0) {
-            Helper.getDepartmentbyGHeadid(id)
+           await  Helper.getDepartmentbyGHeadid(id)
             .then(data => {
                 depDropdown(data)
             })
@@ -197,6 +200,7 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                       onChange={e => {
                           field.onChange(e)
                           gHeadChange(e.value)
+                          setDep('select')
                       }} 
                       />
                   )}
@@ -211,15 +215,14 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                   control={control}
                   id="department"
                   name="department"
-                  defaultValue={depdropdown.find(pre => pre.value === updateIdData.department) ? depdropdown.find(pre => pre.value === updateIdData.department) : depDropdown[0]}
                   render={({ field }) => (
-                      !loading ? (
+                      !dropdownLoad ? (
                           <Select
                             isClearable={false}
                             className={classnames('react-select', { 'is-invalid': stateData !== null && stateData.department === undefined })}
                             classNamePrefix='select'
                             options={depdropdown}
-                            value={dep}
+                            defaultValue={dep}
                             {...field}
                             onChange={obj => { 
                               field.onChange(obj)
@@ -227,14 +230,7 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                            }}
                           />
                       ) : ( 
-                        <Select
-                        isClearable={false}
-                        id='staff-type'
-                        name='staff-type'
-                        className='react-select'
-                        classNamePrefix='select'
-                      //   onChange={type => { setType(type.value) }}
-                      />
+                        <div className="text-center"> <Spinner type="grow" color="warning" /></div>
                       )
                   )}
                   />

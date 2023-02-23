@@ -4,6 +4,7 @@ import { Plus } from "react-feather"
 import { Card, CardBody, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from "reactstrap"
 import AddSubject from "./AddSubject"
 import SubjectHelper from "../../../Helpers/LearningDevelopmentHelper/SubjectHelper"
+import SubjectList from "./SubjectList"
 const index = () => {
     const Helper = SubjectHelper()
     const [loading, setLoading] = useState(false)
@@ -30,7 +31,7 @@ const index = () => {
     }
     const CallBack = () => {
         fetchSubjects()
-        toggleCanvasEnd()
+        setCanvasOpen(false)
     }
     useEffect(() => {
         fetchSubjects()
@@ -39,7 +40,6 @@ const index = () => {
     <>
         <div className="row mb-1">
             <div className="col-lg-6">
-                <h2>Subjects</h2>
             </div>
             <div className="col-lg-6">
                 <button
@@ -53,9 +53,12 @@ const index = () => {
         </div>
       {!loading ? (
         subjectList.length > 0 ? (
-            subjectList.map((d, id) => {
+            <>
+            <SubjectList data={subjectList} CallBack={CallBack} />
+            {/* {subjectList.map((d, id) => {
                 return <ToggleComponent id={id} data={d} key={id} CallBack={fetchSubjects}/>
-              })
+              })} */}
+              </>
           ) : (
             <Card>
                 <CardBody>

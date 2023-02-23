@@ -9,10 +9,10 @@ const UpdateProject = ({ data, CallBack }) => {
   
       const handleSubmit = async (event) => {
         event.preventDefault()
-        if (name !== '' && code !== '') {
+        if (name !== '') {
           const formData = new FormData()
           formData['name'] = name
-          formData['code'] = code
+          if (data.code !== code) formData['code'] = code
           await Api.jsonPatch(`/projects/${data.uuid}/`, formData).then(result => {
             if (result) {
               if (result.status === 200) {
@@ -45,7 +45,7 @@ const UpdateProject = ({ data, CallBack }) => {
             />
           </Col>
           <Col md={6} className='mt-1'>
-            <Label>Code <Badge color='light-danger'>*</Badge></Label>
+            <Label>Code</Label>
             <Input
               type="text"
               id="code"

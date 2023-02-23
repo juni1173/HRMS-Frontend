@@ -1,11 +1,12 @@
 import { Fragment, useEffect, useState } from "react"
 import {  Eye, Search} from "react-feather"
-import {Container, Card, CardBody, CardTitle, Badge, InputGroup, Input, InputGroupText, Col, Spinner} from "reactstrap"
+import {Container, Row, Card, CardBody, CardTitle, Badge, InputGroup, Input, InputGroupText, Col, Spinner} from "reactstrap"
 import user_blank  from "../../../assets/images/avatars/user_blank.png"
 import apiHelper from "../../Helpers/ApiHelper"
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
 import Masonry from 'react-masonry-component'
 import ReactPaginate from 'react-paginate'
+import Select from "react-select"
  
 const viewEmployee = () => {
     
@@ -18,8 +19,13 @@ const viewEmployee = () => {
     const [currentItems, setCurrentItems] = useState([])
     const [pageCount, setPageCount] = useState(0)
     const [itemOffset, setItemOffset] = useState(0)
-    const itemsPerPage = 6
-    
+    const [itemsPerPage, setItemsPerPage] = useState(50)
+    const itemsCount = [
+        {value: 50, label: '50'},
+        {value: 100, label: '100'},
+        {value: 150, label: '150'},
+        {value: 200, label: '200'}
+    ]
     const getEmployeeData = async () => {
         setLoading(true)
         await Api.get(`/employees/`).then(result => {
@@ -85,14 +91,25 @@ const viewEmployee = () => {
             <div className='row  my-1'>
                 <Col md={6}>
                     <h3>Employee List</h3>
+                    <span>Showing {itemsPerPage} results per page</span>
                 </Col>
-                <Col md={6}>
+                <Col md={4}>
                     <InputGroup className='input-group-merge mb-2'>
                         <InputGroupText>
                             <Search size={14} />
                         </InputGroupText>
                         <Input placeholder='search employee name...'  onChange={e => { getSearch({list: employeeList, key: 'name', value: e.target.value }) } }/>
                     </InputGroup>
+                </Col>
+                <Col md={2}>
+                    <Select 
+                    placeholder="Entries"
+                    options={itemsCount}
+                    onChange={e => {
+                        setItemsPerPage(e.value)
+                        setItemOffset(0)
+                    }}
+                    />
                 </Col>
             </div>
         </Container>

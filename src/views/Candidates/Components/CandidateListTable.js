@@ -161,12 +161,14 @@ const CandidateListTable = (props) => {
             </div>
             ) : (
                 <div className="row min-width-225">
-                    <div className="col-lg-8">
+                    <div className={candidate.is_qualified ? "col-lg-8" : "col-lg-12"}>
                         {props.stages.find(({value}) => value === candidate.stage) ? props.stages.find(({value}) => value === candidate.stage).label : props.stages[0].label }
                     </div>
-                    <div className="col-lg-4 float-right">
-                        <Edit color="orange" onClick={() => setToggleThisElement((prev) => !prev)}/>
-                    </div>
+                    {candidate.is_qualified && (
+                         <div className="col-lg-4 float-right">
+                         <Edit color="orange" onClick={() => setToggleThisElement((prev) => !prev)}/>
+                     </div>
+                    )}
                 </div>
             )
                 
@@ -185,6 +187,7 @@ const CandidateListTable = (props) => {
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>CNIC</th> 
                                 <th>Job title</th>
                                 <th>Resume</th>
                                 <th>Score</th>
@@ -200,8 +203,9 @@ const CandidateListTable = (props) => {
                         {Object.values(props.data).length > 0 ? (
                             props.data.map((candidate, index) => (
                                 <tr key={index}>
-                                    <td>{candidate.candidate_name}</td>
-                                    <td>{candidate.email}</td>
+                                    <td>{candidate.candidate_name ? candidate.candidate_name : <Badge color="light-danger">N/A</Badge>}</td>
+                                    <td>{candidate.email ? candidate.email : <Badge color="light-danger">N/A</Badge>}</td>
+                                    <td className="text-nowrap">{candidate.cnic_no ? candidate.cnic_no : <Badge color="light-danger">N/A</Badge>}</td> 
                                     <td>{candidate.job_title ? candidate.job_title : <Badge color="light-danger">N/A</Badge>}</td>
                                     <td>
                                         <a className="btn btn-primary btn-sm" target="_blank" href={`${process.env.REACT_APP_BACKEND_URL}${candidate.resume}`}><File/></a>

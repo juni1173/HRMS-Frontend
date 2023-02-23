@@ -1,7 +1,7 @@
 // ** Reactstrap Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import Select from 'react-select'
-import { Check, X, XCircle, Edit, Save } from 'react-feather'
+import { Check, X, XCircle, Edit, Save, Search } from 'react-feather'
 import { useForm } from 'react-hook-form'
 import apiHelper from '../../../../Helpers/ApiHelper'
 // ** Styles
@@ -17,12 +17,12 @@ import {
     Label,
     Button,
     ModalBody,
-    ModalHeader,
-    // FormFeedback,
+    ModalHeader, InputGroup, InputGroupText,
     Table
   } from 'reactstrap'
   import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
+import SearchHelper from '../../../../Helpers/SearchHelper/SearchByObject'
 const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedDepID }) => {
     const Api = apiHelper()
     const [editModal, setEditModal] = useState(false)
@@ -30,6 +30,9 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
     const [updatedGHeadID, setGHeadID] = useState(null)
     const [updatedTitle, setUpdatedTitle] = useState('')
     const [updatedDescription, setUpdatedDescription] = useState('')
+    const searchHelper = SearchHelper()
+    const [searchResults, setSearchResults] = useState([])
+    const [searchQuery] = useState([])
     const [editData, setData] = useState([
         {
             grouphead: null,
@@ -77,6 +80,26 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
         // Dep_status: editData.status,
         Dep_description: editData.description
       }
+      const getSearch = options => {
+        if (options.value === '' || options.value === null || options.value === undefined) {
+    
+            if (options.key in searchQuery) {
+                delete searchQuery[options.key]
+            } 
+            if (Object.values(searchQuery).length > 0) {
+                options.value = {query: searchQuery}
+            } else {
+                options.value = {}
+            }
+            setSearchResults(searchHelper.searchObj(options))
+            
+        } else {
+            
+            searchQuery[options.key] = options.value
+            options.value = {query: searchQuery}
+            setSearchResults(searchHelper.searchObj(options))
+        }
+    }
     const {
         // control,
         setError,
@@ -176,11 +199,24 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
                 )
         }
       }
+      useEffect(() => {
+        setSearchResults(DepList)
+      }, [DepList])
   return (
     <Fragment>
-      <div className='divider'>
-        <div className='divider-text'><h3 className='my-1'>Departments List</h3></div>
-      </div>  
+      <div className='row'>
+              <div className='col-md-6 my-1'>
+                  <h3 className=''>Department List</h3>
+              </div>
+              <div className='col-md-6 px-1'>
+              <InputGroup className='input-group-merge mb-2'>
+                  <InputGroupText>
+                  <Search size={14} />
+                  </InputGroupText>
+                  <Input placeholder='search title...' onChange={e => { getSearch({list: DepList, key: 'title', value: e.target.value }) } }/>
+              </InputGroup>
+              </div>
+            </div>
       <Table bordered striped responsive>
         <thead className='table-dark text-center'>
           <tr>
@@ -202,9 +238,9 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
           </tr>
         </thead>
         <tbody className='text-center'>
-          {Object.values(DepList).length > 0 ? (
+          {Object.values(searchResults).length > 0 ? (
             <>
-            {Object.values(DepList).map((item, key) => (
+            {Object.values(searchResults).map((item, key) => (
                 !item.is_active ? null : (
                     <tr key={key}>
                   <td>{item.title}</td>

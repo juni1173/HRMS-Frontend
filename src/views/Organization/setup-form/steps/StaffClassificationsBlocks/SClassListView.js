@@ -1,6 +1,6 @@
 // ** Reactstrap Imports
-import { Fragment, useState } from 'react'
-import { Check, X, XCircle, Edit, Save, Plus, Minus } from 'react-feather'
+import { Fragment, useState, useEffect } from 'react'
+import { Check, X, XCircle, Edit, Save, Plus, Minus, Search } from 'react-feather'
 import { useForm } from 'react-hook-form'
 import InputNumber from 'rc-input-number'
 // ** Styles
@@ -15,17 +15,20 @@ import {
     Label,
     Button,
     ModalBody,
-    ModalHeader,
-    // FormFeedback,
+    ModalHeader, InputGroup, InputGroupText,
     Table
   } from 'reactstrap'
   import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
+import SearchHelper from '../../../../Helpers/SearchHelper/SearchByObject'
 const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
     const [editModal, setEditModal] = useState(false)
     const [editIDState, setEditIDState] = useState(null)
     const [updatedTitle, setUpdatedTitle] = useState('')
       const [updatedLevel, setUpdatedLevel] = useState('')
+      const searchHelper = SearchHelper()
+      const [searchResults, setSearchResults] = useState([])
+      const [searchQuery] = useState([])
     const [editData, setEditData] = useState({
         title: "",
         level: 1,
@@ -71,6 +74,26 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
         level: editData.level
         // sclass_status: editData.is_status
       }
+      const getSearch = options => {
+        if (options.value === '' || options.value === null || options.value === undefined) {
+    
+            if (options.key in searchQuery) {
+                delete searchQuery[options.key]
+            } 
+            if (Object.values(searchQuery).length > 0) {
+                options.value = {query: searchQuery}
+            } else {
+                options.value = {}
+            }
+            setSearchResults(searchHelper.searchObj(options))
+            
+        } else {
+            
+            searchQuery[options.key] = options.value
+            options.value = {query: searchQuery}
+            setSearchResults(searchHelper.searchObj(options))
+        }
+    }
     const {
         // control,
         setError,
@@ -167,11 +190,24 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
                 )
         }
       }
+      useEffect(() => {
+        setSearchResults(SClassList)
+      }, [SClassList])
   return (
     <Fragment>
-      <div className='divider'>
-        <div className='divider-text'><h3 className='my-1'>Staff Classifications List</h3></div>
-      </div>
+      <div className='row'>
+          <div className='col-md-6 my-1'>
+              <h3 className=''>Staff Classification List</h3>
+          </div>
+          <div className='col-md-6 px-1'>
+          <InputGroup className='input-group-merge mb-2'>
+              <InputGroupText>
+              <Search size={14} />
+              </InputGroupText>
+              <Input placeholder='search title...' onChange={e => { getSearch({list: SClassList, key: 'title', value: e.target.value }) } }/>
+          </InputGroup>
+          </div>
+        </div>
       <Table bordered striped responsive>
         <thead className='table-dark text-center'>
           <tr>
@@ -187,9 +223,9 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
           </tr>
         </thead>
         <tbody className='text-center'>
-          {Object.values(SClassList).length > 0 ? (
+          {Object.values(searchResults).length > 0 ? (
             <>
-            {Object.values(SClassList).map((item, key) => (
+            {Object.values(searchResults).map((item, key) => (
                 !item.is_active ? null : (
                     <tr key={key}>
                   <td>{item.title}</td>

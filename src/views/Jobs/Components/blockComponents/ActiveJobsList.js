@@ -2,14 +2,12 @@ import { useState, useEffect } from "react"
 import { Edit, XCircle, Search} from "react-feather"
 import { Card, CardBody, Table, Modal, ModalBody, ModalHeader, Input, InputGroup, InputGroupText, Button, Spinner} from "reactstrap"
 import apiHelper from "../../../Helpers/ApiHelper"
-import JobHelper from "../../../Helpers/JobHelper"
 import UpdateJobList from "./UpdateJobList"
 import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
 import { useHistory } from "react-router-dom"
 const ActiveJobsList = ({count, data, CallBack}) => {
     const history = useHistory()
     const Api = apiHelper()
-    const Helper = JobHelper()
     const searchHelper = SearchHelper()
     const [Loading, setLoading] = useState(true)
     const [activeJobsList, setActiveJobList] = useState([])

@@ -1,8 +1,9 @@
 // ** Reactstrap Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import Select from 'react-select'
-import { Check, X, XCircle, Edit, Save } from 'react-feather'
+import { Check, X, XCircle, Edit, Save, Search } from 'react-feather'
 import { useForm } from 'react-hook-form'
+import SearchHelper from '../../../../Helpers/SearchHelper/SearchByObject'
 
 // ** Styles
 import '@styles/react/libs/react-select/_react-select.scss'
@@ -15,8 +16,7 @@ import {
     Label,
     Button,
     ModalBody,
-    ModalHeader,
-    // FormFeedback,
+    ModalHeader, InputGroup, InputGroupText,
     Table
   } from 'reactstrap'
   import { toast, Slide } from 'react-toastify'
@@ -25,8 +25,11 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
     const [editModal, setEditModal] = useState(false)
     const [editIDState, setEditIDState] = useState(null)
     const [updatedTitle, setUpdatedTitle] = useState('')
-      const [updatedType, setUpdatedType] = useState(null) 
-      const [updatedDescription, setUpdatedDescription] = useState('')
+    const [updatedType, setUpdatedType] = useState(null) 
+    const [updatedDescription, setUpdatedDescription] = useState('')
+    const searchHelper = SearchHelper()
+    const [searchResults, setSearchResults] = useState([])
+    const [searchQuery] = useState([])
     const [editData, setEditData] = useState({
         title: "",
         grouphead_type: 1,
@@ -79,6 +82,26 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
         group_status: editData.is_active,
         group_description: editData.description
       }
+      const getSearch = options => {
+        if (options.value === '' || options.value === null || options.value === undefined) {
+    
+            if (options.key in searchQuery) {
+                delete searchQuery[options.key]
+            } 
+            if (Object.values(searchQuery).length > 0) {
+                options.value = {query: searchQuery}
+            } else {
+                options.value = {}
+            }
+            setSearchResults(searchHelper.searchObj(options))
+            
+        } else {
+            
+            searchQuery[options.key] = options.value
+            options.value = {query: searchQuery}
+            setSearchResults(searchHelper.searchObj(options))
+        }
+    }
     const {
         // control,
         setError,
@@ -184,11 +207,24 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
                 )
         }
       }
+      useEffect(() => {
+        setSearchResults(groupHeadList)
+      }, [groupHeadList])
   return (
     <Fragment>
-        <div className='divider'>
-            <div className='divider-text'><h3 className='my-1'>Group Heads List</h3></div>
-        </div>
+            <div className='row'>
+              <div className='col-md-6 my-1'>
+                  <h3 className=''>Group Heads List</h3>
+              </div>
+              <div className='col-md-6 px-1'>
+              <InputGroup className='input-group-merge mb-2'>
+                  <InputGroupText>
+                  <Search size={14} />
+                  </InputGroupText>
+                  <Input placeholder='search title...' onChange={e => { getSearch({list: groupHeadList, key: 'title', value: e.target.value }) } }/>
+              </InputGroup>
+              </div>
+            </div>
       <Table bordered striped responsive>
         <thead className='table-dark text-center'>
           <tr>
@@ -207,9 +243,9 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
           </tr>
         </thead>
         <tbody className='text-center'>
-          {Object.values(groupHeadList).length > 0 ? (
+          {Object.values(searchResults).length > 0 ? (
             <>
-            {Object.values(groupHeadList).map((item, key) => (
+            {Object.values(searchResults).map((item, key) => (
                 !item.is_active ? null : (
                     <tr key={key}>
                   <td>{item.title}</td>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const Repeater = props => {
   // ** Props
-  const { count, tag, component, children, ...rest } = props
+  const { count, tag, children, ...rest } = props
 
   // ** Custom Tag
   const Tag = tag

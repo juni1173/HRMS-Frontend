@@ -28,7 +28,6 @@ const ExperienceDetail = ({emp_state}) => {
            
            InputValue = e
         } else if (InputType === 'date') {
-            console.warn(e)
             const dateFormat = Api.formatDate(e)
                
             InputValue = dateFormat
@@ -39,8 +38,6 @@ const ExperienceDetail = ({emp_state}) => {
         setExperienceDetail(prevState => ({
            ...prevState,
           [InputName] : InputValue
-           
-           
         }))
       
    }

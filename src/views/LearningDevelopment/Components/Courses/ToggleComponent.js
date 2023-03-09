@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Course_Module from './Course_Module/index'
 const ToggleComponent = ({ data, id, CallBack }) => {
+    console.warn(data)
     const Api = apiHelper()
     const [toggleThisElement, setToggleThisElement] = useState(false)
     const [updateCanvasPlacement, setupdateCanvasPlacement] = useState('end')
@@ -67,13 +68,17 @@ const ToggleComponent = ({ data, id, CallBack }) => {
                 <Card key={id}>
                     <CardTitle className="mb-0">
                         <div className="row bg-blue">
-                                    <div className="col-lg-4 col-md-4 col-sm-4">
+                                    <div className="col-lg-2 col-md-2 col-sm-2">
                                     <ChevronDown color="white" className="float-left cursor-pointer" onClick={() => setToggleThisElement((prev) => !prev)}/>
                                     </div>
-                                    <div className='col-lg-4 col-md-4 col-sm-4'>
-                                        <h4 color='white' className="text-center">{data.title}</h4>
+                                    
+                                    <div className='col-lg-8 col-md-8 col-sm-8'>
+                                        <a href={`/course/detail/${data.slug_title}/${data.uuid}`}>
+                                            <h4 color='white' className="text-center">{data.title}</h4>
+                                        </a>
                                     </div>
-                                    <div className="col-lg-4 col-md-4 col-sm-4">
+                                    
+                                    <div className="col-lg-2 col-md-2 col-sm-2">
                                         <button
                                             className="border-0 no-background float-right"
                                             title="Delete Course"

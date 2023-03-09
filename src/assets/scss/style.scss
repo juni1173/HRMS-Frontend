@@ -145,6 +145,9 @@ svg {
 	text-align: center;
 	margin: auto;
 }
+div.course-single-card .bg-blue:hover{
+	background-color: #20395c;
+}
 .bg-green{
 	background-color: #6db433;
 	padding : 10px 0;
@@ -215,6 +218,10 @@ p.label{
   .border-right{
 	border-right:lightgrey solid 1px;
   }
+  .border-right-blue{
+	border-right: #7367f0 solid 1px;
+	box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+  }
   td {
 	border-color: #00000036;
   }
@@ -280,4 +287,22 @@ div.configuration_panel .tab-pane-blue {
 }
 .organization-tabs svg {
 	margin: 0 !important;
+}
+.course-tabs .nav-link {
+	padding: 20px
+}
+.custom-sidebar{
+	border-right:lightgrey solid 1px;
+}
+.custom-sidebar .row:hover {
+	background-color: rgb(34 41 47 / 10%);
+	cursor: pointer;
+}
+.custom-sidebar .row {
+	padding: 10px 1px;
+	border-bottom: 1px solid lightgrey;
+	
+}
+.custom-sidebar .row.active {
+	background-color: lightgray;
 }

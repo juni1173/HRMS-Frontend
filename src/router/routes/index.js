@@ -117,6 +117,10 @@ const Routes = [
     component: lazy(() => import('../../views/LearningDevelopment/Components/Courses'))
   },
   {
+    path: '/course/detail/:slug/:uuid',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Courses/CourseDetail'))
+  },
+  {
     path: '/course-sessions',
     component: lazy(() => import('../../views/LearningDevelopment/Components/Sessions'))
   },

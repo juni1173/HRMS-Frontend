@@ -16,7 +16,8 @@ import {
     Button,
     ModalBody,
     ModalHeader, InputGroup, InputGroupText,
-    Table
+    Table,
+    Badge
   } from 'reactstrap'
   import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
@@ -102,7 +103,7 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
       } = useForm({ defaultValues })    
       const getSClassByID = (id) => {
         if (id) {
-            fetch(`${process.env.REACT_APP_API_URL}/organization/staff_classification/${id}/`, {
+            fetch(`${process.env.REACT_APP_API_URL}/organizations/staff_classification/${id}/`, {
                 method: "GET",
                 headers: { "Content-Type": "Application/json", Authorization: token }
               })
@@ -146,7 +147,7 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
       // const [updatedStatus, setUpdatedStatus] = useState(defaultValues.sclass_status)
       const updateSClass = (data, id) => {
         if (Object.values(data).length > 0 && id) {
-            fetch(`${process.env.REACT_APP_API_URL}/organization/staff_classification/${id}/`, {
+            fetch(`${process.env.REACT_APP_API_URL}/organizations/staff_classification/${id}/`, {
                 method: "PATCH",
                 headers: { "Content-Type": "Application/json", Authorization: token },
                 body: JSON.stringify(data) 
@@ -215,6 +216,9 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
               Title
             </th>
             <th scope="col" className="text-nowrap">
+              Initial
+            </th>
+            <th scope="col" className="text-nowrap">
               Level
             </th>
             <th scope="col" className="text-nowrap">
@@ -229,6 +233,7 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
                 !item.is_active ? null : (
                     <tr key={key}>
                   <td>{item.title}</td>
+                  <td>{item.initial ? <Badge color='light-success'> {item.initial} </Badge> : <Badge color='light-danger'>N/A</Badge>}</td>
                   <td>{item.level}</td>
                   <td>
                     <div className="d-flex row">

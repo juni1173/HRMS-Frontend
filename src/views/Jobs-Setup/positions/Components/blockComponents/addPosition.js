@@ -137,7 +137,7 @@ const addPosition = ({ CallBack }) => {
                 if (data.department !== undefined) formData['department'] = data.department.value
                 if (data.staff_id !== undefined) formData['staff_classification'] = data.staff_id.value
                 if (data.position_title !== undefined)  formData['title'] = data.position_title
-                if (data.position_code !== undefined)  formData['code'] =  data.position_code
+                // if (data.position_code !== undefined)  formData['code'] =  data.position_code
                 if (data.qualification !== undefined)  formData['qualification'] = data.qualification.value
                 if (data.experience !== undefined)  formData['years_of_experience'] = data.experience.value
                 if (data.min_salary !== undefined)  formData['min_salary'] = parseInt(data.min_salary)
@@ -249,7 +249,7 @@ const addPosition = ({ CallBack }) => {
                   )}
                 />
               </Col>
-              <Col md='4' className='mb-1'>
+              <Col md='6' className='mb-1'>
                 <label className='form-label'>
                   Position Title
                 </label>
@@ -268,7 +268,7 @@ const addPosition = ({ CallBack }) => {
                 />
                   {errors.position_title && <FormFeedback>{errors.position_title.message}</FormFeedback>}
               </Col>
-              <Col md='4' className='mb-1'>
+              {/* <Col md='4' className='mb-1'>
                 <label className='form-label'>
                   Position Code
                 </label>
@@ -288,8 +288,8 @@ const addPosition = ({ CallBack }) => {
                   )}
                 />
                  {errors.position_code && <FormFeedback>{errors.position_code.message}</FormFeedback>}
-              </Col>
-              <Col md='4' className='mb-1'>
+              </Col> */}
+              <Col md='6' className='mb-1'>
                 <Label className='form-label'>
                   Qualification
                 </Label>

@@ -1,104 +1,58 @@
 import { Fragment, useState } from "react" 
 // ** Icons Imports
-import { ArrowLeft, ArrowRight, Minus, Plus, Save, Check, X, XCircle } from "react-feather" 
+import { ArrowLeft, ArrowRight, Minus, Plus, Save } from "react-feather" 
 // ** Reactstrap Imports
-import { Label, Row, Col, Input, Form, Button } from "reactstrap" 
+import { Label, Row, Col, Input, Form, Button, Badge, FormFeedback} from "reactstrap" 
 import InputNumber from 'rc-input-number'
 // ** React Select
-import Select from 'react-select'
-import { toast, Slide } from 'react-toastify'
-import Avatar from '@components/avatar'
+import apiHelper from "../../Helpers/ApiHelper"
 const StaffClassificationAdd = ({ stepper, type, stepperStatus, fetchStaffClassification, fetchingStaffClassification }) => {
+    const Api = apiHelper()
     const [title, setTitle] = useState('')
+    const [initial, setInitial] = useState('')
+    const [initialError, setInitialError] = useState('')
     const [plevel, setPLevel] = useState(5)
-    // const [sclass_status, setStatus] = useState(0)
-  // const staffStatus = [
-  //   { value: '0', label: 'Inactive' },
-  //   { value: '1', label: 'Active' }
-  //   ]
-    const organization = JSON.parse(localStorage.getItem('organization'))
-    const ToastContent = ({ type, message }) => (
-        type === 'success' ? (
-        <Fragment>
-          <div className='toastify-header'>
-            <div className='title-wrapper'>
-              <Avatar size='sm' color='success' icon={<Check size={12} />} />
-              <h6 className='toast-title fw-bold'>Succesfull</h6>
-            </div>
-          </div>
-          <div className='toastify-body'>
-            <span>{message}</span>
-          </div>
-        </Fragment>) : (
-        <Fragment>
-          <div className='toastify-header'>
-            <div className='title-wrapper'>
-              <Avatar size='sm' color='danger' icon={<X size={12} />} />
-              <h6 className='toast-title fw-bold'>Error</h6>
-            </div>
-          </div>
-          <div className='toastify-body'>
-            <span>{message}</span>
-          </div>
-        </Fragment>
-        )
-    )
-    let token = localStorage.getItem('accessToken')
-    token = token.replaceAll('"', '')
-    token = `Bearer ${token}`
+    const getInitail = value => {
+      if (value) {
+        setTitle(value)
+        const matches = value.match(/\b(\w)/g)
+        const acronym = matches.join('') 
+        const initialLength = acronym.length
+        if (initialLength < 5) {
+          setInitial(acronym.toUpperCase())
+        } else {
+          setInitialError('Initial cannot be greater than 4 alphabets')
+        }
+        
+      } else {
+        setInitial('')
+      }
+      
+    }
     function saveData() {
         const formData = new FormData()
-        if (title.length > 0) {
+        if (title !== '' && initial !== '') {
           formData['title'] =  title
           formData['level'] = plevel
-          // formData['is_status'] =  sclass_status
-          formData['organization'] = organization.id
+          formData['initial'] =  initial
     
-          console.warn(formData)
           // ** Api Post Request
     
-          fetch(`${process.env.REACT_APP_API_URL}/organization/staff_classification/`, {
-            method: "POST",
-            headers: { "Content-Type": "Application/json", Authorization: token },
-            body: JSON.stringify(formData)
-          })
-          .then((response) => response.json())
+           Api.jsonPost(`/organizations/staff_classification/`, formData)
           .then((result) => {
             const data = {status:result.status, result_data:result.data, message: result.message }
             if (data.status === 200) {
-              toast.success(
-                <ToastContent type='success' message={data.message} />,
-                { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-              )
+             
               fetchingStaffClassification()
               if (typeof fetchStaffClassification !== "undefined") { 
                 fetchStaffClassification()
               }
-              
             } else {
-              alert('failed')
-              toast.error(
-                <ToastContent type='error' message={data.message} />,
-                { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-              )
+              Api.Toast('error', data.message)
             }
-            
-            // stepper.next()
           })
-          .catch((error) => {
-            
-            console.log(error)
-            toast.error(
-              <ToastContent type='error' message="Not getting data" />,
-              { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-            )
-          }) 
-          
         } else {
-            toast.error(
-                <ToastContent type='error' message="Title is required" />,
-                { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-              )
+            Api.Toast('error', 'Fill all the required fields!')
         }
       }
 return (
@@ -109,13 +63,21 @@ return (
       </div>
       <Form onSubmit={e => e.preventDefault()}>
         <Row>
-          <Col md='6' className='mb-1'>
+          <Col md='4' className='mb-1'>
             <Label className='form-label' for={`staff-${type}`}>
-              Title
+              Title<Badge color="light-danger">*</Badge>
             </Label>
-            <Input type='text' id={`staff-title`} name='staff-title' placeholder='Add Title' onChange={e => setTitle(e.target.value)} />
+            <Input type='text' id={`staff-title`} name='staff-title' placeholder='Add Title' onChange={e => getInitail(e.target.value)}/>
           </Col>
-          <Col md='6' className='mb-1'>
+          <Col md='4' className='mb-1'>
+            <Label className='form-label' for={`staff-${type}`}>
+              Initial<Badge color="light-danger">*</Badge>
+            </Label>
+            <Input type='text' id={`staff-initial`} name='staff-initial'
+            defaultValue={initial && initial} placeholder='Add Initial' onChange={e => setInitial(e.target.value)} />
+            {initialError !== '' ? <FormFeedback style={{display : 'block'}}>{initialError}</FormFeedback> : null}
+          </Col>
+          <Col md='4' className='mb-1'>
                 <Label className='form-label' for='min-max-number-input'>
                     Priority Level [ 1 - 30 ]
                 </Label>
@@ -169,7 +131,7 @@ return (
           </div>
         </div>
         ) : (
-          <div className='row float-right'>
+          <div className='row'>
             <div className='col-lg-12'>
             <Button color='primary' className='btn-next me-1' onClick={saveData}>
                 <span className='align-middle d-sm-inline-block d-none'>Save</span>

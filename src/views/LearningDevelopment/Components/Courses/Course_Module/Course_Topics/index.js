@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, Fragment } from "react"
 import ToggleComponent from "./ToggleComponent"
 import { Plus } from "react-feather"
 import { Card, CardBody, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from "reactstrap"
 import AddTopics from "./AddTopics"
 import TopicHelper from "../../../../../Helpers/LearningDevelopmentHelper/Course-subModules/TopicsHelper"
-const index = ({ module_id }) => {
+const index = ({ module_id, key }) => {
     const Helper = TopicHelper()
     const [loading, setLoading] = useState(false)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
@@ -37,7 +37,7 @@ const index = ({ module_id }) => {
         fetchTopics()
     }, [])
   return (
-    <>
+    <Fragment key={key}>
         <div className="row mb-1">
             <div className="col-lg-6">
                 <h2>Topics</h2>
@@ -74,7 +74,7 @@ const index = ({ module_id }) => {
             <AddTopics CallBack={CallBack} module_id={module_id}/>
             </OffcanvasBody>
         </Offcanvas>
-    </>
+    </Fragment>
     
   )
 }

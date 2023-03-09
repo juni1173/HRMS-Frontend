@@ -6,6 +6,7 @@ import { Settings } from 'react-feather'
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import Roles from './RolesConfiguration/Roles'
 import EmailIndex from '../EmailModule'
+import SalaryComposition from './SalaryComposition'
 
 const Configuration = () => {
   // ** State
@@ -75,7 +76,7 @@ const Configuration = () => {
           <EmailIndex/>
         </TabPane>
         <TabPane tabId='4' className='tab-pane-blue'>
-          <p className='text-white'> Coming Soon...!</p>
+          <SalaryComposition />
         </TabPane>
       </TabContent>
     </div>

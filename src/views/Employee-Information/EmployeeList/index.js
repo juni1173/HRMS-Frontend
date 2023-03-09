@@ -91,7 +91,7 @@ const viewEmployee = () => {
             <div className='row  my-1'>
                 <Col md={6}>
                     <h3>Employee List</h3>
-                    <span>Showing {itemsPerPage} results per page</span>
+                    <span>Showing {Object.values(currentItems).length > 0 ? itemsPerPage : 0} results per page</span>
                 </Col>
                 <Col md={4}>
                     <InputGroup className='input-group-merge mb-2'>
@@ -130,7 +130,7 @@ const viewEmployee = () => {
                             </div>
                             <div className="col-md-3">
                                 <Badge color='light-info p-0'>
-                                        Name
+                                    Name
                                 </Badge>
                                 <br></br>
                                 <strong>{item.name ? item.name : <Badge color="light-danger">N/A</Badge>}</strong>
@@ -157,7 +157,7 @@ const viewEmployee = () => {
                                 </div>
                             </div>
                         </div>
-                        </CardBody>
+                    </CardBody>
                 </Card> 
                 </Col>
             ))) : (

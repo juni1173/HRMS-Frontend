@@ -69,7 +69,7 @@ const PositionHelper = () => {
     positionResult.positionNotActive = positionNotActive
     return  positionResult
     } else {
-        Api.Toast('error', response.message)
+        // Api.Toast('error', response.message)
     }
     return positionResult
     // console.warn(positionResult)
@@ -106,7 +106,7 @@ const PositionHelper = () => {
       SCResult.SCNotActive = SCNotActive
       return  SCResult
       } else {
-          Api.Toast('error', response.message)
+          // Api.Toast('error', response.message)
       }
       return SCResult
      

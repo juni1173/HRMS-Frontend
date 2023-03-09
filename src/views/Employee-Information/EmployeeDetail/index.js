@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect} from "react"
 import { Edit, Plus, XCircle} from "react-feather"
-import {Modal, ModalBody, ModalHeader, Card, CardBody, CardTitle, Spinner, Table} from "reactstrap"
+import {Modal, ModalBody, ModalHeader, Card, CardBody, CardTitle, Spinner, Table, Badge} from "reactstrap"
 import UpdatePersonalDetail from "../AddEmployee/PersonalDetail/updatePersonalDetail"
 import UpdateOfficeDetail from "../AddEmployee/OfficeDetail/UpdateOfficeDetail"
 import UpdateEmpContact from "../UpdateEmployeeComponents/UpdateEmpContact"
@@ -15,6 +15,7 @@ import CreateEmpEducation from "../CreateEmployeeComponents/CreateEmpEducation"
 import CreateEmpExperience from "../CreateEmployeeComponents/CreateEmpExperience"
 import CreateEmpSkill from "../CreateEmployeeComponents/CreateEmpSkill"
 import CreateEmpBank from "../CreateEmployeeComponents/CreateEmpBank"
+import CreateProjectRole from "../CreateEmployeeComponents/CreateProjectRole"
 import {useParams} from "react-router-dom" 
 import apiHelper from "../../Helpers/ApiHelper"
 import EmployeeHelper from "../../Helpers/EmployeeHelper"
@@ -37,7 +38,8 @@ const EmployeeDetail = () => {
         employee_contacts: [],
         employee_dependents: [],
         employee_education: [],
-        employee_skills: []
+        employee_skills: [],
+        employee_project_roles: []
     })
 
     const BloodGrup = [
@@ -76,12 +78,12 @@ const EmployeeDetail = () => {
         setCreateModalState(active)
         setCreateModal(true)
     }
-    const getEmployeeData = () => {
+    const getEmployeeData = async () => {
         setLoading(true)
         if (!url_params.uuid) {
             return false   
         }
-        Api.get(`/employees/pre/complete/data/${url_params.uuid}/`).then(result => {
+       await Api.get(`/employees/pre/complete/data/${url_params.uuid}/`).then(result => {
             if (result) {
                 if (result.status === 200) {
                     console.warn(result.data)
@@ -94,7 +96,8 @@ const EmployeeDetail = () => {
                         employee_contacts: finalData.employee_contacts ? finalData.employee_contacts : [],
                         employee_dependents: finalData.employee_dependents ? finalData.employee_dependents : [],
                         employee_education: finalData.employee_education ? finalData.employee_education : [],
-                        employee_skills: finalData.employee_skills ? finalData.employee_skills : []
+                        employee_skills: finalData.employee_skills ? finalData.employee_skills : [],
+                        employee_project_roles: finalData.employee_project_roles ? finalData.employee_project_roles : []
                         }))
                 } else {
                     Api.Toast('error', result.message)
@@ -150,6 +153,8 @@ const EmployeeDetail = () => {
             return <CreateEmpDependent CallBack={CallBack} uuid={url_params.uuid} />
         case 6:
             return <CreateEmpBank CallBack={CallBack} uuid={url_params.uuid} />
+        case 7:
+        return <CreateProjectRole CallBack={CallBack} emp_id={empData.employee.id} />
         
         default:
             return <p>No Data Found</p>
@@ -272,6 +277,80 @@ const EmployeeDetail = () => {
                     )}
                 </Card>
                 
+                <Card className="emplyee_project_role">
+                    <CardTitle className={!loading ? 'mb-0' : ''}>
+                                <div className="row bg-blue">
+                                    <div className="col-lg-4 col-md-4 col-sm-4"></div>
+                                    <div className='col-lg-4 col-md-4 col-sm-4'>
+                                        <h4 color='white' className="text-center">Project Roles</h4>
+                                    </div>
+                                    <div className="col-lg-4 col-md-4 col-sm-4">
+                                        <button
+                                            className="border-0 no-background float-right"
+                                            title="Edit Employee"
+                                            onClick={() => createModelfunc(7)}
+                                            >
+                                            <Plus color="white"/>
+                                        </button>
+                                    </div>
+                                </div>
+                    </CardTitle>
+                    {!loading ? (
+                    Object.values(empData.employee_project_roles).length > 0 ? (
+                    <>
+                        <CardBody>
+                                <Table bordered striped responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Project</th>
+                                            <th>Role</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>status/Deactivate</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {Object.values(empData.employee_project_roles).map((pRole, key) => (
+                                        <tr key={key} className={!pRole.is_active ? 'table-danger' : ''}>
+                                            <td>{pRole.project_title ? pRole.project_title : 'N/a'}</td>
+                                            <td>{pRole.role_title ? pRole.role_title : 'N/A'}</td>
+                                            <td>{pRole.start_date ? pRole.start_date : 'N/A'}</td>
+                                            <td>{pRole.end_date ? pRole.end_date : <Badge color='light-success'>Not Ended</Badge>}</td>
+                                            <td>
+                                                {pRole.is_active ? (
+                                                    <div className="d-flex row">
+                                                    <div className="col">
+                                                    <button
+                                                        className="border-0 btn btn-danger"
+                                                        onClick={() => EmpHelper.DeleteProjectRole(pRole.id).then(() => { getEmployeeData() })}
+                                                    >
+                                                       End Role 
+                                                    </button>
+                                                    </div>
+                                                </div>
+                                                ) : (
+                                                    <Badge color='light-danger'>Role Ended</Badge>
+                                                )}
+                                                
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </Table>
+                        </CardBody>
+                    </>
+                    ) : (
+                        <CardBody>
+                            No Data Found
+                        </CardBody>
+                    )
+                    
+                    ) : (
+                        <div className="text-center"><Spinner /></div>
+                    )}
+                </Card>
+
                 <Card className="emplyee_contact_detail">
                     <CardTitle>
                                 <div className="row bg-blue">
@@ -746,7 +825,6 @@ const EmployeeDetail = () => {
                         <div className="text-center"><Spinner /></div>
                     )}
                 </Card>
-
                 <Modal isOpen={editModal} toggle={() => setEditModal(!editModal)} className='modal-dialog-centered modal-lg'>
                     <ModalHeader className='bg-transparent' toggle={() => setEditModal(!editModal)}></ModalHeader>
                     <ModalBody className='px-sm-5 mx-50 pb-5'>    

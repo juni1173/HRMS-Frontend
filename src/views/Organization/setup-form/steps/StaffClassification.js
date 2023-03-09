@@ -59,7 +59,7 @@ const StaffClassification = ({ stepper, list, createForm, stepperStatus, fetchSt
   const fetchData = async () => {
       setLoading(true)
       try {
-        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organization/staff_classification/`, {
+        const {data: response} = await axios.get(`${process.env.REACT_APP_API_URL}/organizations/staff_classification/`, {
          headers: {
           Accept : 'application/json',
           Authorization : token
@@ -107,7 +107,7 @@ const StaffClassification = ({ stepper, list, createForm, stepperStatus, fetchSt
   const deleteSClass = (id) => {
     if (id) {
       // ** Api DELETE Request
-      fetch(`${process.env.REACT_APP_API_URL}/organization/staff_classification/${id}/`, {
+      fetch(`${process.env.REACT_APP_API_URL}/organizations/staff_classification/${id}/`, {
         method: "DELETE",
         headers: { "Content-Type": "Application/json", Authorization: token }
       })

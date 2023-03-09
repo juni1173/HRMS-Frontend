@@ -60,7 +60,7 @@ const CustomHelper = () => {
     }
      const getstaffByDep = async () => {
         
-            const response = await Api.get('/organization/staff_classification/')
+            const response = await Api.get('/organizations/staff_classification/')
         // console.warn(response)
         if (response.status === 200) {
             const result = response.data

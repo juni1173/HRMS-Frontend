@@ -9,6 +9,7 @@ import ContactDetail from "./AddEmployee/ContactDetail"
 import ExperienceDetail from "./AddEmployee/ExperienceDetail"
 import SkillDetail from "./AddEmployee/SkillDetail"
 import DependentDetail from "./AddEmployee/DependentDetail"
+import EmpProjectRole from "./AddEmployee/EmpProjectRole"
 const employeeInformation = () => {
     const ref = useRef(null)
     const [stepper, setStepper] = useState(null)
@@ -40,6 +41,12 @@ const employeeInformation = () => {
             title: 'Employee Office Detail',
             subtitle: 'Enter Your Details.',
             content: <OfficeDetail stepper={stepper} state={state} emp_state={emp_state}/>
+          },
+          {
+            id: 'project-role-detail',
+            title: 'Project Role Detail',
+            subtitle: 'Enter Your Details.',
+            content: <EmpProjectRole stepper={stepper} state={state} emp_state={emp_state}/>
           },
           {
             id: 'contact-detail',

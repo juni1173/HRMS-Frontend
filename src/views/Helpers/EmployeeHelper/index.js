@@ -127,6 +127,19 @@ const EmployeeHelper = () => {
             }
         })
     }
+    const DeleteProjectRole = async (id) => {
+        await Api.deleteData(`/employees/projects/roles/${id}/data/`, {method: 'DELETE'}).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    Api.Toast('success', result.message)
+                } else {
+                    Api.Toast('error', result.message)
+                }
+            } else {
+                Api.Toast('error', 'Server Not Responding')
+            }
+        })
+    }
     
     // end Delete Api's for Employees
 
@@ -138,7 +151,8 @@ const EmployeeHelper = () => {
         DeleteEmpExperience,
         DeleteEmpSkill,
         DeleteEmpDependent,
-        DeleteEmpBank
+        DeleteEmpBank,
+        DeleteProjectRole
     }
 
 }

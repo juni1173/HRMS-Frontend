@@ -107,7 +107,7 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
     const formValues = updateIdData[0]
     const FormSchema = yup.object().shape({
       position_title: yup.string().min(3, 'Title must be more than 3 characters').required('Position Title Required'),
-      position_code: yup.number().min(3, 'Code must be more than 3 characters').required('Position Code Required'),
+      // position_code: yup.number().min(3, 'Code must be more than 3 characters').required('Position Code Required'),
       min_salary: yup.number().required('Min Salary Required'),
       max_salary: yup.number().required('Max Salary Required'),
       max_salary: yup.mixed().test('isLarger', 'Max Salary must be larger than Min Salary', (value, testContext) => {
@@ -127,17 +127,18 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
         formState:{ errors }
       } = useForm({formValues, mode: 'onChange', resolver: yupResolver(FormSchema) 
       })
-     
         const onSubmit = async (data) => {
             const formData = new FormData()
             setStateData(data)
-            
+            if (dep) {
+              data.department = dep
+            }
             if (data && data.ghead !== undefined && data.department !== undefined && data.staff_id !== undefined && data.qualification !== undefined && data.experience !== undefined) {
                 if (data.ghead !== undefined && data.ghead.value !== updateIdData.grouphead) formData['grouphead'] = data.ghead.value
                 if (data.department !== undefined && data.department.value !== updateIdData.department) formData['department'] = data.department.value
                 if (data.staff_id !== undefined && data.staff_id.value !== updateIdData.staff_classification) formData['staff_classification'] = data.staff_id.value
                 if (data.position_title !== undefined && data.position_title !== updateIdData.title)  formData['title'] = data.position_title
-                if (data.position_code !== undefined && data.position_code !== updateIdData.code)  formData['code'] =  data.position_code
+                // if (data.position_code !== undefined && data.position_code !== updateIdData.code)  formData['code'] =  data.position_code
                 if (data.qualification !== undefined && data.qualification.value !== updateIdData.qualification)  formData['qualification'] = data.qualification.value
                 if (data.experience !== undefined && data.experience.value !== updateIdData.years_of_experience)  formData['years_of_experience'] = data.experience.value
                 if (data.min_salary !== undefined && data.min_salary !== updateIdData.min_salary)  formData['min_salary'] = parseInt(data.min_salary)
@@ -264,7 +265,7 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                   )}
                 />
               </Col>
-              <Col md='4' className='mb-1'>
+              <Col md='6' className='mb-1'>
                 <label className='form-label'>
                   Position Title
                 </label>
@@ -283,7 +284,7 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                 />
                   {errors.position_title && <FormFeedback>{errors.position_title.message}</FormFeedback>}
               </Col>
-              <Col md='4' className='mb-1'>
+              {/* <Col md='4' className='mb-1'>
                 <label className='form-label'>
                   Position Code
                 </label>
@@ -303,8 +304,8 @@ const UpdatePosition = ({ CallBack, updateIdData }) => {
                   )}
                 />
                  {errors.position_code && <FormFeedback>{errors.position_code.message}</FormFeedback>}
-              </Col>
-              <Col md='4' className='mb-1'>
+              </Col> */}
+              <Col md='6' className='mb-1'>
                 <Label className='form-label'>
                   Qualification
                 </Label>

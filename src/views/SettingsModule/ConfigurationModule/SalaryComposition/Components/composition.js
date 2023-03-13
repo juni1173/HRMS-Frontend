@@ -7,9 +7,12 @@ import { Save, Lock, Unlock, Trash2 } from 'react-feather'
 // ** Reactstrap Imports
 import { Row, Col, Card, CardHeader, CardBody, Form, Label, Input, Button, Spinner, Badge, Table } from 'reactstrap'
 import apiHelper from '../../../../Helpers/ApiHelper'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const Composition = () => {
     const Api = apiHelper()
+    const MySwal = withReactContent(Swal)
   // ** State
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
@@ -49,7 +52,7 @@ const Composition = () => {
            await Api.get(`/payroll/pre/data/view/`).then(result => {
             if (result) {
                 if (result.status === 200) {
-                    setData(result.data)
+                    setData(result.data) 
                 } else {
                     Api.Toast('error', result.message)
                 }
@@ -215,22 +218,48 @@ const Composition = () => {
   }
   const LockBatch = () => {
     if (checkValidation(data.composition)) {
-        setLoading(true)
-        
-        Api.get(`/payroll/lock/batch/compositions/`).then(result => {
-            if (result) {
-                if (result.status === 200) {
-                getData()
-                } else {
-                    Api.Toast('error', result.message)
-                }
-            } else {
-                Api.Toast('error', 'Server not responding')
-            }
+        MySwal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to lock salary composition?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Lock it!',
+            customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.value) {
+                Api.get(`/payroll/lock/batch/compositions/`)
+                .then((result) => {
+                    if (result.status === 200) {
+                        MySwal.fire({
+                            icon: 'success',
+                            title: 'Salary composition is locked!',
+                            customClass: {
+                            confirmButton: 'btn btn-success'
+                            }
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                getData()
+                            }
+                        })
+                    } else {
+                        MySwal.fire({
+                            icon: 'error',
+                            title: result.message ? result.message : 'Salary composition cannot be changed!',
+                            text: 'Salary composition  is not changed.',
+                            customClass: {
+                            confirmButton: 'btn btn-danger'
+                            }
+                        })
+                    }
+                        
+                    })
+            } 
         })
-    setTimeout(() => {
-        setLoading(false)
-    }, 1000)
+
     } else {
         Api.Toast('error', 'Composition accomulated percentage must be equals to 100%..')
     }
@@ -242,7 +271,7 @@ const Composition = () => {
     <Fragment>
         {!loading ? (
             <>
-                {Object.values(data).length > 0 ? (
+                {(Object.values(data).length > 0 && data.batch !== null) ? (
                     <>
                         {data.batch !== null && (
                             <div className='row'>
@@ -261,14 +290,15 @@ const Composition = () => {
                                             </div>
                                             <div className='col-lg-3'>
                                             {data.batch.is_lock ? (
-                                                <Button className='btn btn-danger' onClick={CreateBatch}>
-                                                    <Unlock /> Unlock
-                                                </Button>
-                                            ) : (
-                                                <Button className='btn btn-success' onClick={LockBatch}>
-                                                   <Lock /> Lock
-                                                </Button>
-                                            )}
+                                                    <Button className='btn btn-danger' onClick={CreateBatch}>
+                                                        <Unlock /> Unlock
+                                                    </Button>
+                                                ) : (
+                                                    <Button className='btn btn-success' onClick={LockBatch}>
+                                                       <Lock /> Lock
+                                                    </Button>
+                                                )   
+                                            }
                                             </div>
                                         </div>
                                     </CardBody>
@@ -363,7 +393,7 @@ const Composition = () => {
                                                     <tr>
                                                         <th>Attribute</th>
                                                         <th>Percentage</th>
-                                                        {!data.batch.is_lock && (
+                                                        { !data.batch.is_lock && (
                                                             <th>Delete</th>
                                                         )}
                                                     </tr>

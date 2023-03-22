@@ -12,7 +12,6 @@ import PositionHelper from "../../../Helpers/PositionHelper"
 import { Redirect } from "react-router-dom"
 
 const UpdateJobProfile = ({stepper, count, CallBack, jobDescription}) => {
-console.warn(jobDescription)
     const Department = DepartmentsHelper()
   const Position = PositionHelper()
   const [depActive] = useState([])
@@ -105,8 +104,8 @@ console.warn(jobDescription)
     departmentType: depActive[0],
     positionType: positionActive[0],
     project: '',
-    title: '',
-    code: 0
+    title: ''
+    // code: 0
   }
   const {
     control,
@@ -236,7 +235,7 @@ console.warn(jobDescription)
               )}
               
             </Col>
-            <Col md='4' className='mb-1'>
+            <Col md='6' className='mb-1'>
               <label className='form-label'>
                 Project
               </label>
@@ -256,7 +255,7 @@ console.warn(jobDescription)
                 )}
               />
             </Col>
-            <Col md='4' className='mb-1'>
+            <Col md='6' className='mb-1'>
               <label className='form-label'>
                 Title
               </label>
@@ -276,7 +275,7 @@ console.warn(jobDescription)
               )}
               />
             </Col>
-            <Col md='4' className='mb-1'>
+            {/* <Col md='4' className='mb-1'>
               <label className='form-label'>
                 Code
               </label>
@@ -295,7 +294,7 @@ console.warn(jobDescription)
                   />
                 )}
                 />
-            </Col>
+            </Col> */}
           
           </Row>
           <div className='d-flex justify-content-between'>

@@ -26,10 +26,10 @@ const SClassListView = ({SClassList, deleteSClassID, updatedSClassID }) => {
     const [editModal, setEditModal] = useState(false)
     const [editIDState, setEditIDState] = useState(null)
     const [updatedTitle, setUpdatedTitle] = useState('')
-      const [updatedLevel, setUpdatedLevel] = useState('')
-      const searchHelper = SearchHelper()
-      const [searchResults, setSearchResults] = useState([])
-      const [searchQuery] = useState([])
+    const [updatedLevel, setUpdatedLevel] = useState('')
+    const searchHelper = SearchHelper()
+    const [searchResults, setSearchResults] = useState([])
+    const [searchQuery] = useState([])
     const [editData, setEditData] = useState({
         title: "",
         level: 1,

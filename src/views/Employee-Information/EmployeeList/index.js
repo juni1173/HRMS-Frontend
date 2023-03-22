@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react"
 import {  Eye, Search} from "react-feather"
-import {Container, Row, Card, CardBody, CardTitle, Badge, InputGroup, Input, InputGroupText, Col, Spinner} from "reactstrap"
+import {Container, Row, Card, CardBody, CardTitle, Badge, InputGroup, Input, InputGroupText, Col, Spinner, Button} from "reactstrap"
 import user_blank  from "../../../assets/images/avatars/user_blank.png"
 import apiHelper from "../../Helpers/ApiHelper"
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
@@ -89,7 +89,7 @@ const viewEmployee = () => {
     <Fragment>
         <Container>
             <div className='row  my-1'>
-                <Col md={6}>
+                <Col md={3}>
                     <h3>Employee List</h3>
                     <span>Showing {Object.values(currentItems).length > 0 ? itemsPerPage : 0} results per page</span>
                 </Col>
@@ -110,6 +110,13 @@ const viewEmployee = () => {
                         setItemOffset(0)
                     }}
                     />
+                </Col>
+                <Col md={3}>
+                    <a href="/employeeInformation">
+                        <Button className='btn btn-success'>
+                            Add Employee
+                        </Button>
+                    </a>
                 </Col>
             </div>
         </Container>

@@ -64,6 +64,14 @@ const Routes = [
     }
   },
   {
+    path: '/track/:uuid',
+    component: lazy(() => import('../../views/Candidates/Components/trackform')),
+    layout: 'BlankLayout',
+    meta: {
+      publicRoute: true
+    }
+  },
+  {
     path: '/assessment/test/:uuid',
     component: lazy(() => import('../../views/Candidates/Components/AssessmentTest/index')),
     layout: 'BlankLayout',
@@ -151,6 +159,10 @@ const Routes = [
   {
     path: '/projects',
     component: lazy(() => import('../../views/Projects'))
+  },
+  {
+    path: '/rolesandpermissions',
+    component: lazy(() => import('../../views/SettingsModule/ConfigurationModule/RolesConfiguration/Roles'))
   },
   {
     path: '/configurations',

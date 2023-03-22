@@ -214,7 +214,7 @@ const AssessmentTest = () => {
             <CardBody>
                 <h3>Thanks for your interest.</h3>
                 <h2 className="mt-1">You have achieved {getPercentage(result.correct_questions, result.total_questions)}%.</h2>
-                {getPercentage(result.correct_questions, result.total_questions) ? <p className="mt-1">Our HR official will contact you soon.</p> : <p className="mt-1">Better luck next time!</p>}
+                {getPercentage(result.correct_questions, result.total_questions) > 49 ? <p className="mt-1">Our HR official will contact you soon.</p> : <p className="mt-1">Better luck next time!</p>}
             </CardBody>
         </Card>
         {/* ) : {

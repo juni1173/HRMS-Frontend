@@ -8,7 +8,6 @@ import JobHelper from "../../../Helpers/JobHelper"
 import apiHelper from "../../../Helpers/ApiHelper"
 
 const UpdateJobList = ({ CallBack, data }) => {
-  console.warn(data)
   const Job_Helper = JobHelper()
   const Api = apiHelper()
 
@@ -17,7 +16,7 @@ const UpdateJobList = ({ CallBack, data }) => {
   const [position, setPosition] = useState(data.position)
   const [jobType, setJobType] = useState(data.job_type)
   const [jobTitle, setJobTitle] = useState(data.title)
-  const [jobCode, setJobCode] = useState(data.job_post_code)
+  // const [jobCode, setJobCode] = useState(data.job_post_code)
   const [individualNo, setIndividualNo] = useState(data.no_of_individuals)
   const [jobDescription, setJobDescription] = useState(data.jd_selection)
   const [job_post_id] = useState(data.job_post_id)
@@ -69,9 +68,9 @@ const UpdateJobList = ({ CallBack, data }) => {
   const onChangeTitleHandler = (event) => {
     setJobTitle(event.target.value)
   }
-  const onChangeJobCodeHandler = (event) => {
-    setJobCode(event.target.value)
-  }
+  // const onChangeJobCodeHandler = (event) => {
+  //   setJobCode(event.target.value)
+  // }
   const onChangeIndividualHandler = (event) => {
     setIndividualNo(event.target.value)
   }
@@ -80,7 +79,7 @@ const UpdateJobList = ({ CallBack, data }) => {
   }
   const onSubmit = async () => {
       
-    if (departmentType !== '' && staffClassification !== '' && position !== '' && jobType !== '' && jobTitle !== '' && jobCode !== '' && jobDescription !== '') {
+    if (departmentType !== '' && staffClassification !== '' && position !== '' && jobType !== '' && jobTitle !== '' && jobDescription !== '') {
            
             const formInput = new FormData()
             formInput['department'] = departmentType
@@ -88,7 +87,7 @@ const UpdateJobList = ({ CallBack, data }) => {
             formInput['title'] = jobTitle
             formInput['staff_classification'] = staffClassification
             formInput['no_of_individuals'] = parseInt(individualNo)
-            formInput['job_code'] = parseInt(jobCode)
+            // formInput['job_code'] = parseInt(jobCode)
             formInput['jd_selection'] = jobDescription
             formInput['job_type'] = jobType
             formInput['job_post_id'] = job_post_id
@@ -219,7 +218,7 @@ const UpdateJobList = ({ CallBack, data }) => {
                 />
             </Col>
            
-              <Col md='4' className='mb-1'>
+              {/* <Col md='4' className='mb-1'>
                 <label className='form-label'>
                   Job Code<span className="required">*</span>
                 </label>
@@ -232,8 +231,8 @@ const UpdateJobList = ({ CallBack, data }) => {
                     defaultValue={data.job_post_code}
                     onChange={onChangeJobCodeHandler}
                   />
-              </Col>
-              <Col md='4' className='mb-1'>
+              </Col> */}
+              <Col md='6' className='mb-1'>
                 <label className='form-label'>
                   No of Individual Required
                 </label>
@@ -246,7 +245,7 @@ const UpdateJobList = ({ CallBack, data }) => {
                     onChange={onChangeIndividualHandler}
                   />
               </Col>
-              <Col md='4' className='mb-1'>
+              <Col md='6' className='mb-1'>
                 <label className='form-label'>
                   Job Description<span className="required">*</span>
                 </label>

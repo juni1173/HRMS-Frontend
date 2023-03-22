@@ -171,12 +171,12 @@ const VerticalLayout = props => {
       {children}
 
       {/* Vertical Nav Menu Overlay */}
-      {/* <div
+      <div
         className={classnames('sidenav-overlay', {
           show: menuVisibility
         })}
         onClick={() => setMenuVisibility(false)}
-      ></div> */}
+      ></div>
       {/* Vertical Nav Menu Overlay */}
 
       {themeConfig.layout.customizer === true ? (

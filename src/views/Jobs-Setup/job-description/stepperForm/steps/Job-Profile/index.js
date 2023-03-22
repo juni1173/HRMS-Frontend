@@ -98,8 +98,8 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
     departmentType: '',
     positionType: '',
     project: '',
-    title: '',
-    code: 0
+    title: ''
+    // code: 0
   }
   const {
     control,
@@ -121,8 +121,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
     setLoading(false)
   }, [])
  const onSubmit = data => {
-  console.warn(data)
-   if (data.department !== undefined && data.position !== undefined && data.title !== '' && data.code !== '') {
+   if (data.department !== undefined && data.position !== undefined && data.title !== '') {
     data.department = data.department.value
     data.position = data.position.value
     data.staff_classification = data.staff_classification.value
@@ -233,7 +232,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
               )}
               
             </Col>
-            <Col md='4' className='mb-1'>
+            <Col md='6' className='mb-1'>
               <label className='form-label'>
                 Project
               </label>
@@ -253,7 +252,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                 )}
               />
             </Col>
-            <Col md='4' className='mb-1'>
+            <Col md='6' className='mb-1'>
               <label className='form-label'>
                 Title<Badge color='light-danger'>*</Badge>
               </label>
@@ -273,7 +272,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
               )}
               />
             </Col>
-            <Col md='4' className='mb-1'>
+            {/* <Col md='4' className='mb-1'>
               <label className='form-label'>
                 Code<Badge color='light-danger'>*</Badge>
               </label>
@@ -292,7 +291,7 @@ const Job_Profile = ({ stepper, count, CallBack}) => {
                   />
                 )}
                 />
-            </Col>
+            </Col> */}
           
           </Row>
           <div className='d-flex justify-content-between'>

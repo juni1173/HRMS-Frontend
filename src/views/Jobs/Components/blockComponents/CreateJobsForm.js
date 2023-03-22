@@ -17,7 +17,7 @@ const JobsAddForm = ({ count, CallBack }) => {
   const [jobTitle, setJobTitle] = useState('')
   // const [minSalary, setMinSalary] = useState('')
   // const [maxSalary, setMaxSalary] = useState('')
-  const [jobCode, setJobCode] = useState('')
+  // const [jobCode, setJobCode] = useState('')
   const [individualNo, setIndividualNo] = useState('')
   const [jobDescription, setJobDescription] = useState('')
 
@@ -82,9 +82,9 @@ const JobsAddForm = ({ count, CallBack }) => {
   // const onChangeMaxSalaryHandler = (event) => {
   //   setMaxSalary(event.target.value)
   // }
-  const onChangeJobCodeHandler = (event) => {
-    setJobCode(event.target.value)
-  }
+  // const onChangeJobCodeHandler = (event) => {
+  //   setJobCode(event.target.value)
+  // }
   const onChangeIndividualHandler = (event) => {
     setIndividualNo(event.target.value)
   }
@@ -93,7 +93,7 @@ const JobsAddForm = ({ count, CallBack }) => {
   }
   const onSubmit = async () => {
       
-    if (departmentType !== '' && staffClassification !== '' && position !== '' && jobType !== '' && jobTitle !== '' && jobCode !== '' && individualNo !== '' && jobDescription !== '') {
+    if (departmentType !== '' && staffClassification !== '' && position !== '' && jobType !== '' && jobTitle !== '' && individualNo !== '' && jobDescription !== '') {
 
             const formInput = new FormData()
             formInput['department'] = departmentType
@@ -102,7 +102,7 @@ const JobsAddForm = ({ count, CallBack }) => {
             formInput['staff_classification'] = staffClassification
             // formInput['maximumSalary'] = parseInt(maxSalary)
             formInput['no_of_individuals'] = parseInt(individualNo)
-            formInput['job_code'] = parseInt(jobCode)
+            // formInput['job_code'] = parseInt(jobCode)
             formInput['jd_selection'] = jobDescription
             formInput['job_type'] = jobType
             // formInput['minimumSalary'] = parseInt(minSalary)
@@ -269,7 +269,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                   </Col>
                 </div>
               </Col> */}
-              <Col md='4' className='mb-1'>
+              {/* <Col md='4' className='mb-1'>
                 <label className='form-label'>
                   Job Code
                 </label>
@@ -281,8 +281,8 @@ const JobsAddForm = ({ count, CallBack }) => {
                     placeholder="Job Code"
                     onChange={onChangeJobCodeHandler}
                   />
-              </Col>
-              <Col md='4' className='mb-1'>
+              </Col> */}
+              <Col md='6' className='mb-1'>
                 <label className='form-label'>
                   No of Individual Required
                 </label>
@@ -294,7 +294,7 @@ const JobsAddForm = ({ count, CallBack }) => {
                     onChange={onChangeIndividualHandler}
                   />
               </Col>
-              <Col md='4' className='mb-1'>
+              <Col md='6' className='mb-1'>
                 <label className='form-label'>
                   Job Description
                 </label>

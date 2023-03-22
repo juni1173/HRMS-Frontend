@@ -4,9 +4,9 @@ import { Settings } from 'react-feather'
 
 // ** Reactstrap Imports
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
-import Roles from './RolesConfiguration/Roles'
 import EmailIndex from '../EmailModule'
 import SalaryComposition from './SalaryComposition'
+import CandidateStages from './Candidatestages/Components/candidate_stages'
 
 const Configuration = () => {
   // ** State
@@ -31,7 +31,7 @@ const Configuration = () => {
               toggle('1')
             }}
           >
-            Role Types
+            Candidate Stages
           </NavLink>
         </NavItem>
         <NavItem>
@@ -41,7 +41,7 @@ const Configuration = () => {
               toggle('2')
             }}
           >
-            Roles
+            Email Templates
           </NavLink>
         </NavItem>
         <NavItem>
@@ -51,31 +51,18 @@ const Configuration = () => {
               toggle('3')
             }}
           >
-            Email Templates
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink
-            active={active === '4'}
-            onClick={() => {
-              toggle('4')
-            }}
-          >
             Salary Composition
           </NavLink>
         </NavItem>
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId='1' className='tab-pane-blue'>
-          <p className='text-white'> Coming Soon...!</p>
+          <CandidateStages />
         </TabPane>
         <TabPane tabId='2' className='tab-pane-blue'>
-          <Roles />
-        </TabPane>
-        <TabPane tabId='3' className='tab-pane-blue'>
           <EmailIndex/>
         </TabPane>
-        <TabPane tabId='4' className='tab-pane-blue'>
+        <TabPane tabId='3' className='tab-pane-blue'>
           <SalaryComposition />
         </TabPane>
       </TabContent>

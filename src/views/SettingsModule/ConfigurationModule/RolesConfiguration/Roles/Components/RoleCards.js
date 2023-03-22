@@ -17,7 +17,7 @@ import {
 
 import apiHelper from '../../../../../Helpers/ApiHelper'
 // ** Third Party Components
-import { Plus, Trash2 } from 'react-feather'
+import { Plus, Trash2, Edit, User } from 'react-feather'
 
 // ** Custom Components
 // import AvatarGroup from '@components/avatar-group'
@@ -27,6 +27,8 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import AddRole from './AddRole'
 import UpdateRole from './UpdateRole'
+import RolePermissions from './RolePermissions'
+import RoleUsers from './RoleUsers'
 import Masonry from 'react-masonry-component'
 // ** Vars
 // const data = [
@@ -269,7 +271,7 @@ const RoleCards = () => {
   return (
     <Fragment>
       <Row>
-        <Col md={6} tag={'h3'} className={'pt-1 text-white'}>Roles</Col> 
+        <Col md={6} tag={'h3'} className={'pt-1'}>Roles & Permissions</Col> 
         <Col md={6}>
             <Button
                 color='success'
@@ -291,30 +293,57 @@ const RoleCards = () => {
                             <Col key={index} xl={4} md={6}>
                                 <Card>
                                 <CardBody>
-                                    <div className='justify-content-between'>
-                                    <h4 className='fw-bolder'>{item.title}</h4>
-                                    <span>{`${item.role_type_title}`}</span>
-                                    {/* <AvatarGroup data={item.users} /> */}
+                                    <div className='row'>
+                                        <div className='col-md-8'>
+                                        <h4 className='fw-bolder'>{item.title}</h4>
+                                        <span>{`${item.role_type_title}`}</span>
+                                        {/* <AvatarGroup data={item.users} /> */}
+                                        </div>
+                                        <div className='col-md-4'>
+                                            <Link
+                                                to='/'
+                                                className='role-edit-modal'
+                                                onClick={e => {
+                                                    e.preventDefault()
+                                                    setModalType('Users')
+                                                    setCurrentRole(item)
+                                                    setShow(true)
+                                                }}
+                                                >
+                                                <User className='float-right' color='green'/>
+                                            </Link>
+                                            
+                                        </div>
+                                   
                                     </div>
-                                    <div className='d-flex justify-content-between align-items-end mt-1 pt-20'>
-                                    <div className='role-heading'>
-                                        <Link
-                                        to='/'
-                                        className='role-edit-modal'
-                                        onClick={e => {
-                                            e.preventDefault()
-                                            setModalType('Edit')
-                                            setCurrentRole(item)
-                                            setShow(true)
-                                        }}
-                                        >
-                                        <small className='fw-bolder'>Edit Role</small>
-                                        </Link>
-                                    </div>
-                                    {/* <Link to='' className='text-body' onClick={e => e.preventDefault()}>
-                                        <Copy className='font-medium-5' />
-                                    </Link> */}
-                                    <Trash2 color='red' onClick={() => removeRole(item.uuid ? item.uuid : 1)}/>
+                                    <div className='row pt-2'>
+                                        <div className='col-md-8'>
+                                            <div className='role-heading'>
+                                                <Link
+                                                to='/'
+                                                className='role-edit-modal'
+                                                onClick={e => {
+                                                    e.preventDefault()
+                                                    setModalType('Permissions')
+                                                    setCurrentRole(item)
+                                                    setShow(true)
+                                                }}
+                                                >
+                                                <small className='fw-bolder'>Permissions</small>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                        <div className='col-md-4 '>
+                                                <div className=' float-right d-flex'>
+                                                <Edit color='orange'className='mr-1' onClick={e => {
+                                                        e.preventDefault()
+                                                        setModalType('Edit')
+                                                        setCurrentRole(item)
+                                                        setShow(true)
+                                                    }} />
+                                                     <Trash2 color='red' onClick={() => removeRole(item.uuid ? item.uuid : 1)}/>
+                                                </div>
+                                        </div>        
                                     </div>
                                 </CardBody>
                                 </Card>
@@ -334,7 +363,7 @@ const RoleCards = () => {
             )}
         </>
         ) : (
-            <div className='text-center'><Spinner type='grow' color='white'/></div>
+            <div className='text-center'><Spinner type='grow'/></div>
         )
         }
       </Row>
@@ -346,13 +375,20 @@ const RoleCards = () => {
       >
         <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
         <ModalBody className='px-5 pb-5'>
-          <div className='text-center mb-4'>
+          <div className='text-center mb-2'>
             <h1>{modalType} Role</h1>
           </div>
-          {modalType === 'Add New' ? (
+          {modalType === 'Permissions' && (
+            <RolePermissions role_id={currentRole.id} CallBack={CallBack} DiscardModal={DiscardModal}/>
+          )}
+          {modalType === 'Add New' && (
             <AddRole CallBack={CallBack} DiscardModal={DiscardModal}/>
-          ) : (
+          ) }
+          {modalType === 'Edit' && (
             <UpdateRole role={currentRole} CallBack={CallBack} DiscardModal={DiscardModal}/>
+          )}
+          {modalType === 'Users' && (
+            <RoleUsers role_id={currentRole.id} CallBack={CallBack} DiscardModal={DiscardModal}/>
           )}
         </ModalBody>
       </Modal>

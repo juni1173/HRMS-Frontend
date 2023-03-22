@@ -17,14 +17,20 @@ const AddRole = ({ CallBack, DiscardModal }) => {
     const Api = apiHelper()
     const [roleTypeArr] = useState([])
     const getRoletypes = async () => {
-        await Api.get(`/roles/types/`).then(data => {
-            if (data.length > 0) {
-                roleTypeArr.splice(0, roleTypeArr.length)
-                for (let i = 0; i < data.length; i++) {
-                    if (data[i].organization === Api.org.id) {
-                        roleTypeArr.push({value: data[i].id, label: data[i].title})
+        await Api.get(`/roles/types/`).then(result => {
+            
+            if (result) {
+                if (result.status === 200) {
+                    roleTypeArr.splice(0, roleTypeArr.length)
+                    for (let i = 0; i < result.data.length; i++) {
+                        if (result.data[i].organization === Api.org.id) {
+                            roleTypeArr.push({value: result.data[i].id, label: result.data[i].title})
+                        }
                     }
+                } else {
+                    Api.Toast('error', result.message)
                 }
+                
             } else {
                 Api.Toast('error', 'No role types found, Please add role types first!')
             }

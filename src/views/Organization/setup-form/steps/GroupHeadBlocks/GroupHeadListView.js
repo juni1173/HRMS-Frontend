@@ -212,19 +212,19 @@ const GroupHeadList = ({groupHeadList, deleteGHeadID, updatedGHeadID, fetchGroup
       }, [groupHeadList])
   return (
     <Fragment>
-            <div className='row'>
-              <div className='col-md-6 my-1'>
-                  <h3 className=''>Group Heads List</h3>
-              </div>
-              <div className='col-md-6 px-1'>
-              <InputGroup className='input-group-merge mb-2'>
-                  <InputGroupText>
-                  <Search size={14} />
-                  </InputGroupText>
-                  <Input placeholder='search title...' onChange={e => { getSearch({list: groupHeadList, key: 'title', value: e.target.value }) } }/>
-              </InputGroup>
-              </div>
-            </div>
+      <div className='row'>
+        <div className='col-md-6 my-1'>
+            <h3 className=''>Group Heads List</h3>
+        </div>
+        <div className='col-md-6 px-1'>
+        <InputGroup className='input-group-merge mb-2'>
+            <InputGroupText>
+            <Search size={14} />
+            </InputGroupText>
+            <Input placeholder='search title...' onChange={e => { getSearch({list: groupHeadList, key: 'title', value: e.target.value }) } }/>
+        </InputGroup>
+        </div>
+      </div>
       <Table bordered striped responsive>
         <thead className='table-dark text-center'>
           <tr>

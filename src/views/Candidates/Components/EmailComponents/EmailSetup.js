@@ -42,7 +42,7 @@ const EmailSetup = ({ uuid, stage_id }) => {
             if (result) {
                 if (result.status === 200) {
                     const final = result.data
-                    console.warn(final)
+                    
                     setEmailTemplateData(final)
                 } else {
                     Api.Toast('error', result.message)
@@ -64,7 +64,9 @@ const EmailSetup = ({ uuid, stage_id }) => {
             await Api.jsonPost(`/email/templates/candidate/job/${uuid}/`, formData).then(result => {
                 if (result) {
                     if (result.status === 200) {
+                        console.warn(uuid)
                        const final = result.data
+                       console.warn(`Data ${final}`)
                         setCandidateEmail(final)
                         getEmailData(final.id)
                     } else {
@@ -82,9 +84,9 @@ const EmailSetup = ({ uuid, stage_id }) => {
             setLoading(false)
         }, 1000)   
     }
-    const onChangeEmailTemplate = (value) => {
-        setEmail(value)
-    }
+    // const onChangeEmailTemplate = (value) => {
+    //     setEmail(value)
+    // }
     const sendCallBack = () => {
         console.warn('save and sent')
     }
@@ -109,7 +111,7 @@ const EmailSetup = ({ uuid, stage_id }) => {
                         </Badge><br></br>
                         <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{emailTemplateData.candidate_email.email_template_title && emailTemplateData.candidate_email.email_template_title}</span>
                     </div>
-                    <EmailForm EmailData={emailTemplateData} CallBack={sendCallBack}/>
+                     <EmailForm EmailData={emailTemplateData} CallBack={sendCallBack}/>
                     {/* <div className="col-md-12"> */}
                         
                         {/* <Badge color='light-primary'>
@@ -145,7 +147,7 @@ const EmailSetup = ({ uuid, stage_id }) => {
                         type="text"
                         name="interviewer"
                         options={templates}
-                        onChange={ (e) => { onChangeEmailTemplate(e.value) }}
+                        onChange={ (e) => { setEmail(e.value) }}
                     />
                 </div>
                 

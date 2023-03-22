@@ -1,6 +1,22 @@
 import { Circle, Home, Briefcase, User, Settings, CheckSquare, BookOpen, Bookmark } from 'react-feather'
-
-export default [
+// const checkVisibility = (list, apiList) => {
+  
+//   for (let i = 0; i < apiList.length; i++) {
+//       const index = list.findIndex(obj => obj.title.toLowerCase() === apiList[i].title.toLowerCase())
+//       // if (apiList[i].)
+//       if (index !== -1) {
+//         // final_nav = [...list, {id: apiList[i].id,
+//         // title: apiList[i].title,
+//         // icon: <CheckSquare size={20} />,
+//         // navLink: apiList[i].navLink ? apiList[i].navLink : '/'}]
+//     list.splice(index, 1)
+//     }
+//     return list
+//   }
+// }
+let nav = []
+ nav =  [
+  ...nav,
   {
     id: 'nsv-Organization',
     title: 'Organization',
@@ -10,22 +26,9 @@ export default [
   
   {
     id: 'nav-employee-information',
-    title: 'Employee',
+    title: 'Employees',
     icon: <User size={30} />,
-    children: [     
-      {
-        id: 'nav-add-employee',
-        title: 'Add Employee',
-        icon: <Circle size={12} />,
-        navLink: '/employeeInformation'
-      },
-      {
-        id: 'nav-view-employee',
-        title: 'Employee List',
-        icon: <Circle size={12} />,
-        navLink: '/employeeList'
-      }
-    ] 
+    navLink:'/employeeList'
     
   },
   {
@@ -139,21 +142,19 @@ export default [
     icon: <Bookmark size={30} />,
     navLink: '/kind_notes'
   },
+  {
+    id: 'nav-roles-permissions',
+    title: 'Roles & Permissions',
+    icon: <Bookmark size={30} />,
+    navLink: '/rolesandpermissions'
+  },
 
   {
-    id: 'nav-settings',
-    title: 'Settings',
-    icon: <Settings size={30} />,
-    children: [     
-      {
         id: 'nav-configurations',
         title: 'Configurations',
         icon: <Settings size={12} />,
         navLink: '/configurations'
-      }
-    ] 
-    
   }
-  
-  
 ]
+
+export default nav

@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Course_Module from './Course_Module/index'
 const ToggleComponent = ({ data, id, CallBack }) => {
-    console.warn(data)
+    // console.warn(data)
     const Api = apiHelper()
     const [toggleThisElement, setToggleThisElement] = useState(false)
     const [updateCanvasPlacement, setupdateCanvasPlacement] = useState('end')
@@ -79,21 +79,25 @@ const ToggleComponent = ({ data, id, CallBack }) => {
                                     </div>
                                     
                                     <div className="col-lg-2 col-md-2 col-sm-2">
-                                        <button
-                                            className="border-0 no-background float-right"
-                                            title="Delete Course"
-                                            onClick={() => removeCourse(data.uuid, data.slug_title)}
-                                            >
-                                            <XCircle color="white"/>
-                                        </button>
-                                        
-                                        <button
-                                            className="border-0 no-background float-right"
-                                            title="Edit Course"
-                                            onClick={toggleCanvasEnd}
-                                            >
-                                            <Edit color="white"/>
-                                        </button>
+                                    {Api.role === 'admin' && (
+                                        <>
+                                         <button
+                                         className="border-0 no-background float-right"
+                                         title="Delete Course"
+                                         onClick={() => removeCourse(data.uuid, data.slug_title)}
+                                         >
+                                         <XCircle color="white"/>
+                                     </button>
+                                     
+                                     <button
+                                         className="border-0 no-background float-right"
+                                         title="Edit Course"
+                                         onClick={toggleCanvasEnd}
+                                         >
+                                         <Edit color="white"/>
+                                     </button>
+                                     </>
+                                    )}
                                         
                                     </div>
                         </div>

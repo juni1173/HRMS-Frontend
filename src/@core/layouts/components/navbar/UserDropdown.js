@@ -1,5 +1,5 @@
 // ** React Imports
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 // ** Custom Components
@@ -10,7 +10,6 @@ import { isUserLoggedIn } from '@utils'
 
 import { useDispatch } from 'react-redux'
 import { handleLogout } from '@store/authentication'
-
 // ** Third Party Components
 import { User, Mail, CheckSquare, MessageSquare, Settings, CreditCard, HelpCircle, Power } from 'react-feather'
 
@@ -25,27 +24,31 @@ const UserDropdown = () => {
   // const [userData] = useState(null)
   const dispatch = useDispatch()
   const [userData, setUserData] = useState(null)
+  const history = useHistory()
   //** ComponentDidMount
   useEffect(() => {
     if (isUserLoggedIn() !== null) {
-      setUserData(JSON.parse(localStorage.getItem('userData')))
+      setUserData(JSON.parse(localStorage.getItem('user')))
     }
   }, [])
 
   //** Vars
-  const userAvatar = (userData && userData.avatar) || defaultAvatar
+  const userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? JSON.parse(localStorage.getItem('user')).profile_image : defaultAvatar) : defaultAvatar
 
   return (
     <UncontrolledDropdown tag='li' className='dropdown-user nav-item'>
       <DropdownToggle href='/' tag='a' className='nav-link dropdown-user-link' onClick={e => e.preventDefault()}>
         <div className='user-nav d-sm-flex d-none'>
-          <span className='user-name fw-bold'>{(userData && userData['username']) || 'HR Manager'}</span>
-          <span className='user-status'>{(userData && userData.role) || 'Admin'}</span>
+          <span className='user-name fw-bold'>{(userData && userData.name) || 'user'}</span>
+          <span className='user-status'>{localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).user_role : ''}</span>
         </div>
-        <Avatar img={userAvatar} imgHeight='40' imgWidth='40' status='online' />
+        <Avatar img={JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? `${process.env.REACT_APP_BACKEND_URL}${userAvatar}` : defaultAvatar) : defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>
       <DropdownMenu end>
-        <DropdownItem tag='a' href='/pages/profile' onClick={e => e.preventDefault()}>
+        <DropdownItem tag='a' href='/pages/profile' onClick={e => {
+          e.preventDefault()
+          if (JSON.parse(localStorage.getItem('user')).uuid) history.push(`/employeeDetail/${JSON.parse(localStorage.getItem('user')).uuid}`)
+          }}>
           <User size={14} className='me-75' />
           <span className='align-middle'>Profile</span>
         </DropdownItem>

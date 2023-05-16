@@ -9,7 +9,7 @@ import { useForm, Controller } from 'react-hook-form'
 // import { toast, Slide } from 'react-toastify'
 import DepartmentsHelper from "../../../Helpers/DepartmentsHelper"
 import PositionHelper from "../../../Helpers/PositionHelper"
-import { Redirect } from "react-router-dom"
+// import { Redirect } from "react-router-dom"
 
 const UpdateJobProfile = ({stepper, count, CallBack, jobDescription}) => {
     const Department = DepartmentsHelper()
@@ -58,7 +58,7 @@ const UpdateJobProfile = ({stepper, count, CallBack, jobDescription}) => {
           }
           
         } else {
-          <Redirect to={login} />
+         
         }
   }
   const dep = () => {
@@ -91,7 +91,7 @@ const UpdateJobProfile = ({stepper, count, CallBack, jobDescription}) => {
         }
         
       } else {
-        <Redirect to={login} />
+        // <Redirect to={login} />
       }
 }
   const SC = () => {
@@ -127,11 +127,14 @@ const UpdateJobProfile = ({stepper, count, CallBack, jobDescription}) => {
     setLoading(false)
   }, [])
  const onSubmit = data => {
+  if (data) {
     data.department = data.department.value
     data.position = data.position.value
     data.staff_classification = data.staff_classification.value
     CallBack(data, '1')
     stepper.next()
+  }
+   
   }
 //   console.log()
   return (

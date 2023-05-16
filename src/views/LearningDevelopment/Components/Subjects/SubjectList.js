@@ -141,7 +141,7 @@ const SubjectList = ({data, CallBack}) => {
                     <th>Title </th>
                     <th>Type</th>
                     <th>Description</th>
-                    <th>Actions</th>
+                    {Api.role === 'admin' && <th>Actions</th>}
                 </tr>
             </thead>
             <tbody>
@@ -150,7 +150,9 @@ const SubjectList = ({data, CallBack}) => {
                     <td>{subject.title ? subject.title : <Badge color='light-danger'>N/A</Badge>}</td>
                     <td>{subject.type_title ? subject.type_title : <Badge color='light-danger'>N/A</Badge>}</td>
                     <td>{subject.description ? subject.description : <Badge color='light-danger'>N/A</Badge>}</td>
-                    <td>
+                    
+                    {Api.role === 'admin' && (
+                        <td>
                         <Row>
                             <Col md={6} className='text-center'>
                             <button
@@ -173,6 +175,8 @@ const SubjectList = ({data, CallBack}) => {
                             </Col>
                         </Row>
                     </td>
+                    )}
+                    
                 </tr>
             ))}
             </tbody>

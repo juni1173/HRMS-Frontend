@@ -74,22 +74,26 @@ const ToggleComponent = ({ data, id, CallBack, courseData }) => {
                                         <h4 color='white' className="text-center">{data.course_title} - {data.title}</h4>
                                     </div>
                                     <div className="col-lg-4 col-md-4 col-sm-4">
-                                        <button
-                                            className="border-0 no-background float-right"
-                                            title="Delete Module"
-                                            onClick={() => removeModule(courseData.uuid, data.course_slug_title, data.id)}
-                                            >
-                                            <XCircle color="white"/>
-                                        </button>
-                                        
-                                        <button
-                                            className="border-0 no-background float-right"
-                                            title="Edit Module"
-                                            onClick={toggleCanvasEnd}
-                                            >
-                                            <Edit color="white"/>
-                                        </button>
-                                        
+                                    {Api.role === 'admin' && (
+                                            <>
+                                            <button
+                                                className="border-0 no-background float-right"
+                                                title="Delete Module"
+                                                onClick={() => removeModule(courseData.uuid, data.course_slug_title, data.id)}
+                                                >
+                                                <XCircle color="white"/>
+                                            </button>
+                                            
+                                            <button
+                                                className="border-0 no-background float-right"
+                                                title="Edit Module"
+                                                onClick={toggleCanvasEnd}
+                                                >
+                                                <Edit color="white"/>
+                                            </button>
+                                            </>
+                                    )}
+                                    
                                     </div>
                         </div>
                     </CardTitle>

@@ -7,6 +7,7 @@ import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import EmailIndex from '../EmailModule'
 import SalaryComposition from './SalaryComposition'
 import CandidateStages from './Candidatestages/Components/candidate_stages'
+import EmployeeRequests from './EmployeeRequests/index'
 
 const Configuration = () => {
   // ** State
@@ -54,6 +55,16 @@ const Configuration = () => {
             Salary Composition
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink
+            active={active === '4'}
+            onClick={() => {
+              toggle('4')
+            }}
+          >
+            Employee Requests
+          </NavLink>
+        </NavItem>
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId='1' className='tab-pane-blue'>
@@ -64,6 +75,9 @@ const Configuration = () => {
         </TabPane>
         <TabPane tabId='3' className='tab-pane-blue'>
           <SalaryComposition />
+        </TabPane>
+        <TabPane tabId='4' className='tab-pane-blue'>
+          <EmployeeRequests />
         </TabPane>
       </TabContent>
     </div>

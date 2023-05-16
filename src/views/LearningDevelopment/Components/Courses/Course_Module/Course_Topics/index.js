@@ -4,8 +4,10 @@ import { Plus } from "react-feather"
 import { Card, CardBody, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from "reactstrap"
 import AddTopics from "./AddTopics"
 import TopicHelper from "../../../../../Helpers/LearningDevelopmentHelper/Course-subModules/TopicsHelper"
+import apiHelper from "../../../../../Helpers/ApiHelper"
 const index = ({ module_id, key }) => {
     const Helper = TopicHelper()
+    const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
@@ -43,6 +45,7 @@ const index = ({ module_id, key }) => {
                 <h2>Topics</h2>
             </div>
             <div className="col-lg-6">
+            {Api.role === 'admin' && (
                 <button
                     className="btn btn-sm btn-success float-right"
                     title="Add Course"
@@ -50,6 +53,8 @@ const index = ({ module_id, key }) => {
                     >    
                     <Plus />Add topic
                 </button>
+            )}
+                
             </div>
         </div>
         {!loading ? (

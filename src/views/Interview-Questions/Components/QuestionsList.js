@@ -260,7 +260,14 @@ const getQuestions = async (paperType, quesPosition = null) => {
                             <Input id='search-input' placeholder='search question...' type='text' bsSize='md' onChange={e => { getSearch({list: questions, key: 'question', value: e.target.value }) } } />
                         </div>
                     </div>
-                    <div className='col-lg-4 my-1'>
+                    <div className='col-lg-2 my-1'>
+                    <a href={`${Api.BackendBaseLink}/media/assessment-test/sample-assessment-questions.csv`} target="_blank" rel="noopener noreferrer" download>
+                        <button className="btn btn-primary float-right">
+                            Sample file <i className="fa fa-download"></i>
+                        </button>
+                    </a>  
+                    </div>
+                    <div className='col-lg-2 my-1'>
                     <a href={exportPath && exportPath} target="_blank" rel="noopener noreferrer" download>
                         <button className="btn btn-primary float-right">
                             Export <i className="fa fa-download"></i>
@@ -279,6 +286,10 @@ const getQuestions = async (paperType, quesPosition = null) => {
                             <th scope="col">Option2</th>
                             <th scope="col">Option3</th>
                             <th scope="col">Option4</th>
+                            <th scope="col">Option5</th>
+                            <th scope="col">Option6</th>
+                            <th scope="col">Option7</th>
+                            <th scope="col">Option8</th>
                             <th scope="col">Answer</th>
                             <th scope="col">Complexity Level</th>
                             <th scope="col">TIME (Sec)</th>
@@ -294,6 +305,10 @@ const getQuestions = async (paperType, quesPosition = null) => {
                                         <td>{ question.question_options[1] && question.question_options[1].value}</td>
                                         <td>{ question.question_options[2] && question.question_options[2].value}</td>
                                         <td>{ question.question_options[3] && question.question_options[3].value}</td>
+                                        <td>{ question.question_options[4] && question.question_options[4].value}</td>
+                                        <td>{ question.question_options[5] && question.question_options[5].value}</td>
+                                        <td>{ question.question_options[6] && question.question_options[6].value}</td>
+                                        <td>{ question.question_options[7] && question.question_options[7].value}</td>
                                         <td>{ question.answer }</td>
                                         <td>{ question.complexity_level }</td>
                                         <td>{ question.time }</td>

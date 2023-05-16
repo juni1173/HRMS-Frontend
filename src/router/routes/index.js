@@ -161,12 +161,32 @@ const Routes = [
     component: lazy(() => import('../../views/Projects'))
   },
   {
+    path: '/jira',
+    component: lazy(() => import('../../views/Projects/Components/JiraProjectComponents/JiraIndex'))
+  },
+  {
+    path: '/requests',
+    component: lazy(() => import('../../views/EmployeeHRrequests/index'))
+  },
+  {
     path: '/rolesandpermissions',
     component: lazy(() => import('../../views/SettingsModule/ConfigurationModule/RolesConfiguration/Roles'))
   },
   {
     path: '/configurations',
     component: lazy(() => import('../../views/SettingsModule/ConfigurationModule/Configuration'))
+  },
+  {
+    path: '/admin/dashboard',
+    component: lazy(() => import('../../views/Dashboard/Components/AdminDashboard'))
+  },
+  {
+    path: '/employee/dashboard',
+    component: lazy(() => import('../../views/Dashboard/Components/EmployeeDashboard'))
+  },
+  {
+    path: '/learning_development/employee/sheet',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/EmployeeSheet'))
   },
   {
     path: '/error',

@@ -33,6 +33,7 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
 
      const Api = apiHelper()
      const org_id = Api.org.id
+
      const defaultValues = {
         organization : org_id,
         first_name : empData.first_name ? empData.first_name : '',
@@ -43,8 +44,8 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
         dob : empData.dob ? new Date(empData.dob) : '',
         cnic_no : empData.cnic_no ? empData.cnic_no : '',
         blood_group : BloodGrup.find(pre => pre.value === empData.blood_group) ? BloodGrup.find(pre => pre.value === empData.blood_group) : BloodGrup[0],
-        passport_no : empData['passport_data'][0] ? empData['passport_data'][0].passport_no : '',
-        date_of_expiry : empData['passport_data'][0] ? new Date(empData['passport_data'][0].date_of_expiry) : '',
+        passport_no : empData['passport_data'] && (empData['passport_data'][0] ? empData['passport_data'][0].passport_no : ''),
+        date_of_expiry : empData['passport_data'] && (empData['passport_data'][0] ? new Date(empData['passport_data'][0].date_of_expiry) : ''),
         gender : Gender.find(pre => pre.value === empData.gender) ? Gender.find(pre => pre.value === empData.gender) : Gender[0],
         martial_status : MeritalStatus.find(pre => pre.value === empData.martial_status) ? MeritalStatus.find(pre => pre.value === empData.martial_status) : MeritalStatus[0]
      }
@@ -87,7 +88,7 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
             if (profileImage !== empData.profile_image && profileImage !== null) {
                 formData.append("profile_image", profileImage ? profileImage : null)
             }
-              Api.jsonPatch(`/employees/${empData.uuid}/`, formData, false)
+              Api.jsonPatch(`/employees/${empData.uuid ? empData.uuid : JSON.parse(localStorage.getItem('user')).uuid}/`, formData, false)
               .then((result) => { 
                 if (result.status === 200) {
                     Api.Toast('success', result.message)

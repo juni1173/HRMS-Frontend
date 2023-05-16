@@ -5,12 +5,13 @@ import Flatpickr from 'react-flatpickr'
 import apiHelper from "../../../Helpers/ApiHelper"
 
 const updateSession = ({ SessionData, CallBack }) => {
-    console.warn(SessionData.cs_instructor[0].id)
+    // console.warn(SessionData.cs_instructor[0].id)
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [instructors] = useState([])
     const [courses] = useState([])
     const [course_session_types] = useState([])
+    const [duration, setDuration] = useState(0)
     const [sessionDetail, setsessionDetail] = useState({
         course_session_type : SessionData.course_session_type ? SessionData.course_session_type : '',
         course: SessionData.course ? SessionData.course : '',
@@ -43,7 +44,23 @@ const updateSession = ({ SessionData, CallBack }) => {
         }))
     
     }
-
+    const dateConverter = (startDate, timeEnd) => {
+        if (startDate !== '' && timeEnd !== '') {
+            const newStartDate = new Date(startDate)
+            const newEndDate = new Date(timeEnd)
+            const one_day = 1000 * 60 * 60 * 24
+            const result = Math.ceil((newEndDate.getTime() - newStartDate.getTime()) / (one_day))
+            // console.warn(startDate)
+            // console.warn(timeEnd)
+            // console.warn('date Converter result', result)
+            if (result < 0) { return 0 }
+            setsessionDetail(prevState => ({
+                ...prevState,
+                [duration] : result
+            }))
+            return result
+        }
+      }
     const GetPreData = async () => {
         setLoading(true)
        await Api.get(`/instructors/pre/course/sessions/data/view/`, { headers: {Authorization: Api.token} }).then(result => {
@@ -92,7 +109,7 @@ const updateSession = ({ SessionData, CallBack }) => {
             formData['course'] = sessionDetail.course
             formData['start_date'] = sessionDetail.start_date
             formData['end_date'] = sessionDetail.end_date
-            formData['duration'] = sessionDetail.duration
+            formData['duration'] = duration
             formData['total_lectures'] = sessionDetail.total_lectures
             formData['no_of_students'] = sessionDetail.no_of_students
             if (sessionDetail.instructor !== '') formData['instructor'] = sessionDetail.instructor
@@ -162,7 +179,10 @@ const updateSession = ({ SessionData, CallBack }) => {
                                 dateFormat: 'Y-m-d'
                             }}
                             defaultValue={SessionData.start_date ? SessionData.start_date : ''}
-                            onChange={ (date) => { onChangeSessionHandler('start_date', 'date', Api.formatDate(date)) }}
+                            onChange={ (date) => { 
+                                onChangeSessionHandler('start_date', 'date', Api.formatDate(date)) 
+                                setDuration(dateConverter(date, Api.formatDate(sessionDetail.end_date)))
+                            }}
                         />
                     </Col>
                     <Col md="6" className="mb-1">
@@ -178,7 +198,10 @@ const updateSession = ({ SessionData, CallBack }) => {
                                 dateFormat: 'Y-m-d'
                             }}
                             defaultValue={SessionData.end_date ? SessionData.end_date : ''}
-                            onChange={ (date) => { onChangeSessionHandler('end_date', 'date', Api.formatDate(date)) }}
+                            onChange={ (date) => { 
+                                onChangeSessionHandler('end_date', 'date', Api.formatDate(date)) 
+                                setDuration(dateConverter(sessionDetail.start_date, date))
+                            }}
                         />
                     </Col>
                     <Col md="6" className="mb-1">
@@ -189,8 +212,9 @@ const updateSession = ({ SessionData, CallBack }) => {
                             type="text"
                             name="duration"
                             defaultValue={SessionData.duration ? SessionData.duration : ''}
-                            onChange={ (e) => { onChangeSessionHandler('duration', 'input', e) }}
-                            placeholder="Duration"
+                            // onChange={ (e) => { onChangeSessionHandler('duration', 'input', e) }}
+                            value={duration === 0 ? (SessionData.duration ? SessionData.duration : duration) : duration}
+                            disabled
                             
                             />
                     </Col>

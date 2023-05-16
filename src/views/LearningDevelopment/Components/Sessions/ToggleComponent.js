@@ -74,7 +74,9 @@ const ToggleComponent = ({ data, id, CallBack }) => {
                                         <h4 color='white' className="text-center">{data.course_title} <br></br> {data.start_date} - {data.end_date}</h4>
                                     </div>
                                     <div className="col-lg-4 col-md-4 col-sm-4">
-                                        <button
+                                        {Api.role === 'admin' && (
+                                            <>
+                                            <button
                                             className="border-0 no-background float-right"
                                             title="Delete Course"
                                             onClick={() => removeSession(data.id)}
@@ -89,6 +91,8 @@ const ToggleComponent = ({ data, id, CallBack }) => {
                                             >
                                             <Edit color="white"/>
                                         </button>
+                                        </>
+                                        )}
                                         
                                     </div>
                         </div>

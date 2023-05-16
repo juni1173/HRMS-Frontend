@@ -8,6 +8,7 @@ import JobHelper from "../../../Helpers/JobHelper"
 import apiHelper from "../../../Helpers/ApiHelper"
 
 const UpdateJobList = ({ CallBack, data }) => {
+  console.warn(data)
   const Job_Helper = JobHelper()
   const Api = apiHelper()
 
@@ -16,7 +17,7 @@ const UpdateJobList = ({ CallBack, data }) => {
   const [position, setPosition] = useState(data.position)
   const [jobType, setJobType] = useState(data.job_type)
   const [jobTitle, setJobTitle] = useState(data.title)
-  // const [jobCode, setJobCode] = useState(data.job_post_code)
+  // const [jobCode] = useState(data.job_code)
   const [individualNo, setIndividualNo] = useState(data.no_of_individuals)
   const [jobDescription, setJobDescription] = useState(data.jd_selection)
   const [job_post_id] = useState(data.job_post_id)
@@ -87,7 +88,7 @@ const UpdateJobList = ({ CallBack, data }) => {
             formInput['title'] = jobTitle
             formInput['staff_classification'] = staffClassification
             formInput['no_of_individuals'] = parseInt(individualNo)
-            // formInput['job_code'] = parseInt(jobCode)
+            formInput['job_code'] = data.job_code
             formInput['jd_selection'] = jobDescription
             formInput['job_type'] = jobType
             formInput['job_post_id'] = job_post_id
@@ -110,7 +111,8 @@ const UpdateJobList = ({ CallBack, data }) => {
   return (
       <Fragment>
         <div className='content-header' >
-          <h5 className='mb-2'>Add Job</h5>
+          <h5 className='mb-2'>Job</h5>
+          <hr></hr>
           {/* <small>Add Job.</small> */}
         </div>
         <Form onSubmit={e => e.preventDefault()}  id="create-job-form">

@@ -5,8 +5,10 @@ import { Card, CardBody, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } fr
 import AddProgram from "./AddProgram"
 import ProgramList from "./ProgramList"
 import ProgramHelper from "../../../Helpers/LearningDevelopmentHelper/ProgramHelper"
+import apiHelper from "../../../Helpers/ApiHelper"
 const index = () => {
     const Helper = ProgramHelper()
+    const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
@@ -44,13 +46,16 @@ const index = () => {
             <div className="col-lg-6">
             </div>
             <div className="col-lg-6">
+            {Api.role === 'admin' && (
                 <button
-                    className="btn btn-sm btn-success float-right"
-                    title="Add Program"
-                    onClick={toggleCanvasEnd}
-                    >    
-                    <Plus />Add Program
-                </button>
+                className="btn btn-sm btn-success float-right"
+                title="Add Program"
+                onClick={toggleCanvasEnd}
+                >    
+                <Plus />Add Program
+            </button>
+            )}
+                
             </div>
         </div>
         {!loading ? (

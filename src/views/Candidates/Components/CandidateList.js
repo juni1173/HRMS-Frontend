@@ -219,7 +219,7 @@ const CandidateList = () => {
                                                     )
                                                     
                                                 ) : (
-                                                    <Spinner />
+                                                    <div className="text-center"> <Spinner /></div>
                                                 )}
                                                 
                                             </div>
@@ -238,7 +238,7 @@ const CandidateList = () => {
                                                     )
                                                     
                                                 ) : (
-                                                    <Spinner />
+                                                   <div className="text-center"> <Spinner /></div>
                                                 )}
                                                 
                                             </div>

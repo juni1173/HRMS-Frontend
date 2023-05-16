@@ -5,7 +5,6 @@ import withReactContent from 'sweetalert2-react-content'
 // ** Reactstrap Imports
 import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
-import ReactPaginate from 'react-paginate'
   const apiHelper = () => {
     const MySwal = withReactContent(Swal)
     let token = localStorage.getItem('accessToken')
@@ -17,8 +16,11 @@ import ReactPaginate from 'react-paginate'
      token = `Bearer ${token}`
     
     }
+    
     const org = JSON.parse(localStorage.getItem('organization'))
     const user_id = JSON.parse(localStorage.getItem('user_id'))
+    const user = JSON.parse(localStorage.getItem('user'))
+    const role = localStorage.getItem('userData') && JSON.parse(localStorage.getItem('userData')).user_role
      
     const ApiBaseLink = process.env.REACT_APP_API_URL
 
@@ -90,7 +92,7 @@ import ReactPaginate from 'react-paginate'
             const apiResponse = await fetch(endpointurl, options)
             // debugger
             if (!apiResponse.ok) {
-              if ([401, 403].includes(apiResponse.status)) {
+              if ([401, 405].includes(apiResponse.status)) {
                   localStorage.clear()
                   window.location.href = "/login"
                   return false
@@ -132,7 +134,7 @@ import ReactPaginate from 'react-paginate'
       try {
         const apiResult =  await fetch(url, options)
         if (!apiResult.ok) {
-          if ([401, 403].includes(apiResult.status)) {
+          if ([401, 405].includes(apiResult.status)) {
               localStorage.clear()
               window.location.href = "/login"
               return false
@@ -159,7 +161,7 @@ import ReactPaginate from 'react-paginate'
       try {
         const apiResult =  await fetch(url, options)
         if (!apiResult.ok) {
-          if ([401, 403].includes(apiResult.status)) {
+          if ([401, 405].includes(apiResult.status)) {
               localStorage.clear()
               window.location.href = "/login"
               return false
@@ -169,6 +171,157 @@ import ReactPaginate from 'react-paginate'
       } catch (err) {
           return err
       }
+    }
+    const getJiraTokens = async () => {
+      const response = await fetch(`${ApiBaseLink}/jira/tokens/`, {
+        method: 'GET',
+        headers: {
+          Authorization: token
+        }
+      })
+      const json = response.json()
+      return await json
+      
+    }
+    const postJiraTokens = async (data) => {
+     
+      const response = await fetch(`${ApiBaseLink}/jira/tokens/`, {
+        method: 'POST',
+        headers: {
+          Authorization: token,
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      const json = response.json()
+      return await json
+  }
+    const JiraAccessToken = async () => {
+      let local_tokens_data = []
+        const tokens_data = await getJiraTokens()
+        if (tokens_data.status === 200) {
+          local_tokens_data = tokens_data.data[0]
+          if (Object.values(local_tokens_data).length > 0) {
+            const response = await fetch(`https://auth.atlassian.com/oauth/token`, {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                grant_type: 'refresh_token',
+                client_id: 'q6m1aQ2HZYuIWSiDDyPnB6tbVnDVwwCm',
+                client_secret: 'ATOA42fMjBgj8BY96jal5V7KXTzg41XSzYGz5bsvKhZGEUY5pO6iX0lxB_GwMtHE3R1a8CE8FC61',
+                refresh_token: local_tokens_data.refresh_token
+              })
+            })
+            if (response.status === 200) {
+              const json = await response.json()
+          
+              if (Object.values(json).length > 0) {
+                console.warn(`Oauth api response : ${JSON.stringify(json)}`)
+                const post_local_tokens = await postJiraTokens(json)
+                console.warn(`new tokens data : ${JSON.stringify(post_local_tokens.data)}`)
+                return post_local_tokens.data
+              }
+            }
+          }
+        }
+        // console.warn(`Local Server api response : ${local_tokens_data}`)
+        if (!tokens_data.ok) {
+          if ([401, 405].includes(tokens_data.status)) {
+              localStorage.clear()
+              window.location.href = "/login"
+              return false
+          }
+        }   
+      return local_tokens_data
+    }
+    
+    const jiraGet = async (url) => {
+      url = `https://api.atlassian.com/ex/jira/ebd17c20-72d8-441c-81eb-b6185d42c9d8${url}`
+      let local_tokens = []
+      const tokens_data = await getJiraTokens()
+      local_tokens = tokens_data.data[0]
+      if (Object.values(local_tokens).length > 0) {
+        const Authorization = `Bearer ${local_tokens.access_token}`
+        const options = {headers: null, method: null, body: null}
+        
+        options.method = "GET"
+        options.headers = {Authorization, Accept: 'application/json'}
+        
+        try {
+          const apiResult =  await fetch(url, options)
+          if (!apiResult.ok) {
+            if ([401, 405].includes(apiResult.status)) {
+              local_tokens = await JiraAccessToken()
+                const Auth = `Bearer ${local_tokens.access_token}`
+                const Jira_options = {headers: null, method: null, body: null}        
+                Jira_options.method = "GET"
+                Jira_options.headers = {Authorization: Auth, Accept: 'application/json'}
+                try {
+                  const JiraApi = await fetch(url, Jira_options)
+                  if (!JiraApi.ok) {
+                    Toast('error', JiraApi.message)
+                  }
+                  return await JiraApi.json()
+                } catch (err) {
+                  return err
+                }
+            }
+          }    
+          return await apiResult.json()
+        } catch (err) {
+            return err
+        }
+      } else {
+        Toast('error', 'Jira Tokens are empty')
+      }
+      
+    }
+    const jiraPost = async (url, data) => {
+      
+      url = `https://api.atlassian.com/ex/jira/ebd17c20-72d8-441c-81eb-b6185d42c9d8${url}`
+      let local_tokens = []
+      const tokens_data = await getJiraTokens()
+      local_tokens = tokens_data.data[0]
+      if (Object.values(local_tokens).length > 0) {
+        const Authorization = `Bearer ${local_tokens.access_token}`
+        const options = {headers: null, method: null, body: null}
+      
+      options.method = "POST"
+      options.headers = {Authorization, Accept: 'application/json', 'Content-Type': 'application/json'}
+      options.body = data
+      try {
+        const apiResult =  await fetch(url, options)
+        if (!apiResult.ok) {
+          if ([401, 405].includes(apiResult.status)) {
+            local_tokens = await JiraAccessToken()
+            const Auth = `Bearer ${local_tokens.access_token}`
+            const Jira_options = {headers: null, method: null, body: null}        
+            Jira_options.method = "POST"
+            Jira_options.headers = {Authorization: Auth, Accept: 'application/json'}
+            try {
+              const JiraApi = await fetch(url, Jira_options)
+              if (!JiraApi.ok) {
+                Toast('error', JiraApi.message)
+              }
+              const jiraData = await JiraApi.json()
+              const jiraResponse = {status: JiraApi.status, jiraData}
+              return  jiraResponse
+            } catch (err) {
+              return err
+            }
+          }
+        }    
+        const data = await apiResult.json()
+        const response = {status: apiResult.status, data}
+        return  response
+      } catch (err) {
+          return err
+      }
+    } else {
+      Toast('error', 'Jira Tokens are empty')
+    }
     }
 
     //Put Api calling
@@ -292,6 +445,8 @@ import ReactPaginate from 'react-paginate'
         jsonPatch,
         put,
         deleteData,
+        jiraGet,
+        jiraPost,
         Toast,
         deleteModal,
         successModal,
@@ -301,6 +456,8 @@ import ReactPaginate from 'react-paginate'
         convertUTCtoDate,
         org,
         user_id,
+        user,
+        role,
         token,
         ApiBaseLink,
         BackendBaseLink

@@ -1,11 +1,12 @@
 // import { useState } from "react"
 import { useState, useEffect } from "react"
 import { Check, Search } from "react-feather"
-import { Spinner, Table, Input, InputGroup, InputGroupText } from "reactstrap"
+import { Spinner, Table, Input, InputGroup, InputGroupText, Modal, ModalBody, ModalHeader } from "reactstrap"
 import apiHelper from "../../../Helpers/ApiHelper"
+import CreateReopenedJob from "./CreateReopenedJob"
 import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+// import Swal from 'sweetalert2'
+// import withReactContent from 'sweetalert2-react-content'
 const DeletedJobsList = ({data, count, CallBack}) => {
     const Api = apiHelper()
     const searchHelper = SearchHelper()
@@ -13,7 +14,9 @@ const DeletedJobsList = ({data, count, CallBack}) => {
     const [notActiveJobsList, setNotActiveJobList] = useState([])
     const [searchResults, setSearchResults] = useState([])
     const [searchQuery] = useState([])
-    const MySwal = withReactContent(Swal)
+    const [ReopenModal, setReopenModal] = useState(false)
+    const [ReopenData, setReopenData] = useState([])
+    // const MySwal = withReactContent(Swal)
 
     const getNotActiveJobs = async () => {
         const notActiveListArray = []
@@ -47,63 +50,63 @@ const DeletedJobsList = ({data, count, CallBack}) => {
             }, 1000)
     }
      
-    const ActivateJob = async (item) => {
-      MySwal.fire({
-        title: 'Are you sure?',
-        text: "Do you want to ReActivate the Job!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Activate it!',
-        customClass: {
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-danger ms-1'
-        },
-        buttonsStyling: false
-    }).then(function (result) {
-        if (result.value) {
-           Api.jsonPatch(`/jobs/${item.uuid}/activate/`, item)
-            .then((deleteResult) => {
-                if (deleteResult.status === 200) {
-                    MySwal.fire({
-                        icon: 'success',
-                        title: 'Job Activated!',
-                        text: 'Acvtivation Successfull',
-                        customClass: {
-                        confirmButton: 'btn btn-success'
-                        }
-                    }).then(function (result) {
-                        if (result.isConfirmed) {
-                          Api.Toast('success', deleteResult.message)
-                          getNotActiveJobs()
-                          CallBack()
-                        }
-                    }) 
-                } else {
-                    MySwal.fire({
-                        icon: 'error',
-                        title: deleteResult.message ? deleteResult.message : 'Job can not be activated!',
-                        text: 'Job activation unsuccessfull.',
-                        customClass: {
-                        confirmButton: 'btn btn-danger'
-                        }
-                    })
-                }
+    // const ActivateJob = async (item) => {
+    //   MySwal.fire({
+    //     title: 'Are you sure?',
+    //     text: "Do you want to ReActivate the Job!",
+    //     icon: 'warning',
+    //     showCancelButton: true,
+    //     confirmButtonText: 'Yes, Activate it!',
+    //     customClass: {
+    //     confirmButton: 'btn btn-primary',
+    //     cancelButton: 'btn btn-danger ms-1'
+    //     },
+    //     buttonsStyling: false
+    // }).then(function (result) {
+    //     if (result.value) {
+    //        Api.jsonPatch(`/jobs/${item.uuid}/activate/`, item)
+    //         .then((deleteResult) => {
+    //             if (deleteResult.status === 200) {
+    //                 MySwal.fire({
+    //                     icon: 'success',
+    //                     title: 'Job Activated!',
+    //                     text: 'Acvtivation Successfull',
+    //                     customClass: {
+    //                     confirmButton: 'btn btn-success'
+    //                     }
+    //                 }).then(function (result) {
+    //                     if (result.isConfirmed) {
+    //                       Api.Toast('success', deleteResult.message)
+    //                       getNotActiveJobs()
+    //                       CallBack()
+    //                     }
+    //                 }) 
+    //             } else {
+    //                 MySwal.fire({
+    //                     icon: 'error',
+    //                     title: deleteResult.message ? deleteResult.message : 'Job can not be activated!',
+    //                     text: 'Job activation unsuccessfull.',
+    //                     customClass: {
+    //                     confirmButton: 'btn btn-danger'
+    //                     }
+    //                 })
+    //             }
                         
-                })
-        } 
-    })
-    // await Api.jsonPatch(`/jobs/${item.uuid}/activate/`, item)
-    // .then((result) => {
-    //     if (result.status === 200) {
-    //         Api.Toast('success', result.message)
-    //         getNotActiveJobs()
-    //         CallBack()
-    //         } else {
-    //             Api.Toast('error', result.message)
-    //         }
+    //             })
+    //     } 
     // })
+    // // await Api.jsonPatch(`/jobs/${item.uuid}/activate/`, item)
+    // // .then((result) => {
+    // //     if (result.status === 200) {
+    // //         Api.Toast('success', result.message)
+    // //         getNotActiveJobs()
+    // //         CallBack()
+    // //         } else {
+    // //             Api.Toast('error', result.message)
+    // //         }
+    // // })
           
-    }
+    // }
       
     const getSearch = options => {
       setLoading(true)
@@ -130,6 +133,15 @@ const DeletedJobsList = ({data, count, CallBack}) => {
       }, 1000)
     }
 
+    const ReopenJob = item => {
+      setReopenData(item)
+      setReopenModal(true)
+    }
+    const ReopenCallBack = () => {
+      setReopenModal(false)
+      getNotActiveJobs()
+      CallBack()
+    }
 
     useEffect(() => {
         if (count !== 0) {
@@ -208,13 +220,21 @@ const DeletedJobsList = ({data, count, CallBack}) => {
                   <td>
                     <div className="d-flex row">
                        
-                      <div className="col">
+                      {/* <div className="col">
                         <button
                           className="border-0"
                           onClick={() => ActivateJob(item)}
                         >
                           <Check color="green"/>
                           
+                        </button>
+                      </div> */}
+                      <div className="col">
+                        <button
+                          className="btn btn-primary border-0"
+                          onClick={() => ReopenJob(item)}
+                        >
+                          Reopen
                         </button>
                       </div>
                     </div>
@@ -237,7 +257,12 @@ const DeletedJobsList = ({data, count, CallBack}) => {
             
         </tbody>
       </Table>
-
+      <Modal isOpen={ReopenModal} toggle={() => setReopenModal(!ReopenModal)} className='modal-dialog-centered modal-lg'>
+        <ModalHeader className='bg-transparent' toggle={() => setReopenModal(!ReopenModal)}></ModalHeader>
+        <ModalBody className='px-sm-5 mx-50 pb-5'>
+          {ReopenData ? <CreateReopenedJob CallBack={ReopenCallBack} data={ReopenData}/> : "No Data"}
+        </ModalBody>
+      </Modal>
         </>
     )
 }

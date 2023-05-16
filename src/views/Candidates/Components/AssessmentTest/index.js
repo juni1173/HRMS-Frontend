@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import { Card, CardBody, Label, Input, Spinner, CardTitle } from "reactstrap"
+import { Card, CardBody, Label, Input, Spinner, CardTitle, Row, Col } from "reactstrap"
 import {useParams} from "react-router-dom" 
 import apiHelper from "../../../Helpers/ApiHelper"
 const AssessmentTest = () => {
@@ -131,10 +131,10 @@ const AssessmentTest = () => {
     
         return () => clearInterval(tick.current)
       }, [start])
-      const getPercentage = (mark, total) => {
-        const final = (mark / total) * 100
-        return final
-      }
+    //   const getPercentage = (mark, total) => {
+    //     const final = (mark / total) * 100
+    //     return final
+    //   }
     const dispSecondsAsMins = (seconds) => {
     // 25:00
     const mins = Math.floor(seconds / 60)
@@ -148,22 +148,24 @@ const AssessmentTest = () => {
         StartTest()
     }, [])
   return (
-    <div className="container">
+    <div className="mx-1">
         
      {result === '' ? (
         <>
             <div className="row my-1">
                 
-                <div className="col-lg-4"></div>
-                <div className="col-lg-4">
+                <div className="col-lg-4 col-md-4 col-sm-4"></div>
+                <div className="col-lg-4 col-md-4 col-sm-4">
                     <h2 className="text-center">Assessment Test</h2>
                 </div>
-                <div className="col-lg-4">
+                <div className="col-lg-4 col-md-4 col-sm-4">
                     <span className="float-right">Time: <strong>{start ? dispSecondsAsMins(timer) : '00:00'}</strong></span>
                 </div>
             
             </div>
             <hr></hr>
+            <Row>
+            <Col md={12} sm={12} lg={12}>
             <Card className="p-1">
             <CardBody>
             {!loading ? (
@@ -195,17 +197,19 @@ const AssessmentTest = () => {
             {!is_last_question ? <button className="float-right btn btn-warning" onClick={onNext}>Next</button> : <button className="float-right btn btn-success" onClick={onNext}>Finish</button>}
             </CardBody>
             </Card>
+            </Col>
+            </Row>
         </>
      ) : (
         <>
         {/* {getPercentage(result.correct_questions, result.total_questions) > 50 ? ( */}
         <div className="row my-1">
                 
-                <div className="col-lg-4"></div>
-                <div className="col-lg-4">
+                <div className="col-lg-4 col-md-4 col-sm-4"></div>
+                <div className="col-lg-4 col-md-4 col-sm-4">
                     <h2 className="text-center">Assessment Test Result</h2>
                 </div>
-                <div className="col-lg-4">
+                <div className="col-lg-4 col-md-4 col-sm-4">
                 </div>
             
             </div>
@@ -213,8 +217,8 @@ const AssessmentTest = () => {
         <Card>
             <CardBody>
                 <h3>Thanks for your interest.</h3>
-                <h2 className="mt-1">You have achieved {getPercentage(result.correct_questions, result.total_questions)}%.</h2>
-                {getPercentage(result.correct_questions, result.total_questions) > 49 ? <p className="mt-1">Our HR official will contact you soon.</p> : <p className="mt-1">Better luck next time!</p>}
+                <h2 className="mt-1">You have achieved {result.percentage}%.</h2>
+                <p className="mt-1">Our HR official will contact you soon.</p>
             </CardBody>
         </Card>
         {/* ) : {

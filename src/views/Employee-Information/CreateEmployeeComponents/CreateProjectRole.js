@@ -13,36 +13,30 @@ const CreateProjectRole = ({emp_id, CallBack}) => {
         role : ''
          
    })
-    const getPreData = async () => {
+    const getPreData =  () => {
         setLoading(true)
-       await Api.get(`/projects/`).then(projectResult => {
-
-        if (projectList.length > 0) {
-            projectList.splice(0, projectList.length)
-        }
-        if (projectResult) {
-            if (projectResult.status === 200) {
-                const projectData = projectResult.data
-                for (let i = 0; i < projectData.length; i++) {
-                    projectList.push({value: projectData[i].id, label: projectData[i].name})
-                }
-            }
-        }
-        
-       })
-       await Api.get(`/roles/`).then(roleResult => {
         if (roleList.length > 0) {
             roleList.splice(0, roleList.length)
         }
+        if (projectList.length > 0) {
+            projectList.splice(0, projectList.length)
+        }
+        Api.get(`/employees/pre/projects/roles/data/view/`).then(roleResult => {
         if (roleResult) {
+            
             if (roleResult.status === 200) {
-                const roleData = roleResult.data
+                const projectData = roleResult.data.project
+                for (let i = 0; i < projectData.length; i++) {
+                    projectList.push({value: projectData[i].id, label: projectData[i].name})
+                }
+                const roleData = roleResult.data.role 
                 for (let i = 0; i < roleData.length; i++) {
                     roleList.push({value: roleData[i].id, label: roleData[i].title})
                 }
             }
         }
        })
+
        setTimeout(() => {
         setLoading(false)
        }, 1000)
@@ -68,8 +62,6 @@ const CreateProjectRole = ({emp_id, CallBack}) => {
         setpRoleDetail(prevState => ({
         ...prevState,
         [InputName] : InputValue
-        
-        
         }))
     
     }

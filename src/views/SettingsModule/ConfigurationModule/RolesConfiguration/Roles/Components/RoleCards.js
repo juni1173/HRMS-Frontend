@@ -318,7 +318,8 @@ const RoleCards = () => {
                                     </div>
                                     <div className='row pt-2'>
                                         <div className='col-md-8'>
-                                            <div className='role-heading'>
+                                            {item.role_type !== 13 && (
+                                                <div className='role-heading'>
                                                 <Link
                                                 to='/'
                                                 className='role-edit-modal'
@@ -332,6 +333,8 @@ const RoleCards = () => {
                                                 <small className='fw-bolder'>Permissions</small>
                                                 </Link>
                                             </div>
+                                            )}
+                                            
                                         </div>
                                         <div className='col-md-4 '>
                                                 <div className=' float-right d-flex'>

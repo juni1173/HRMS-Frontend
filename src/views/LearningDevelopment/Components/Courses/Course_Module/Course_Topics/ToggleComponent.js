@@ -72,22 +72,26 @@ const ToggleComponent = ({ data, id, CallBack, module_id }) => {
                                         <h4 color='white' className="text-center">{data.title}</h4>
                                     </div>
                                     <div className="col-lg-3 col-md-3 col-sm-3">
-                                        <button
-                                            className="border-0 no-background float-right"
-                                            title="Delete Topic"
-                                            onClick={() => removeTopic(data.uuid, data.slug_title, data.id)}
-                                            >
-                                            <XCircle color="white"/>
-                                        </button>
-                                        
-                                        <button
-                                            className="border-0 no-background float-right"
-                                            title="Edit Topic"
-                                            onClick={toggleCanvasEnd}
-                                            >
-                                            <Edit color="white"/>
-                                        </button>
-                                        
+                                    {Api.role === 'admin' && (
+                                         <>
+                                         <button
+                                             className="border-0 no-background float-right"
+                                             title="Delete Topic"
+                                             onClick={() => removeTopic(data.uuid, data.slug_title, data.id)}
+                                             >
+                                             <XCircle color="white"/>
+                                         </button>
+                                         
+                                         <button
+                                             className="border-0 no-background float-right"
+                                             title="Edit Topic"
+                                             onClick={toggleCanvasEnd}
+                                             >
+                                             <Edit color="white"/>
+                                         </button>
+                                         </>
+                                    )}
+                                       
                                     </div>
                         </div>
                     </CardTitle>

@@ -6,6 +6,7 @@ import apiHelper from '../../../Helpers/ApiHelper'
 
 
 const UpdateJobSpecifiction = ({ stepper, preData, CallBack, Dimensions }) => {
+  
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [dimension, setDimension] = useState(null)
@@ -23,6 +24,7 @@ const UpdateJobSpecifiction = ({ stepper, preData, CallBack, Dimensions }) => {
       return size
     }
   const addmoreSubmit = () => {
+    console.warn(Specifications)
       setLoading(true)
         if (Object.values(Specifications).length > 0) {
           if (dimensionExist()) {
@@ -52,8 +54,9 @@ const UpdateJobSpecifiction = ({ stepper, preData, CallBack, Dimensions }) => {
         
       }
   const removeAction = value => {
+    console.warn(value)
     setLoading(true)
-    Specifications.splice(value)
+    Specifications.splice(value, 1)
     setTimeout(() => {
       setLoading(false)
     }, 1000)

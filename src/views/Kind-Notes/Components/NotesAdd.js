@@ -8,7 +8,6 @@ const NotesAdd = ({ CallBack }) => {
   const [loading, setLoading] = useState(false)
   const [employeeName, setEmployeeName] = useState("")
   const [notes, setNotes] = useState("")
-  const [addedBy, setAddedBy] = useState("")
   const [employee_dropdown] = useState([])
 
   // const employeeList = [
@@ -23,7 +22,7 @@ const NotesAdd = ({ CallBack }) => {
   // ]
   const getEmployeeData = async () => {
     setLoading(true)
-      await Api.get(`/organization/${Api.org ? Api.org.id : 4}/kind/notes/pre/data/view/`).then(result => {
+      await Api.get(`/kind-notes/pre/data/`).then(result => {
         if (result) {
           if (result.status === 200) {
               employee_dropdown.splice(0, employee_dropdown.length)
@@ -42,12 +41,11 @@ const NotesAdd = ({ CallBack }) => {
   }
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (employeeName !== '' && notes !== '' && addedBy !== '') {
+    if (employeeName !== '' && notes !== '') {
       const formData = new FormData()
-      formData['reciever'] = employeeName
-      formData['sender'] = addedBy
+      formData['receiver'] = employeeName
       formData['notes'] = notes
-      await Api.jsonPost(`/organization/${Api.org ? Api.org.id : 4}/kind/notes/`, formData).then(result => {
+      await Api.jsonPost(`/kind-notes/`, formData).then(result => {
         if (result) {
           if (result.status === 200) {
             Api.Toast('success', result.message)
@@ -87,7 +85,7 @@ const NotesAdd = ({ CallBack }) => {
             )}
             
           </Col>
-          <Col md={6}>
+          {/* <Col md={6}>
             <Label>Added by <Badge color='light-danger'>*</Badge>{loading && <Spinner type="grow"/>}</Label>
             {!loading ? (
             <Select
@@ -101,7 +99,7 @@ const NotesAdd = ({ CallBack }) => {
                 isDisabled
               />
             )}
-          </Col>
+          </Col> */}
           <Col md={12} className='mt-1'>
             <Label>Note <Badge color='light-danger'>*</Badge></Label>
             <Input

@@ -10,6 +10,7 @@ const AddSession = ({ CallBack }) => {
     const [instructors] = useState([])
     const [courses] = useState([])
     const [course_session_types] = useState([])
+    const [duration, setDuration] = useState(0)
     const [sessionDetail, setsessionDetail] = useState({
         course_session_type : '',
         course: '',
@@ -21,7 +22,6 @@ const AddSession = ({ CallBack }) => {
         instructor: ''
     })
 
-    
     const onChangeSessionHandler = (InputName, InputType, e) => {
         
         let InputValue
@@ -43,7 +43,21 @@ const AddSession = ({ CallBack }) => {
         }))
     
     }
-
+    const dateConverter = (startDate, timeEnd) => {
+        if (startDate !== '' && timeEnd !== '') {
+            const newStartDate = new Date(startDate)
+            const newEndDate = new Date(timeEnd)
+            const one_day = 1000 * 60 * 60 * 24
+            const result = Math.ceil((newEndDate.getTime() - newStartDate.getTime()) / (one_day))
+            console.warn('date Converter result', result)
+            if (result < 0) { return 0 }
+            setsessionDetail(prevState => ({
+                ...prevState,
+                [duration] : result
+            }))
+            return result
+        }
+      }
     const GetPreData = async () => {
         setLoading(true)
        await Api.get(`/instructors/pre/course/sessions/data/view/`, { headers: {Authorization: Api.token} }).then(result => {
@@ -83,7 +97,7 @@ const AddSession = ({ CallBack }) => {
     const Submit = async (e) => {
         e.preventDefault()
         if (sessionDetail.course !== '' && sessionDetail.start_date !== ''
-        && sessionDetail.end_date !== '' && sessionDetail.duration !== ''
+        && sessionDetail.end_date !== '' && duration !== ''
         && sessionDetail.total_lectures !== ''
         && sessionDetail.no_of_students !== 0) {
             setLoading(true)
@@ -92,7 +106,7 @@ const AddSession = ({ CallBack }) => {
             formData['course'] = sessionDetail.course
             formData['start_date'] = sessionDetail.start_date
             formData['end_date'] = sessionDetail.end_date
-            formData['duration'] = sessionDetail.duration
+            formData['duration'] = duration
             formData['total_lectures'] = sessionDetail.total_lectures
             formData['no_of_students'] = sessionDetail.no_of_students
             if (sessionDetail.instructor !== '') formData['instructor'] = sessionDetail.instructor
@@ -159,7 +173,10 @@ const AddSession = ({ CallBack }) => {
                                 altFormat: 'F j, Y',
                                 dateFormat: 'Y-m-d'
                             }}
-                            onChange={ (date) => { onChangeSessionHandler('start_date', 'date', Api.formatDate(date)) }}
+                            onChange={ (date) => { 
+                                onChangeSessionHandler('start_date', 'date', Api.formatDate(date))
+                                setDuration(dateConverter(date, sessionDetail.end_date))
+                            }}
                         />
                     </Col>
                     <Col md="6" className="mb-1">
@@ -174,19 +191,22 @@ const AddSession = ({ CallBack }) => {
                                 altFormat: 'F j, Y',
                                 dateFormat: 'Y-m-d'
                             }}
-                            onChange={ (date) => { onChangeSessionHandler('end_date', 'date', Api.formatDate(date)) }}
+                            onChange={ (date) => { 
+                                onChangeSessionHandler('end_date', 'date', Api.formatDate(date)) 
+                                setDuration(dateConverter(sessionDetail.start_date, date))
+                            }}
                         />
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Duration<Badge color='light-danger'>*</Badge>
+                        Duration (in days)<Badge color='light-danger'>*</Badge>
                         </Label>
                         <Input
                             type="text"
                             name="duration"
-                            onChange={ (e) => { onChangeSessionHandler('duration', 'input', e) }}
-                            placeholder="Duration"
-                            
+                            value={duration}
+                            // onChange={ (e) => { onChangeSessionHandler('duration', 'input', e) }}
+                            disabled
                             />
                     </Col>
                     <Col md="6" className="mb-1">

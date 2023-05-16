@@ -64,16 +64,19 @@ const index = ({ sessionData }) => {
                 <h2>Lecture</h2>
             </div>
             {lecturelist.length > 0 ? (
-                <span>Lectures Created</span>
+                <span>Lectures</span>
             ) : (
                 <div className="col-lg-6">
-                <button
-                    className="btn btn-sm btn-success float-right"
-                    title="Add Course"
-                    onClick={LecturesCreation}
-                    >    
-                    <Plus />Create Lectures
-                </button>
+                    {Api.role === 'admin' && (
+                        <button
+                            className="btn btn-sm btn-success float-right"
+                            title="Add Course"
+                            onClick={LecturesCreation}
+                            >    
+                            <Plus />Create Lectures
+                        </button>
+                    )}
+                
             </div>
             )}
             

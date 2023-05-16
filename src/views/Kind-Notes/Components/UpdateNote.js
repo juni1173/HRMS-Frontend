@@ -4,16 +4,15 @@ import {Input, Button, Label, Row, Col, Badge, Spinner} from 'reactstrap'
 import apiHelper from '../../Helpers/ApiHelper'
 
 const UpdateNote = ({ data, CallBack }) => {
-    console.warn(data)
+    // console.warn(data)
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
-    const [employeeName, setEmployeeName] = useState(data.reciever ? data.reciever : '')
+    const [employeeName, setEmployeeName] = useState(data.receiver ? data.receiver : '')
     const [notes, setNotes] = useState(data.notes ? data.notes : "")
-    const [addedBy, setAddedBy] = useState(data.sender ? data.sender : "")
     const [employee_dropdown] = useState([])
     const getEmployeeData = async () => {
         setLoading(true)
-          await Api.get(`/organization/${Api.org ? Api.org.id : 4}/kind/notes/pre/data/view/`).then(result => {
+          await Api.get(`/kind-notes/pre/data/`).then(result => {
             if (result) {
               if (result.status === 200) {
                   employee_dropdown.splice(0, employee_dropdown.length)
@@ -32,12 +31,11 @@ const UpdateNote = ({ data, CallBack }) => {
       }
       const handleSubmit = async (event) => {
         event.preventDefault()
-        if (employeeName !== '' && notes !== '' && addedBy !== '') {
+        if (employeeName !== '' && notes !== '') {
           const formData = new FormData()
-          formData['reciever'] = employeeName
-          formData['sender'] = addedBy
+          formData['receiver'] = employeeName
           formData['notes'] = notes
-          await Api.jsonPatch(`/organization/${Api.org ? Api.org.id : 4}/kind/notes/${data.id}/`, formData).then(result => {
+          await Api.jsonPatch(`/kind-notes/${data.id}/`, formData).then(result => {
             if (result) {
               if (result.status === 200) {
                 Api.Toast('success', result.message)
@@ -67,13 +65,13 @@ const UpdateNote = ({ data, CallBack }) => {
               <Select
                 id="employee-name"
                 options={employee_dropdown}
-                defaultValue={employee_dropdown.find(pre => pre.value === data.reciever) ? employee_dropdown.find(pre => pre.value === data.reciever) : ''}
+                defaultValue={employee_dropdown.find(pre => pre.value === data.receiver) ? employee_dropdown.find(pre => pre.value === data.receiver) : ''}
                 onChange={(event) => setEmployeeName(event.value)}
               />
             )}
             
           </Col>
-          <Col md={6}>
+          {/* <Col md={6}>
             <Label>Added by <Badge color='light-danger'>*</Badge>{loading && <Spinner type="grow"/>}</Label>
             {!loading && (
             <Select
@@ -83,7 +81,7 @@ const UpdateNote = ({ data, CallBack }) => {
               onChange={(event) => setAddedBy(event.value)}
             />
             )}
-          </Col>
+          </Col> */}
           <Col md={12} className='mt-1'>
             <Label>Note <Badge color='light-danger'>*</Badge></Label>
             <Input

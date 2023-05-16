@@ -53,6 +53,7 @@ const index = () => {
                 <h2>Session</h2>
             </div>
             <div className="col-lg-6">
+            {Api.role === 'admin' && (
                 <button
                     className="btn btn-sm btn-success float-right"
                     title="Add Course"
@@ -60,6 +61,8 @@ const index = () => {
                     >    
                     <Plus />Add Session
                 </button>
+            )}
+                
             </div>
         </div>
         {!loading ? (

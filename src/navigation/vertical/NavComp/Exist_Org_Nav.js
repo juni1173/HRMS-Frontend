@@ -36,7 +36,6 @@ let nav = []
     title: 'Recruitment',
     icon: <Briefcase size={20} />,
     children: [
-
       {
         id: 'nav-job-setting',
         title: 'Jobs Setup',
@@ -90,6 +89,12 @@ let nav = []
         navLink: '/learning_development/dashboard'
       },
       {
+        id: 'Employee Sheet',
+        title: 'Employee Sheet',
+        icon: <Circle size={12} />,
+        navLink: '/learning_development/employee/sheet'
+      },
+      {
         id: 'Subjects',
         title: 'Subjects',
         icon: <Circle size={12} />,
@@ -134,6 +139,12 @@ let nav = []
     title: 'Projects',
     icon: <CheckSquare size={30} />,
     navLink: '/projects'
+  },
+  {
+    id: 'nav-jira-projects',
+    title: 'Jira',
+    icon: <CheckSquare size={30} />,
+    navLink: '/jira'
   },
   
   {

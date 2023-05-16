@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Card, CardBody, Col, Button, Row, Label, Badge, Input, Spinner } from 'reactstrap'
-import { Send } from 'react-feather'
+import { Send, XCircle } from 'react-feather'
 import { EditorState, ContentState, convertToRaw, convertFromHTML } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
@@ -15,6 +15,8 @@ const EmailForm = ({CallBack, EmailData}) => {
   const [footer, setFooter] = useState(EditorState.createEmpty())
   const [Variables, setVariables] = useState([])
   const [sentEmailMsg, setSentEmailMsg] = useState('')
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [sendLoader, setSendLoader] = useState(false)
   const [emailDetail, setEmailDetail] = useState({
     subject : EmailData.subject_line ? EmailData.subject_line : ''
   })
@@ -64,18 +66,27 @@ const EmailForm = ({CallBack, EmailData}) => {
                 setLoading(false)
               }, 1000)
     }
+    const attachedFileUpload = (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        setSelectedFile(e.target.files[0]) 
+      }
+    } 
+    const removeSelectedFile = () => {
+      setSelectedFile() 
+    } 
     const handleSubmit = async () => {
-        
+        setSendLoader(true)
       const bodyHtml = draftToHtml(convertToRaw(body.getCurrentContent()))
       const footerHtml = draftToHtml(convertToRaw(footer.getCurrentContent()))
     //   bodyHtml.replace(/<[^>]+>/g, '')
       if (emailDetail.subject !== ''
       && bodyHtml !== null && footerHtml !== null) {
         const formData = new FormData()
-        formData['subject'] = emailDetail.subject
-        formData['body'] = bodyHtml
-        formData['footer'] = footerHtml
-        await Api.jsonPatch(`/email/templates/candidate/job/save/${EmailData.candidate_email.candidate_job_uuid}/${EmailData.candidate_email.id}/`, formData).then(result => {
+        formData.append('subject', emailDetail.subject)
+        formData.append('body', bodyHtml)
+        formData.append('footer', footerHtml)
+        formData.append('attachment', selectedFile ? selectedFile : null)
+        await Api.jsonPatch(`/email/templates/candidate/job/save/${EmailData.candidate_email.candidate_job_uuid}/${EmailData.candidate_email.id}/`, formData, false).then(result => {
           if (result) {
               if (result.status === 200) {
                  Api.get(`/email/templates/candidate/job/email/send/${EmailData.candidate_email.candidate_job_uuid}/${EmailData.candidate_email.id}/`)
@@ -92,6 +103,7 @@ const EmailForm = ({CallBack, EmailData}) => {
           }
         })
       }
+      setSendLoader(false)
     }
     useEffect(() => {
       getVariables()
@@ -123,7 +135,27 @@ const EmailForm = ({CallBack, EmailData}) => {
                                     
                                     />
                             </Col>
-                            <Col md="6" className='mb-1'></Col>
+                            <Col md="6" className='mb-1'>
+                            {selectedFile ? (
+                                <div className="float-right">
+                                    Attachment File Uploaded
+                                    <button className="btn" onClick={removeSelectedFile}>
+                                    <XCircle color='red'/>
+                                    </button>
+                                </div>
+                                ) : (
+                                <div>
+                                    <Label className="form-label">Attachment</Label>
+                                    <Input
+                                        type="file"
+                                        id="attachment"
+                                        name="attachment"
+                                        accept="*"
+                                        onChange={attachedFileUpload}
+                                        />
+                                </div>
+                                )}
+                            </Col>
                             <Col md="12" className='mb-1'>
                             <Label className="form-label">
                                 Body<Badge color='light-danger'>*</Badge>
@@ -132,7 +164,7 @@ const EmailForm = ({CallBack, EmailData}) => {
                             </Col>
                             <Col md="12" className="mb-1">
                                 <Label className="form-label">
-                                Footer<Badge color='light-danger'>*</Badge>
+                                Footer <Badge color='light-danger'>*</Badge>
                                 </Label>
                                 <Editor editorState={footer} onEditorStateChange={data => setFooter(data)} />
                             </Col>
@@ -147,7 +179,15 @@ const EmailForm = ({CallBack, EmailData}) => {
                             !loading ? (
                               <ul>
                                 {Variables.map((variable, index) => (
-                                  <li key={index}>{variable.code}</li>
+                                  <button key={index}
+                                  className='btn btn-warning mb-1'
+                                  onClick={() =>  {
+                                    navigator.clipboard.writeText(variable.code)
+                                    Api.Toast('success', 'Variable copied to clipboard')
+                                  }}
+                                >
+                                  {variable.code}
+                                </button>
                                 ))}
                                 
                               </ul>
@@ -168,11 +208,15 @@ const EmailForm = ({CallBack, EmailData}) => {
         </Col>
       </Row>
       <div className='d-flex justify-content-between float-right'>
+          {!sendLoader ? (
+            <Button color='primary'  onClick={handleSubmit}>
+            <Send size={14} className='align-middle ms-sm-25 ms-0'></Send>
+              <span className='align-middle d-sm-inline-block d-none'>Send</span>            
+            </Button>
+          ) : (
+            <Spinner/>
+          )}
           
-          <Button color='primary'  onClick={handleSubmit}>
-          <Send size={14} className='align-middle ms-sm-25 ms-0'></Send>
-            <span className='align-middle d-sm-inline-block d-none'>Send</span>            
-          </Button>
       </div>
       {sentEmailMsg !== '' && (
         <div className='bg-green m-1'>

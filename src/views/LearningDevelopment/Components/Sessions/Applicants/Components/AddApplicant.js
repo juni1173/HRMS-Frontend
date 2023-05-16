@@ -6,7 +6,7 @@ const AddApplicant = ({ CallBack, session}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [employees] = useState([])
-    const [employee_id, setEmployeeID] = useState('')
+    const [employee_id, setEmployeeID] = useState([])
     const getEmployees = async () => {
         setLoading(true)
             await Api.get(`/employees/`)
@@ -30,12 +30,21 @@ const AddApplicant = ({ CallBack, session}) => {
             setLoading(false)
         }, 1000)
     }
+    const handleEmployeeSelect = (selectedOptions) => {
+        setEmployeeID(selectedOptions.map((option) => option.value))
+      }
     const AddApplicant = async () => {
-        if (employee_id !== '') {
+        if (employee_id.length > 0) {
+            const employee_arr = []
+            for (let i = 0; i < employee_id.length; i++) {
+                employee_arr.push({employee: employee_id[i]})
+            }
             setLoading(true)
-                const formData = new FormData()
-                formData['employee'] = employee_id
-                await Api.jsonPost(`/applicants/${session}/`, formData)
+                // const formData = new FormData()
+                // formData['employee'] = employee_arr
+                // console.warn(formData)
+                // return false
+                await Api.jsonPost(`/applicants/multiple/${session}/`, employee_arr)
                 .then(result => {
                     if (result) {
                         if (result.status === 200) {
@@ -71,7 +80,8 @@ const AddApplicant = ({ CallBack, session}) => {
                     <Select 
                         type="text"
                         options={employees}
-                        onChange={e => setEmployeeID(e.value)}
+                        onChange={handleEmployeeSelect}
+                        isMulti
                     />
                 </div>
                 <div className='col-md-4 pt-2'>

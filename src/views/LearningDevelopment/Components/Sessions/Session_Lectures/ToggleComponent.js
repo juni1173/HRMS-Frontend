@@ -103,6 +103,7 @@ const ToggleComponent = ({ data, id, CallBack, sessionData }) => {
                                         <h4 className="text-center text-white">{data.course_title} - {data.title}</h4>
                                     </div>
                                     <div className="col-lg-4 col-md-4 col-sm-4"> 
+                                    {Api.role === 'admin' && (
                                         <button
                                             className="border-0 no-background float-right"
                                             title="Edit Lecture"
@@ -110,7 +111,7 @@ const ToggleComponent = ({ data, id, CallBack, sessionData }) => {
                                             >
                                             <Edit color="white"/>
                                         </button>
-                                        
+                                    )}
                                     </div>
                         </div>
                     </CardTitle>
@@ -165,14 +166,17 @@ const ToggleComponent = ({ data, id, CallBack, sessionData }) => {
                                     </div>
 
                                     <div className="col-md-4 pt-2">
-                                       <Button className="btn btn-primary" onClick={() => StartLecture(data.id)}>
+                                    {Api.role === 'admin' && (
+                                        <Button className="btn btn-primary" onClick={() => StartLecture(data.id)}>
                                             {data.is_taken ? (
                                                 'Lecture Detail'
                                             ) : (
                                                 'Start Lecture'
                                             )}
-                                            
-                                       </Button>
+                                                
+                                        </Button>
+                                    )}
+                                       
                                     </div>
                                 </div>
                             </div>

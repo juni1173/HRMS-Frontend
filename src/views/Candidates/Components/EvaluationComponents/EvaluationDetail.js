@@ -37,6 +37,7 @@ const EvaluationDetail = ({uuid}) => {
                         <th>Evaluated by</th>
                         <th>Recommendation</th>
                         <th>Comment</th>
+                        <th>Percentage</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -49,6 +50,7 @@ const EvaluationDetail = ({uuid}) => {
                         <td>{data.evaluated_by_name}</td>
                         <td>{data.recommendation}</td>
                         <td>{data.comment}</td>
+                        <td>{data.percentage ? `${data.percentage}%` : <Badge color='success'>N/A</Badge>}</td>
                         <td>{(!data.is_cancel && !data.is_rechecked && !data.is_start
                             && !data.is_completed) && 'N/A'}
                             {data.is_cancel && <p><Badge color='danger'>Cancelled</Badge></p>}

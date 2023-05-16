@@ -1,11 +1,15 @@
 import { Fragment } from "react"
-import { Check, XCircle, Clock, CheckCircle } from "react-feather"
+import { Clock, CheckCircle } from "react-feather"
 import { Button } from "reactstrap"
 // import { toast, Slide } from 'react-toastify'
 // import apiHelper from "../../Helpers/ApiHelper"
  
  
 const ApplySuccess = (props) => {
+    // const getPercentage = (mark, total) => {
+    //     const final = (mark / total) * 100
+    //     return final
+    //   }
     return (
         <Fragment>
             
@@ -36,16 +40,17 @@ const ApplySuccess = (props) => {
                                         {(!non_tech.is_completed && non_tech.is_active) ? (
                                             <a href={`${process.env.REACT_APP_PUBLIC_URL}/assessment/test/${non_tech.uuid}/`} target="_blank">
                                             <Button color='primary' className='btn-next'>
-                                            <span className='align-middle d-sm-inline-block d-none'>Start</span>
+                                            <span className='align-middle d-sm-inline-block'>Start </span>
                                             <Clock size={14} className='align-middle ms-sm-25 ms-0'></Clock>
                                             </Button>
                                             </a>
                                         ) : (
-                                            non_tech.is_passed ? (
-                                                <h4 color="green"><Check color="Green"/>Pass</h4>
-                                            ) : (
-                                                <h4 color="red"><XCircle color="red"/> Fail</h4>
-                                            )
+                                            // non_tech.is_passed ? (
+                                            //     <h4 color="green"><Check color="Green"/>Pass</h4>
+                                            // ) : (
+                                            //     <h4 color="red"><XCircle color="red"/> Fail</h4>
+                                            // )
+                                            <h4>{non_tech.percentage}%</h4>
                                         )}
                                     </div>
                                 </div>
@@ -68,16 +73,17 @@ const ApplySuccess = (props) => {
                                         {(!tech.is_completed && tech.is_active) ? (
                                             <a href={`${process.env.REACT_APP_PUBLIC_URL}/assessment/test/${tech.uuid}/`} target="_blank">
                                             <Button color='primary' className='btn-next'>
-                                            <span className='align-middle d-sm-inline-block d-none'>Start</span>
+                                            <span className='align-middle d-sm-inline-block'>Start </span>
                                             <Clock size={14} className='align-middle ms-sm-25 ms-0'></Clock>
                                             </Button>
                                             </a>
                                         ) : (
-                                            tech.is_passed ? (
-                                                <h4 color="green"><Check color="Green"/>Pass</h4>
-                                            ) : (
-                                                <h4 color="red"><XCircle color="red"/> Fail</h4>
-                                            )
+                                            // tech.is_passed ? (
+                                            //     <h4 color="green"><Check color="Green"/>Pass</h4>
+                                            // ) : (
+                                            //     <h4 color="red"><XCircle color="red"/> Fail</h4>
+                                            // )
+                                            <h4>{tech.percentage}%</h4>
                                         )}
                                     </div>
                                 </div>
@@ -94,10 +100,10 @@ const ApplySuccess = (props) => {
                     <div className="col-lg-12">
                         <h3>Assessment Instruction</h3>
                         <ul>
-                            <li>The duration of this assessment is  [duration] minutes. </li>
-                            <li>There are X questions in this assessment and will be presented one at a time. </li>
+                            {/* <li>The duration of this assessment is  [duration] minutes. </li> */}
+                            {/* <li>There are X questions in this assessment and will be presented one at a time. </li> */}
                             <li>Each question is worth the different marks.  </li>
-                            <li>The assessment is worth X% of the marks available in this subject. The contribution each question makes to the total assessment mark is indicated in points or as a percentage. </li>
+                            <li>The assessment is worth 100% of the marks available in this subject. The contribution each question makes to the total assessment mark is indicated in points or as a percentage. </li>
                             <li>During this assessment you won’t be permitted to review previous questions. </li>
                             <li>During assessment you won’t be allowed to switch your screen.</li>
                         </ul>

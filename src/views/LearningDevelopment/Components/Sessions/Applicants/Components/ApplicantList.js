@@ -2,10 +2,22 @@ import React, { Fragment, useState } from 'react'
 import { Table, Button, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import DecisionForm from './DecisionForm'
 import apiHelper from '../../../../../Helpers/ApiHelper'
-const ApplicantList = ({ data, getApplicants }) => {
+const ApplicantList = ({ data, getApplicants, Session_id }) => {
     const Api = apiHelper()
     const [desicionModal, setDesicionModal] = useState(false)
     const [selectedApplicant, setSelectedApplicantID] = useState('')
+    const [checkedItems, setCheckedItems] = useState([])
+
+    const handleCheck = (event) => {
+      const { id } = event.target
+      const isChecked = event.target.checked
+  
+      if (isChecked) {
+        setCheckedItems([...checkedItems, id])
+      } else {
+        setCheckedItems(checkedItems.filter((item) => item !== id))
+      }
+    }
     const openDesicionModal = (id) => {
         setSelectedApplicantID(id)
         setDesicionModal(true)
@@ -14,28 +26,63 @@ const ApplicantList = ({ data, getApplicants }) => {
         setDesicionModal(false)
         getApplicants()
     }
-    const MakeTrainee = async (id) => {
-        if (id) {
-            await Api.jsonPost(`/applicants/enrolled/as/trainee/${id}/`, {})
-            .then(result => {
-                if (result) {
-                    if (result.status === 200) {
+    // const MakeTrainee = async (id) => {
+    //     if (id) {
+    //         await Api.jsonPost(`/applicants/enrolled/as/trainee/${id}/`, {})
+    //         .then(result => {
+    //             if (result) {
+    //                 if (result.status === 200) {
+    //                     Api.Toast('success', result.message)
+    //                     getApplicants()
+    //                 } else {
+    //                     Api.Toast('error', result.message)
+    //                 }
+    //             } else {
+    //                 Api.Toast('error', 'Server not responding!')
+    //             }
+    //         })
+    //     }
+    // }
+    const multipleMakeTrainee = async () => {
+        // console.warn(checkedItems)
+        if (checkedItems.length > 0) {
+            const employee_arr = []
+            for (let i = 0; i < checkedItems.length; i++) {
+                employee_arr.push({course_applicant: parseInt(checkedItems[i])})
+            }
+              
+                await Api.jsonPost(`/applicants/multiple/trainees/${Session_id}/`, employee_arr)
+                .then(result => {
+                    if (result) {
+                        if (result.status === 200) {
                         Api.Toast('success', result.message)
                         getApplicants()
+                        } else {
+                            Api.Toast('error', result.message)
+                        }
                     } else {
-                        Api.Toast('error', result.message)
+                        Api.Toast('error', 'Server not responding!')
                     }
-                } else {
-                    Api.Toast('error', 'Server not responding!')
-                }
-            })
+                })
+        
+        } else {
+            Api.Toast('error', 'Please select an employee to add!')
         }
     }
   return (
     <Fragment>
+        {checkedItems.length > 0 && (
+            <Button className='btn btn-primary mb-1' onClick={multipleMakeTrainee}>
+                Make Trainee
+            </Button>
+        )}
+        
          <Table bordered striped responsive>
           <thead className='table-dark text-center'>
             <tr>
+                <th scope="col" className="text-nowrap">
+                    Select
+                </th>
               <th scope="col" className="text-nowrap">
               Applicant Name
               </th>
@@ -54,30 +101,43 @@ const ApplicantList = ({ data, getApplicants }) => {
           <tbody className='text-center'>
                 {data.length > 0 ? (
                     data.map((applicant, key) => (
-                        <tr key={key}>
+                        !applicant.is_trainee && (
+                            <tr key={key}>
+                            <td>
+                                {(applicant.status === 3 || applicant.status === 5) ? (
+                                    
+                                    <input className='form-check-primary' type="checkbox" id={applicant.id} onChange={handleCheck} />
+                                    
+                                ) : (
+                                    <input className='form-check-primary' type="checkbox" id={applicant.id} onChange={handleCheck} disabled/>
+                                )}
+                                
+                            </td>
                             <td>{applicant.employee_name}</td>
                             <td>{applicant.course_title}</td>
                             <td>{applicant.status_title}</td>
                             <td>
                             <div className="row">
-                                <div className='col-lg-6 border-right'>
+                                <div className='col-lg-12'>
                                     <Button className="btn btn-primary" onClick={() => openDesicionModal(applicant.id)}>
                                         Make Decision
                                     </Button>
                                 </div>
-                                <div className='col-lg-6'>
+                                {/* <div className='col-lg-6'>
                                     <Button className="btn btn-primary" onClick={() => MakeTrainee(applicant.id)}>
                                         Make Trainee
                                     </Button>
-                                </div>
+                                </div> */}
                             </div>
 
                             </td>
                         </tr>
+                        )
+                       
                     )) 
                 ) : (
                     <tr>
-                      <td colSpan={4}>No Applicant Found...</td>
+                      <td colSpan={5}>No Applicant Found...</td>
                   </tr>
                 )}
             </tbody>

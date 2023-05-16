@@ -4,6 +4,7 @@ import Select from 'react-select'
 // import '@styles/react/libs/flatpickr/flatpickr.scss'
 import apiHelper from '../../../Helpers/ApiHelper'
 import EmailForm from './EmailForm'
+import CustomEmailForm from './CustomEmailForm'
 
 const EmailSetup = ({ uuid, stage_id }) => {
     const Api = apiHelper()
@@ -11,6 +12,8 @@ const EmailSetup = ({ uuid, stage_id }) => {
     const [loading, setLoading] = useState(false)
     const [candidateEmail, setCandidateEmail] = useState([])
     const [emailTemplateData, setEmailTemplateData] = useState([])
+    const [customEmail, setCustomEmail] = useState(false)
+    
 
     const getPreData = async () => {
         setLoading(true)
@@ -97,9 +100,10 @@ const EmailSetup = ({ uuid, stage_id }) => {
     <Fragment>
         {!loading ? (
             <div className='row'>
-                {Object.values(emailTemplateData).length > 0 ? (
-                    <>
-                    <div className="col-md-6">
+                {Object.values(emailTemplateData).length > 0 || customEmail ? (
+                    !customEmail ? (
+                        <>
+                            <div className="col-md-6">
                         <Badge color='light-info'>
                             Stage Title 
                         </Badge><br></br>
@@ -112,45 +116,33 @@ const EmailSetup = ({ uuid, stage_id }) => {
                         <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{emailTemplateData.candidate_email.email_template_title && emailTemplateData.candidate_email.email_template_title}</span>
                     </div>
                      <EmailForm EmailData={emailTemplateData} CallBack={sendCallBack}/>
-                    {/* <div className="col-md-12"> */}
-                        
-                        {/* <Badge color='light-primary'>
-                            Subject Line
-                        </Badge><br></br>
-                        <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{emailTemplateData.subject_line && emailTemplateData.subject_line}</span> */}
-                    {/* </div> */}
-                    {/* <div className="col-md-12">
-                        <Badge color='light-success'>
-                            Body
-                        </Badge><br></br>
-                        <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{emailTemplateData.body && emailTemplateData.body}</span>
-                    </div>
-                    <div className="col-md-12">
-                        <Badge color='light-warning'>
-                            Footer
-                        </Badge><br></br>
-                        <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{emailTemplateData.footer && emailTemplateData.footer}</span>
-                    </div> */}
-                    {/* <div className='col-lg-12'>
-                        <Button className='btn btn-success float-right' onClick={SendEmail}>
-                            Save & Send 
-                        </Button>
-                    </div> */}
-                    </>
-                ) : (
+                        </>
+                    ) : (
+                        <CustomEmailForm CallBack={sendCallBack} />
+                    )
+                    // <>
                     
-                    <div className='col-lg-6 mb-1'>
-                    <Label>
-                        Select Email Template<Badge color='light-danger'>*</Badge>
-                    </Label>
-                    <Select
-                        type="text"
-                        name="interviewer"
-                        options={templates}
-                        onChange={ (e) => { setEmail(e.value) }}
-                    />
-                </div>
-                
+                   
+                    // </>
+                ) : (
+                    <>
+                        <div className='col-lg-6 border-right'>
+                        <Label>
+                            Select Email Template<Badge color='light-danger'>*</Badge>
+                        </Label>
+                        <Select
+                            type="text"
+                            name="interviewer"
+                            options={templates}
+                            onChange={ (e) => { setEmail(e.value) }}
+                        />
+                        </div>
+                        <div className='col-lg-6 mt-2 ml-2'>
+                            <Button className='btn btn-primary' onClick={() => setCustomEmail(true)}>
+                                Custom Email
+                            </Button>
+                        </div>
+                    </>
                 )}
                 
             </div>

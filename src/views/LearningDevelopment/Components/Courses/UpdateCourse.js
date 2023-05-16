@@ -11,7 +11,6 @@ const updateCourse = ({ CourseData, CallBack }) => {
         title : CourseData.title ? CourseData.title : '',
         code: CourseData.code ? CourseData.code : '',
         program : CourseData.program ? CourseData.program : '',
-        program_level : CourseData.program_level ? CourseData.program_level : '',
         what_will_you_learn: CourseData.what_will_you_learn ? CourseData.what_will_you_learn : '',
         skills_you_gain: CourseData.skills_you_gain ? CourseData.skills_you_gain : '',
         credit_hours: CourseData.credit_hours ? CourseData.credit_hours : 0,
@@ -77,7 +76,7 @@ const updateCourse = ({ CourseData, CallBack }) => {
      const Submit = async (e) => {
         e.preventDefault()
         if (CourseData.title !== '' && CourseData.program !== ''
-        && CourseData.description !== '' && CourseData.program_level !== ''
+        && CourseData.description !== ''
         && CourseData.mode_of_course !== ''
         && CourseData.complexity_level !== '') {
             setLoading(true)
@@ -85,7 +84,6 @@ const updateCourse = ({ CourseData, CallBack }) => {
             formData['title'] = courseDetail.title
             formData['code'] = courseDetail.code
             formData['program'] = courseDetail.program.value
-            formData['program_level'] = courseDetail.program_level
             if (courseDetail.what_will_you_learn !== '') formData['what_will_you_learn'] = courseDetail.what_will_you_learn
             if (courseDetail.skills_you_gain !== '') formData['skills_you_gain'] = courseDetail.skills_you_gain
             if (courseDetail.credit_hours !== 0) formData['credit_hours'] = courseDetail.credit_hours
@@ -157,19 +155,6 @@ const updateCourse = ({ CourseData, CallBack }) => {
                             options={programArr}
                             defaultValue={programArr.find(pre => pre.value === CourseData.program) ? programArr.find(pre => pre.value === CourseData.program) : ''}
                             onChange={ (e) => { onChangeCourseHandler('program', 'select', e) }}
-                            />
-                    </Col>
-                    <Col md="6" className="mb-1">
-                        <Label className="form-label">
-                        Program Level<Badge color='light-danger'>*</Badge>
-                        </Label>
-                        <Input
-                            type="number"
-                            name="program_level"
-                            defaultValue={CourseData.program_level}
-                            onChange={ (e) => { onChangeCourseHandler('program_level', 'input', e) }}
-                            placeholder="Program Level"
-                            
                             />
                     </Col>
                     <Col md="6" className="mb-1">

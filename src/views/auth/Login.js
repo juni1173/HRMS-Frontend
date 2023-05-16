@@ -86,11 +86,19 @@ const Login = () => {
       .then((result) => {
         if (result) {
           if (result.status === 200) {
-            const data = {status:result.status, accessToken: result.token.accessToken, refreshToken: result.token.refreshToken, org_id: result.org_id, user_id: result.user_id }
+            const data = {status:result.status, accessToken: result.token.accessToken, refreshToken: result.token.refreshToken, org: result.organization, user_id: result.user_id, user_role: result.admin ? 'admin' : 'employee' }
             dispatch(handleLogin(data))
-            localStorage.setItem('organization', JSON.stringify({id: data.org_id}))
+            localStorage.setItem('organization', JSON.stringify(data.org))
+            localStorage.setItem('user', JSON.stringify(result.user))
             localStorage.setItem('user_id', data.user_id)
-            history.push('organizationHome')
+            if (result.admin) {
+              // history.push('/admin/dashboard')
+              history.push('/organizationHome')
+            } else {
+              history.push('/employee/dashboard')
+            }
+            // history.push('/organizationHome')
+            
             toast.success(
               <ToastContent name={data.fullName || data.username || 'HR Manager'} role={data.role || 'admin'} />,
               { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }

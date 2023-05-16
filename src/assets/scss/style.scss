@@ -174,13 +174,15 @@ p.label{
 }
 .apply-form-border{
 	border-right: 1px solid lightgrey;
-	padding-left: 8rem;
-	padding-right: 8rem;
+	padding-left: 4rem;
+	padding-right: 4rem;
 }
+
 .already-applied-form{
 	padding-left: 8rem;
 	padding-right: 8rem;
 }
+
 .editor :global(.public-DraftEditor-content) {
 	max-height: 200px;
 	overflow: auto;
@@ -254,6 +256,9 @@ div.configuration_panel .tab-pane-blue {
     padding: 20px;
     border-radius: 5px;
 }
+.card-blue {
+	background: #315180;
+}
 .pagination {
 	list-style: none;
 	display: flex;
@@ -306,3 +311,25 @@ div.configuration_panel .tab-pane-blue {
 .custom-sidebar .row.active {
 	background-color: lightgray;
 }
+#left-scroll {
+	background-color: #315180;
+	// text-align: center;
+	height:100%;
+	position: absolute;
+	top: 0px;
+	bottom: 0;
+	left: 0;
+	padding-top: 10px;
+	overflow-y: scroll; 
+  }
+  
+  #right-scroll {
+	height:100%;
+	// background-color: #f1c40f;
+	// text-align: center;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	overflow-y: scroll;
+  }

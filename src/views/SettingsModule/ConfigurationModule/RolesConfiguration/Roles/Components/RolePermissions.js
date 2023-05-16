@@ -32,7 +32,9 @@ const RolePermissions = ({ role_id, CallBack, DiscardModal }) => {
                     if (Object.values(data).length > 0) {
                         rolesArr.splice(0, rolesArr.length)
                         for (let i = 0; i < data.length; i++) {
-                            rolesArr.push({title: data[i].title, id: data[i].id})
+                            if (data[i].level === 0) {
+                                rolesArr.push({title: data[i].title, id: data[i].id})
+                            }
                         }
                     } else {
                         Api.Toast('error', 'No role types found')

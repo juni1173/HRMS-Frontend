@@ -1,5 +1,5 @@
-import { Fragment, useState } from "react"
-import { Row, Col, Form, Input, Button, Modal, ModalHeader, ModalBody, ModalFooter, Spinner, Label } from 'reactstrap'
+import { Fragment, useState, useEffect } from "react"
+import { Row, Col, Form, Input, Button, Modal, ModalHeader, ModalBody, Card, Spinner, Label, CardBody } from 'reactstrap'
 import { Save, XCircle, Clock} from "react-feather"
 import InputMask from 'react-input-mask'
 import validator from "validator"
@@ -7,6 +7,7 @@ import {useParams} from "react-router-dom"
 import ApplySuccess from "./ApplySuccess"
 import apiHelper from "../../Helpers/ApiHelper"
 import pdfImage from "../../../assets/images/icons/pdf-icon.png"
+import JDModal from "./JDModal"
  
 const applyForm = () => {
     const Api = apiHelper() 
@@ -26,11 +27,15 @@ const applyForm = () => {
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [linkedin, setLinkedin] = useState('')
+    const [time_interval, setInterval] = useState('')
     const [selectedImage, setSelectedImage] = useState(null)
     const [applySuccessData, setApplySuccessData] = useState([])
     const [successMsg, setSuccessMsg] = useState('')
     const [url_params] = useState(useParams())
     const [successModal, setSuccessModal] = useState(false)
+    const [jdModal, setJDModal] = useState(true)
+    const [jdData, setJDData] = useState([])
+    const [timeIntervals, setTimeIntervals] = useState([])
         
     const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -142,7 +147,6 @@ const applyForm = () => {
         phoneVaidation(event.target.value)
     }
     const submit = () => {
-        
         setLoading(true)
         const job_uuid = url_params.uuid
         if (job_uuid !== '' && job_uuid !== null && job_uuid !== undefined && name !== '' && cnic !== '' && email !== '' && phone !== '') {
@@ -179,6 +183,7 @@ const applyForm = () => {
             formData.append("mobile_no", phone)
             if (linkedin !== '') formData.append("linkedin_profile", linkedin)
             formData.append("resume", selectedImage)
+            if (time_interval !== '') formData.append("time_interval", time_interval)
             
                 Api.jsonPost(`/candidates/apply/form/${job_uuid}/`, formData, false)
                 .then((result) => {
@@ -237,7 +242,7 @@ const applyForm = () => {
             const isValidCnic = checkCnic(trackCnic)
             if (!isValidCnic) {
                 Api.Toast('error',   "Cnic is not valid")
-                return
+                return false
             }
             Api.get(`/assessments/candidate/check/job/post/${trackCnic}/${job_uuid}/`).then(result => {
                 if (result) {
@@ -264,7 +269,34 @@ const applyForm = () => {
                 setLoading(false)
               }, 1000)  
         }
-    
+    const getJD = () => {
+        setLoading(true)
+        Api.get(`/candidates/apply/job/pre/data/${url_params.uuid}/`).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    setJDData(result.data.job_description[0])
+                    setTimeIntervals(result.data.time_intervals)
+                } else {
+                    Api.Toast('error', result.message)
+                }
+            } 
+        })
+            // Api.get(`/jobs/${url_params.uuid}/jd/`).then(result => {
+            //     if (result) {
+            //         if (result.status === 200) {
+            //             setJDData(result.data[0])
+            //         } else {
+            //             Api.Toast('error', result.message)
+            //         }
+            //     } 
+            // })
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+    }
+    useEffect(() => {
+        getJD()
+    }, [])
     return (
         <Fragment>
             <>
@@ -274,7 +306,7 @@ const applyForm = () => {
             </div>
             </div>
             <div className="row">
-                <div className="col-lg-8 my-5 apply-form-border">
+                <div className="col-lg-8 col-md-8 col-sm-12 my-5 apply-form-border">
                 <Form onSubmit={e => e.preventDefault()}  id="create-job-form">
                     <Row>
                         <Col md='12' className='mb-1'>
@@ -398,11 +430,36 @@ const applyForm = () => {
                         </div>
                         )}
                         </Col>
+                        <Col md={12}>
+                        {timeIntervals.length > 0 && (
+                            <>
+                            <Card>
+                                <CardBody>
+                                <label className='form-label'>
+                                    Interview Availability
+                                </label>
+                            
+                                {timeIntervals.map((item) => (
+                                    <div className='demo-inline-spacing' key={item.id}>
+                                    <div className='form-check'>
+                                        <Input type='radio' id={`ex-${item.id}`} value={item.id} name='ex1' onChange={(e) => setInterval(e.target.value)}/>
+                                        <Label className='form-check-label' for={`ex-${item.id}`}>
+                                        {item.time_interval_title}
+                                        </Label>
+                                    </div>
+                                    </div>
+                                ))}   
+                              
+                                </CardBody>
+                            </Card>
+                            </>
+                        )}
+                        </Col>
                     </Row>
                 </Form>
                 <div className="text-center">
                 <Button color='primary' className='btn-next' onClick={submit}>
-                    <span className='align-middle d-sm-inline-block d-none'>Submit</span>
+                    <span className='align-middle d-sm-inline-block'>Submit </span>
                     <Save size={14} className='align-middle ms-sm-25 ms-0'></Save>
                 </Button>
                 </div>
@@ -426,7 +483,7 @@ const applyForm = () => {
                         <div className="text-center">
                             {!loading && (
                                 <Button color='primary' className='btn-next' onClick={submitTrack}>
-                                <span className='align-middle d-sm-inline-block d-none'>Track</span>
+                                <span className='align-middle d-sm-inline-block'>Track </span>
                                 <Clock size={14} className='align-middle ms-sm-25 ms-0'></Clock>
                             </Button>
                             )}
@@ -440,6 +497,17 @@ const applyForm = () => {
             <ModalHeader toggle={() => setSuccessModal(!successModal)}>Job Application Status</ModalHeader>
             <ModalBody>
                 <ApplySuccess successData={applySuccessData} message={successMsg}/>
+            </ModalBody>
+            </Modal>
+
+            <Modal isOpen={jdModal} toggle={() => setJDModal(!jdModal)} className='modal-lg modal-dialog-centered'>
+            <ModalHeader toggle={() => setJDModal(!jdModal)}>Job Descriptions</ModalHeader>
+            <ModalBody>
+                {!loading ? (
+                    <JDModal data={jdData} />
+                ) : (
+                    <div className='text-center'><Spinner/></div>
+                )}
             </ModalBody>
             </Modal>
         </Fragment>

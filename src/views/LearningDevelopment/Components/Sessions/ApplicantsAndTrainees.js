@@ -103,7 +103,6 @@ const ApplicantsAndTrainees = () => {
     }, [])
   return (
     <Fragment>
-       
             <Row>
                 <Col md="6">
                     <Label>
@@ -153,7 +152,7 @@ const ApplicantsAndTrainees = () => {
                     </div>
                     <Row className='pt-2'>
                         <Col md='12'>
-                            <ApplicantList data={applicantsList} getApplicants={getApplicants}/>
+                            <ApplicantList data={applicantsList} getApplicants={getApplicants} Session_id={currentSession}/>
                         </Col>
                     </Row>
                 </>
@@ -161,7 +160,7 @@ const ApplicantsAndTrainees = () => {
             {ActiveList === 2 && (
                  <Row className='pt-2'>
                     <Col md='12'>
-                        <TraineeList data={traineesList} CallBack={getTrainees} />
+                        <TraineeList data={traineesList} CallBack={getTrainees} Session_id={currentSession}/>
                     </Col>
                 </Row>
             )}

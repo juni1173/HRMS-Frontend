@@ -14,6 +14,7 @@ const EvaluationForm = ({uuid, stage_id}) => {
     const [answers] = useState([])
     const [recommendation, setRecommendation] = useState('')
     const [comment, setComments] = useState('')
+    const [remarks, setRemarks] = useState('')
     const [canvasCancelPlacement, setCanvasCancelPlacement] = useState('end')
     const [canvasCancelOpen, setCanvasCancelOpen] = useState(false)
     const [currentEvaluationId, setCurrentEvaluationId] = useState(null)
@@ -127,12 +128,14 @@ const EvaluationForm = ({uuid, stage_id}) => {
         return answers
     }
     const OnSubmitEvaluation = async (id) => {
+        console.warn(remarks)
         if (Object.values(answers).length > 0 && recommendation !== ''
-        && comment !== '') {
+        && comment !== '' && remarks !== '') {
             const formData = new FormData()
             formData['evaluation_questions_remarks'] = answers
             formData['recommendation'] = recommendation
             formData['comment'] = comment
+            formData['evaluation_remarks'] = remarks
             setLoading(true)
             await Api.jsonPost(`/evaluations/candidate/job/submit/questions/remarks/${uuid}/${id}/`, formData)
             .then(result => {
@@ -203,7 +206,27 @@ const EvaluationForm = ({uuid, stage_id}) => {
                                         </div>
                                         </>
                                     )) }
-                                    
+                                    <h3>Evaluation Remarks</h3>
+                                    <div className='demo-inline-spacing evaluationForm'>
+                                        <div className='form-check form-check-success'>
+                                            <Input type='radio' id='radio-danger' value={1} name={`remarks`} onChange={e => setRemarks(e.target.value)}/>
+                                            <Label className='form-check-label' for='radio-danger'>
+                                                Hire
+                                            </Label>
+                                        </div>
+                                        <div className='form-check form-check-danger'>
+                                            <Input type='radio' id='radio-danger' value={2} name={`remarks`} onChange={e => setRemarks(e.target.value)}/>
+                                            <Label className='form-check-label' for='radio-danger'>
+                                                Not Hire
+                                            </Label>
+                                        </div>
+                                        <div className='form-check form-check-warning'>
+                                            <Input type='radio' id='radio-danger' value={3} name={`remarks`} onChange={e => setRemarks(e.target.value)}/>
+                                            <Label className='form-check-label' for='radio-danger'>
+                                                Discussion
+                                            </Label>
+                                        </div>
+                                        </div>
                                 </CardBody>
                             </Card>
                     </div> 
@@ -291,6 +314,10 @@ const EvaluationForm = ({uuid, stage_id}) => {
                                             Comments
                                         </Label>
                                         <p><b>{evaluationData.comment}</b></p>
+                                        <Label>
+                                            Total Percentage
+                                        </Label>
+                                        <Badge color='light-success'><h3>{evaluationData.percentage}%</h3></Badge>
                                         </>
                                     )
                                 ) : (

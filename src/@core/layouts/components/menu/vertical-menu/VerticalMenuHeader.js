@@ -13,7 +13,6 @@ const VerticalMenuHeader = props => {
   const { menuCollapsed, setMenuCollapsed, setMenuVisibility, setGroupOpen, menuHover } = props
   // const { menuCollapsed, setGroupOpen, menuHover } = props
   const [orgImgPath, setOrgImgPath] = useState(null)
-  
   const checkImage = () => {
     const imageUrl = process.env.REACT_APP_BACKEND_URL + JSON.parse(localStorage.getItem('organization')).logo
     const img = new Image()
@@ -24,6 +23,7 @@ const VerticalMenuHeader = props => {
         setOrgImgPath(null)
       }
     }
+  
   // ** Reset open group
   useEffect(() => {
     if (localStorage.getItem('organization')) {

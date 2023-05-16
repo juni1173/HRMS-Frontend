@@ -71,6 +71,9 @@ const TraineeList = ({ data, CallBack }) => {
                   Course
                   </th>
                   <th>
+                    Status
+                  </th>
+                  <th>
                     Remove Trainee
                   </th>
                 </tr>
@@ -82,6 +85,7 @@ const TraineeList = ({ data, CallBack }) => {
                             <tr key={key}>
                                 <td>{applicant.course_applicant_name}</td>
                                 <td>{applicant.course_title}</td>
+                                <td>{applicant.trainee_status ? applicant.trainee_status : 'N/A'}</td>
                                 <td>
                                     <button
                                         className="border-0 no-background"

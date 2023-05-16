@@ -5,8 +5,10 @@ import { Card, CardBody, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } fr
 import AddSubject from "./AddSubject"
 import SubjectHelper from "../../../Helpers/LearningDevelopmentHelper/SubjectHelper"
 import SubjectList from "./SubjectList"
+import apiHelper from "../../../Helpers/ApiHelper"
 const index = () => {
     const Helper = SubjectHelper()
+    const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
@@ -42,13 +44,15 @@ const index = () => {
             <div className="col-lg-6">
             </div>
             <div className="col-lg-6">
+               {Api.role === 'admin' && (
                 <button
-                    className="btn btn-sm btn-success float-right"
-                    title="Add Subject"
-                    onClick={toggleCanvasEnd}
-                    >    
-                    <Plus />Add Subject
-                </button>
+                className="btn btn-sm btn-success float-right"
+                title="Add Subject"
+                onClick={toggleCanvasEnd}
+                >    
+                <Plus />Add Subject
+            </button>
+               )} 
             </div>
         </div>
       {!loading ? (

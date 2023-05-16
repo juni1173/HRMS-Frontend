@@ -3,6 +3,7 @@ import { Edit, XCircle, Search} from "react-feather"
 import { Card, CardBody, Table, Modal, ModalBody, ModalHeader, Input, InputGroup, InputGroupText, Button, Spinner} from "reactstrap"
 import apiHelper from "../../../Helpers/ApiHelper"
 import UpdateJobList from "./UpdateJobList"
+import CandidatePool from "./CandidatePool"
 import SearchHelper from "../../../Helpers/SearchHelper/SearchByObject"
 import { useHistory } from "react-router-dom"
 const ActiveJobsList = ({count, data, CallBack}) => {
@@ -12,14 +13,21 @@ const ActiveJobsList = ({count, data, CallBack}) => {
     const [Loading, setLoading] = useState(true)
     const [activeJobsList, setActiveJobList] = useState([])
     const [editModal, setEditModal] = useState(false)
+    const [candidatePoolModal, setCandidatePoolModal] = useState(false)
     const [searchResults, setSearchResults] = useState([])
     // const [deleteModal, setDeleteModal] = useState(false)  
     const [searchQuery] = useState([])
+    const [candidatePoolModalData, setCandidatePoolModalData] = useState(null)
     const [updatedModalData, setUpdateModalData] = useState(null)
 
     // const [deleteId, setDeleteId] = useState('')
      
-    const updateModal = (data) => {
+    const candidatePoolFunc = (data) => {
+        // setUpdateId(data.id)
+        setCandidatePoolModalData(data)
+        setCandidatePoolModal(true)
+      }
+      const updateModal = (data) => {
         // setUpdateId(data.id)
         setUpdateModalData(data)
         setEditModal(true)
@@ -153,6 +161,12 @@ useEffect(() => {
                     <th scope="col" className="text-nowrap">
                     Job Description
                     </th>
+                    <th>
+                    Applicants
+                    </th>
+                    <th scope="col" className="text-nowrap">
+                    Candidate Pool
+                    </th>
                     <th>Apply</th>
                     <th scope="col" className="text-nowrap">
                     Actions
@@ -169,11 +183,24 @@ useEffect(() => {
                             <td>{item.title ? item.title : 'N/A'}</td>      
                             <td>{data.Department.find(pre => pre.value === item.department) ? data.Department.find(pre => pre.value === item.department).label : 'N/A'}</td>  
                             <td>{data.Staff_Classification.find(pre => pre.value === item.staff_classification) ? data.Staff_Classification.find(pre => pre.value === item.staff_classification).label : 'N/A'}</td>
-                            <td>{data.Position.find(pre => pre.value === item.position) ? data.Position.find(pre => pre.value === item.position).label : 'N/A'}</td>
+                            <td>{item.position_title ? item.position_title : 'N/A'}</td>
                             <td>{data.Job_Types.find(pre => pre.value === item.job_type) ? data.Job_Types.find(pre => pre.value === item.job_type).label : 'N/A'}</td>
                             <td>{item.no_of_individuals}</td>
                             <td>{item.job_post_code}</td>
                             <td>{data.JD_Selection.find(pre => pre.value === item.jd_selection) ? data.JD_Selection.find(pre => pre.value === item.jd_selection).label : 'N/A'}</td>
+                            <td>{item.total_applicants ? item.total_applicants : 0}</td>
+                            <td>
+                                <div className="text-center">
+                                    <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        candidatePoolFunc(item) 
+                                    }}
+                                    >
+                                    Candidate Pool
+                                    </button>
+                                </div>
+                                </td>
                             <td><Button color='primary' className='btn-next' onClick={() => history.push(`apply/${item.uuid}`)}>
                                     <span className='align-middle d-sm-inline-block d-none'>Apply</span>
                                 </Button></td>
@@ -210,11 +237,8 @@ useEffect(() => {
                         <tr>
                           <td colSpan={9}><Spinner /></td>
                         </tr>
-                        
-                      
                     )
                   }
-                
                 </tbody>
                 </Table>
             </CardBody>
@@ -223,6 +247,12 @@ useEffect(() => {
         <ModalHeader className='bg-transparent' toggle={() => setEditModal(!editModal)}></ModalHeader>
         <ModalBody className='px-sm-5 mx-50 pb-5'>
               {updatedModalData ? <UpdateJobList CallBack={updateCallBack} data={updatedModalData}/> : "No Data"}
+        </ModalBody>
+      </Modal>
+      <Modal isOpen={candidatePoolModal} toggle={() => setCandidatePoolModal(!candidatePoolModal)} className='modal-dialog-centered modal-xl'>
+        <ModalHeader className='bg-transparent' toggle={() => setCandidatePoolModal(!candidatePoolModal)}></ModalHeader>
+        <ModalBody className='px-sm-5 mx-50 pb-5'>
+              {candidatePoolModalData ? <CandidatePool CallBack={updateCallBack} data={candidatePoolModalData}/> : "No Data"}
         </ModalBody>
       </Modal>
         </>

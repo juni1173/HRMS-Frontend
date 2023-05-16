@@ -144,7 +144,7 @@ const ProgramList = ({data, CallBack}) => {
                     <th>Title </th>
                     <th>Subject</th>
                     <th>Description</th>
-                    <th>Actions</th>
+                   {Api.role === 'admin' && <th>Actions</th> } 
                 </tr>
             </thead>
             <tbody>
@@ -153,7 +153,8 @@ const ProgramList = ({data, CallBack}) => {
                     <td>{program.title ? program.title : <Badge color='light-danger'>N/A</Badge>}</td>
                     <td>{program.subject_title ? program.subject_title : <Badge color='light-danger'>N/A</Badge>}</td>
                     <td>{program.description ? program.description : <Badge color='light-danger'>N/A</Badge>}</td>
-                    <td>
+                    {Api.role === 'admin' && (
+                        <td>
                         <Row>
                             <Col md={6} className='text-center'>
                             <button
@@ -176,6 +177,8 @@ const ProgramList = ({data, CallBack}) => {
                             </Col>
                         </Row>
                     </td>
+                    )}
+                    
                 </tr>
             ))}
             </tbody>

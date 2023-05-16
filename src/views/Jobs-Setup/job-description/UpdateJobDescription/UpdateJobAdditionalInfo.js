@@ -30,7 +30,7 @@ const UpdateJobAdditionalInfo = ({ stepper, preData, CallBack, Dimensions}) => {
       }
   const removeAction = value => {
     setLoading(true)
-    Add_info.splice(value)
+    Add_info.splice(value, 1)
     setTimeout(() => {
       setLoading(false)
     }, 1000)

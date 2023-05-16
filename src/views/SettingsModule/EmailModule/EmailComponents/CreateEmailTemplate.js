@@ -144,17 +144,22 @@ useEffect(() => {
                     </Col>
                     <Col md="3" className='mb-1'>
                         <Label>
-                            Variables
+                            Click to Copy Variables
                         </Label>
-                        
+                        <hr></hr>
                           {Variables.length > 0 ? (
                             !loading ? (
-                              <ul>
-                                {Variables.map((variable, index) => (
-                                  <li key={index}>{variable.code}</li>
-                                ))}
-                                
-                              </ul>
+                                Variables.map((variable, index) => (
+                                  <button key={index}
+                                  className='btn btn-warning mb-1'
+                                  onClick={() =>  {
+                                    navigator.clipboard.writeText(variable.code)
+                                    Api.Toast('success', 'Variable copied to clipboard')
+                                  }}
+                                >
+                                  {variable.code}
+                                </button>
+                                ))
                             ) : (
                               <div className="text-center"><Spinner type='grow' color='lightgreen'/></div>
                             )

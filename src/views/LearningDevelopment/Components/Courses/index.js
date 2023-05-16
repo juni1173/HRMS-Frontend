@@ -4,8 +4,10 @@ import { Plus } from "react-feather"
 import { Card, CardBody, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from "reactstrap"
 import AddCourse from "./AddCourse"
 import CourseHelper from "../../../Helpers/LearningDevelopmentHelper/CourseHelper"
+import apiHelper from "../../../Helpers/ApiHelper"
 const index = () => {
     const Helper = CourseHelper()
+    const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
@@ -43,13 +45,16 @@ const index = () => {
                 <h2>Courses</h2>
             </div>
             <div className="col-lg-6">
+            {Api.role === 'admin' && (
                 <button
-                    className="btn btn-sm btn-success float-right"
-                    title="Add Course"
-                    onClick={toggleCanvasEnd}
-                    >    
-                    <Plus />Add Course
-                </button>
+                className="btn btn-sm btn-success float-right"
+                title="Add Course"
+                onClick={toggleCanvasEnd}
+                >    
+                <Plus />Add Course
+            </button>
+            )}
+                
             </div>
         </div>
         {!loading ? (

@@ -7,9 +7,11 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import ModuleHelper from "../../../../Helpers/LearningDevelopmentHelper/Course-subModules/ModuleHelper"
 import SideToggle from "./sideToggle"
+import apiHelper from "../../../../Helpers/ApiHelper"
 const index = ({ courseData }) => {
     const MySwal = withReactContent(Swal)
     const Helper = ModuleHelper()
+    const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
@@ -100,13 +102,15 @@ const index = ({ courseData }) => {
                 <h3>Modules</h3>
             </div>
             <div className="col-lg-6">
-                <button
-                    className="btn btn-sm btn-success float-right"
-                    title="Add Course"
-                    onClick={toggleCanvasEnd}
-                    >    
-                    <Plus />Add Module
-                </button>
+            {Api.role === 'admin' && (
+                 <button
+                 className="btn btn-sm btn-success float-right"
+                 title="Add Course"
+                 onClick={toggleCanvasEnd}
+                 >    
+                 <Plus />Add Module
+             </button>
+            )}
             </div>
         </div>
         {!loading ? (
@@ -121,20 +125,24 @@ const index = ({ courseData }) => {
                             </div>
                         </Col>
                         <Col md={5} className="sidebar-links">
+                        {Api.role === 'admin' && (
+                            <>
                             <button
-                                className="border-0 no-background float-right"
-                                title="Delete Module"
-                                onClick={() => removeModule(courseData.uuid, d.course_slug_title, d.id)}
-                                >
-                                <XCircle color="red"/>
-                            </button>
-                            
-                            <button
-                                className="border-0 no-background float-right"
-                                title="Edit Module"
-                                >
-                                <Edit color="orange"/>
-                            </button>  
+                            className="border-0 no-background float-right"
+                            title="Delete Module"
+                            onClick={() => removeModule(courseData.uuid, d.course_slug_title, d.id)}
+                            >
+                            <XCircle color="red"/>
+                        </button>
+                        
+                        <button
+                            className="border-0 no-background float-right"
+                            title="Edit Module"
+                            >
+                            <Edit color="orange"/>
+                        </button>  
+                        </>
+                        )}
                         </Col>
                         
                     </Row>

@@ -152,6 +152,7 @@ const DepListView = ({DepList, groupHead, groupHeadActive, deleteDepID, updatedD
       // const [updatedStatus, setUpdatedStatus] = useState(defaultValues.Dep_status)
       const updateDep = (data, id) => {
         if (Object.values(data).length > 0 && id) {
+          if (data.description === undefined) data.description = ''
             fetch(`${process.env.REACT_APP_API_URL}/organization/department/${id}/`, {
                 method: "PATCH",
                 headers: { "Content-Type": "Application/json", Authorization: Api.token },

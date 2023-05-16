@@ -9,7 +9,8 @@ import Masonry from 'react-masonry-component'
 import ReactPaginate from 'react-paginate'
 import SearchHelper from '../../Helpers/SearchHelper/SearchByObject'
 
-const NotesList = ({ data, CallBack }) => {
+const NotesList = ({ data, CallBack, ListType }) => {
+  console.warn(data)
   const Api = apiHelper()
   const searchHelper = SearchHelper()
   const MySwal = withReactContent(Swal)
@@ -38,7 +39,7 @@ const NotesList = ({ data, CallBack }) => {
           buttonsStyling: false
       }).then(function (result) {
           if (result.value) {
-              Api.deleteData(`/organization/${Api.org ? Api.org.id : 4}/kind/notes/${id}/`, {method: 'Delete'})
+              Api.deleteData(`/kind-notes/${id}/`, {method: 'Delete'})
               .then((deleteResult) => {
                   if (deleteResult.status === 200) {
                       MySwal.fire({
@@ -113,16 +114,19 @@ const NotesList = ({ data, CallBack }) => {
   return (
     <Fragment>
       <Container>
-        <div className='row  my-1'>
+        <div className='row'>
+          {ListType === 'sent' && (
             <Col md={6}>
-                <InputGroup className='input-group-merge mb-2'>
-                    <InputGroupText>
-                        <Search size={14} />
-                    </InputGroupText>
-                    <Input placeholder='Search Reciever Name...'  onChange={e => { getSearch({list: data, key: 'reciever_name', value: e.target.value }) } }/>
-                </InputGroup>
-            </Col>
-            <Col md={6}>
+              <InputGroup className='input-group-merge mb-2'>
+                  <InputGroupText>
+                      <Search size={14} />
+                  </InputGroupText>
+                  <Input placeholder='Search Reciever Name...'  onChange={e => { getSearch({list: data, key: 'receiver_name', value: e.target.value }) } }/>
+              </InputGroup>
+          </Col>
+          )}
+            {ListType === 'recieved' && (
+              <Col md={6}>
                 <InputGroup className='input-group-merge mb-2'>
                     <InputGroupText>
                         <Search size={14} />
@@ -130,6 +134,7 @@ const NotesList = ({ data, CallBack }) => {
                     <Input placeholder='Search Sender Name...'  onChange={e => { getSearch({list: data, key: 'sender_name', value: e.target.value }) } }/>
                 </InputGroup>
             </Col>
+            )}
           </div>
       </Container>
       {Object.values(currentItems).length > 0 ? (
@@ -138,9 +143,9 @@ const NotesList = ({ data, CallBack }) => {
             <Masonry className="row js-animation">
               {currentItems.map((item, key) => (
                   <Col md={6} key={key}>
-                    <Card>
+                    <Card className='card-blue'>
                     <CardBody>
-                    <CardTitle tag='h4'>{item.reciever_name ? item.reciever_name : 'N/A'}
+                    <CardTitle tag='h4' className='text-white'>{item.receiver_name ? item.receiver_name : 'N/A'}
                       <div className='float-right'>
                           <button
                               className="border-0 no-background"
@@ -159,7 +164,7 @@ const NotesList = ({ data, CallBack }) => {
                       </div>
                     </CardTitle>
                         <CardSubtitle className='text-muted mb-1'>By {item.sender_name ? item.sender_name : 'N/A'}</CardSubtitle>
-                        <CardText>
+                        <CardText className='text-white'>
                         {item.notes ? item.notes : 'N/A'}
                         </CardText>
                     </CardBody>

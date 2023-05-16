@@ -128,7 +128,7 @@ const CandidateListTable = (props) => {
             case 1:
                 return <EmailSetup uuid={cand_uuid} stage_id={currentStage} CallBack={CallBack} />
             case 2:
-              return <EmailDetail uuid={cand_uuid} />
+              return <EmailDetail uuid={cand_uuid} /> 
             default:
               return <p>No Data Found</p>
           }
@@ -190,9 +190,10 @@ const CandidateListTable = (props) => {
                                 <th>CNIC</th> 
                                 <th>Job title</th>
                                 <th>Resume</th>
+                                <th>Time Interval</th>
                                 <th>Score</th>
                                 <th>Stage</th>
-                                <th>Email Templates</th>
+                                <th>Email History</th>
                                 <th>Interview</th>
                                 <th>Evaluation</th>
                                 <th>Disqualify</th>
@@ -210,7 +211,13 @@ const CandidateListTable = (props) => {
                                     <td>
                                         <a className="btn btn-primary btn-sm" target="_blank" href={`${process.env.REACT_APP_BACKEND_URL}${candidate.resume}`}><File/></a>
                                     </td>
-                                    <td>{candidate.score ? candidate.score : <Badge color="light-danger">N/A</Badge>} </td>
+                                    <td className="text-nowrap">{candidate.time_interval_title ? candidate.time_interval_title : <Badge color="danger">N/A</Badge>}</td>
+                                    <td>{(Object.values(candidate.candidate_job_assessments).length > 0) ? (
+                                        <>
+                                        <p className="d-flex"><Badge color="light-success">Non-Tech</Badge> {candidate.candidate_job_assessments.non_tech_test ? `${candidate.candidate_job_assessments.non_tech_test[0].percentage}%` : <Badge color="light-danger">N/A</Badge>}</p>
+                                        <p className="d-flex"><Badge color="light-success">Tech</Badge> {candidate.candidate_job_assessments.tech_test ? `${candidate.candidate_job_assessments.tech_test[0].percentage}%` : <Badge color="light-danger">N/A</Badge>}</p>
+                                        </>
+                                        ) : <Badge color="light-danger">N/A</Badge>} </td>
                                     <td className="text-nowrap">
                                         <Stage candidate={candidate} key={index}/>
                                     </td>

@@ -1,121 +1,69 @@
-import React, { Fragment, useState } from 'react'
-import FullCalendar from '@fullcalendar/react'
-import listPlugin from '@fullcalendar/list'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
+import React, { Fragment, useEffect, useState } from 'react'
+import { Label, Input } from 'reactstrap'
+import ActivityCalendar from './ActivityCalendar'
+import apiHelper from '../../../Helpers/ApiHelper'
 const index = () => {
-    const [selectedDate, setSelectedDate] = useState('')
-    const calendarOptions = {
-        // events: store.events.length ? store.events : [],
-        plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          start: 'prev,next',
-          center: 'title',
-          end: 'dayGridMonth'
-        },
-        /*
-          Enable dragging and resizing event
-          ? Docs: https://fullcalendar.io/docs/editable
-        */
-        editable: true,
-    
-        /*
-          Enable resizing event from start
-          ? Docs: https://fullcalendar.io/docs/eventResizableFromStart
-        */
-        eventResizableFromStart: false,
-    
-        /*
-          Automatically scroll the scroll-containers during event drag-and-drop and date selecting
-          ? Docs: https://fullcalendar.io/docs/dragScroll
-        */
-        dragScroll: false,
-    
-        /*
-          Max number of events within a given day
-          ? Docs: https://fullcalendar.io/docs/dayMaxEvents
-        */
-        dayMaxEvents: 3,
-    
-        /*
-          Determines if day names and week names are clickable
-          ? Docs: https://fullcalendar.io/docs/navLinks
-        */
-        navLinks: true,
-    
-        eventClassNames({ event: calendarEvent }) {
-          // eslint-disable-next-line no-underscore-dangle
-          const colorName = calendarsColor[calendarEvent._def.extendedProps.calendar]
-    
-          return [
-            // Background Color
-            `bg-light-${colorName}`
-          ]
-        },
-    
-        // eventClick({ event: clickedEvent }) {
-        //   dispatch(selectEvent(clickedEvent))
-        //   handleAddEventSidebar()
-    
-          // * Only grab required field otherwise it goes in infinity loop
-          // ! Always grab all fields rendered by form (even if it get `undefined`) otherwise due to Vue3/Composition API you might get: "object is not extensible"
-          // event.value = grabEventDataFromEventApi(clickedEvent)
-    
-          // eslint-disable-next-line no-use-before-define
-          // isAddNewEventSidebarActive.value = true
-        // },
-    
-        // customButtons: {
-        //   sidebarToggle: {
-        //     text: <Menu className='d-xl-none d-block' />,
-        //     click() {
-        //       toggleSidebar(true)
-        //     }
-        //   }
-        // },
-    
-        dateClick(info) {
-          setSelectedDate(info.dateStr)
-        //   handleAddEventSidebar()
+    const Api = apiHelper()
+    const [loading, setLoading] = useState(false)
+    const [events] = useState([])
+    const getEvents =  async () => {
+      setLoading(true)
+       await  Api.get(`/instructors/get/all/lectures/`).then(result => {
+        if (result) {
+          if (result.status === 200) {
+              const item = result.data
+              for (let i = 0; i < item.length; i++) {
+                events.push({id: item[i].id, title: item[i].title ? item[i].title : null, start: item[i].date ? new Date(item[i].date) : '', status: item[i].status ? item[i].status : '', date: item[i].date ? item[i].date : 'N/A', start_time: item[i].start_time ? item[i].start_time : 'N/A', duration: item[i].duration ? item[i].duration : 'N/A', status_title: item[i].status_title ? item[i].status_title : 'N/A', mode_of_instruction_title: item[i].mode_of_instruction_title ? item[i].mode_of_instruction_title : 'N/A', instructor_name: item[i].instructor_name ? item[i].instructor_name : 'N/A', description: item[i].description ? item[i].description : 'N/A' })
+              }
+          }
+          
         }
-    
-        /*
-          Handle event drop (Also include dragged event)
-          ? Docs: https://fullcalendar.io/docs/eventDrop
-          ? We can use `eventDragStop` but it doesn't return updated event so we have to use `eventDrop` which returns updated event
-        */
-        // eventDrop({ event: droppedEvent }) {
-        //   dispatch(updateEvent(droppedEvent))
-         
-        // },
-    
-        /*
-          Handle event resize
-          ? Docs: https://fullcalendar.io/docs/eventResize
-        */
-        // eventResize({ event: resizedEvent }) {
-        //   dispatch(updateEvent(resizedEvent))
-        //   toast.success(<ToastComponent title='Event Updated' color='success' icon={<Check />} />, {
-        //     icon: false,
-        //     autoClose: 2000,
-        //     hideProgressBar: true,
-        //     closeButton: false
-        //   })
-        // },
-    
-        // ref: calendarRef,
-    
-        // // Get direction from app state (store)
-        // direction: isRtl ? 'rtl' : 'ltr'
-      }
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000)
+      })
+    }
+    useEffect(() => {
+      getEvents()
+    }, [events])
+   
+     
   return (
     <Fragment>
         <div className='row'>
-            <div className='col-lg-6'>
-                {selectedDate && (<p>{selectedDate}</p>)}
-                <FullCalendar {...calendarOptions} />
+        <div className='col-md-2'>
+            <div className='mt-3'>
+              <div className='form-check form-check-info mb-1'>
+              <Input type='radio' id='radio-info' defaultChecked />
+              <Label className='form-check-label' for='radio-info'>
+                Scheduled
+              </Label>
+              </div>
+              <div className='form-check form-check-danger mb-1'>
+                <Input type='radio' id='radio-danger' defaultChecked />
+                <Label className='form-check-label' for='radio-danger'>
+                  Not Scheduled
+                </Label>
+              </div>
+              <div className='form-check form-check-dark mb-1'>
+                <Input type='radio' id='radio-dark' defaultChecked />
+                <Label className='form-check-label' for='radio-dark'>
+                  In Progress
+                </Label>
+              </div>
+              <div className='form-check form-check-success mb-1'>
+                <Input type='radio' id='radio-success' defaultChecked />
+                <Label className='form-check-label' for='radio-success'>
+                  Completed
+                </Label>
+              </div>
+            </div>
+            </div>
+            <div className='col-md-10'>
+                {(events.length > 0 && !loading) && (
+                  <ActivityCalendar events={events}/>
+                )}
+               
             </div>
         </div>
     </Fragment>

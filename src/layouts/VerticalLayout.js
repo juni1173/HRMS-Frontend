@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { Spinner } from 'reactstrap'
 // ** Menu Items Array
 import navigation from '@src/navigation/vertical'
+import emp_nav from '@src/navigation/vertical/NavComp/Emp_Nav'
 import No_Org_Nav from '../navigation/vertical/NavComp/No_Org_Nav'
 // import Exist_Org_Nav from '../navigation/vertical/NavComp/Exist_Org_Nav'
 const VerticalLayout = props => {
@@ -15,10 +16,12 @@ const VerticalLayout = props => {
     // axios.get(URL).then(response => setMenuData(response.data))  
   // }, [])
   const [org, setOrg] = useState(null)
+  const [userRole, setUserRole] = useState(null)
   const [loading, setLoading] = useState(false)
   useEffect(() => {
       setLoading(true)
        setOrg(JSON.parse(localStorage.getItem('organization')) || null)   
+       setUserRole(JSON.parse(localStorage.getItem('userData')).user_role)
        setTimeout(() => {
         setLoading(false)
        }, 1000)
@@ -27,9 +30,16 @@ const VerticalLayout = props => {
   return (
     !loading ? (
       org ? (
-        <Layout menuData={navigation} {...props}>
+        userRole === 'employee' ? (
+          <Layout menuData={emp_nav} {...props}>
           {props.children}
         </Layout>
+        ) : (
+          <Layout menuData={navigation} {...props}>
+          {props.children}
+        </Layout>
+        )
+        
       ) : (
         <Layout menuData={No_Org_Nav} {...props}>
           {props.children}

@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { Card, CardBody, CardTitle, CardSubtitle, Row, Col, Offcanvas, OffcanvasHeader, OffcanvasBody } from 'reactstrap'
+import { Card, CardBody, CardTitle, CardSubtitle, Row, Col, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from 'reactstrap'
 import { Edit, Trash2 } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
@@ -11,10 +11,11 @@ import ReactPaginate from 'react-paginate'
 const ProjectList = ({ data, CallBack }) => {
   const Api = apiHelper()
   const MySwal = withReactContent(Swal)
+  
   const [updateCanvasPlacement, setupdateCanvasPlacement] = useState('end')
   const [updateCanvasOpen, setupdateCanvasOpen] = useState(false)
   const [updateProject, setUpdateProject] = useState([])
-
+  
   const [currentItems, setCurrentItems] = useState([])
   const [pageCount, setPageCount] = useState(0)
   const [itemOffset, setItemOffset] = useState(0)
@@ -70,7 +71,8 @@ const ProjectList = ({ data, CallBack }) => {
     setupdateCanvasPlacement('end')
     setupdateCanvasOpen(!updateCanvasOpen)
   }
-
+  
+  
   useEffect(() => {
     const endOffset = itemOffset === 0 ? itemsPerPage : itemOffset + itemsPerPage
     setCurrentItems(data.slice(itemOffset, endOffset))
@@ -83,6 +85,7 @@ const ProjectList = ({ data, CallBack }) => {
   }
   return (
     <Fragment>
+      
       {Object.values(currentItems).length > 0 ? (
         <>
             <Masonry className="row js-animation">
@@ -136,6 +139,8 @@ const ProjectList = ({ data, CallBack }) => {
           </CardBody>
         </Card>
       )}
+      
+      
       <Offcanvas direction={updateCanvasPlacement} isOpen={updateCanvasOpen} toggle={toggleCanvasEnd}>
         <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
         <OffcanvasBody className=''>

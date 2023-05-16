@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react"
+import { useState, useEffect, Fragment, useCallback } from "react"
 import { Edit, Eye, Search, Trash2 } from "react-feather"
 import {Card, CardBody, CardTitle, Spinner, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody, CardSubtitle, InputGroup, Input, InputGroupText} from "reactstrap"
 import JDHelper from "../../../Helpers/JDHelper"
@@ -33,13 +33,9 @@ const JDList = ({count, Canvas}) => {
         setCanvasViewOpen(!canvasViewOpen)
     }
     
-    const getJD = () => {
+    const getJD = async () => {
         setLoading(true)
-        if (JDList !== null) {
-            JDList.splice(0, JDList.length)
-        }
-        Helper.fetchJDList().then(data => {
-            if (data) {
+        await Helper.fetchJDList().then(data => {
                 if (Object.values(data).length > 0) {
                     setJDList(data)
                     setSearchResults(data)
@@ -47,11 +43,6 @@ const JDList = ({count, Canvas}) => {
                     setJDList([])
                     setSearchResults([])
                 }
-            } else {
-                setJDList([])
-                setSearchResults([])
-            }
-            
         })
         setTimeout(() => {
             setLoading(false)
@@ -83,6 +74,9 @@ const JDList = ({count, Canvas}) => {
         setCanvasUpdateOpen(false)
         getJD()
     }
+    const handleDataProcessing = useCallback(() => {
+        CallBack()
+    }, [JDList])
     useEffect(() => {
         if (count > 0) {
             getJD()
@@ -187,7 +181,7 @@ const JDList = ({count, Canvas}) => {
           <OffcanvasHeader toggle={toggleUpdateCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             {/* {Canvas(active)} */}
-            <StepperForm updateCallBack={CallBack} eidtJdData={editJDList}/>
+            <StepperForm updateCallBack={handleDataProcessing} eidtJdData={editJDList}/>
           </OffcanvasBody>
         </Offcanvas>
 

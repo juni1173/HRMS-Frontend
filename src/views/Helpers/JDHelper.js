@@ -10,7 +10,7 @@ const JDHelper = () => {
         JDSpecifications: {},
         JDAddInfo: {}
     })
-    const [JDList] = useState([])
+    // const [JDList] = useState([])
     
   const fetchDimensions = async () => {
     
@@ -27,9 +27,9 @@ const JDHelper = () => {
         if (Object.values(dim).length > 0) {
             for (let i = 0; i < dim.length; i++) {
                 if (dim[i].jd_type === 1) {
-                    JDSpecifications.push({value: dim[i].id, label: dim[i].title})
+                    JDSpecifications.push({value: dim[i].level, label: dim[i].title})
                 } else if (dim[i].jd_type === 2) {
-                    JDAddInfo.push({value: dim[i].id, label: dim[i].title})
+                    JDAddInfo.push({value: dim[i].level, label: dim[i].title})
                 }
               }  
         }
@@ -47,20 +47,21 @@ const JDHelper = () => {
         const response = await Api.get('/jd/', { headers: {Authorization: Api.token} })
         if (response) {
             if (response.status === 200) {
-                const List = response.data 
-                // console.warn(result)
-                if (Object.values(List).length > 0) {
-                    for (let i = 0; i < List.length; i++) {
-                        if (List[i].is_active) {
-                            JDList.push(List[i])
-                        } 
-                      }  
-                      return JDList
-                }
-            } else {
-                Api.Toast('error', response.message)
-            }
+                // const List = response.data 
+                return response.data 
+            //     if (Object.values(List).length > 0) {
+            //         for (let i = 0; i < List.length; i++) {
+            //             if (List[i].is_active) {
+            //                 JDList.push(List[i])
+            //             } 
+            //           }  
+            //           return JDList
+            //     }
+            // } else {
+            //     Api.Toast('error', response.message)
+            // }
         }
+    }
     }
   const postJD = async (data) => {
     let formData = new FormData()
@@ -87,7 +88,7 @@ const JDHelper = () => {
   const updateJD = async (data, id) => {
     let formData = new FormData()
         formData = Object.assign(data)
-                Api.jsonPatch(`/jd/${id}/`, formData)
+               await  Api.jsonPatch(`/jd/${id}/`, formData)
                 .then((result) => {
                     if (result) {
                         if (result.status === 200) {

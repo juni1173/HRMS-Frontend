@@ -1,4 +1,4 @@
-import { Home, CheckSquare, Bookmark, HelpCircle } from 'react-feather'
+import { Home, CheckSquare, Bookmark, HelpCircle, Book, Clock } from 'react-feather'
 // const checkVisibility = (list, apiList) => {
   
 //   for (let i = 0; i < apiList.length; i++) {
@@ -81,23 +81,36 @@ let nav = []
     
 //   },
 
-  {
-    id: 'nav-projects',
-    title: 'Projects',
-    icon: <CheckSquare size={30} />,
-    navLink: '/projects'
-  },
+//   {
+//     id: 'nav-projects',
+//     title: 'Projects',
+//     icon: <CheckSquare size={30} />,
+//     navLink: '/projects'
+//   },
+    {
+        id: 'nav-requests',
+        title: 'ESS Requests',
+        icon: <HelpCircle size={30} />,
+        navLink: '/requests'
+    },
+    {
+        id: 'nav-attendance',
+        title: 'Attendance',
+        icon: <Clock size={30} />,
+        navLink: '/attendancelist'
+      },
   {
     id: 'nav-kind_notes',
     title: 'Kind Notes',
     icon: <Bookmark size={30} />,
     navLink: '/kind_notes'
   },
+  
   {
-    id: 'nav-requests',
-    title: 'HR Requests',
-    icon: <HelpCircle size={30} />,
-    navLink: '/requests'
+    id: 'nav-l&d',
+    title: 'Learning & Development',
+    icon: <Book size={30} />,
+    navLink: '/employeelearninganddevelopment'
   }
 //   {
 //     id: 'nav-roles-permissions',

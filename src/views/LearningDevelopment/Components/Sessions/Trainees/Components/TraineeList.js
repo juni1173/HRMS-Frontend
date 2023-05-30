@@ -1,13 +1,20 @@
-import React, { Fragment } from 'react'
-import { Table } from 'reactstrap'
-import { Trash2 } from 'react-feather'
+import React, { Fragment, useState } from 'react'
+import { Table, Button, Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Trash2, Mail } from 'react-feather'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import apiHelper from '../../../../../Helpers/ApiHelper'
+import CustomEmail from '../../CustomEmail/index'
 
 const TraineeList = ({ data, CallBack }) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
+    const [emailModal, setEmailModal] = useState(false)
+    const [selectedApplicant, setSelectedApplicantID] = useState('')
+    const openEmailModal = (id) => {
+        setSelectedApplicantID(id)
+        setEmailModal(true)
+        } 
     const removeTrainee = (id) => {
         MySwal.fire({
             title: 'Are you sure?',
@@ -71,6 +78,10 @@ const TraineeList = ({ data, CallBack }) => {
                   Course
                   </th>
                   <th>
+                    Email
+                  </th>
+
+                  <th>
                     Status
                   </th>
                   <th>
@@ -85,6 +96,15 @@ const TraineeList = ({ data, CallBack }) => {
                             <tr key={key}>
                                 <td>{applicant.course_applicant_name}</td>
                                 <td>{applicant.course_title}</td>
+                                <td>
+                                <div className="row">
+                                <div className='col-lg-12'>
+                                    <Button className="btn btn-primary" onClick={() => openEmailModal(applicant.course_applicant)}>
+                                        <Mail />
+                                    </Button>
+                                    </div>
+                                </div>
+                                </td>
                                 <td>{applicant.trainee_status ? applicant.trainee_status : 'N/A'}</td>
                                 <td>
                                     <button
@@ -99,11 +119,17 @@ const TraineeList = ({ data, CallBack }) => {
                         )) 
                     ) : (
                         <tr>
-                          <td colSpan={3}>No Trainee Found...</td>
+                          <td colSpan={4}>No Trainee Found...</td>
                       </tr>
                     )}
                 </tbody>
                 </Table>
+                <Modal isOpen={emailModal} toggle={() => setEmailModal(!emailModal)} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => setEmailModal(!emailModal)}></ModalHeader>
+                <ModalBody className='px-sm-5 mx-50 pb-5'>
+                    <CustomEmail applicant_id={selectedApplicant} />
+                </ModalBody>
+            </Modal>
         </Fragment>
       )
     }

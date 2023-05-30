@@ -4,6 +4,8 @@ import Reimbursement from './Components/Reimbursement'
 import Medical_Limit from './Components/Medical'
 import Leaves from './Components/Leaves'
 import apiHelper from '../../../Helpers/ApiHelper'
+import ProvidentFund from './Components/ProvidentFund'
+import LoanRequirements from './Components/LoanRequirements'
 const index = () => {
     const Api = apiHelper()
     const [active, setActive] = useState('1')
@@ -12,6 +14,13 @@ const index = () => {
     const [leaveData, setLeaveData] = useState({
         types: '',
         duration: ''
+    })
+    const [loanData, setLoanData] = useState({
+        types: '',
+        purpose_of_loan: '',
+        time_frequency: '',
+        time_period: '',
+        set_loan_requirements: ''
     })
     const toggle = tab => {
       if (active !== tab) {
@@ -30,13 +39,22 @@ const index = () => {
                 duration : response.data.set_leave_duration
                 
                 }))
+            setLoanData(prevState => ({
+                ...prevState,
+                types : response.data.loan_type,
+                purpose_of_loan : response.data.purpose_of_loan,
+                time_frequency: response.data.time_frequency,
+                time_period: response.data.time_period,
+                set_loan_requirements: response.data.set_loan_requirements
+                
+                }))
             const sc_data = await response.data.staff_classification            
             staffdropdown.splice(0, staffdropdown.length)
             for (let i = 0; i < sc_data.length; i++) {
                     staffdropdown.push({value:sc_data[i].id, label: sc_data[i].title })
             } 
         } else {
-            return Api.Toast('error', 'staff Classifications not found')
+            return Api.Toast('error', 'Pre server data not found')
         }
     }
     useEffect(() => {
@@ -81,6 +99,26 @@ const index = () => {
             Leaves
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink
+            active={active === '4'}
+            onClick={() => {
+              toggle('4')
+            }}
+          >
+            Provident Fund
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink
+            active={active === '5'}
+            onClick={() => {
+              toggle('5')
+            }}
+          >
+            Loan
+          </NavLink>
+        </NavItem>
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId='1'>
@@ -91,6 +129,12 @@ const index = () => {
         </TabPane>
         <TabPane tabId='3'>
           <Leaves staffdropdown={staffdropdown} data={leaveData} CallBack={handleDataProcessing}/>
+        </TabPane>
+        <TabPane tabId='4'>
+          <ProvidentFund  data={data.provident_fund} CallBack={handleDataProcessing}/>
+        </TabPane>
+        <TabPane tabId='5'>
+          <LoanRequirements  data={loanData} CallBack={handleDataProcessing}/>
         </TabPane>
       </TabContent>
     </div>

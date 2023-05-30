@@ -11,42 +11,23 @@ const index = () => {
   const Api = apiHelper()
     const [active, setActive] = useState('1')
     const [data, setData] = useState([])
-    const [leaveData, setLeaveData] = useState({
-      leave_types: '',
-      employee_leaves: ''
-  })
-  const [loanData, setLoanData] = useState({
-    types: '',
-    purpose_of_loan: '',
-    time_frequency: '',
-    time_period: '',
-    set_loan_requirements: ''
-})
+    const status_choices = [
+      {value: 'un-processed', label: 'un-processed'},
+      {value: 'in-progress', label: 'in-progress'},
+      {value: 'not-approved', label: 'not-approved'},
+      {value: 'approved', label: 'approved'}
+  ]
+ 
     const toggle = tab => {
       if (active !== tab) {
         setActive(tab)
       }
     }
     const preDataApi = async () => {
-      const response = await Api.get('/reimbursements/employee/pre/data/')
+      const response = await Api.get('/reimbursements/employee/requests/pre/data/')
       if (response.status === 200) {
           setData(response.data)
           console.warn(response.data)
-          setLeaveData(prevState => ({
-            ...prevState,
-            leave_types : response.data.leave_types,
-            employee_leaves : response.data.employee_leaves
-            
-            }))
-            setLoanData(prevState => ({
-              ...prevState,
-              types : response.data.loan_type,
-              purpose_of_loan : response.data.purpose_of_loan,
-              time_frequency: response.data.time_frequency,
-              time_period: response.data.time_period,
-              employee_loan: response.data.employee_loan
-              
-              }))
       } else {
           return Api.Toast('error', 'Pre server data not found')
       }
@@ -59,10 +40,10 @@ const index = () => {
       }, [data])
   return (
     <Fragment>
-        <Card>
+        <Card className='bg-mirror'>
             <CardBody>
             {/* <h3 className='brand-text text-center'> <HelpCircle/> ESS</h3> */}
-            <div className='nav-vertical configuration_panel'>
+            <div className='nav-vertical overflow-inherit configuration_panel'>
       <Nav tabs className='nav-left'>
       <NavItem>
            <h3 className='brand-text'> <HelpCircle/> ESS</h3>
@@ -77,7 +58,7 @@ const index = () => {
             Gym
           </NavLink>
         </NavItem>
-        <NavItem>
+         <NavItem>
           <NavLink
             active={active === '2'}
             onClick={() => {
@@ -107,7 +88,7 @@ const index = () => {
             Provident Fund
           </NavLink>
         </NavItem>
-        <NavItem>
+       <NavItem>
           <NavLink
             active={active === '5'}
             onClick={() => {
@@ -116,23 +97,23 @@ const index = () => {
           >
             Loan
           </NavLink>
-        </NavItem>
+        </NavItem> 
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId='1'>
-         <Gym data={data.employee_gym_allowance} CallBack={handleDataProcessing}/>
+         <Gym data={data.gym_allowance} status_choices={status_choices} CallBack={handleDataProcessing}/>
         </TabPane>
-        <TabPane tabId='2'>
-        <Medical data={data.employee_medical_allowance} CallBack={handleDataProcessing}/>
+         <TabPane tabId='2'>
+        <Medical data={data.medical_allowance} status_choices={status_choices} CallBack={handleDataProcessing}/>
         </TabPane>
         <TabPane tabId='3'>
-        <Leave data={leaveData} CallBack={handleDataProcessing} />
+        <Leave data={data.leaves} status_choices={status_choices} CallBack={handleDataProcessing} />
         </TabPane>
         <TabPane tabId='4'>
-        <PF data={data.employee_provident_fund} CallBack={handleDataProcessing} />
+        <PF data={data.provident_fund} status_choices={status_choices} CallBack={handleDataProcessing} />
         </TabPane>
-        <TabPane tabId='5'>
-        <Loan data={loanData} CallBack={handleDataProcessing} />
+       <TabPane tabId='5'>
+        <Loan data={data.loan} status_choices={status_choices} CallBack={handleDataProcessing} />
         </TabPane>
       </TabContent>
     </div>

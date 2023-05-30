@@ -3,7 +3,7 @@
 
   // ** Reactstrap Imports
   import { useState, useEffect } from 'react'
-  import { Link, Redirect } from 'react-router-dom'
+  import { Link, useHistory } from 'react-router-dom'
   import { Button, Row, Col, Card, CardHeader, CardBody, CardTitle, TabContent, TabPane, Nav, NavItem, NavLink, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from "reactstrap"
 
   // ** Custom Components
@@ -22,6 +22,7 @@
   import apiHelper from '../Helpers/ApiHelper'
   const Organization = () => {
     const Api = apiHelper()
+    const history = useHistory()
     const [loading, setLoading] = useState(true)
     const [active, setActive] = useState('1')
     const [canvasPlacement, setCanvasPlacement] = useState('end')
@@ -65,6 +66,9 @@
     }
     
     useEffect(() => {
+      if (JSON.parse(localStorage.getItem('userData')).user_role === "employee") {
+        history.push('/employee/dashboard')
+      }
       getDashCount()
       
     }, [])

@@ -113,6 +113,15 @@ html[dir] body {
 btn.btn-addmore span{
 	white-space: nowrap;
 }
+.nowrap {
+	white-space: nowrap;
+}
+.nav-vertical .nav.nav-tabs.nav-left ~ .tab-content .tab-pane{
+	overflow-y: inherit !important;
+}
+.overflow-inherit {
+	overflow: inherit !important;
+}
 .apply-head-row{
 	background-color: #315180c7;
 }
@@ -144,6 +153,9 @@ svg {
 	padding : 10px 0;
 	text-align: center;
 	margin: auto;
+}
+.bg-mirror {
+	background-color: #ebe9f154;
 }
 div.course-single-card .bg-blue:hover{
 	background-color: #20395c;
@@ -229,6 +241,7 @@ p.label{
   }
   [dir] .table-bordered > :not(caption) > * > *{
 	border-width: 1px 1px;
+	border-color: #00000036 !important;
   }
   .evaluationForm .form-check {
 	margin-bottom: 1.5rem !important;

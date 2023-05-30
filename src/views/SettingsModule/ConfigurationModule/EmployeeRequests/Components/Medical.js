@@ -53,12 +53,13 @@ const Medical_Limit = ({ staffdropdown, data, CallBack }) => {
                     }
                 }
             })
-            setTimeout(() => {
-                setLoading(false)
-            }, 1000)
+            
         } else {
             Api.Toast('error', 'Please fill all required fields!')
         }
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
     }
     const removeAction = (id) => {
         MySwal.fire({

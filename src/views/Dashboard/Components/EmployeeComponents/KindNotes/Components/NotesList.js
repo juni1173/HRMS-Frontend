@@ -1,13 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import { InputGroup, Container, Card, CardBody, CardTitle, CardSubtitle, CardText, InputGroupText, Col, Offcanvas, OffcanvasHeader, OffcanvasBody, Input } from 'reactstrap'
 import { Edit, Trash2, Search } from 'react-feather'
-import apiHelper from '../../Helpers/ApiHelper'
+import apiHelper from '../../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import UpdateNote from './UpdateNote'
 import Masonry from 'react-masonry-component'
 import ReactPaginate from 'react-paginate'
-import SearchHelper from '../../Helpers/SearchHelper/SearchByObject'
+import SearchHelper from '../../../../../Helpers/SearchHelper/SearchByObject'
 
 const NotesList = ({ data, CallBack, ListType }) => {
   const Api = apiHelper()

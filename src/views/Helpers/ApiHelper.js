@@ -242,7 +242,7 @@ import Avatar from '@components/avatar'
       let local_tokens = []
       const tokens_data = await getJiraTokens()
       local_tokens = tokens_data.data[0]
-      if (Object.values(local_tokens).length > 0) {
+      if (local_tokens && Object.values(local_tokens).length > 0) {
         const Authorization = `Bearer ${local_tokens.access_token}`
         const options = {headers: null, method: null, body: null}
         
@@ -284,7 +284,7 @@ import Avatar from '@components/avatar'
       let local_tokens = []
       const tokens_data = await getJiraTokens()
       local_tokens = tokens_data.data[0]
-      if (Object.values(local_tokens).length > 0) {
+      if (local_tokens && Object.values(local_tokens).length > 0) {
         const Authorization = `Bearer ${local_tokens.access_token}`
         const options = {headers: null, method: null, body: null}
       
@@ -430,6 +430,18 @@ import Avatar from '@components/avatar'
          
       return hoursMin
     }
+
+    // get month name by date
+
+    const getMonth = (date) => {
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ]
+      const d = new Date(date)
+       const monthName = monthNames[d.getMonth()]
+       return monthName
+    }
     const convertUTCtoDate = date => {
       if (date) {
           let d = new Date(date)
@@ -453,6 +465,7 @@ import Avatar from '@components/avatar'
         cancelModal,
         formatDate,
         formatTime,
+        getMonth,
         convertUTCtoDate,
         org,
         user_id,

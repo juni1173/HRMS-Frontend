@@ -169,6 +169,18 @@ const Routes = [
     component: lazy(() => import('../../views/EmployeeHRrequests/index'))
   },
   {
+    path: '/statusrequests',
+    component: lazy(() => import('../../views/HRApprovals/index'))
+  },
+  {
+    path: '/attendancelist',
+    component: lazy(() => import('../../views/EmployeeAttendance/Components/AllList'))
+  },
+  {
+    path: '/employeelearninganddevelopment',
+    component: lazy(() => import('../../views/Employee-Learning-Development/index'))
+  },
+  {
     path: '/rolesandpermissions',
     component: lazy(() => import('../../views/SettingsModule/ConfigurationModule/RolesConfiguration/Roles'))
   },

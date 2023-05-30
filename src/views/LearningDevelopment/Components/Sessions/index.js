@@ -20,9 +20,6 @@ const index = () => {
        await Api.get('/instructors/session/').then(result => {
             if (result) {
                 if (result.status === 200) {
-                    const final = result.data
-                    console.warn(final)
-                    // return false
                     setsessionList(result.data) 
                 } else {
                     setsessionList([])

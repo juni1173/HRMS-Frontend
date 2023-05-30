@@ -1,21 +1,21 @@
 import { Fragment, useState } from 'react'
-import { Label, Row, Col, Input, Button, Spinner, Table, Badge, UncontrolledTooltip  } from "reactstrap" 
-import { Edit2, Save, XCircle, HelpCircle } from 'react-feather'
+import { Label, Row, Col, Input, Button, Spinner, Table, Badge } from "reactstrap" 
+import { Edit2, Save, XCircle } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
-const Gym = ({ data, CallBack }) => {
+const Medical = ({ data, CallBack }) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
-    const [reimbursementData, setReimbursementData] = useState({
+    const [medicalData, setMedicalData] = useState({
         amount: '',
         date : new Date()
    })
-   const [gym_receipt, setGym_Receipt] = useState(null)
-    const onChangeReimbursementDetailHandler = (InputName, InputType, e) => {
+   const [medical_receipt, setMedical_Receipt] = useState(null)
+    const onChangeMedicalDetailHandler = (InputName, InputType, e) => {
         
         let InputValue
         if (InputType === 'input') {
@@ -27,12 +27,13 @@ const Gym = ({ data, CallBack }) => {
         } else if (InputType === 'date') {
               
               const formatDate = Api.formatDate(e)
+              console.warn(formatDate)
             InputValue = formatDate
         } else if (InputType === 'file') {
             InputValue = e.target.files[0].name
         }
 
-        setReimbursementData(prevState => ({
+        setMedicalData(prevState => ({
         ...prevState,
         [InputName] : InputValue
         
@@ -41,24 +42,24 @@ const Gym = ({ data, CallBack }) => {
     }
     const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
-          setGym_Receipt(e.target.files[0]) 
+          setMedical_Receipt(e.target.files[0]) 
         }
       } 
-    const remove_gym_receipt = () => {
-        setGym_Receipt(null) 
+    const remove_medical_receipt = () => {
+        setMedical_Receipt(null) 
       } 
     const submitForm = async () => {
         setLoading(true)
-        if (reimbursementData.amount !== '' && reimbursementData.date !== '') {
+        if (medicalData.amount !== '' && medicalData.date !== '') {
             const formData = new FormData()
-            formData.append('amount', reimbursementData.amount)
-            formData.append('date', reimbursementData.date)
-            if (gym_receipt !== null) formData.append('gym_receipt', gym_receipt)
-            await Api.jsonPost(`/reimbursements/employees/gym/allowance/`, formData, false).then(result => {
+            formData.append('amount', medicalData.amount)
+            formData.append('date', medicalData.date)
+            if (medical_receipt !== null) formData.append('medical_receipt', medical_receipt)
+            await Api.jsonPost(`/reimbursements/employees/medical/allowance/`, formData, false).then(result => {
                 if (result) {
                     if (result.status === 200) {
                         Api.Toast('success', result.message)
-                        setGym_Receipt(null) 
+                        setMedical_Receipt(null)
                         CallBack()
                     } else {
                         Api.Toast('error', result.message)
@@ -75,7 +76,7 @@ const Gym = ({ data, CallBack }) => {
     const removeAction = (id) => {
         MySwal.fire({
             title: 'Are you sure?',
-            text: "Do you want to delete the Reimbursement!",
+            text: "Do you want to delete the Medical claim!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, Delete it!',
@@ -86,13 +87,13 @@ const Gym = ({ data, CallBack }) => {
             buttonsStyling: false
         }).then(function (result) {
             if (result.value) {
-                Api.deleteData(`/reimbursements/employees/gym/allowance/${id}/`, {method: 'Delete'})
+                Api.deleteData(`/reimbursements/employees/medical/allowance/${id}/`, {method: 'Delete'})
                 .then((deleteResult) => {
                     if (deleteResult.status === 200) {
                         MySwal.fire({
                             icon: 'success',
-                            title: 'Reimbursement Deleted!',
-                            text: 'Reimbursement is deleted.',
+                            title: 'Medical Claim Deleted!',
+                            text: 'Medical Claim is deleted.',
                             customClass: {
                             confirmButton: 'btn btn-success'
                             }
@@ -104,8 +105,8 @@ const Gym = ({ data, CallBack }) => {
                     } else {
                         MySwal.fire({
                             icon: 'error',
-                            title: 'Reimbursement can not be deleted!',
-                            text: deleteResult.message ? deleteResult.message : 'Reimbursement is not deleted.',
+                            title: 'Medical Claim can not be deleted!',
+                            text: deleteResult.message ? deleteResult.message : 'Medical Claim is not deleted.',
                             customClass: {
                             confirmButton: 'btn btn-danger'
                             }
@@ -121,7 +122,7 @@ const Gym = ({ data, CallBack }) => {
         <Row>
             <Col md={12}>
          <div className='content-header' >
-          <h5 className='mb-2'>Claim Gym Allowance</h5>
+          <h5 className='mb-2'>Claim Medical Allowance</h5>
           {/* <small>Add position.</small> */}
         </div>
         
@@ -134,7 +135,7 @@ const Gym = ({ data, CallBack }) => {
                 Date <Badge color="light-danger">*</Badge>
             </Label>
             <Flatpickr className='form-control'  
-            onChange={(date) => onChangeReimbursementDetailHandler('date', 'date', date)} 
+            onChange={(date) => onChangeMedicalDetailHandler('date', 'date', date)} 
             id='default-picker' 
             placeholder='Date'
             options={{
@@ -153,38 +154,38 @@ const Gym = ({ data, CallBack }) => {
                 </label>
                 <Input type="number" 
                     name="amount"
-                    onChange={ (e) => { onChangeReimbursementDetailHandler('amount', 'input', e) }}
+                    onChange={ (e) => { onChangeMedicalDetailHandler('amount', 'input', e) }}
                     placeholder="Amount"  />
               </Col>
               <Col md={3}>
-              {gym_receipt ? (
+              {medical_receipt ? (
               <div className="float-right">
                 <img
-                  src={URL.createObjectURL(gym_receipt)}
+                  src={URL.createObjectURL(medical_receipt)}
                   alt="Thumb"
                   width="50"
                 />
-                <button className="btn" onClick={remove_gym_receipt}>
+                <button className="btn" onClick={remove_medical_receipt}>
                   <XCircle />
                 </button>
               </div>
-                ) : (
-                <div>
-                    <Label className="form-label">Receipt (JPG/PNG)</Label>
-                    <Input
-                        type="file"
-                        id="gym_receipt"
-                        name="gym_receipt"
-                        accept="image/*"
-                        onChange={imageChange}
-                        />
-                </div>
-                )}
+            ) : (
+              <div>
+                <Label className="form-label">Receipt (JPG/PNG)</Label>
+                <Input
+                      type="file"
+                      id="medical_receipt"
+                      name="medical_receipt"
+                      accept="image/*"
+                      onChange={imageChange}
+                    />
+              </div>
+            )}
               </Col>
                 <Col md={3}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm}>
                 <span className="align-middle d-sm-inline-block">
-                  Save
+                  Submit
                 </span>
                 <Save
                   size={14}
@@ -206,7 +207,7 @@ const Gym = ({ data, CallBack }) => {
                                 Amount Claimed
                                 </th>
                                 <th scope="col" className="text-nowrap">
-                                Monthly Limit
+                                Remaining / Limit (Yearly)
                                 </th>
                                 <th scope="col" className="text-nowrap">
                                 Receipt
@@ -225,14 +226,11 @@ const Gym = ({ data, CallBack }) => {
                                         <tr key={key}>
                                         <td className='nowrap'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.amount ? item.amount : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.gym_monthly_limit ? item.gym_monthly_limit : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.gym_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.gym_receipt}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.gym_receipt}`} width={20} height={20}/></a> : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td>{item.employee_remaining_allowance ? item.employee_remaining_allowance : <Badge color='light-danger'>N/A</Badge>} / {item.medical_yearly_limit ? item.medical_yearly_limit : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td>{item.medical_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`} width={20} height={20}/></a> : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
                                         <td>
-                                        <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
-                                        {item.decision_reason && (<> <HelpCircle id='UnControlledExample'/><UncontrolledTooltip placement='right' target='UnControlledExample'>{item.decision_reason} </UncontrolledTooltip></>)}
-                                        </td>
-                                        <td className='p-1'>
-                                            <Row>
+                                            <Row className='text-center'>
                                             <Col className='col-6 border-right'>
                                                 <button
                                                 className="border-0 no-background"
@@ -259,17 +257,16 @@ const Gym = ({ data, CallBack }) => {
                     </Table>
                 </Col>
             </Row>
-            ) : (
-                <div className="text-center">No Gym Allowance Data Found!</div>
-            )
-            
+                ) : (
+                    <div className="text-center">No Medical Allowance Data Found!</div>
+                )
+                
+                }
+                    </>
+                ) : (
+                    <div className="text-center"><Spinner /></div>
+                )  
             }
-                </>
-            ) : (
-                <div className="text-center"><Spinner /></div>
-            )
-            
-       }
         <hr></hr>
             </Col>
         </Row>
@@ -277,4 +274,4 @@ const Gym = ({ data, CallBack }) => {
   )
 }
 
-export default Gym
+export default Medical

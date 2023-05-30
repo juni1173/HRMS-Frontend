@@ -2,9 +2,12 @@ import React, { Fragment, useState } from 'react'
 import { Table, Button, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import DecisionForm from './DecisionForm'
 import apiHelper from '../../../../../Helpers/ApiHelper'
+import { Mail } from 'react-feather'
+import CustomEmail from '../../CustomEmail/index'
 const ApplicantList = ({ data, getApplicants, Session_id }) => {
     const Api = apiHelper()
     const [desicionModal, setDesicionModal] = useState(false)
+    const [emailModal, setEmailModal] = useState(false)
     const [selectedApplicant, setSelectedApplicantID] = useState('')
     const [checkedItems, setCheckedItems] = useState([])
 
@@ -21,6 +24,10 @@ const ApplicantList = ({ data, getApplicants, Session_id }) => {
     const openDesicionModal = (id) => {
         setSelectedApplicantID(id)
         setDesicionModal(true)
+        } 
+    const openEmailModal = (id) => {
+        setSelectedApplicantID(id)
+        setEmailModal(true)
         } 
     const CallBack = () => {
         setDesicionModal(false)
@@ -90,8 +97,12 @@ const ApplicantList = ({ data, getApplicants, Session_id }) => {
               Course
               </th>
               <th scope="col" className="text-nowrap">
+              Email
+              </th>
+              <th scope="col" className="text-nowrap">
               Status
               </th>
+
               <th scope="col" className="text-nowrap">
               Decision
               </th>
@@ -115,6 +126,15 @@ const ApplicantList = ({ data, getApplicants, Session_id }) => {
                             </td>
                             <td>{applicant.employee_name}</td>
                             <td>{applicant.course_title}</td>
+                            <td>
+                            <div className="row">
+                                <div className='col-lg-12'>
+                                    <Button className="btn btn-primary" onClick={() => openEmailModal(applicant.id)}>
+                                        <Mail />
+                                    </Button>
+                                </div>
+                            </div>
+                            </td>
                             <td>{applicant.status_title}</td>
                             <td>
                             <div className="row">
@@ -146,6 +166,12 @@ const ApplicantList = ({ data, getApplicants, Session_id }) => {
                 <ModalHeader className='bg-transparent' toggle={() => setDesicionModal(!desicionModal)}></ModalHeader>
                 <ModalBody className='px-sm-5 mx-50 pb-5'>
                     <DecisionForm applicant={selectedApplicant} CallBack={CallBack}/>
+                </ModalBody>
+            </Modal>
+            <Modal isOpen={emailModal} toggle={() => setEmailModal(!emailModal)} className='modal-dialog-centered modal-lg'>
+                <ModalHeader className='bg-transparent' toggle={() => setEmailModal(!emailModal)}></ModalHeader>
+                <ModalBody className='px-sm-5 mx-50 pb-5'>
+                    <CustomEmail applicant_id={selectedApplicant} />
                 </ModalBody>
             </Modal>
     </Fragment>

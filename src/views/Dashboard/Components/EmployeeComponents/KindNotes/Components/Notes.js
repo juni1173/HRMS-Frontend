@@ -1,60 +1,22 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Card, CardBody, Row, Col, Button, Spinner, Offcanvas, OffcanvasHeader, OffcanvasBody, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import NotesList from './NotesList'
-import apiHelper from '../../Helpers/ApiHelper'
 import NotesAdd from './NotesAdd'
 import { Send } from 'react-feather'
-const Notes = () => {
-  const Api = apiHelper()
+const Notes = ({notesList, CallBack}) => {
   const [loading, setLoading] = useState(false)
   const [active, setActive] = useState('1')
-  const [notesList, setNotesList] = useState({
-    recieved: '',
-    sent: ''
-  })
+
   const [canvasPlacement, setCanvasPlacement] = useState('end')
   const [canvasOpen, setCanvasOpen] = useState(false)
-  const getNotes = async () => {
+ 
+  const CallBackFunc = () => {
     setLoading(true)
-    setNotesList({
-      recieved: '',
-      sent: ''
-      })
-    await Api.get(`/kind-notes/sent/`).then(result => {
-      if (result) {
-        if (result.status === 200) {
-          setNotesList(prevState => ({
-            ...prevState,
-            sent: result.data
-            }))
-        } else {
-          // Api.Toast('error', result.message)
-        }
-      } else {
-        Api.Toast('error', 'Server not responding!')
-      }
-    })
-      await Api.get(`/kind-notes/received/`).then(result => {
-        if (result) {
-          if (result.status === 200) {
-            setNotesList(prevState => ({
-              ...prevState,
-              recieved: result.data
-              }))
-          } else {
-            // Api.Toast('error', result.message)
-          }
-        } else {
-          Api.Toast('error', 'Server not responding!')
-        }
-    })
+    setCanvasOpen(false)
+    CallBack()
     setTimeout(() => {
       setLoading(false)
     }, 1000)
-  }
-  const CallBack = () => {
-    setCanvasOpen(false)
-    getNotes()
   }
   const toggleCanvasEnd = () => {
     setCanvasPlacement('end')
@@ -63,9 +25,7 @@ const Notes = () => {
   const toggle = tab => {
     setActive(tab)
   }
-  useEffect(() => {
-    getNotes()
-  }, [])
+  
   return (
     <Fragment>
       <div className="Module-single-card">
@@ -119,7 +79,7 @@ const Notes = () => {
                                         <Col md={12}>
                                           {!loading ? (
                                             notesList.recieved !== '' ? (
-                                              <NotesList data={notesList.recieved} CallBack={CallBack} ListType={`recieved`}/>
+                                              <NotesList data={notesList.recieved} CallBack={CallBackFunc} ListType={`recieved`}/>
                                             ) : (
                                               <Card className='card-blue'> 
                                                 <CardBody>
@@ -144,7 +104,7 @@ const Notes = () => {
                                         <Col md={12}>
                                           {!loading ? (
                                             notesList.sent !== '' ? (
-                                              <NotesList data={notesList.sent} CallBack={CallBack} ListType={`sent`}/>
+                                              <NotesList data={notesList.sent} CallBack={CallBackFunc} ListType={`sent`}/>
                                             ) : (
                                               <Card className='card-blue'> 
                                                 <CardBody>
@@ -169,7 +129,7 @@ const Notes = () => {
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             {/* {Canvas(active)} */}
-            <NotesAdd CallBack={CallBack}/>
+            <NotesAdd CallBack={CallBackFunc}/>
           </OffcanvasBody>
         </Offcanvas>
     </Fragment>

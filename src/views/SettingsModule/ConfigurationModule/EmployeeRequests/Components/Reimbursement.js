@@ -53,12 +53,13 @@ const Reimbursement = ({ staffdropdown, data, CallBack }) => {
                     }
                 }
             })
-            setTimeout(() => {
-                setLoading(false)
-            }, 1000)
+           
         } else {
             Api.Toast('error', 'Please fill all required fields!')
         }
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
     }
     const removeAction = (id) => {
         MySwal.fire({
@@ -116,96 +117,96 @@ const Reimbursement = ({ staffdropdown, data, CallBack }) => {
         {Object.values(staffdropdown).length > 0 ?  (
             !loading ? (
                 <>
-            <Row>
-            <Col md="4" className="mb-1">
-                <Label className="form-label">
-                Staff Classification <Badge color='light-danger'>*</Badge>
-                </Label>
-                <Select
-                    isClearable={false}
-                    className='react-select'
-                    classNamePrefix='select'
-                    name="staff_classification"
-                    options={staffdropdown}
-                    onChange={ (e) => { onChangeReimbursementDetailHandler('staff_classification', 'select', e.value) }}
-                />
-            </Col>
-              <Col md='4' className='mb-1'>
-                <label className='form-label'>
-                  Monthly Limit <Badge color='light-danger'>*</Badge>
-                </label>
-                <Input type="number" 
-                    name="monthly_limit"
-                    onChange={ (e) => { onChangeReimbursementDetailHandler('monthly_limit', 'input', e) }}
-                    placeholder="Monthly Limit"  />
-              </Col>
-                <Col md={4}>
-                <Button color="primary" className="btn-next mt-2" onClick={submitForm}>
-                <span className="align-middle d-sm-inline-block">
-                  Save
-                </span>
-                <Save
-                  size={14}
-                  className="align-middle ms-sm-25 ms-0"
-                ></Save>
-              </Button>
-                </Col>
-            </Row>
-            {Object.values(data).length > 0 ? (
-                <Row>
-                <Col md={12}>
-                    <Table bordered striped responsive className='my-1'>
-                            <thead className='table-dark text-center'>
-                            <tr>
-                                <th scope="col" className="text-nowrap">
-                                Staff Classification
-                                </th>
-                                <th scope="col" className="text-nowrap">
-                                Monthly Limit
-                                </th>
-                                <th scope="col" className="text-nowrap">
-                                Actions
-                                </th>
-                            </tr>
-                            </thead>
-                            
-                            <tbody className='text-center'>
-                                {Object.values(data).map((item, key) => (
-                                        <tr key={key}>
-                                        <td>{item.staff_classification_title}</td>
-                                        <td>{item.monthly_limit}</td>
-                                        <td>
-                                            <div className="d-flex row">
-                                            <div className="col">
-                                                <button
-                                                className="border-0"
-                                                >
-                                                <Edit2 color="orange" />
-                                                </button>
-                                            </div>
-                                            <div className="col">
-                                                <button
-                                                className="border-0"
-                                                onClick={() => removeAction(item.id)}
-                                                >
-                                                <XCircle color="red" />
-                                                </button>
-                                            </div>
-                                            </div>
-                                        </td>
-                                        </tr>
-                                )
-                                )}
-                            
-                            </tbody>
-                            
-                    </Table>
-                </Col>
-            </Row>
-            ) : (
-                <div className="text-center">No Gym Allowance Data Found!</div>
-            )
-        }
+                    <Row>
+                    <Col md="4" className="mb-1">
+                        <Label className="form-label">
+                        Staff Classification <Badge color='light-danger'>*</Badge>
+                        </Label>
+                        <Select
+                            isClearable={false}
+                            className='react-select'
+                            classNamePrefix='select'
+                            name="staff_classification"
+                            options={staffdropdown}
+                            onChange={ (e) => { onChangeReimbursementDetailHandler('staff_classification', 'select', e.value) }}
+                        />
+                    </Col>
+                    <Col md='4' className='mb-1'>
+                        <label className='form-label'>
+                        Monthly Limit <Badge color='light-danger'>*</Badge>
+                        </label>
+                        <Input type="number" 
+                            name="monthly_limit"
+                            onChange={ (e) => { onChangeReimbursementDetailHandler('monthly_limit', 'input', e) }}
+                            placeholder="Monthly Limit"  />
+                    </Col>
+                        <Col md={4}>
+                        <Button color="primary" className="btn-next mt-2" onClick={submitForm}>
+                        <span className="align-middle d-sm-inline-block">
+                        Save
+                        </span>
+                        <Save
+                        size={14}
+                        className="align-middle ms-sm-25 ms-0"
+                        ></Save>
+                    </Button>
+                        </Col>
+                    </Row>
+                    {Object.values(data).length > 0 ? (
+                        <Row>
+                        <Col md={12}>
+                            <Table bordered striped responsive className='my-1'>
+                                    <thead className='table-dark text-center'>
+                                    <tr>
+                                        <th scope="col" className="text-nowrap">
+                                        Staff Classification
+                                        </th>
+                                        <th scope="col" className="text-nowrap">
+                                        Monthly Limit
+                                        </th>
+                                        <th scope="col" className="text-nowrap">
+                                        Actions
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    
+                                    <tbody className='text-center'>
+                                        {Object.values(data).map((item, key) => (
+                                                <tr key={key}>
+                                                <td>{item.staff_classification_title}</td>
+                                                <td>{item.monthly_limit}</td>
+                                                <td>
+                                                    <div className="d-flex row">
+                                                    <div className="col">
+                                                        <button
+                                                        className="border-0"
+                                                        >
+                                                        <Edit2 color="orange" />
+                                                        </button>
+                                                    </div>
+                                                    <div className="col">
+                                                        <button
+                                                        className="border-0"
+                                                        onClick={() => removeAction(item.id)}
+                                                        >
+                                                        <XCircle color="red" />
+                                                        </button>
+                                                    </div>
+                                                    </div>
+                                                </td>
+                                                </tr>
+                                        )
+                                        )}
+                                    
+                                    </tbody>
+                                    
+                            </Table>
+                        </Col>
+                    </Row>
+                        ) : (
+                            <div className="text-center">No Gym Allowance Data Found!</div>
+                        )
+                    }
                 </>
             ) : (
                 <div className="text-center"><Spinner /></div>
@@ -215,8 +216,6 @@ const Reimbursement = ({ staffdropdown, data, CallBack }) => {
           <div className="text-center">No Staff Classification Found!</div>
         )}
         <hr></hr>
-           
-
             </Col>
         </Row>
     </Fragment>

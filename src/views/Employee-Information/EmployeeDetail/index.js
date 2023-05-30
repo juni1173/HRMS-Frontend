@@ -256,6 +256,7 @@ const EmployeeDetail = () => {
                                         <p className='label'>Leaving Reason: &nbsp;  &nbsp; <strong>{empData.employee.leaving_reason ? empData.employee.leaving_reason : 'N/A'}</strong></p>
                                 </div>
                                     <div className='col-lg-6 col-md-6 col-sm-6'>
+                                    <p className='label'>Employee Code: &nbsp;  &nbsp; <strong>{empData.employee.emp_code ? empData.employee.emp_code : 'N/A'}</strong></p>
                                         <p className='label'>Official Skype: &nbsp;  &nbsp; <strong>{empData.employee.skype ? empData.employee.skype : 'N/A'}</strong></p>
                                         <p className='label'>Joining Date: &nbsp;  &nbsp; <strong>{empData.employee.joining_date ? empData.employee.joining_date : 'N/A'}</strong></p>
                                         <p className='label'>Hiring Comment: &nbsp;  &nbsp; <strong>{empData.employee.hiring_comment ? empData.employee.hiring_comment : 'N/A'} </strong></p>

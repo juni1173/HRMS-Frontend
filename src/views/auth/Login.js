@@ -92,17 +92,22 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(result.user))
             localStorage.setItem('user_id', data.user_id)
             if (result.admin) {
-              // history.push('/admin/dashboard')
+              // history.push('/admin/dashboard')              
               history.push('/organizationHome')
+              toast.success(
+                <ToastContent name={data.fullName || data.username || 'HR Manager'} role={data.role || 'admin'} />,
+                { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
+              )
             } else {
               history.push('/employee/dashboard')
+              toast.success(
+                <ToastContent name={result.user[0].name || data.username || 'Employee'} role={data.role || 'Employee'} />,
+                { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
+              )
             }
             // history.push('/organizationHome')
             
-            toast.success(
-              <ToastContent name={data.fullName || data.username || 'HR Manager'} role={data.role || 'admin'} />,
-              { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
-            )
+            
           } else {
             history.push('/')
             Api.Toast('error', result.message)

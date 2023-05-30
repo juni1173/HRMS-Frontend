@@ -134,12 +134,12 @@ let nav = []
     
   },
 
-  {
-    id: 'nav-projects',
-    title: 'Projects',
-    icon: <CheckSquare size={30} />,
-    navLink: '/projects'
-  },
+  // {
+  //   id: 'nav-projects',
+  //   title: 'Projects',
+  //   icon: <CheckSquare size={30} />,
+  //   navLink: '/projects'
+  // },
   {
     id: 'nav-jira-projects',
     title: 'Jira',
@@ -153,11 +153,17 @@ let nav = []
     icon: <Bookmark size={30} />,
     navLink: '/kind_notes'
   },
+  // {
+  //   id: 'nav-roles-permissions',
+  //   title: 'Roles & Permissions',
+  //   icon: <Bookmark size={30} />,
+  //   navLink: '/rolesandpermissions'
+  // },
   {
-    id: 'nav-roles-permissions',
-    title: 'Roles & Permissions',
+    id: 'nav-status-approvals',
+    title: 'Allowances Requests',
     icon: <Bookmark size={30} />,
-    navLink: '/rolesandpermissions'
+    navLink: '/statusrequests'
   },
 
   {

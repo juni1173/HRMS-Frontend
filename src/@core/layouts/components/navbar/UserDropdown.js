@@ -1,5 +1,5 @@
 // ** React Imports
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 // ** Custom Components
@@ -24,17 +24,20 @@ const UserDropdown = () => {
   // const [userData] = useState(null)
   const dispatch = useDispatch()
   const [userData, setUserData] = useState(null)
-  const history = useHistory()
+  // const history = useHistory()
   //** ComponentDidMount
   useEffect(() => {
     if (isUserLoggedIn() !== null) {
       setUserData(JSON.parse(localStorage.getItem('user')))
     }
   }, [])
-
+  let userAvatar = ''
   //** Vars
-  const userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? JSON.parse(localStorage.getItem('user')).profile_image : defaultAvatar) : defaultAvatar
-
+  if (JSON.parse(localStorage.getItem('userData')).user_role === 'employee') {
+     userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user'))[0].profile_image ? JSON.parse(localStorage.getItem('user'))[0].profile_image : defaultAvatar) : defaultAvatar
+  } else {
+     userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? JSON.parse(localStorage.getItem('user')).profile_image : defaultAvatar) : defaultAvatar
+  }
   return (
     <UncontrolledDropdown tag='li' className='dropdown-user nav-item'>
       <DropdownToggle href='/' tag='a' className='nav-link dropdown-user-link' onClick={e => e.preventDefault()}>
@@ -42,16 +45,17 @@ const UserDropdown = () => {
           <span className='user-name fw-bold'>{(userData && userData.name) || 'user'}</span>
           <span className='user-status'>{localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).user_role : ''}</span>
         </div>
-        <Avatar img={JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? `${process.env.REACT_APP_BACKEND_URL}${userAvatar}` : defaultAvatar) : defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
+        <Avatar img={userAvatar !== '' ? `${process.env.REACT_APP_BACKEND_URL}${userAvatar}` : defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>
       <DropdownMenu end>
-        <DropdownItem tag='a' href='/pages/profile' onClick={e => {
-          e.preventDefault()
-          if (JSON.parse(localStorage.getItem('user')).uuid) history.push(`/employeeDetail/${JSON.parse(localStorage.getItem('user')).uuid}`)
-          }}>
+      {JSON.parse(localStorage.getItem('user')).uuid && (
+        <DropdownItem tag='a' href={`/pages/profile/${JSON.parse(localStorage.getItem('user')).uuid}`}>
           <User size={14} className='me-75' />
           <span className='align-middle'>Profile</span>
         </DropdownItem>
+      )
+      }
+        
         {/* <DropdownItem tag='a' href='/apps/email' onClick={e => e.preventDefault()}>
           <Mail size={14} className='me-75' />
           <span className='align-middle'>Inbox</span>

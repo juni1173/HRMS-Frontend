@@ -1,5 +1,5 @@
 import {Fragment, useEffect, useState} from 'react'
-import { Button, Card, CardBody, Spinner, Row, Col, Table, Modal, ModalHeader, ModalBody, ModalFooter, Label } from 'reactstrap'
+import { Button, Card, CardBody, Spinner, Row, Col, Table, Modal, ModalHeader, ModalBody, ModalFooter, Label, Badge } from 'reactstrap'
 import apiHelper from '../../Helpers/ApiHelper'
 const list = () => {
     const Api = apiHelper()
@@ -11,7 +11,7 @@ const list = () => {
     const [btnstatus, setBtnStatus] = useState('')
     const getAttendanceData = async () => {
             setLoading(true)
-            await Api.get(`/attendance/list/`)
+            await Api.get(`/attendance/list/all/`)
             .then((result) => {
                 if (result) {
                     if (result.status === 200) {
@@ -112,6 +112,7 @@ const list = () => {
                         <tr>
                         <th>Date</th>
                         <th>Type</th>
+                        <th>Duration</th>
                         <th>Check In</th>
                         <th>Check Out</th>
                         </tr>
@@ -121,24 +122,25 @@ const list = () => {
                         atndceData.map((item, key) => (
                             <tbody key={key}>
                                 <tr>
-                                <td className='nowrap'>{item.date}</td>
-                                <td>{item.attendance_type}</td>
-                                <td>{item.check_in}</td>
-                                <td>{item.check_out}</td>
+                                <td className='nowrap'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</td>
+                                <td>{item.attendance_type ? item.attendance_type : <Badge color='light-danger'>N/A</Badge>}</td>
+                                <td>{item.duration ? <Badge color='light-success'>{item.duration}</Badge> : <Badge color='light-danger'>N/A</Badge>}</td>
+                                <td>{item.check_in ? item.check_in : <Badge color='light-danger'>N/A</Badge>}</td>
+                                <td>{item.check_out ? item.check_out : <Badge color='light-danger'>N/A</Badge>}</td>
                                 </tr>
                             </tbody>
                         ))
                     ) : (
                         <tbody>
                             <tr>
-                            <td colSpan={4}><div className='text-center'>No Data Found</div></td>
+                            <td colSpan={5}><div className='text-center'>No Data Found</div></td>
                             </tr>
                         </tbody>
                     )
                     ) : (
                         <tbody>
                             <tr>
-                            <td colSpan={4}><div className='text-center'><Spinner /></div></td>
+                            <td colSpan={5}><div className='text-center'><Spinner /></div></td>
                             </tr>
                         </tbody>
                             

@@ -29,7 +29,8 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
         title : empData.title ? empData.title : '',
         staff_classification : empData.staff_classification_title ? {value: empData.staff_classification, label: empData.staff_classification_title} : '',
         hiring_comment : empData.hiring_comment ? empData.hiring_comment : '',
-        leaving_reason : empData.leaving_reason ? empData.leaving_reason : ''
+        leaving_reason : empData.leaving_reason ? empData.leaving_reason : '',
+        emp_code: empData.emp_code ? empData.emp_code : ''
     }
     
 
@@ -87,8 +88,9 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
             if (data.department) formData["department"] = data.department.value
             if (data.employee_type) formData["employee_type"]  = data.employee_type.value
             if (data.position) formData["position"] = data.position.value
+            if (data.emp_code) formData["emp_code"] = data.emp_code
             if (data.starting_salary) formData["starting_salary"] = data.starting_salary !== 0 ? data.starting_salary : 0
-            formData["official_email"] = data.official_email
+            if (!empData.official_email && empData.official_email === '') formData["official_email"] = data.official_email
             if (emp_joining_date !== '') formData["joining_date"] = emp_joining_date
             if (emp_leaving_date !== '') formData["leaving_date"] = emp_leaving_date
             if (data.current_salary) formData["current_salary"] = data.current_salary
@@ -240,7 +242,25 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                           )}
                           />
                     </Col>
-                    <Col md="6" className="mb-1">
+                    <Col md="4" className="mb-1">
+                           <Label className="form-label">
+                            Employee Code
+                        </Label>
+                        <Controller
+                          control={control}
+                          id="emp_code"
+                          name="emp_code"
+                          defaultValue={defaultValues.emp_code}
+                          render={({ field }) => (
+                              <Input
+                              type="number"
+                              placeholder="Employee Code"
+                              {...field}
+                              />
+                          )}
+                          />
+                    </Col>
+                    <Col md="4" className="mb-1">
                             <Label className="form-label">
                         Staff Classification
                         </Label>
@@ -260,7 +280,7 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
                           )}
                           />
                     </Col>
-                    <Col md="6" className="mb-1">
+                    <Col md="4" className="mb-1">
                           <Label className="form-label">
                         Skype ID
                         </Label>

@@ -62,7 +62,7 @@ const Configuration = () => {
               toggle('4')
             }}
           >
-            Employee Requests
+            Set Employee Allowances
           </NavLink>
         </NavItem>
       </Nav>

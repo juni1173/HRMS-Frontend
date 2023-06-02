@@ -22,8 +22,8 @@ const Attendance = ({atndceData, CallBack}) => {
             setLoading(true)
             if (check_in_time && date !== '' && type !== '') {
                 const formData = new FormData()
-                if (check_in_time) formData['check_in'] = check_in_time
-                if (date) formData['date'] = date
+                if (check_in_time) formData['check_in'] = `${check_in_time}:00`
+                if (date) formData['date'] = Api.formatDate(date)
                 if (type) formData['attendance_type'] = type
                 await Api.jsonPost(`/attendance/check_in/`, formData)
                 .then((result) => {
@@ -48,10 +48,10 @@ const Attendance = ({atndceData, CallBack}) => {
     }
     const Check_out = async () => {
             setLoading(true)
-            if (check_in_time && date !== '') {
+            if (check_out_time && date !== '') {
                 const formData = new FormData()
-                if (check_out_time) formData['check_out'] = check_out_time 
-                if (date) formData['date'] = date
+                if (check_out_time) formData['check_out'] = `${check_out_time}:00` 
+                if (date) formData['date'] = Api.formatDate(date)
                 await Api.jsonPost(`/attendance/check_out/`, formData)
                 .then((result) => {
                     if (result) {
@@ -142,7 +142,7 @@ const Attendance = ({atndceData, CallBack}) => {
                 </Table>
             </CardBody>
         </Card>
-        <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered'>
+        <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered modal-lg'>
           <ModalHeader toggle={() => setCenteredModal(!centeredModal)}></ModalHeader>
           <ModalBody>
                 
@@ -161,9 +161,9 @@ const Attendance = ({atndceData, CallBack}) => {
                             Date <Badge color="light-danger">*</Badge>
                             </Label>
                             <Flatpickr className='form-control'  
-                            onChange={(e) => setDate(e.target.value)} 
+                            onChange={(e) => setDate(e)} 
                             id='default-picker' 
-                            placeholder='Start Date'
+                            placeholder='Date'
                             options={{
                                 disable: [
                                 function(date) {
@@ -209,9 +209,9 @@ const Attendance = ({atndceData, CallBack}) => {
                             Date <Badge color="light-danger">*</Badge>
                             </Label>
                             <Flatpickr className='form-control'  
-                            onChange={(e) => setDate(e.target.value)} 
+                            onChange={(e) => setDate(e)} 
                             id='default-picker' 
-                            placeholder='Start Date'
+                            placeholder='Date'
                             options={{
                                 disable: [
                                 function(date) {

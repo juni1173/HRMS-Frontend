@@ -18,7 +18,7 @@ const Loan = ({ data }) => {
     const history = useHistory()
     let date = new Date()
     date = Api.formatDate(date)
-    const month = Api.getMonth(date)
+    const month = Api.getMonth(new Date)
   const renderStates = (data) => {
     
       return (

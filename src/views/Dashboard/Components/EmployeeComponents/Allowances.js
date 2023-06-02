@@ -17,7 +17,7 @@ const Allowances = ({ data }) => {
     const history = useHistory()
     let date = new Date()
     date = Api.formatDate(date)
-    const month = Api.getMonth(date)
+    const month = Api.getMonth(new Date())
   const renderStates = (data) => {
     
       return (
@@ -37,7 +37,7 @@ const Allowances = ({ data }) => {
             </div>
             ))
         ) : (
-            <div className='text-center'>No Gym allowance applied on {month}!</div> 
+            <Badge color='light-danger' className='text-center mb-2'>No Gym allowance applied on {month}!</Badge> 
         )}
         {data.medical && Object.values(data.medical).length > 0 ? (
             data.medical.map((item, key) => (
@@ -54,7 +54,7 @@ const Allowances = ({ data }) => {
             </div>
             ))
         ) : (
-            <div className='text-center'>No Medical allowance applied on {month}!</div> 
+            <Badge color='light-danger' className='text-center'>No Medical allowance applied on {month}!</Badge> 
         )}
 
         </>

@@ -1,14 +1,23 @@
 import { Fragment, useState } from 'react'
-import { Row, Col, Button, Spinner, Table, Badge } from "reactstrap" 
+import { Row, Col, Button, Spinner, Table, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody } from "reactstrap" 
 import { Check } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import SessionDetails from './SessionDetails'
 const SessionsList = ({ data, CallBack }) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
+    const [canvasPlacement, setCanvasPlacement] = useState('end')
+    const [canvasOpen, setCanvasOpen] = useState(false)
     const [loading, setLoading] = useState(false)
-   
+    const [detailData, setDetailData] = useState([])
+    const toggleCanvasEnd = (itemData) => {
+        console.warn(itemData)
+        setDetailData(itemData)
+        setCanvasPlacement('end')
+        setCanvasOpen(!canvasOpen)
+        }
     const applySession = (id) => {
         MySwal.fire({
             title: 'Are you sure?',
@@ -87,7 +96,10 @@ const SessionsList = ({ data, CallBack }) => {
                                 Start / End Date
                                 </th>
                                 <th scope="col" className="text-nowrap">
-                                Total Lectures
+                                Lectures
+                                </th>
+                                <th>
+                                    Details
                                 </th>
                                 <th scope="col" className="text-nowrap">
                                 Apply
@@ -103,16 +115,23 @@ const SessionsList = ({ data, CallBack }) => {
                                         <td>{item.duration ? item.duration : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.start_date ? `${item.start_date}` : <Badge color='light-danger'>N/A</Badge>} / {item.end_date ? `${item.end_date}` : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.total_lectures ? `${item.total_lectures}` : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>
-                                        <Button color="success" className="btn-next mt-2" onClick={() => applySession(item.id)}>
-                                            <span className="align-middle d-sm-inline-block">
-                                            Apply 
-                                            </span>
-                                            <Check
-                                            size={14}
-                                            className="align-middle ms-sm-25 ms-0"
-                                            ></Check>
-                                        </Button>
+                                        <td><Button className='btn btn-primary' onClick={ () => toggleCanvasEnd(item)}>
+                                            Details</Button></td>
+                                        <td className='nowrap'>
+                                            {item.is_registered ? (
+                                                <Badge color='light-success'>Applied</Badge>
+                                            ) : (
+                                                <Button color="success" className="btn-next mt-2" onClick={() => applySession(item.id)}>
+                                                    <span className="align-middle d-sm-inline-block">
+                                                    Apply 
+                                                    </span>
+                                                    <Check
+                                                    size={14}
+                                                    className="align-middle ms-sm-25 ms-0"
+                                                    ></Check>
+                                                </Button>
+                                            )}
+                                        
                                         </td>
                                         
                                         </tr>
@@ -138,6 +157,12 @@ const SessionsList = ({ data, CallBack }) => {
         <hr></hr>
             </Col>
         </Row>
+        <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd}>
+            <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
+            <OffcanvasBody className=''>
+            <SessionDetails data={detailData} />
+            </OffcanvasBody>
+        </Offcanvas>
     </Fragment>
   )
 }

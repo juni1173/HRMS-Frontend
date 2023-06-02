@@ -440,6 +440,8 @@ import Avatar from '@components/avatar'
       ]
       const d = new Date(date)
        const monthName = monthNames[d.getMonth()]
+       console.warn(d.getMonth())
+       console.warn(monthName)
        return monthName
     }
     const convertUTCtoDate = date => {

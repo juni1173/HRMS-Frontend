@@ -14,7 +14,7 @@ const AddApplicant = ({ CallBack, session}) => {
                 if (result) {
                     if (result.status === 200) {
                         employees.splice(0, employees.length)
-                        const final = result.data
+                        const final = result.data.active_employees
                         for (let i = 0; i < final.length; i++) {
                             employees.push({value: final[i].id, label: final[i].name})
                         }

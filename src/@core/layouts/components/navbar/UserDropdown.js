@@ -17,7 +17,7 @@ import { User, Mail, CheckSquare, MessageSquare, Settings, CreditCard, HelpCircl
 import { UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem } from 'reactstrap'
 
 // ** Default Avatar Image
-import defaultAvatar from '@src/assets/images/portrait/small/avatar-s-11.jpg'
+import defaultAvatar from '@src/assets/images/avatars/user_blank.png'
 
 const UserDropdown = () => {
   // ** State
@@ -28,7 +28,12 @@ const UserDropdown = () => {
   //** ComponentDidMount
   useEffect(() => {
     if (isUserLoggedIn() !== null) {
+      if (JSON.parse(localStorage.getItem('userData')).user_role === 'employee') {
+        setUserData(JSON.parse(localStorage.getItem('user'))[0])
+     } else {
       setUserData(JSON.parse(localStorage.getItem('user')))
+     }
+      
     }
   }, [])
   let userAvatar = ''
@@ -48,13 +53,12 @@ const UserDropdown = () => {
         <Avatar img={userAvatar !== '' ? `${process.env.REACT_APP_BACKEND_URL}${userAvatar}` : defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>
       <DropdownMenu end>
-      {JSON.parse(localStorage.getItem('user')).uuid && (
-        <DropdownItem tag='a' href={`/pages/profile/${JSON.parse(localStorage.getItem('user')).uuid}`}>
-          <User size={14} className='me-75' />
-          <span className='align-middle'>Profile</span>
-        </DropdownItem>
-      )
-      }
+      {JSON.parse(localStorage.getItem('userData')).user_role === 'employee' && (
+            <DropdownItem tag='a' href={`/employee_profile`}>
+              <User size={14} className='me-75' />
+              <span className='align-middle'>Profile</span>
+            </DropdownItem>
+          )}
         
         {/* <DropdownItem tag='a' href='/apps/email' onClick={e => e.preventDefault()}>
           <Mail size={14} className='me-75' />
@@ -81,6 +85,7 @@ const UserDropdown = () => {
           <HelpCircle size={14} className='me-75' />
           <span className='align-middle'>FAQ</span>
         </DropdownItem> */}
+        
         <DropdownItem tag={Link} to='/login' onClick={() => dispatch(handleLogout())}>
           <Power size={14} className='me-75' />
           <span className='align-middle'>Logout</span>

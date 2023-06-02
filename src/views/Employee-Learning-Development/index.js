@@ -5,10 +5,9 @@ const index = () => {
   const Api = apiHelper()
     const [data, setData] = useState([])
     const preDataApi = async () => {
-      const response = await Api.get('/instructors/session/')
+      const response = await Api.get('/applicants/register/course_session/')
       if (response.status === 200) {
-        setData(response.data)
-          console.warn(response.data)
+        setData(response.data.course_session)
          
       } else {
           return Api.Toast('error', 'Sessions data not found')

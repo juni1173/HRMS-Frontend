@@ -1,11 +1,13 @@
 import { Fragment, useEffect, useState, useCallback } from "react"
-import { Row, Col, CardBody, Card, Container } from "reactstrap"
+import { Row, Col, CardBody, Card, Container, CardHeader } from "reactstrap"
+import Masonry from 'react-masonry-component'
 import apiHelper from "../../Helpers/ApiHelper"
 import Notes from "./EmployeeComponents/KindNotes/Components/Notes"
 import Attendance from "./EmployeeComponents/Attendance"
 import Allowances from "./EmployeeComponents/Allowances"
 import Leaves from "./EmployeeComponents/Leaves"
 import Loan from "./EmployeeComponents/Loan"
+import LearningDevelopment from "./EmployeeComponents/LearningDevelopment/index"
 const EmployeeDashboard = () => {
   const Api = apiHelper()
   const [data, setData] = useState([])
@@ -35,15 +37,14 @@ const EmployeeDashboard = () => {
       }, [data])
   return (
    <Fragment>
-    <div className="row js-animation">
+    <Masonry className="row js-animation">
         <Col md={6} >
             <Attendance atndceData={data.last_week_attendance} CallBack={handleDataProcessing}/>
         </Col>
         <Col md={6}>
           <Allowances data={data} />
         </Col>
-      </div>
-      <Row>
+      
         <Col md={6}>
           <Card>
             <CardBody>
@@ -67,8 +68,19 @@ const EmployeeDashboard = () => {
           </Card>
         )}
         </Col>
-      </Row>
-     
+        <Col md={12}>
+        {data.course_sessions && Object.values(data.course_sessions).length > 0 && (
+          <Card>
+            <CardHeader>
+              <h3>Learning & Development</h3>
+            </CardHeader>
+            <CardBody>
+              <LearningDevelopment sessions={data.course_sessions}/>
+            </CardBody>
+          </Card>
+        )}
+        </Col>
+        </Masonry>
    </Fragment> 
   )
 }

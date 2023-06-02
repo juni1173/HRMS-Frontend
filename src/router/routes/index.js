@@ -174,11 +174,15 @@ const Routes = [
   },
   {
     path: '/attendancelist',
-    component: lazy(() => import('../../views/EmployeeAttendance/Components/AllList'))
+    component: lazy(() => import('../../views/EmployeeAttendance/index'))
   },
   {
     path: '/employeelearninganddevelopment',
     component: lazy(() => import('../../views/Employee-Learning-Development/index'))
+  },
+  {
+    path: '/employee_profile',
+    component: lazy(() => import('../../views/auth/AccountSettings'))
   },
   {
     path: '/rolesandpermissions',

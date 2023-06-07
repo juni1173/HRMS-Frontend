@@ -7,17 +7,19 @@ import { useState, useEffect  } from "react"
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
 import CandidateFilters from "./CandidateFilters"
 import { Filter } from "react-feather"
+import ReactPaginate from 'react-paginate'
 const CandidateList = () => {
     const [loading, setLoading] = useState(false)
     const [filter, setFilters] = useState(false)
     const [active, setActive] = useState('2')
     const [candidateList, setCandidateList] = useState([])  
-    const [qualifiedList] = useState([])
-    const [disqualifiedList] = useState([])
+    const [qualifiedList, setqualifiedList] = useState([])
+    const [disqualifiedList, setdisqualifiedList] = useState([])
     const [Stages] = useState([])
     const [searchResult, setSearchResults] = useState([])
     const [searchQuery] = useState([])
-  
+    const [totalqualifiedPageCount, setqualifiedTotalPageCount] = useState(1)
+    const [totaldisqualifiedPageCount, setdisqualifiedTotalPageCount] = useState(1)
     const Api = apiHelper() 
     const searchHelper = SearchHelper()
     const getStages = async () => {
@@ -42,31 +44,90 @@ const CandidateList = () => {
     const getCandidate = async () => {
         setLoading(true)
        getStages()
-       await Api.get(`/candidates/`)
+       await Api.get(`/candidates/?page=1`)
             .then((result) => {
                 if (result) {
                     if (result.status === 200) {
                         setCandidateList(result.data)
                         // setSearchResults(result.data)
                         const finalData = result.data
-                        qualifiedList.splice(0, qualifiedList.length)
-                        disqualifiedList.splice(0, disqualifiedList.length)
-                        for (let i = 0; i < finalData.length; i++) {
-                            if (finalData[i].is_qualified) {
-                                qualifiedList.push(finalData[i])
-                            } else {
-                                disqualifiedList.push(finalData[i])
-                            }
+                        
+                        setqualifiedList(finalData.candidate_job_list_qualified)
+                        setdisqualifiedList(finalData.candidate_job_list_disqualified)
+                        if (finalData.candidate_job_list_qualified && Object.values(finalData.candidate_job_list_qualified).length > 0) {
+                            setqualifiedTotalPageCount(finalData.candidate_job_list_qualified[0].total_pages_qualified)
                         }
-                        setSearchResults(qualifiedList)
+                        if (finalData.candidate_job_list_disqualified && Object.values(finalData.candidate_job_list_disqualified).length > 0) {
+                            setdisqualifiedTotalPageCount(finalData.candidate_job_list_disqualified[0].total_pages_disqualified)
+                        }
+                        setSearchResults(finalData.candidate_job_list_qualified)
                     } else {
                         Api.Toast('error', result.message)
                     }
                 } else {
                     setCandidateList([])
                     setSearchResults([])
-                    qualifiedList.splice(0, qualifiedList.length)
-                    disqualifiedList.splice(0, disqualifiedList.length)
+                    setqualifiedList([])
+                    setdisqualifiedList([])
+                    Api.Toast('error', 'Server not respnding')
+                }
+              
+            })
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
+            
+    }
+    const getQualifiedCandidate = async (page) => {
+        setLoading(true)
+       await Api.get(`/candidates/?page=${page}`)
+            .then((result) => {
+                if (result) {
+                    if (result.status === 200) {
+                        // setSearchResults(result.data)
+                        const finalData = result.data
+                        
+                        setqualifiedList(finalData.candidate_job_list_qualified)
+                        if (finalData.candidate_job_list_qualified && Object.values(finalData.candidate_job_list_qualified).length > 0) {
+                            setqualifiedTotalPageCount(finalData.candidate_job_list_qualified[0].total_pages_qualified)
+                        }
+                        setSearchResults(finalData.candidate_job_list_qualified)
+                    } else {
+                        Api.Toast('error', result.message)
+                    }
+                } else {
+                    setSearchResults([])
+                    setqualifiedList([])
+                    Api.Toast('error', 'Server not respnding')
+                }
+              
+            })
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
+            
+    }
+    const getDisqualifiedCandidate = async (page) => {
+        setLoading(true)
+       await Api.get(`/candidates/?page=${page}`)
+            .then((result) => {
+                if (result) {
+                    if (result.status === 200) {
+                        // setSearchResults(result.data)
+                        const finalData = result.data
+                        
+                        setdisqualifiedList(finalData.candidate_job_list_disqualified)
+                       
+                        if (finalData.candidate_job_list_disqualified && Object.values(finalData.candidate_job_list_disqualified).length > 0) {
+                            setdisqualifiedTotalPageCount(finalData.candidate_job_list_disqualified[0].total_pages_disqualified)
+                        }
+                        setSearchResults(finalData.candidate_job_list_disqualified)
+                    } else {
+                        Api.Toast('error', result.message)
+                    }
+                } else {
+                    setSearchResults([])
+                    setdisqualifiedList([])
                     Api.Toast('error', 'Server not respnding')
                 }
               
@@ -121,6 +182,13 @@ const CandidateList = () => {
             default : return candidateList
            }
     }
+    const handleQualifiedPageClick = (event) => {
+        getQualifiedCandidate(event.selected + 1)
+        }
+    const handleDisqualifiedPageClick = (event) => {
+        console.warn(event.selected)
+        getDisqualifiedCandidate(event.selected + 1)
+        }
     useEffect(() => {
         getCandidate()
       }, [setCandidateList])
@@ -208,27 +276,42 @@ const CandidateList = () => {
                                 <TabPane tabId='2'>
                                     <div>
                                     {!loading ? (
-                                                    Object.values(searchResult).length > 0 ? (
+                                                    (searchResult && Object.values(searchResult).length > 0) ? (
                                                         <CandidateListTable data={searchResult} stages={Stages} getCandidate={getCandidate} rowsPerPage={5}/>
-                                                    ) : (
+                                                        ) : (
                                                         <Card>
                                                             <CardBody>
                                                                 <p>No Qualified Candidate Found...</p>
                                                             </CardBody>
                                                         </Card>
                                                     )
+                                                    ) : (
+                                                        <div className="text-center"> <Spinner /></div>
+                                                    )}
+                                                    <ReactPaginate
+                                                        breakLabel="..."
+                                                        nextLabel=">"
+                                                        onPageChange={handleQualifiedPageClick}
+                                                        pageRangeDisplayed={5}
+                                                        pageCount={totalqualifiedPageCount}
+                                                        previousLabel="<"
+                                                        renderOnZeroPageCount={null}
+                                                        containerClassName='pagination'
+                                                        pageLinkClassName='page-num'
+                                                        previousLinkClassName='page-num'
+                                                        nextLinkClassName='page-num'
+                                                        activeLinkClassName='active'
+                                                      />
                                                     
-                                                ) : (
-                                                    <div className="text-center"> <Spinner /></div>
-                                                )}
-                                                
                                             </div>
                                 </TabPane>
                                 <TabPane tabId='3'>
                                     <div>
                                     {!loading ? (
-                                                    Object.values(searchResult).length > 0 ? (
+                                                    (searchResult && Object.values(searchResult).length > 0) ? (
+                                                        
                                                         <CandidateListTable data={searchResult} stages={Stages} getCandidate={getCandidate}/>
+                                                       
                                                     ) : (
                                                         <Card>
                                                             <CardBody>
@@ -240,7 +323,20 @@ const CandidateList = () => {
                                                 ) : (
                                                    <div className="text-center"> <Spinner /></div>
                                                 )}
-                                                
+                                                 <ReactPaginate
+                                                        breakLabel="..."
+                                                        nextLabel=">"
+                                                        onPageChange={handleDisqualifiedPageClick}
+                                                        pageRangeDisplayed={5}
+                                                        pageCount={totaldisqualifiedPageCount}
+                                                        previousLabel="<"
+                                                        renderOnZeroPageCount={null}
+                                                        containerClassName='pagination'
+                                                        pageLinkClassName='page-num'
+                                                        previousLinkClassName='page-num'
+                                                        nextLinkClassName='page-num'
+                                                        activeLinkClassName='active'
+                                                      />
                                             </div>
                                 </TabPane>
                             </TabContent> 

@@ -12,8 +12,8 @@ const index = () => {
     const [active, setActive] = useState('1')
     const [data, setData] = useState([])
     const status_choices = [
-      {value: 'un-processed', label: 'un-processed'},
       {value: 'in-progress', label: 'in-progress'},
+      {value: 'under-review', label: 'under-review'},
       {value: 'not-approved', label: 'not-approved'},
       {value: 'approved', label: 'approved'}
   ]
@@ -27,7 +27,6 @@ const index = () => {
       const response = await Api.get('/reimbursements/employee/requests/pre/data/')
       if (response.status === 200) {
           setData(response.data)
-          console.warn(response.data)
       } else {
           return Api.Toast('error', 'Pre server data not found')
       }

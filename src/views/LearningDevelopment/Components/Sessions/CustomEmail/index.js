@@ -57,7 +57,7 @@ const index = ({applicant_id}) => {
       const footerHtml = draftToHtml(convertToRaw(footer.getCurrentContent()))
     //   bodyHtml.replace(/<[^>]+>/g, '')
       if (emailDetail.subject !== ''
-      && bodyHtml !== null && footerHtml !== null) {
+      && (bodyHtml !== null) && footerHtml !== null) {
         const formData = new FormData()
         formData.append('course_applicant', applicant_id)
         formData.append('subject', emailDetail.subject)

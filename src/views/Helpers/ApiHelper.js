@@ -430,7 +430,15 @@ import Avatar from '@components/avatar'
          
       return hoursMin
     }
-
+    const currentTime = () => { 
+      const current = new Date()
+      const time = current.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    })
+    return time
+  }
     // get month name by date
 
     const getMonth = (date) => {
@@ -440,8 +448,14 @@ import Avatar from '@components/avatar'
       ]
       const d = new Date(date)
        const monthName = monthNames[d.getMonth()]
-       console.warn(d.getMonth())
-       console.warn(monthName)
+       return monthName
+    }
+    const getMonthName = (month_number) => {
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ]
+       const monthName = monthNames[(month_number - 1)]
        return monthName
     }
     const convertUTCtoDate = date => {
@@ -468,7 +482,9 @@ import Avatar from '@components/avatar'
         formatDate,
         formatTime,
         getMonth,
+        getMonthName,
         convertUTCtoDate,
+        currentTime,
         org,
         user_id,
         user,

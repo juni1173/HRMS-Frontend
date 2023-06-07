@@ -1,15 +1,44 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button } from "reactstrap" 
 import { Edit, XCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
+import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import ReactPaginate from 'react-paginate'
 const Gym = ({ data, status_choices, CallBack }) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
-    
+    const [searchResults, setSearchResults] = useState([])
+    const [searchQuery] = useState([])
+    const [currentItems, setCurrentItems] = useState([])
+    const [pageCount, setPageCount] = useState(0)
+    const [itemOffset, setItemOffset] = useState(0)
+    const [itemsPerPage, setItemsPerPage] = useState(50)
+    const searchHelper = SearchHelper()
+    const monthNames = [
+        {value: 0, label: 'Select Month'},
+        {value: 1, label: "January"},
+        {value: 2, label: "February"},
+        {value: 3, label: "March"},
+        {value: 4, label: "April"},
+        {value: 5, label: "May"},
+        {value: 6, label: "June"},
+        {value: 7, label: "July"},
+        {value: 8, label: "August"},
+        {value: 9, label: "September"},
+        {value: 10, label: "October"},
+        {value: 11, label: "November"},
+        {value: 12, label: "December"}
+      ]
+      const itemsCount = [
+        {value: 50, label: '50'},
+        {value: 100, label: '100'},
+        {value: 150, label: '150'},
+        {value: 200, label: '200'}
+    ]
     
     const onStatusUpdate = async (id, status_value, comment) => {
             MySwal.fire({
@@ -65,7 +94,6 @@ const Gym = ({ data, status_choices, CallBack }) => {
         const [toggleThisElement, setToggleThisElement] = useState(false)
         const [comment, setComment] = useState('')
         const [statusValue, setStatusValue] = useState('')
-       
         return (
             <div className="single-history" key={index}>
             
@@ -124,21 +152,108 @@ const Gym = ({ data, status_choices, CallBack }) => {
             </div>
         )
         }
+        const getSearch = options => {
+
+            if (options.value === '' || options.value === null || options.value === undefined || options.value === 0) {
     
+                if (options.key in searchQuery) {
+                    delete searchQuery[options.key]
+                } 
+                if (Object.values(searchQuery).length > 0) {
+                    options.value = {query: searchQuery}
+                } else {
+                    options.value = {}
+                }
+                setItemOffset(0)
+                setSearchResults(searchHelper.searchObj(options))
+                setCurrentItems(searchHelper.searchObj(options))
+                
+            } else {
+                
+                searchQuery[options.key] = options.value
+                options.value = {query: searchQuery}
+                setItemOffset(0)
+                setSearchResults(searchHelper.searchObj(options))
+                setCurrentItems(searchHelper.searchObj(options))
+            }
+        }
+        useEffect(() => {
+            setLoading(true)
+            setSearchResults(data)
+            setTimeout(() => {
+                setLoading(false)
+            }, 1000)
+        }, [data])
+        useEffect(() => {
+            if (searchResults && Object.values(searchResults).length > 0) {
+                const endOffset = itemOffset === 0 ? itemsPerPage : itemOffset + itemsPerPage            
+                setCurrentItems(searchResults.slice(itemOffset, endOffset))
+                setPageCount(Math.ceil(searchResults.length / itemsPerPage))
+            }
+            }, [itemOffset, itemsPerPage, searchResults])
+            
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchResults.length
+            setItemOffset(newOffset)
+            }
   return (
     <Fragment>
         <Row>
-            <Col md={12}>
-         <div className='content-header' >
+        <Col md={12}>
+        <div className='content-header' >
           <h5 className='mb-2'>Gym Allowance Requests</h5>
-        </div>
+          </div>
+        </Col>
+        <Col md={4}>
+            <Label>Search Month</Label>
+            <Select
+                isClearable={false}
+                options={monthNames}
+                className='react-select mb-1'
+                classNamePrefix='select'
+                defaultValue={monthNames[0]}
+                onChange={e => { getSearch({list: data, key: 'month', value: e.value }) } }
+            />
+        </Col>
+        <Col md={4}>
+            <Label>
+                Search Status
+            </Label>
+            <Select
+                isClearable={true}
+                options={status_choices}
+                className='react-select mb-1'
+                classNamePrefix='select'
+                onChange={e => {
+                            if (e) {
+                            getSearch({list: data, key: 'status', value: e.value }) 
+                            } else {
+                                getSearch({list: data, key: 'status', value: '' }) 
+                            }
+                        } 
+                    }
+            />
+                
+        </Col>
+        <Col md={4}>
+            <span>Showing {Object.values(currentItems).length > 0 ? itemsPerPage : 0} results per page</span>
+            <Select 
+                placeholder="Entries"
+                options={itemsCount}
+                onChange={e => {
+                    setItemsPerPage(e.value)
+                    setItemOffset(0)
+                }}
+            />
+        </Col>
+            <Col md={12}>
         
         {!loading ? (
                 <>
-            {(data && Object.values(data).length > 0) ? (
+            {(currentItems && Object.values(currentItems).length > 0) ? (
                 <Row>
                  <Col md={12}>
-                 {Object.values(data).map((item, index) => (
+                 {Object.values(currentItems).map((item, index) => (
                             <Card key={index}>
                             <CardBody>
                                 <div className="row">
@@ -146,7 +261,7 @@ const Gym = ({ data, status_choices, CallBack }) => {
                                     <div className="col-md-4">
                                     <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
                                     <CardSubtitle>
-                                    <h4><Badge color='light-danger'>{item.date ? Api.getMonth(item.date) : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
+                                    <h4><Badge color='light-danger'>{item.month ? Api.getMonthName(item.month) : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
                                         <h4><Badge color='light-warning'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</Badge></h4></CardSubtitle>
                                     </div>
                                     <div className="col-md-4">
@@ -191,7 +306,22 @@ const Gym = ({ data, status_choices, CallBack }) => {
        }
         <hr></hr>
             </Col>
+            <ReactPaginate
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={pageCount}
+                previousLabel="<"
+                renderOnZeroPageCount={null}
+                containerClassName='pagination'
+                pageLinkClassName='page-num'
+                previousLinkClassName='page-num'
+                nextLinkClassName='page-num'
+                activeLinkClassName='active'
+                />
         </Row>
+        
     </Fragment>
   )
 }

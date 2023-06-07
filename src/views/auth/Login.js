@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
 // ** Custom Hooks
@@ -25,7 +25,7 @@ import apiHelper from '../Helpers/ApiHelper'
 // import { getHomeRouteForLoggedInUser } from '@utils'
 
 // ** Reactstrap Imports
-import { Row, Col, Form, Input, Label, Alert, Button, CardText, CardTitle, UncontrolledTooltip } from 'reactstrap'
+import { Row, Col, Form, Input, Label, Alert, Button, CardText, CardTitle, UncontrolledTooltip, Spinner } from 'reactstrap'
 // ** Styles
 import '@styles/react/pages/page-authentication.scss'
 
@@ -42,20 +42,6 @@ const ToastContent = ({ name, role }) => (
     </div>
   </Fragment>
 )
-const ToastError = () => (
-  <Fragment>
-    <div className='toastify-header'>
-      <div className='title-wrapper'>
-        <Avatar size='sm' color='danger' icon={<Key size={12} />} />
-        <h6 className='toast-title fw-bold'>Error</h6>
-      </div>
-    </div>
-    <div className='toastify-body'>
-      <span>Server not responding!</span>
-    </div>
-  </Fragment>
-)
-
 const defaultValues = {
   password: '',
   loginEmail: ''
@@ -67,6 +53,7 @@ const Login = () => {
   const { skin } = useSkin()
   const dispatch = useDispatch()
   const history = useHistory()
+  const [loading, setLoading] = useState(false)
   // const ability = useContext(AbilityContext)
   const formData = new FormData()
   const {
@@ -79,6 +66,7 @@ const Login = () => {
     source = require(`@src/assets/images/pages/${illustration}`).default
 
   const onSubmit = async data => {
+    setLoading(true)
     if (Object.values(data).every(field => field.length > 0)) {
       formData['email'] =  data.loginEmail
       formData['password'] = data.password
@@ -138,6 +126,9 @@ const Login = () => {
           }
         }
       }
+      setTimeout(() => {
+        setLoading(false)
+      }, 500)
   }
 
   return (
@@ -201,9 +192,14 @@ const Login = () => {
                   Remember Me
                 </Label>
               </div>
-              <Button type='submit' color='primary' block>
+              {!loading ? (
+                <Button type='submit' color='primary' block>
                 Sign in
               </Button>
+              ) : (
+                <div className='text-center'><Spinner type='grow' color='primary'/></div>
+              )}
+              
             </Form>
           </Col>
         </Col>

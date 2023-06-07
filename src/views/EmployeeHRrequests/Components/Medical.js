@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react'
 import { Label, Row, Col, Input, Button, Spinner, Table, Badge } from "reactstrap" 
-import { Edit2, Save, XCircle } from 'react-feather'
+import { Save, XCircle, FileText } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -154,24 +154,26 @@ const Medical = ({ data, CallBack }) => {
                 </label>
                 <Input type="number" 
                     name="amount"
+                    min="0"
                     onChange={ (e) => { onChangeMedicalDetailHandler('amount', 'input', e) }}
                     placeholder="Amount"  />
               </Col>
               <Col md={3}>
+              <Label className="form-label">Receipt <Badge color="light-danger">*</Badge> </Label>
               {medical_receipt ? (
               <div className="float-right">
-                <img
+                {/* <img
                   src={URL.createObjectURL(medical_receipt)}
                   alt="Thumb"
                   width="50"
-                />
+                /> */}
+                <FileText color='green'/>
                 <button className="btn" onClick={remove_medical_receipt}>
                   <XCircle />
                 </button>
               </div>
             ) : (
               <div>
-                <Label className="form-label">Receipt (JPG/PNG)</Label>
                 <Input
                       type="file"
                       id="medical_receipt"
@@ -207,7 +209,7 @@ const Medical = ({ data, CallBack }) => {
                                 Amount Claimed
                                 </th>
                                 <th scope="col" className="text-nowrap">
-                                Remaining / Limit (Yearly)
+                                 Limit (Yearly)
                                 </th>
                                 <th scope="col" className="text-nowrap">
                                 Receipt
@@ -226,19 +228,13 @@ const Medical = ({ data, CallBack }) => {
                                         <tr key={key}>
                                         <td className='nowrap'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.amount ? item.amount : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.employee_remaining_allowance ? item.employee_remaining_allowance : <Badge color='light-danger'>N/A</Badge>} / {item.medical_yearly_limit ? item.medical_yearly_limit : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td>{item.medical_yearly_limit ? item.medical_yearly_limit : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.medical_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`} width={20} height={20}/></a> : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
                                         <td>
                                             <Row className='text-center'>
-                                            <Col className='col-6 border-right'>
-                                                <button
-                                                className="border-0 no-background"
-                                                >
-                                                <Edit2 color="orange" />
-                                                </button>
-                                            </Col>
-                                            <Col className='col-6'>
+                                            
+                                            <Col className='col-12'>
                                                 <button
                                                 className="border-0 no-background"
                                                 onClick={() => removeAction(item.id)}

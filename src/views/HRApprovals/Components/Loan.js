@@ -143,7 +143,7 @@ const Loan = ({ data, status_choices, CallBack }) => {
                                     <div className="col-md-4">
                                     <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
                                     <CardSubtitle>
-                                    <h4><Badge color='light-danger'>{item.loan_start_date ? Api.getMonth(item.loan_start_date) : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
+                                    <h4><Badge color='light-danger'>{item.month ? Api.getMonthName(item.month) : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
                                         <h4><Badge color='light-warning'>{item.loan_start_date ? item.loan_start_date : 'N/A'} - {item.loan_end_date ? item.loan_end_date : 'N/A'}</Badge></h4></CardSubtitle>
                                     </div>
                                     <div className="col-md-4">

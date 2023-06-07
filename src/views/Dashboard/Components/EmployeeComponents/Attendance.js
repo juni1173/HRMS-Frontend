@@ -9,9 +9,9 @@ const Attendance = ({atndceData, CallBack}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [centeredModal, setCenteredModal] = useState(false)
-    const [check_in_time, setCheckInTime] = useState(null)
-    const [check_out_time, setCheckOutTime] = useState(null)
-    const [date, setDate] = useState('')
+    const [check_in_time, setCheckInTime] = useState(Api.currentTime())
+    const [check_out_time, setCheckOutTime] = useState(Api.currentTime())
+    const [date, setDate] = useState(new Date())
     const [type, setType] = useState('')
     const [btnstatus, setBtnStatus] = useState('')
     const types_choices = [
@@ -19,8 +19,9 @@ const Attendance = ({atndceData, CallBack}) => {
         {value: 'WFH', label: 'WFH'}
     ]
     const Check_in = async () => {
+      
             setLoading(true)
-            if (check_in_time && date !== '' && type !== '') {
+            if (type !== '') {
                 const formData = new FormData()
                 if (check_in_time) formData['check_in'] = `${check_in_time}:00`
                 if (date) formData['date'] = Api.formatDate(date)
@@ -31,6 +32,7 @@ const Attendance = ({atndceData, CallBack}) => {
                         if (result.status === 200) {
                                 setCenteredModal(false)
                                 CallBack()
+                                Api.Toast('success', result.message)
                         } else {
                                 Api.Toast('error', result.message)
                             
@@ -48,7 +50,6 @@ const Attendance = ({atndceData, CallBack}) => {
     }
     const Check_out = async () => {
             setLoading(true)
-            if (check_out_time && date !== '') {
                 const formData = new FormData()
                 if (check_out_time) formData['check_out'] = `${check_out_time}:00` 
                 if (date) formData['date'] = Api.formatDate(date)
@@ -66,18 +67,11 @@ const Attendance = ({atndceData, CallBack}) => {
                         Api.Toast('error', 'Server not responding')
                     }
                 })
-            } else {
-                Api.Toast('error', 'Please fill all required fields!')
-            }
+            
             setTimeout(() => {
                 setLoading(false)
               }, 1000)
         
-    }
-    const getCurrentTime = () => {
-        const today = new Date()
-        const time = `${today.getHours()}:${today.getMinutes()}}`
-        return time
     }
   return (
     <Fragment>
@@ -152,19 +146,20 @@ const Attendance = ({atndceData, CallBack}) => {
                            <h3> Check in</h3></Col>   
                         <Col md="3" className="mb-1">
                         <Label className="form-label">
-                         Time <Badge color="light-danger">*</Badge>
+                         Time
                         </Label><br></br>
-                            <input className="form-control" type="time" onChange={e => setCheckInTime(e.target.value)} defaultValue={getCurrentTime}></input>
+                            <input className="form-control" type="time" onChange={e => setCheckInTime(e.target.value)} defaultValue={Api.currentTime}></input>
                         </Col>
                         <Col md="3">
                         <Label className='form-label' for='default-picker'>
-                            Date <Badge color="light-danger">*</Badge>
+                            Date
                             </Label>
                             <Flatpickr className='form-control'  
                             onChange={(e) => setDate(e)} 
                             id='default-picker' 
                             placeholder='Date'
                             options={{
+                                defaultDate: 'today',
                                 disable: [
                                 function(date) {
                                     // Weekend disable
@@ -200,19 +195,20 @@ const Attendance = ({atndceData, CallBack}) => {
                            <h3> Check out</h3></Col>  
                         <Col md="4" className="mb-1">
                         <Label className="form-label">
-                         Time <Badge color="light-danger">*</Badge>
+                         Time 
                         </Label><br></br>
                             <input className="form-control" type="time" onChange={e => setCheckOutTime(e.target.value)}></input>
                         </Col>
                         <Col md="4">
                             <Label className='form-label' for='default-picker'>
-                            Date <Badge color="light-danger">*</Badge>
+                            Date
                             </Label>
                             <Flatpickr className='form-control'  
                             onChange={(e) => setDate(e)} 
                             id='default-picker' 
                             placeholder='Date'
                             options={{
+                                defaultDate: 'today',
                                 disable: [
                                 function(date) {
                                     // Weekend disable

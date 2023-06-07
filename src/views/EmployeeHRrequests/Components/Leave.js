@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { Row, Col, Label, Button, Spinner, Input, Badge, Table } from 'reactstrap'
-import { Save, XCircle, Edit2 } from 'react-feather'
+import { Save, XCircle, FileText } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
@@ -139,7 +139,8 @@ const Leave = ({ data, CallBack }) => {
           <h5 className='mb-2'>Add Leaves Request</h5>
           {/* <small>Add position.</small> */}
         </div>
-
+        {!loading && (
+            <>
         <Col md="4" className="mb-1">
                 <Label className="form-label">
                 Leave Type <Badge color='light-danger'>*</Badge>
@@ -161,22 +162,23 @@ const Leave = ({ data, CallBack }) => {
                     name="duration"
                     onChange={ (e) => { onChangeLeavesDetailHandler('duration', 'input', e) }}
                     placeholder="Duration"  />
-              </Col>
+        </Col>
         <Col md={4} className="mb-1">
+        <Label className="form-label">Attachment</Label>
             {attachment ? (
               <div className="float-right">
-                <img
+                {/* <img
                   src={URL.createObjectURL(attachment)}
                   alt="Thumb"
                   width="50"
-                />
+                /> */}
+                <FileText color='green'/>
                 <button className="btn" onClick={remove_attachment}>
                   <XCircle />
                 </button>
               </div>
                 ) : (
                 <div>
-                    <Label className="form-label">Attachment (JPG/PNG)</Label>
                     <Input
                         type="file"
                         id="attachment"
@@ -243,7 +245,7 @@ const Leave = ({ data, CallBack }) => {
         <Col md={2}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm}>
                 <span className="align-middle d-sm-inline-block">
-                  Save
+                  Submit
                 </span>
                 <Save
                   size={14}
@@ -251,6 +253,8 @@ const Leave = ({ data, CallBack }) => {
                 ></Save>
               </Button>
         </Col>
+        </>
+        )}
         </Row>
         {!loading ? (
                 <>
@@ -295,14 +299,8 @@ const Leave = ({ data, CallBack }) => {
                                         <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
                                         <td>
                                             <Row className='text-center'>
-                                            <Col className='col-6 border-right'>
-                                                <button
-                                                className="border-0 no-background"
-                                                >
-                                                <Edit2 color="orange" />
-                                                </button>
-                                            </Col>
-                                            <Col className='col-6'>
+                                           
+                                            <Col className='col-12'>
                                                 <button
                                                 className="border-0 no-background"
                                                 onClick={() => removeAction(item.id)}

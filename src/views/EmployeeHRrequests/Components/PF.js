@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react'
 import { Row, Col, Button, Spinner, Table, Badge } from "reactstrap" 
-import { Edit2, Save, XCircle } from 'react-feather'
+import { Save } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'

@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react'
 import { Label, Row, Col, Input, Button, Spinner, Table, Badge, UncontrolledTooltip  } from "reactstrap" 
-import { Edit2, Save, XCircle, HelpCircle } from 'react-feather'
+import { Save, XCircle, HelpCircle, FileText } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -153,24 +153,26 @@ const Gym = ({ data, CallBack }) => {
                 </label>
                 <Input type="number" 
                     name="amount"
+                    min="0"
                     onChange={ (e) => { onChangeReimbursementDetailHandler('amount', 'input', e) }}
                     placeholder="Amount"  />
               </Col>
               <Col md={3}>
+              <Label className="form-label">Receipt <Badge color="light-danger">*</Badge> </Label>
               {gym_receipt ? (
               <div className="float-right">
-                <img
-                  src={URL.createObjectURL(gym_receipt)}
+                {/* <img
+                  src={gym_receipt ? URL.createObjectURL(gym_receipt) : pdfImage}
                   alt="Thumb"
                   width="50"
-                />
+                /> */}
+                <FileText color='green'/>
                 <button className="btn" onClick={remove_gym_receipt}>
                   <XCircle />
                 </button>
               </div>
                 ) : (
                 <div>
-                    <Label className="form-label">Receipt (JPG/PNG)</Label>
                     <Input
                         type="file"
                         id="gym_receipt"
@@ -184,7 +186,7 @@ const Gym = ({ data, CallBack }) => {
                 <Col md={3}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm}>
                 <span className="align-middle d-sm-inline-block">
-                  Save
+                  Submit
                 </span>
                 <Save
                   size={14}
@@ -231,16 +233,10 @@ const Gym = ({ data, CallBack }) => {
                                         <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
                                         {item.decision_reason && (<> <HelpCircle id='UnControlledExample'/><UncontrolledTooltip placement='right' target='UnControlledExample'>{item.decision_reason} </UncontrolledTooltip></>)}
                                         </td>
-                                        <td className='p-1'>
+                                        {item.status === 'in-progress' && (
+                                            <td className='p-1'>
                                             <Row>
-                                            <Col className='col-6 border-right'>
-                                                <button
-                                                className="border-0 no-background"
-                                                >
-                                                <Edit2 color="orange" />
-                                                </button>
-                                            </Col>
-                                            <Col className='col-6'>
+                                            <Col className='col-12'>
                                                 <button
                                                 className="border-0 no-background"
                                                 onClick={() => removeAction(item.id)}
@@ -250,6 +246,8 @@ const Gym = ({ data, CallBack }) => {
                                             </Col>
                                             </Row>
                                         </td>
+                                        )}
+                                        
                                         </tr>
                                 )
                                 )}

@@ -168,7 +168,7 @@ const getCurrentTime = () => {
                 </Table>
             </CardBody>
         </Card>
-        <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered'>
+        <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered modal-lg'>
           <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Enter Time</ModalHeader>
           <ModalBody>
                 
@@ -249,7 +249,7 @@ const getCurrentTime = () => {
                          />
                      </Col>
                          <Col md="4" className="mb-1">
-                         <Button className='btn btn-primary mt-2' onClick={ () => Check_out}>
+                         <Button className='btn btn-primary mt-2' onClick={Check_out}>
                              <Clock />
                          </Button>
                          </Col>

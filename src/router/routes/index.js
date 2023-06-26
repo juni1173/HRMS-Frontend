@@ -193,6 +193,10 @@ const Routes = [
     component: lazy(() => import('../../views/SettingsModule/ConfigurationModule/Configuration'))
   },
   {
+    path: '/reports',
+    component: lazy(() => import('../../views/Reports/index'))
+  },
+  {
     path: '/admin/dashboard',
     component: lazy(() => import('../../views/Dashboard/Components/AdminDashboard'))
   },

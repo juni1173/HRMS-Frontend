@@ -49,7 +49,7 @@ const Medical = ({ data, CallBack }) => {
         setMedical_Receipt(null) 
       } 
     const submitForm = async () => {
-        setLoading(true)
+        
         if (medicalData.amount !== '' && medicalData.date !== '') {
             const formData = new FormData()
             formData.append('amount', medicalData.amount)
@@ -58,9 +58,13 @@ const Medical = ({ data, CallBack }) => {
             await Api.jsonPost(`/reimbursements/employees/medical/allowance/`, formData, false).then(result => {
                 if (result) {
                     if (result.status === 200) {
+                        setLoading(true)
                         Api.Toast('success', result.message)
                         setMedical_Receipt(null)
                         CallBack()
+                        setTimeout(() => {
+                            setLoading(false)
+                        }, 1000)
                     } else {
                         Api.Toast('error', result.message)
                     }
@@ -69,9 +73,7 @@ const Medical = ({ data, CallBack }) => {
         } else {
             Api.Toast('error', 'Please fill all required fields!')
         }
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000)
+        
     }
     const removeAction = (id) => {
         MySwal.fire({
@@ -229,11 +231,12 @@ const Medical = ({ data, CallBack }) => {
                                         <td className='nowrap'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.amount ? item.amount : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.medical_yearly_limit ? item.medical_yearly_limit : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.medical_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`} width={20} height={20}/></a> : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td>{item.medical_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`}> <FileText /></a> : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
+                                        
                                         <td>
+                                        {item.status === 'in-progress' && (
                                             <Row className='text-center'>
-                                            
                                             <Col className='col-12'>
                                                 <button
                                                 className="border-0 no-background"
@@ -243,7 +246,9 @@ const Medical = ({ data, CallBack }) => {
                                                 </button>
                                             </Col>
                                             </Row>
+                                            )}
                                         </td>
+                                        
                                         </tr>
                                 )
                                 )}

@@ -257,8 +257,8 @@ const Loan = ({ data, CallBack }) => {
                                         <td className='nowrap'>{item.loan_start_date ? item.loan_start_date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
                                         <td>
+                                        {item.status === 'in-progress' && (
                                             <Row className='text-center'>
-                                            
                                             <Col className='col-12'>
                                                 <button
                                                 className="border-0 no-background"
@@ -268,6 +268,7 @@ const Loan = ({ data, CallBack }) => {
                                                 </button>
                                             </Col>
                                             </Row>
+                                            )}
                                         </td>
                                         </tr>
                                 )

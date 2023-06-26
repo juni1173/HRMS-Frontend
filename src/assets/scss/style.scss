@@ -9,7 +9,12 @@ NOTE:
 ------
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
-
+.pr-1 {
+	padding-right: 1rem !important;
+}
+.overflowx-scroll {
+	overflow-x: scroll;
+}
 .float-right{
 	float: right;
 }
@@ -260,12 +265,24 @@ div.configuration_panel a.nav-link.active {
 	box-shadow: 0 0 10px 1px rgb(115 103 240 / 70%);
     border-radius: 4px;
 }
+div.configuration_panel_orange a.nav-link.active {
+	color: white;
+	background-color: Orange;
+	box-shadow: 0 0 10px 1px rgba(255, 166, 0, 0.486);
+    border-radius: 4px;
+}
 div.configuration_panel .nav-tabs .nav-link:after {
 	background: none !important;
 }
 div.configuration_panel .tab-pane-blue {
 	overflow-x: hidden;
     background: #315180;
+    padding: 20px;
+    border-radius: 5px;
+}
+div.configuration_panel .tab-pane-orange {
+	overflow-x: hidden;
+    background: orange;
     padding: 20px;
     border-radius: 5px;
 }

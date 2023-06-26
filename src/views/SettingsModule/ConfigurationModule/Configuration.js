@@ -8,7 +8,7 @@ import EmailIndex from '../EmailModule'
 import SalaryComposition from './SalaryComposition'
 import CandidateStages from './Candidatestages/Components/candidate_stages'
 import EmployeeRequests from './EmployeeRequests/index'
-
+import Roles from './RolesConfiguration/Roles'
 const Configuration = () => {
   // ** State
   const [active, setActive] = useState('1')
@@ -65,6 +65,16 @@ const Configuration = () => {
             Set Employee Allowances
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink
+            active={active === '5'}
+            onClick={() => {
+              toggle('5')
+            }}
+          >
+            Project Roles
+          </NavLink>
+        </NavItem>
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId='1' className='tab-pane-blue'>
@@ -78,6 +88,9 @@ const Configuration = () => {
         </TabPane>
         <TabPane tabId='4' className='tab-pane-blue'>
           <EmployeeRequests />
+        </TabPane>
+        <TabPane tabId='5' className='tab-pane-blue'>
+          <Roles />
         </TabPane>
       </TabContent>
     </div>

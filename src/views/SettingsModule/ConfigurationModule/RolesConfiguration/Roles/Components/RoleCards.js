@@ -330,7 +330,7 @@ const RoleCards = () => {
                                                     setShow(true)
                                                 }}
                                                 >
-                                                <small className='fw-bolder'>Permissions</small>
+                                                {/* <small className='fw-bolder'>Permissions</small> */}
                                                 </Link>
                                             </div>
                                             )}

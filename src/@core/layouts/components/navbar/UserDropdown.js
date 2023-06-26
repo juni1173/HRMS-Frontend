@@ -39,7 +39,7 @@ const UserDropdown = () => {
   let userAvatar = ''
   //** Vars
   if (JSON.parse(localStorage.getItem('userData')).user_role === 'employee') {
-     userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user'))[0].profile_image ? JSON.parse(localStorage.getItem('user'))[0].profile_image : defaultAvatar) : defaultAvatar
+     userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? JSON.parse(localStorage.getItem('user')).profile_image : defaultAvatar) : defaultAvatar
   } else {
      userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? JSON.parse(localStorage.getItem('user')).profile_image : defaultAvatar) : defaultAvatar
   }

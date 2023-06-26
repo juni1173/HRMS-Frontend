@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState, useCallback } from "react"
-import { Row, Col, CardBody, Card, Container, CardHeader } from "reactstrap"
+import { Row, Col, CardBody, Card, Spinner, CardHeader } from "reactstrap"
 import Masonry from 'react-masonry-component'
 import apiHelper from "../../Helpers/ApiHelper"
 import Notes from "./EmployeeComponents/KindNotes/Components/Notes"
@@ -11,11 +11,13 @@ import LearningDevelopment from "./EmployeeComponents/LearningDevelopment/index"
 const EmployeeDashboard = () => {
   const Api = apiHelper()
   const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
   const [kindNotes, setKindNotes] = useState({
     recieved: '',
     sent: ''
 })
   const preDataApi = async () => {
+    setLoading(true)
     const response = await Api.get('/employees-self-service/homepage/')
     
     if (response.status === 200) {
@@ -28,6 +30,9 @@ const EmployeeDashboard = () => {
     } else {
         return Api.Toast('error', 'Server not found')
     }
+    setTimeout(() => {
+      setLoading(false)
+    }, 500)
 }
   useEffect(() => {
     preDataApi()
@@ -37,14 +42,14 @@ const EmployeeDashboard = () => {
       }, [data])
   return (
    <Fragment>
-    <Masonry className="row js-animation">
+    {!loading ? (
+      <Masonry className="row js-animation">
         <Col md={6} >
             <Attendance atndceData={data.last_week_attendance} CallBack={handleDataProcessing}/>
         </Col>
         <Col md={6}>
           <Allowances data={data} />
         </Col>
-      
         <Col md={6}>
           <Card>
             <CardBody>
@@ -80,7 +85,11 @@ const EmployeeDashboard = () => {
           </Card>
         )}
         </Col>
-        </Masonry>
+      </Masonry>
+    ) : (
+      <div className="text-center"><Spinner color="primary"/></div>
+    )}
+    
    </Fragment> 
   )
 }

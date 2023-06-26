@@ -295,9 +295,11 @@ const Leave = ({ data, CallBack }) => {
                                         <td className='nowrap'>{item.duration ? item.duration : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.start_date ? item.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.end_date ? item.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.attachment ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.attachment}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.attachment}`} width={20} height={20}/></a> : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td>{item.attachment ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
+                                        
                                         <td>
+                                            {item.status === 'in-progress' && (
                                             <Row className='text-center'>
                                            
                                             <Col className='col-12'>
@@ -309,7 +311,9 @@ const Leave = ({ data, CallBack }) => {
                                                 </button>
                                             </Col>
                                             </Row>
+                                            )}
                                         </td>
+
                                         </tr>
                                 )
                                 )}

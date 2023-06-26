@@ -18,8 +18,8 @@ import Avatar from '@components/avatar'
     }
     
     const org = JSON.parse(localStorage.getItem('organization'))
-    const user_id = JSON.parse(localStorage.getItem('user_id'))
     const user = JSON.parse(localStorage.getItem('user'))
+    const user_id = localStorage.getItem('user_id') ? JSON.parse(localStorage.getItem('user_id')) : null
     const role = localStorage.getItem('userData') && JSON.parse(localStorage.getItem('userData')).user_role
      
     const ApiBaseLink = process.env.REACT_APP_API_URL

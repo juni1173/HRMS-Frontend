@@ -1,4 +1,4 @@
-import { Circle, Home, Briefcase, User, Settings, CheckSquare, BookOpen, Bookmark } from 'react-feather'
+import { Circle, Home, Briefcase, User, Settings, CheckSquare, BookOpen, Bookmark, Trello } from 'react-feather'
 // const checkVisibility = (list, apiList) => {
   
 //   for (let i = 0; i < apiList.length; i++) {
@@ -134,12 +134,12 @@ let nav = []
     
   },
 
-  // {
-  //   id: 'nav-projects',
-  //   title: 'Projects',
-  //   icon: <CheckSquare size={30} />,
-  //   navLink: '/projects'
-  // },
+  {
+    id: 'nav-projects',
+    title: 'Projects',
+    icon: <CheckSquare size={30} />,
+    navLink: '/projects'
+  },
   {
     id: 'nav-jira-projects',
     title: 'Jira',
@@ -171,7 +171,13 @@ let nav = []
         title: 'Configurations',
         icon: <Settings size={12} />,
         navLink: '/configurations'
-  }
+  },
+  {
+    id: 'nav-reports',
+    title: 'Reports',
+    icon: <Trello size={12} />,
+    navLink: '/reports'
+}
 ]
 
 export default nav

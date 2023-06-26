@@ -48,7 +48,7 @@ const Gym = ({ data, CallBack }) => {
         setGym_Receipt(null) 
       } 
     const submitForm = async () => {
-        setLoading(true)
+        
         if (reimbursementData.amount !== '' && reimbursementData.date !== '') {
             const formData = new FormData()
             formData.append('amount', reimbursementData.amount)
@@ -57,9 +57,13 @@ const Gym = ({ data, CallBack }) => {
             await Api.jsonPost(`/reimbursements/employees/gym/allowance/`, formData, false).then(result => {
                 if (result) {
                     if (result.status === 200) {
+                        setLoading(true)
                         Api.Toast('success', result.message)
                         setGym_Receipt(null) 
                         CallBack()
+                        setTimeout(() => {
+                            setLoading(false)
+                        }, 1000)
                     } else {
                         Api.Toast('error', result.message)
                     }
@@ -68,9 +72,7 @@ const Gym = ({ data, CallBack }) => {
         } else {
             Api.Toast('error', 'Please fill all required fields!')
         }
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000)
+        
     }
     const removeAction = (id) => {
         MySwal.fire({
@@ -228,13 +230,14 @@ const Gym = ({ data, CallBack }) => {
                                         <td className='nowrap'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.amount ? item.amount : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.gym_monthly_limit ? item.gym_monthly_limit : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.gym_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.gym_receipt}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.gym_receipt}`} width={20} height={20}/></a> : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td>{item.gym_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.gym_receipt}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>
                                         <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
                                         {item.decision_reason && (<> <HelpCircle id='UnControlledExample'/><UncontrolledTooltip placement='right' target='UnControlledExample'>{item.decision_reason} </UncontrolledTooltip></>)}
                                         </td>
-                                        {item.status === 'in-progress' && (
+                                        
                                             <td className='p-1'>
+                                            {item.status === 'in-progress' && (
                                             <Row>
                                             <Col className='col-12'>
                                                 <button
@@ -245,8 +248,9 @@ const Gym = ({ data, CallBack }) => {
                                                 </button>
                                             </Col>
                                             </Row>
+                                            )}
                                         </td>
-                                        )}
+                                        
                                         
                                         </tr>
                                 )

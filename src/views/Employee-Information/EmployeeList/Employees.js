@@ -32,7 +32,6 @@ const Employees = ({ employeeList, CallBack, type }) => {
         setLoading(true)
             if (employeeList && Object.values(employeeList).length > 0) {
                     setSearchResults(employeeList)
-              
             } 
         setTimeout(() => {
             setLoading(false)

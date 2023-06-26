@@ -14,7 +14,7 @@ const ChangePassword = () => {
     const dispatch = useDispatch()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
-    const img = Api.user[0].profile_image ? `${process.env.REACT_APP_BACKEND_URL}${Api.user[0].profile_image}` : defaultAvatar
+    const img = Api.user.profile_image ? `${process.env.REACT_APP_BACKEND_URL}${Api.user.profile_image}` : defaultAvatar
     const [avatar, setAvatar] = useState(img)
     const [passwordData, setPasswordData] = useState({
         password: '',
@@ -27,7 +27,7 @@ const ChangePassword = () => {
    const UpdateProfileImg = path => {
     if (path) {
         const user = JSON.parse(localStorage.getItem('user'))
-        const userToUpdate = user[0]
+        const userToUpdate = user
         userToUpdate.profile_image = path
         localStorage.setItem('user', JSON.stringify(user))
         window.location.reload()

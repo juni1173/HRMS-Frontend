@@ -9,6 +9,8 @@ import SalaryComposition from './SalaryComposition'
 import CandidateStages from './Candidatestages/Components/candidate_stages'
 import EmployeeRequests from './EmployeeRequests/index'
 import Roles from './RolesConfiguration/Roles'
+import KpiSegmentationForm from './KpiSegmentations/SegmentationForm'
+import Manuals from './ManualsSettings/index'
 const Configuration = () => {
   // ** State
   const [active, setActive] = useState('1')
@@ -75,7 +77,28 @@ const Configuration = () => {
             Project Roles
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink
+            active={active === '6'}
+            onClick={() => {
+              toggle('6')
+            }}
+          >
+            KPI Segmentation
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink
+            active={active === '7'}
+            onClick={() => {
+              toggle('7')
+            }}
+          >
+            Manuals (SOP / EPM)
+          </NavLink>
+        </NavItem>
       </Nav>
+
       <TabContent activeTab={active}>
         <TabPane tabId='1' className='tab-pane-blue'>
           <CandidateStages />
@@ -91,6 +114,12 @@ const Configuration = () => {
         </TabPane>
         <TabPane tabId='5' className='tab-pane-blue'>
           <Roles />
+        </TabPane>
+        <TabPane tabId='6' className='tab-pane'>
+          <KpiSegmentationForm />
+        </TabPane>
+        <TabPane tabId='7' className='tab-pane-blue'>
+          <Manuals />
         </TabPane>
       </TabContent>
     </div>

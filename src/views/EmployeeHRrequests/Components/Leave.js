@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Row, Col, Label, Button, Spinner, Input, Badge, Table } from 'reactstrap'
-import { Save, XCircle, FileText } from 'react-feather'
+import { Row, Col, Label, Button, Spinner, Input, Badge, Table, UncontrolledTooltip } from 'reactstrap'
+import { Save, XCircle, FileText, HelpCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
@@ -59,7 +59,7 @@ const Leave = ({ data, CallBack }) => {
         setAttachment() 
       } 
     const submitForm = async () => {
-        setLoading(true)
+        
         if (leaveData.leave_types !== '' && leaveData.start_date !== '' && leaveData.end_date !== '' && leaveData.duration !== '') {
             const formData = new FormData()
             formData.append('leave_types', leaveData.leave_types)
@@ -70,8 +70,20 @@ const Leave = ({ data, CallBack }) => {
             await Api.jsonPost(`/reimbursements/employees/leaves/`, formData, false).then(result => {
                 if (result) {
                     if (result.status === 200) {
+                        setLoading(true)
                         Api.Toast('success', result.message)
                         CallBack()
+                        setLeaveData(prevState => ({
+                            ...prevState,
+                            leave_types: '',
+                            start_date : '',
+                            end_date: '',
+                            duration: ''
+                       })
+                        )
+                        setTimeout(() => {
+                            setLoading(false)
+                        }, 1000)
                     } else {
                         Api.Toast('error', result.message)
                     }
@@ -80,9 +92,7 @@ const Leave = ({ data, CallBack }) => {
         } else {
             Api.Toast('error', 'Please fill required fields!')
         }
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000)
+       
     }
     const removeAction = (id) => {
         MySwal.fire({
@@ -198,17 +208,18 @@ const Leave = ({ data, CallBack }) => {
             id='default-picker' 
             placeholder='Start Date'
             options={{
-                disable: [
-                function(date) {
-                    // Weekend disable
-                    return (date.getDay() === 0 || date.getDay() === 6) 
-                }, 
-                function(date) {
-                    // past dates disable
-                    const d = new Date()
-                    return (date < d) 
-                }
-                ]
+                minDate: "today"
+                // disable: [
+                // // function(date) {
+                // //     // Weekend disable
+                // //     return (date.getDay() === 0 || date.getDay() === 6) 
+                // // }, 
+                // function(date) {
+                //     // past dates disable
+                //     const d = new Date()
+                //     return (date <= d) 
+                // }
+                // ]
               } }
             />
         </Col>
@@ -221,22 +232,23 @@ const Leave = ({ data, CallBack }) => {
                 id='default-picker' 
                 placeholder='End Date'
                 options={{
-                    disable: [
-                    function(date) {
-                        // Weekend disable
-                        return (date.getDay() === 0 || date.getDay() === 6) 
-                    }, 
-                    function(date) {
-                        // past dates disable
-                        let startDate = null
-                        const d = new Date()
-                        if (leaveData.start_date !== '') {
-                            startDate = new Date(leaveData.start_date)
-                            return (date < d || date < startDate) 
-                        } 
-                        return (date < d) 
-                    }
-                    ]
+                    minDate: new Date(leaveData.start_date)
+                    // disable: [
+                    // // function(date) {
+                    // //     // Weekend disable
+                    // //     return (date.getDay() === 0 || date.getDay() === 6) 
+                    // // }, 
+                    // function(date) {
+                    //     // past dates disable
+                    //     let startDate = null
+                    //     const d = new Date()
+                    //     if (leaveData.start_date !== '') {
+                    //         startDate = new Date(leaveData.start_date)
+                    //         return (date < startDate) 
+                    //     } 
+                    //     return (date <= d) 
+                    // }
+                    // ]
                   } }
                 />
            
@@ -296,7 +308,10 @@ const Leave = ({ data, CallBack }) => {
                                         <td className='nowrap'>{item.start_date ? item.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.end_date ? item.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.attachment ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
+                                        <td>
+                                        <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
+                                        {item.decision_reason && (<> <HelpCircle id={`UnControlledLeave${key}`}/><UncontrolledTooltip  target={`UnControlledLeave${key}`}>{item.decision_reason} </UncontrolledTooltip></>)}
+                                        </td>
                                         
                                         <td>
                                             {item.status === 'in-progress' && (

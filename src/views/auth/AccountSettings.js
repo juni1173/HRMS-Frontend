@@ -16,6 +16,9 @@ const ChangePassword = () => {
     const [loading, setLoading] = useState(false)
     const img = Api.user.profile_image ? `${process.env.REACT_APP_BACKEND_URL}${Api.user.profile_image}` : defaultAvatar
     const [avatar, setAvatar] = useState(img)
+    const [isUppercaseValid, setIsUppercaseValid] = useState(false)
+  const [isSpecialCharValid, setIsSpecialCharValid] = useState(false)
+  const [isCombinedValid, setIsCombinedValid] = useState(false)
     const [passwordData, setPasswordData] = useState({
         password: '',
         confirmPassword : ''
@@ -55,9 +58,9 @@ const ChangePassword = () => {
         }
     })
   }
-  const handleImgReset = () => {
-    setAvatar(defaultAvatar)
-  }
+//   const handleImgReset = () => {
+//     setAvatar(defaultAvatar)
+//   }
 //    const [gym_receipt, setGym_Receipt] = useState(null)
     const onChangePasswordDetailHandler = (InputName, InputType, e) => {
         
@@ -81,7 +84,32 @@ const ChangePassword = () => {
         [InputName] : InputValue
         
         }))
+        if (InputName === 'password') {
+            const uppercasePattern = /[A-Z]/
+            const isValidUppercase = uppercasePattern.test(InputValue)
+            setIsUppercaseValid(isValidUppercase)
+        
+            // Validate special character
+            const specialCharPattern = /[!@#$%^&*()_\-+=~`[\]{}|:;"'<>,.?]/
+            const isValidSpecialChar = specialCharPattern.test(InputValue)
+            setIsSpecialCharValid(isValidSpecialChar)
+        
+            // Validate combined criteria
+            const combinedPattern = InputValue.length
+            if (combinedPattern >= 8) {
+                setIsCombinedValid(true)
+            } else {
+                setIsCombinedValid(false)
+            }
+        }
         if (InputName === 'confirmPassword') {
+            if (InputValue === '' || !InputValue) {
+                setConfirmPasswordMatch(prevState => ({
+                    ...prevState,
+                    msg: '',
+                    type: ''
+                }))
+            }
             if (passwordData.password !== InputValue) {
                 setConfirmPasswordMatch(prevState => ({
                     ...prevState,
@@ -96,7 +124,14 @@ const ChangePassword = () => {
                     }))
             }
         }
-        if (InputName === 'password') {
+        if (InputName === 'password' && passwordData.confirmPassword !== '') {
+            if (InputValue === '' || !InputValue) {
+                setConfirmPasswordMatch(prevState => ({
+                    ...prevState,
+                    msg: '',
+                    type: ''
+                }))
+            }
             if (InputValue !== passwordData.confirmPassword) {
                 setConfirmPasswordMatch(prevState => ({
                     ...prevState,
@@ -122,6 +157,18 @@ const ChangePassword = () => {
     //   } 
    
     const changePasswordAction = () => {
+        if (!isUppercaseValid) {
+            Api.Toast('error', 'Password must contain 1 upper case letter')
+            return false
+        }
+        if (!isSpecialCharValid) {
+            Api.Toast('error', 'Password must contain 1 special character')
+            return false
+        }
+        if (!isCombinedValid) {
+            Api.Toast('error', 'Password must contain at least 8 character')
+            return false
+        }
         MySwal.fire({
             title: 'Are you sure?',
             text: "Do you want to change password?",
@@ -156,6 +203,18 @@ const ChangePassword = () => {
                             }
                         }) 
                     } else {
+
+                            setPasswordData(prevState => ({
+                                ...prevState,
+                                password: '',
+                                confirmPassword: ''
+                            }))
+                            
+                            setConfirmPasswordMatch(prevState => ({
+                                ...prevState,
+                                msg: '',
+                                type: ''
+                            }))
                         MySwal.fire({
                             icon: 'error',
                             title: 'Password can not be changed!',
@@ -188,9 +247,9 @@ const ChangePassword = () => {
                                     Upload
                                     <Input type='file' onChange={onChangeImg} hidden accept='image/*' />
                                 </Button>
-                                <Button className='mb-75' color='secondary' size='sm' outline onClick={handleImgReset}>
+                                {/* <Button className='mb-75' color='secondary' size='sm' outline onClick={handleImgReset}>
                                     Reset
-                                </Button>
+                                </Button> */}
                             </div>
                             <div>
                                 <p className='mt-2 mb-0'>Allowed JPG, GIF or PNG<br/> Max size of 800kB</p>
@@ -217,6 +276,12 @@ const ChangePassword = () => {
                                     name="password"
                                     onChange={ (e) => { onChangePasswordDetailHandler('password', 'input', e) }}
                                     placeholder="Password"  />
+                                    <br></br>
+                                <Badge color={isUppercaseValid ? 'success' : 'danger'} className='mb-1'>1 Capital letter</Badge>
+                                <Badge color={isSpecialCharValid ? 'success' : 'danger'} className='mb-1'>1 special character </Badge>
+                                <Badge color={isCombinedValid ? 'success' : 'danger'}>at least 8 total characters</Badge>
+                                <br></br>
+                                <br></br>
                             </Col>
                             <Col md={4}>
                                 <label className='form-label'>
@@ -231,7 +296,8 @@ const ChangePassword = () => {
                                         )}
                             </Col>
                             <Col md={3}>
-                            <Button color="primary" className="btn-next mt-2" onClick={changePasswordAction}>
+                                
+                            <Button color="primary" className="btn-next mt-2" onClick={changePasswordAction} disabled={confirmPasswordMatch.type !== 'light-success' && true }>
                                 <span className="align-middle d-sm-inline-block">
                                 Save
                                 </span>

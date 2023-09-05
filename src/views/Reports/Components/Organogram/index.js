@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
-import DepartmentOrganogram from './DepartmentOrganogram'
 import apiHelper from '../../../Helpers/ApiHelper'
+import TreeComponent from './DepartmentOrganogram'
 const index = () => {
     const Api = apiHelper()
     const [data, setData] = useState([])
@@ -28,9 +28,9 @@ const index = () => {
     <>
     {!loading && (
         Object.values(data).length > 0 && (
-            <div className='overflowx-scroll'>
-            <DepartmentOrganogram data={data} />
-            </div>
+            // <div className='overflowx-scroll'>
+            <TreeComponent treeData={data} />
+            // </div>
         )
         
     )}

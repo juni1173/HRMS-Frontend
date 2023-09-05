@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect} from "react"
 import { Edit, Plus, XCircle} from "react-feather"
-import {Modal, ModalBody, ModalHeader, Card, CardBody, CardTitle, Spinner, Table, Badge} from "reactstrap"
+import {Modal, ModalBody, ModalHeader, Card, CardBody, CardTitle, Spinner, Table, Badge, Button, Input} from "reactstrap"
 import UpdatePersonalDetail from "../AddEmployee/PersonalDetail/updatePersonalDetail"
 import UpdateOfficeDetail from "../AddEmployee/OfficeDetail/UpdateOfficeDetail"
 import UpdateEmpContact from "../UpdateEmployeeComponents/UpdateEmpContact"
@@ -20,10 +20,13 @@ import {useParams} from "react-router-dom"
 import apiHelper from "../../Helpers/ApiHelper"
 import EmployeeHelper from "../../Helpers/EmployeeHelper"
 import user_blank  from "../../../assets/images/avatars/user_blank.png"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const EmployeeDetail = () => {
     const Api = apiHelper()
     const EmpHelper = EmployeeHelper()
+    const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
     const [editModal, setEditModal] = useState(false)
     const [modalState, setModalState] = useState(1)
@@ -160,6 +163,98 @@ const EmployeeDetail = () => {
             return <p>No Data Found</p>
     }
     }
+    const onJiraidUpdate = async (id, value) => {
+        MySwal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to update the Jira Account id!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, update it!',
+            customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.value) {
+                const formData = new FormData()
+                formData['jira_account_id'] = value
+                 Api.jsonPatch(`/employees/projects/roles/${id}/data/`, formData)
+                    .then((result) => {
+                        if (result.status === 200) {
+                            MySwal.fire({
+                                icon: 'success',
+                                title: 'Jira Account id Updated!',
+                                text: 'Jira Account id is updated.',
+                                customClass: {
+                                confirmButton: 'btn btn-success'
+                                }
+                            }).then(function (result) {
+                                if (result.isConfirmed) {
+                                    setLoading(true)
+                                    CallBack()
+                                    setTimeout(() => {
+                                        setLoading(false)
+                                    }, 1000)
+                                }
+                            })
+                            } else {
+                                MySwal.fire({
+                                    title: 'Error',
+                                    text: result.message ? result.message : 'Something went wrong',
+                                    icon: 'error',
+                                    customClass: {
+                                      confirmButton: 'btn btn-success'
+                                    }
+                                  })
+                            }
+                    })
+            } 
+        })
+    }
+    const JiraAccountidComponent = ({ item, index }) => {
+        const [toggleThisElement, setToggleThisElement] = useState(false)
+        const [jiraAccountid, setJiraAccountid] = useState('')
+        return (
+            <div className="single-history" key={index}>
+            
+            {toggleThisElement ? (
+                <div className="row min-width-300">
+                <div className="col-lg-8">
+               <Input 
+                type='text'
+                placeholder="Jira Account id"
+                onChange={(e) => setJiraAccountid(e.target.value)}
+               />
+                    
+                    <Button className="btn btn-primary btn-sm mt-1" onClick={ async () => {
+                        await onJiraidUpdate(item.id, jiraAccountid).then(() => {
+                            setToggleThisElement((prev) => !prev)
+                        })
+                    }}>
+                        Update
+                    </Button>
+                </div>
+                <div className="col-lg-4 float-right">
+                <XCircle color="red" onClick={() => setToggleThisElement((prev) => !prev)}/>
+                </div>
+            </div>
+            ) : (
+                <div className="row min-width-225">
+                    <div className="col-lg-8">
+                    <b>{item.jira_account_id ? item.jira_account_id : <Badge color='light-secondary'>N/A</Badge>}</b>
+                    </div>
+                    
+                    <div className="col-lg-4 float-right">
+                        <Edit color="orange" onClick={() => setToggleThisElement((prev) => !prev)}/>
+                     </div>
+                </div>
+            )
+                
+            }
+            </div>
+        )
+        }
     useEffect(() => {
         getEmployeeData()
     }, [])
@@ -305,6 +400,7 @@ const EmployeeDetail = () => {
                                         <tr>
                                             <th>Project</th>
                                             <th>Role</th>
+                                            <th>Jira Account id</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>status/Deactivate</th>
@@ -316,6 +412,7 @@ const EmployeeDetail = () => {
                                         <tr key={key} className={!pRole.is_active ? 'table-danger' : ''}>
                                             <td>{pRole.project_title ? pRole.project_title : 'N/a'}</td>
                                             <td>{pRole.role_title ? pRole.role_title : 'N/A'}</td>
+                                            <td><JiraAccountidComponent item={pRole} index={key}/></td>
                                             <td>{pRole.start_date ? pRole.start_date : 'N/A'}</td>
                                             <td>{pRole.end_date ? pRole.end_date : <Badge color='light-success'>Not Ended</Badge>}</td>
                                             <td>

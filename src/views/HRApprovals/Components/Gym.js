@@ -39,7 +39,31 @@ const Gym = ({ data, status_choices, CallBack }) => {
         {value: 150, label: '150'},
         {value: 200, label: '200'}
     ]
-    
+    const getSearch = options => {
+
+        if (options.value === '' || options.value === null || options.value === undefined || options.value === 0) {
+
+            if (options.key in searchQuery) {
+                delete searchQuery[options.key]
+            } 
+            if (Object.values(searchQuery).length > 0) {
+                options.value = {query: searchQuery}
+            } else {
+                options.value = {}
+            }
+            setItemOffset(0)
+            setSearchResults(searchHelper.searchObj(options))
+            setCurrentItems(searchHelper.searchObj(options))
+            
+        } else {
+            
+            searchQuery[options.key] = options.value
+            options.value = {query: searchQuery}
+            setItemOffset(0)
+            setSearchResults(searchHelper.searchObj(options))
+            setCurrentItems(searchHelper.searchObj(options))
+        }
+    }
     const onStatusUpdate = async (id, status_value, comment) => {
             MySwal.fire({
                 title: 'Are you sure?',
@@ -67,10 +91,10 @@ const Gym = ({ data, status_choices, CallBack }) => {
                                     customClass: {
                                     confirmButton: 'btn btn-success'
                                     }
-                                }).then(function (result) {
+                                }).then(async function (result) {
                                     if (result.isConfirmed) {
                                         setLoading(true)
-                                        CallBack()
+                                        await CallBack()
                                         setTimeout(() => {
                                             setLoading(false)
                                         }, 1000)
@@ -152,34 +176,11 @@ const Gym = ({ data, status_choices, CallBack }) => {
             </div>
         )
         }
-        const getSearch = options => {
-
-            if (options.value === '' || options.value === null || options.value === undefined || options.value === 0) {
-    
-                if (options.key in searchQuery) {
-                    delete searchQuery[options.key]
-                } 
-                if (Object.values(searchQuery).length > 0) {
-                    options.value = {query: searchQuery}
-                } else {
-                    options.value = {}
-                }
-                setItemOffset(0)
-                setSearchResults(searchHelper.searchObj(options))
-                setCurrentItems(searchHelper.searchObj(options))
-                
-            } else {
-                
-                searchQuery[options.key] = options.value
-                options.value = {query: searchQuery}
-                setItemOffset(0)
-                setSearchResults(searchHelper.searchObj(options))
-                setCurrentItems(searchHelper.searchObj(options))
-            }
-        }
+        
         useEffect(() => {
             setLoading(true)
             setSearchResults(data)
+            getSearch({ list: data, value: null })
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
@@ -236,7 +237,7 @@ const Gym = ({ data, status_choices, CallBack }) => {
                 
         </Col>
         <Col md={4}>
-            <span>Showing {Object.values(currentItems).length > 0 ? itemsPerPage : 0} results per page</span>
+            <span>Showing {currentItems && Object.values(currentItems).length > 0 ? itemsPerPage : 0} results per page</span>
             <Select 
                 placeholder="Entries"
                 options={itemsCount}

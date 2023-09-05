@@ -64,6 +64,14 @@ const Routes = [
     }
   },
   {
+    path: '/kavskill',
+    component: lazy(() => import('../../views/Kavskills/index')),
+    layout: 'BlankLayout',
+    meta: {
+      publicRoute: true
+    }
+  },
+  {
     path: '/track/:uuid',
     component: lazy(() => import('../../views/Candidates/Components/trackform')),
     layout: 'BlankLayout',
@@ -205,8 +213,42 @@ const Routes = [
     component: lazy(() => import('../../views/Dashboard/Components/EmployeeDashboard'))
   },
   {
+    path: '/employee/kpi',
+    component: lazy(() => import('../../views/KpiModule/index'))
+  },
+
+  {
+    path: '/hr/kpi',
+    component: lazy(() => import('../../views/KpiModule/HRkpi/index'))
+  },
+  {
+    path: '/hr/kavskills',
+    component: lazy(() => import('../../views/Kavskills/hr_kavskills/index'))
+  },
+  {
     path: '/learning_development/employee/sheet',
     component: lazy(() => import('../../views/LearningDevelopment/Components/EmployeeSheet'))
+  },
+  {
+    path: '/employee/manuals',
+    component: lazy(() => import('../../views/EmployeeSOPModule/index'))
+  },
+
+  {
+    path: '/forgot-password',
+    component: lazy(() => import('../../views/auth/ForgotPassword/ForgotPasswordForm')),
+    layout: 'BlankLayout',
+    meta: {
+      authRoute: true
+    }
+  },
+  {
+    path: '/reset-password/:id/:token',
+    component: lazy(() => import('../../views/auth/ForgotPassword/ResetPassword')),
+    layout: 'BlankLayout',
+    meta: {
+      authRoute: true
+    }
   },
   {
     path: '/error',

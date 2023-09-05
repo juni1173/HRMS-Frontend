@@ -1,5 +1,5 @@
 // ** React Imports
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 // ** Custom Components
@@ -28,21 +28,27 @@ const UserDropdown = () => {
   //** ComponentDidMount
   useEffect(() => {
     if (isUserLoggedIn() !== null) {
-      if (JSON.parse(localStorage.getItem('userData')).user_role === 'employee') {
-        setUserData(JSON.parse(localStorage.getItem('user'))[0])
-     } else {
-      setUserData(JSON.parse(localStorage.getItem('user')))
-     }
-      
+      if (JSON.parse(localStorage.getItem('userData'))) {
+        if (JSON.parse(localStorage.getItem('userData')).user_role === 'employee') {
+          setUserData(JSON.parse(localStorage.getItem('user')))
+       } else {
+        setUserData(JSON.parse(localStorage.getItem('user')))
+       }
+      }
     }
   }, [])
   let userAvatar = ''
   //** Vars
-  if (JSON.parse(localStorage.getItem('userData')).user_role === 'employee') {
-     userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? JSON.parse(localStorage.getItem('user')).profile_image : defaultAvatar) : defaultAvatar
+  if (JSON.parse(localStorage.getItem('userData'))) {
+    if (JSON.parse(localStorage.getItem('userData')).user_role === 'employee') {
+      userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? JSON.parse(localStorage.getItem('user')).profile_image : defaultAvatar) : defaultAvatar
+   } else {
+      userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? JSON.parse(localStorage.getItem('user')).profile_image : defaultAvatar) : defaultAvatar
+   }
   } else {
-     userAvatar = JSON.parse(localStorage.getItem('user')) ? (JSON.parse(localStorage.getItem('user')).profile_image ? JSON.parse(localStorage.getItem('user')).profile_image : defaultAvatar) : defaultAvatar
+    return <Redirect to='/' />
   }
+  
   return (
     <UncontrolledDropdown tag='li' className='dropdown-user nav-item'>
       <DropdownToggle href='/' tag='a' className='nav-link dropdown-user-link' onClick={e => e.preventDefault()}>

@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Row, Col, Label, Button, Spinner, Input, Badge, Table } from 'reactstrap'
-import { Save, XCircle } from 'react-feather'
+import { Row, Col, Label, Button, Spinner, Input, Badge, Table, UncontrolledTooltip } from 'reactstrap'
+import { Save, XCircle, HelpCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
@@ -37,7 +37,11 @@ const Loan = ({ data, CallBack }) => {
         InputValue = e
         } else if (InputType === 'date') {
             const formatDate = Api.formatDate(e)
-            InputValue = formatDate
+            if (formatDate === 'NaN-NaN-NaN') {
+                InputValue = ''
+            } else {
+                InputValue = formatDate
+            }
         } else if (InputType === 'file') {
             InputValue = e.target.files[0].name
         }
@@ -67,7 +71,7 @@ const Loan = ({ data, CallBack }) => {
     }
   
     const submitForm = async () => {
-        setLoading(true)
+       
         if (loanData.loan_type !== '' && loanData.amount !== '' && loanData.loan_start_date !== '' && loanData.number_of_loan_installment !== ''
         && loanData.purpose_of_loan !== '') {
             const formData = new FormData()
@@ -79,8 +83,21 @@ const Loan = ({ data, CallBack }) => {
             await Api.jsonPost(`/reimbursements/employees/loans/`, formData).then(result => {
                 if (result) {
                     if (result.status === 200) {
+                        setLoading(true)
                         Api.Toast('success', result.message)
                         CallBack()
+                        setLoanData(prevState => ({
+                            ...prevState,
+                            loan_type: '',
+                            amount : '',
+                            number_of_loan_installment: '',
+                            loan_start_date: '',
+                            purpose_of_loan: ''
+                       })
+                       )
+                        setTimeout(() => {
+                            setLoading(false)
+                        }, 1000)
                     } else {
                         Api.Toast('error', result.message)
                     }
@@ -255,7 +272,10 @@ const Loan = ({ data, CallBack }) => {
                                         <td className='nowrap'>{item.amount ? item.amount : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.number_of_loan_installment ? item.number_of_loan_installment : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.loan_start_date ? item.loan_start_date : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
+                                        <td>
+                                        <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
+                                        {item.decision_reason && (<> <HelpCircle id={`UnControlledLoan${key}`}/><UncontrolledTooltip  target={`UnControlledLoan${key}`}>{item.decision_reason} </UncontrolledTooltip></>)}
+                                        </td>
                                         <td>
                                         {item.status === 'in-progress' && (
                                             <Row className='text-center'>

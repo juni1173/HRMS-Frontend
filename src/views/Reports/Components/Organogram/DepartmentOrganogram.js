@@ -1,98 +1,94 @@
-import React from 'react'
-import { Chart } from 'react-google-charts'
-import defaultAvatar from '@src/assets/images/avatars/user_blank.png'
-
-const DepartmentOrganogram = ({ data }) => {
-  
-    const chartData = [
-        ['Name', 'Manager', { type: 'string', role: 'tooltip' }, { type: 'string', role: 'style' }],
-        ...data.flatMap((department) => {
-          const { title, employees } = department
-          return [
-            [
-                {
-                v: title,
-                f:`<h4 style="color:white; white-space:nowrap">${title}</h4>`
-            }, '', '', `color: #fff font-weight: bold font-size: 26px`
-        ], // Department node
-            ...employees.map((employee) => {
-                const profileImage = employee.profile_image ? `${process.env.REACT_APP_BACKEND_URL}${employee.profile_image}` : defaultAvatar // Use empty string if profile_image is null
-              const tooltipContent = {
-                v: `${employee.name} - ${employee.staff_classification_title}`,
-                f: `<div style="display:flex"><img src=${profileImage} width="50" height="50"/><p style="color:white; white-space:nowrap">${employee.name}<br>${employee.staff_classification_title}</p></div>`
-              }
-            //   const rows = []
-            //   if (employee.staff_classification_level === 10) {
-            //     // Employee node with staff classification level 1
-            //     rows.push([tooltipContent, title, '', ''])
-            //   } else {
-                // Find the previous employee with the same staff_classification_level
-                // const previousEmployee = employees.find(
-                //   (emp) => emp.staff_classification_level === employee.staff_classification_level - 1
-                // )
-        
-                // if (previousEmployee) {
-                //   // Child node for employee with different staff_classification_level
-                //   rows.push(['', previousEmployee.name, '', employee.name])
-                // } else {
-                //   // Employee node with staff classification level 1 (if no previous employee found)
-                //   rows.push([tooltipContent, title, '', ''])
-                // }
-            //   }
-        
-            //   return rows
-            //   if (employee.staff_classification_level < 4) {
-            //     rows.push([
-            //         tooltipContent, 
-            //         title, // Manager
-            //         employee.staff_classification_title,
-            //         // Tooltip content
-            //         `background-image: url(${profileImage}) background-size: cover` // Style for profile image
-            //       ])
-            //   } else {
-            //     rows.push([
-            //         tooltipContent, 
-            //         title, // Manager
-            //         employee.staff_classification_title,
-            //         // Tooltip content
-            //         `background-image: url(${profileImage}) background-size: cover` // Style for profile image
-            //       ])
-            //   }
-              return ([
-                    tooltipContent, 
-                    title, // Manager
-                    employee.staff_classification_title,
-                    // Tooltip content
-                    `background-image: url(${profileImage}) background-size: cover` // Style for profile image
-                    ])
-            })
-          ]
-        })
-      ]
-   
-    // const test = () => {
-    //     console.warn(chartData)
-    // }
+import React, {useState} from 'react'
+import { CardBody, Card, Badge, Modal, ModalHeader, ModalBody, Button } from 'reactstrap'
+import user_blank  from "../../../../assets/images/avatars/user_blank.png"
+const TreeNode = ({ node }) => {
+  if (!node.employees) {
+    return null
+  }
+  const renderChildren = (childData, level) => {
+    if (level <= 0 || childData.data.length === 0) {
       return (
-        <>
-        {/* <button onClick={test}>Test</button> */}
-        <Chart
-          width={'50%'}
-          height={'auto'}
-          backgrou
-          chartType="OrgChart"
-          loader={<div>Loading Chart</div>}
-          data={chartData}
-          options={{
-            allowHtml: true,
-            color: '#315180',
-            layout: 'horizontal' // Set the layout to horizontal
-          }}
-        />
-        </>
+        childData.children && (
+          <>
+          {renderChildren(childData.children, level - 1)}
+          </>
+        )
       )
-
     }
-    
+    return (
+      <>
+       <div className='d-flex'>
+        {childData.data.map((employee) => (
+              <Card className='m-1' key={employee.id} style={{width: "22rem"}}>
+                    <CardBody className='p-0'>
+                        <div className="row">
+                            <div className="col-md-3">
+                                <Badge color='light-warning'>
+                                {employee.profile_image ?  <img src={employee.profile_image} style={{height: '50px', width: "50px"}} alt="logo" /> : <img src={user_blank} style={{height:"50px", width: "50px"}} alt="logo" />}   
+                                </Badge> 
+                            </div>
+                            <div className="col-md-9">
+                                <strong>{employee.name ? employee.name : <Badge color="light-danger">N/A</Badge>}</strong>
+                                <br></br>
+                                <Badge color='light-info p-0'>
+                                    {employee.staff_classification_title && employee.staff_classification_title}
+                                </Badge>
+                            </div>
+                        </div>
+                    </CardBody>
+              </Card> 
+        ))}
+       </div>
+       {(childData.children) && (
+        <>
+        {renderChildren(childData.children, level - 1)}
+        </>
+      )}
+      </>
+    )
+  }
 
-export default DepartmentOrganogram
+  return (
+    
+      <div className='border-right'>
+      <h3 className='px-2'>{node.title}</h3>
+      {(node.employees.children) && (
+          renderChildren(node.employees.children, node.total_levels - 1)
+        )}
+        </div>
+  )
+}
+
+const TreeComponent = ({ treeData }) => {
+  const [centeredModal, setCenteredModal] = useState(false)
+  return (
+    <div className=''>
+      <Button className='mb-2' color='primary' outline onClick={() => setCenteredModal(!centeredModal)}>
+          Full Screen
+        </Button>
+      <div style={{ display: 'flex', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+     { treeData.map((node) => (
+      <div className='col' key={node.id}>
+        <TreeNode key={node.id} node={node} />
+      </div>
+      ))}
+      </div>
+      <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered modal-fullscreen'>
+          <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Organogram</ModalHeader>
+          <ModalBody>
+          <div style={{ display: 'flex', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+            { treeData.map((node) => (
+              <div className='col' key={node.id}>
+                <TreeNode key={node.id} node={node} />
+              </div>
+              ))}
+              </div>
+          </ModalBody>
+          
+        </Modal>
+      </div>
+  )
+  
+}
+
+export default TreeComponent

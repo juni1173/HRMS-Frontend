@@ -2,7 +2,7 @@
 import Chart from 'react-apexcharts'
 
 // ** Reactstrap Imports
-import { Card, CardTitle, CardText, CardBody, Row, Col } from 'reactstrap'
+import { Card, CardBody, Row, Col } from 'reactstrap'
 
 const SessionChart = ({ data, Sessions }) => {
     console.warn(data)

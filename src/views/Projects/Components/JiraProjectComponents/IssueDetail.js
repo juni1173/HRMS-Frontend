@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import { Badge, Row, Col, Card, CardBody } from 'reactstrap'
 
 const IssueDetail = ({ data }) => {
+
   return (
     <Fragment>
          {
@@ -11,11 +12,29 @@ const IssueDetail = ({ data }) => {
                                 <Row className='mb-2'>
                                     <Col md={8}>
                                    <h3>{data.summary}</h3>
+                                   <br></br>
+                                       <b>Assignee: </b><Badge>{data.assignee ? (data.assignee.displayName && data.assignee.displayName) : 'N/A'} </Badge>
+                                       <br></br>
+                                       <b>Description: </b>{data.description ? data.description : <Badge color='light-danger'>N/A</Badge>}
                                     </Col>
                                     <Col md={4} >
                                        <b>Status: </b><Badge color={data.status.statusCategory.colorName === 'green' ? 'light-success' : 'light-warning'}>{data.status.name}</Badge>
                                        <br></br><br></br>
-                                       <b>Assignee: </b>{data.assignee ? (data.assignee.displayName && data.assignee.displayName) : <Badge>N/A</Badge>} 
+                                       <b>Priority: </b>{data.priority ? (
+                                        <Row>
+                                         {data.priority.iconUrl && (
+                                            <Col md={2} className="text-center">
+                                                <img src={data.priority.iconUrl} width="32" height={32} />
+                                            </Col>
+                                         )} 
+                                        {data.priority.name && (
+                                             <Col md={10}>
+                                               <Badge>{data.priority.name}</Badge>
+                                            </Col>
+                                         )} 
+                                       
+                                    </Row>
+                                       ) : <Badge>N/A</Badge>} 
                                     </Col>
                                 </Row>
                                 <Row>

@@ -6,12 +6,17 @@ import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import { Clock } from 'react-feather'
 const list = () => {
+    const getCurrentTime = () => {
+        const today = new Date()
+        const currentTime = `${today.getHours()}:${today.getMinutes()}`
+        return currentTime
+    }
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [atndceData, setAtndceData] = useState([])
     const [centeredModal, setCenteredModal] = useState(false)
-    const [check_in_time, setCheckInTime] = useState(null)
-    const [check_out_time, setCheckOutTime] = useState(null)
+    const [check_in_time, setCheckInTime] = useState(getCurrentTime)
+    const [check_out_time, setCheckOutTime] = useState(getCurrentTime)
     const [date, setDate] = useState(new Date())
     const [type, setType] = useState('')
     const [btnstatus, setBtnStatus] = useState('')
@@ -46,6 +51,8 @@ const list = () => {
             if (check_in_time) formData['check_in'] = `${check_in_time}:00`
             if (date) formData['date'] = Api.formatDate(date)
             if (type) formData['attendance_type'] = type
+            console.warn(formData)
+            // return false
             await Api.jsonPost(`/attendance/check_in/`, formData)
             .then((result) => {
                 if (result) {
@@ -53,6 +60,10 @@ const list = () => {
                             setCenteredModal(false)
                             getAttendanceData()
                             Api.Toast('success', result.message)
+                            setDate(new Date)
+                            setType('')
+                            setCheckInTime(getCurrentTime)
+                            setCheckOutTime(getCurrentTime)
                     } else {
                             Api.Toast('error', result.message)
                         
@@ -80,6 +91,10 @@ const Check_out = async () => {
                             setCenteredModal(false)
                             getAttendanceData()
                             Api.Toast('success', result.message)
+                            setDate(new Date)
+                            setType('')
+                            setCheckInTime(getCurrentTime)
+                            setCheckOutTime(getCurrentTime)
                     } else {
                             Api.Toast('error', result.message)
                         
@@ -93,11 +108,7 @@ const Check_out = async () => {
           }, 1000)
     
 }
-const getCurrentTime = () => {
-    const today = new Date()
-    const time = `${today.getHours()}:${today.getMinutes()}}`
-    return time
-}
+
     useEffect(() => {
         getAttendanceData()
     }, [setAtndceData])
@@ -169,19 +180,70 @@ const getCurrentTime = () => {
         <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered modal-lg'>
           <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Enter Time</ModalHeader>
           <ModalBody>
-                
-                    {btnstatus === 'check_in' && (
-                       <Row>
-                       <Col md="12">
-                         <h3> Check in</h3></Col>   
-                      <Col md="3" className="mb-1">
+                {!loading ? (
+                    <>
+                   { btnstatus === 'check_in' && (
+                        <Row>
+                        <Col md="12">
+                          <h3> Check in</h3></Col>   
+                       <Col md="3" className="mb-1">
+                       <Label className="form-label">
+                        Time
+                       </Label><br></br>
+                           <input className="form-control" type="time" onChange={e => setCheckInTime(e.target.value)} defaultValue={check_in_time}></input>
+                       </Col>
+                       <Col md="3">
+                       <Label className='form-label' for='default-picker'>
+                           Date
+                           </Label>
+                           <Flatpickr className='form-control'  
+                           onChange={(e) => setDate(e)} 
+                           id='default-picker' 
+                           placeholder='Date'
+                           options={{
+                             defaultDate: date
+                            //    disable: [
+                            //    function(date) {
+                            //        // Weekend disable
+                            //        return (date.getDay() === 0 || date.getDay() === 6) 
+                            //    }
+                            //    ]
+                           } }
+                           />
+                       </Col>
+                       <Col md="3">
+                           <Label>
+                               Type <Badge color="light-danger">*</Badge>
+                           </Label>
+                           <Select
+                               isClearable={false}
+                               className='react-select'
+                               classNamePrefix='select'
+                               name="type"
+                               options={types_choices}
+                               defaultValue={types_choices.find(pre => pre.value === type)}
+                               onChange={ (e) => setType(e.value) }
+                           />
+                       </Col>
+                           <Col md="3" className="mb-1">
+                               <Button className='btn btn-primary mt-2' onClick={Check_in}>
+                               <Clock/>
+                           </Button>
+                           </Col>
+                     </Row>
+                     )}
+                     {btnstatus === 'check_out' && (
+                          <Row>
+                          <Col md="12">
+                         <h3> Check out</h3></Col>  
+                      <Col md="4" className="mb-1">
                       <Label className="form-label">
                        Time
                       </Label><br></br>
-                          <input className="form-control" type="time" onChange={e => setCheckInTime(e.target.value)} defaultValue={getCurrentTime}></input>
+                          <input className="form-control" type="time" onChange={e => setCheckOutTime(e.target.value)} defaultValue={check_out_time}></input>
                       </Col>
-                      <Col md="3">
-                      <Label className='form-label' for='default-picker'>
+                      <Col md="4">
+                          <Label className='form-label' for='default-picker'>
                           Date
                           </Label>
                           <Flatpickr className='form-control'  
@@ -189,72 +251,29 @@ const getCurrentTime = () => {
                           id='default-picker' 
                           placeholder='Date'
                           options={{
-                            defaultDate: 'today',
-                              disable: [
-                              function(date) {
-                                  // Weekend disable
-                                  return (date.getDay() === 0 || date.getDay() === 6) 
-                              }
-                              ]
+                             defaultDate: date
+                            //   disable: [
+                            //   function(date) {
+                            //       // Weekend disable
+                            //       return (date.getDay() === 0 || date.getDay() === 6) 
+                            //   }
+                            //   ]
                           } }
                           />
                       </Col>
-                      <Col md="3">
-                          <Label>
-                              Type <Badge color="light-danger">*</Badge>
-                          </Label>
-                          <Select
-                              isClearable={false}
-                              className='react-select'
-                              classNamePrefix='select'
-                              name="type"
-                              options={types_choices}
-                              onChange={ (e) => setType(e.value) }
-                          />
-                      </Col>
-                          <Col md="3" className="mb-1">
-                              <Button className='btn btn-primary mt-2' onClick={Check_in}>
-                              <Clock/>
+                          <Col md="4" className="mb-1">
+                          <Button className='btn btn-primary mt-2' onClick={Check_out}>
+                              <Clock />
                           </Button>
                           </Col>
                     </Row>
-                    )} 
-                    {btnstatus === 'check_out' && (
-                         <Row>
-                         <Col md="12">
-                        <h3> Check out</h3></Col>  
-                     <Col md="4" className="mb-1">
-                     <Label className="form-label">
-                      Time
-                     </Label><br></br>
-                         <input className="form-control" type="time" onChange={e => setCheckOutTime(e.target.value)} defaultValue={getCurrentTime}></input>
-                     </Col>
-                     <Col md="4">
-                         <Label className='form-label' for='default-picker'>
-                         Date
-                         </Label>
-                         <Flatpickr className='form-control'  
-                         onChange={(e) => setDate(e)} 
-                         id='default-picker' 
-                         placeholder='Date'
-                         options={{
-                            defaultDate: 'today',
-                             disable: [
-                             function(date) {
-                                 // Weekend disable
-                                 return (date.getDay() === 0 || date.getDay() === 6) 
-                             }
-                             ]
-                         } }
-                         />
-                     </Col>
-                         <Col md="4" className="mb-1">
-                         <Button className='btn btn-primary mt-2' onClick={Check_out}>
-                             <Clock />
-                         </Button>
-                         </Col>
-                   </Row>
-                    )}
+                     )}
+                     </>
+                ) : (
+                    <div className='text-center'><Spinner /></div>
+                )
+                }
+                    
                 
           </ModalBody>
           <ModalFooter>

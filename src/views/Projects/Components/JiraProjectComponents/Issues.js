@@ -9,10 +9,10 @@ const JiraIssues = ({ data }) => {
     const Api = apiHelper()
     const [issues, setIssues] = useState([])
     const [loading, setLoading] = useState(false)
-    const [centeredModal, setCenteredModal] = useState(false)
-    const [assigneeModal, setAssigneeModal] = useState(false)
-    const [statusCount, setStatusCount] = useState([])
-    const [assigneeCount, setAssigneeCount] = useState([])
+    // const [centeredModal, setCenteredModal] = useState(false)
+    // const [assigneeModal, setAssigneeModal] = useState(false)
+    // const [statusCount, setStatusCount] = useState([])
+    // const [assigneeCount, setAssigneeCount] = useState([])
     const [currentIssue, setCurrentIssue] = useState([])
     const getIssues = async () => {
         setLoading(true)
@@ -22,7 +22,8 @@ const JiraIssues = ({ data }) => {
             "status",
             "assignee",
             "comment",
-            "worklog"
+            "worklog",
+            "priority"
           ]
           formData['fieldsByKeys'] = false
           formData['jql'] = `project = ${data.id} ORDER BY created DESC`
@@ -95,17 +96,17 @@ const JiraIssues = ({ data }) => {
     console.warn(assigneesWithCount)
     return assigneesWithCount
 }
-    const getStatusChart = () => {
-        const data = convert(issues)
-        setStatusCount(data)
-        setCenteredModal(!centeredModal)
-    }
-    const getAssigneeChart = () => {
-        const data = getAssignee(issues)
+    // const getStatusChart = () => {
+    //     const data = convert(issues)
+    //     setStatusCount(data)
+    //     setCenteredModal(!centeredModal)
+    // }
+    // const getAssigneeChart = () => {
+    //     const data = getAssignee(issues)
        
-        setAssigneeCount(data)
-        setAssigneeModal(!assigneeModal)
-    }
+    //     setAssigneeCount(data)
+    //     setAssigneeModal(!assigneeModal)
+    // }
     useEffect(() => {
         getIssues()
     }, [])
@@ -113,7 +114,7 @@ const JiraIssues = ({ data }) => {
     <Fragment>
         
         <Row>
-            <Col md={4} id='left-scroll'>
+            <Col md={3} id='left-scroll'>
             <h3 className='text-center text-white'>Jira Issues </h3>
             {
             !loading ? (
@@ -141,15 +142,15 @@ const JiraIssues = ({ data }) => {
             )
         }
             </Col>
-            <Col md={8} id='right-scroll'>
+            <Col md={6} className='mid-scroll'>
                 <h3 className='text-center'>Issue Detail </h3>
-                
+{/*                 
                 <Button className='btn btn-success text-center m-2' onClick={getStatusChart}>
                     Status Chart <BarChart2 />
                 </Button>
                 <Button className='btn btn-success text-center' onClick={getAssigneeChart}>
                     Assignee Chart <BarChart2 />
-                </Button>
+                </Button> */}
                 {
                     Object.values(currentIssue).length > 0 ? (
                         <IssueDetail data={currentIssue} />
@@ -158,8 +159,13 @@ const JiraIssues = ({ data }) => {
                     )
                 }
             </Col>
+            <Col md={3} className='right-scroll'>
+                    <StatusChart data={convert(issues)} />
+                    <br></br>
+                    <AssigneeChart data={getAssignee(issues)} />
+                </Col>
         </Row>
-        <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered modal-lg'>
+        {/* <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered modal-lg'>
           <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Statuses Chart</ModalHeader>
           <ModalBody>
                 <StatusChart data={statusCount} />
@@ -176,7 +182,7 @@ const JiraIssues = ({ data }) => {
           <ModalFooter>
            
           </ModalFooter>
-        </Modal>
+        </Modal> */}
     </Fragment>
   )
 }

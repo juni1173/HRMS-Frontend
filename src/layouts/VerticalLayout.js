@@ -3,10 +3,12 @@
 import Layout from '@layouts/VerticalLayout'
 import { useState, useEffect } from 'react'
 import { Spinner } from 'reactstrap'
+
 // ** Menu Items Array
 import navigation from '@src/navigation/vertical'
 import emp_nav from '@src/navigation/vertical/NavComp/Emp_Nav'
 import No_Org_Nav from '../navigation/vertical/NavComp/No_Org_Nav'
+import { Redirect } from 'react-router-dom'
 // import Exist_Org_Nav from '../navigation/vertical/NavComp/Exist_Org_Nav'
 const VerticalLayout = props => {
   // const [menuData, setMenuData] = useState([])
@@ -21,25 +23,27 @@ const VerticalLayout = props => {
   useEffect(() => {
       setLoading(true)
        setOrg(JSON.parse(localStorage.getItem('organization')) || null)   
-       setUserRole(JSON.parse(localStorage.getItem('userData')).user_role)
+        
+        JSON.parse(localStorage.getItem('userData')) ? setUserRole(JSON.parse(localStorage.getItem('userData')).user_role) : setUserRole(null)
+    
        setTimeout(() => {
         setLoading(false)
        }, 1000)
   }, [localStorage.getItem('organization')])
-
+if (JSON.parse(localStorage.getItem('userData'))) {
   return (
     !loading ? (
       org ? (
-        userRole === 'employee' ? (
-          <Layout menuData={emp_nav} {...props}>
-          {props.children}
-        </Layout>
-        ) : (
-          <Layout menuData={navigation} {...props}>
-          {props.children}
-        </Layout>
-        )
-        
+       
+          userRole === 'employee' ? (
+            <Layout menuData={emp_nav} {...props}>
+            {props.children}
+          </Layout>
+          ) : (
+            <Layout menuData={navigation} {...props}>
+            {props.children}
+          </Layout>
+          )
       ) : (
         <Layout menuData={No_Org_Nav} {...props}>
           {props.children}
@@ -55,6 +59,10 @@ const VerticalLayout = props => {
     
     
   )
+} else {
+  return <Redirect to='/' />
+}
+ 
 }
 
 export default VerticalLayout

@@ -6,6 +6,7 @@ import Select from 'react-select'
 import apiHelper from '../../../../Helpers/ApiHelper'
 import DownloadPDF from '../../../../Helpers/PDFDownloadHelper/PdfDownload'
 import { DownloadCloud } from 'react-feather'
+import { CSVLink } from "react-csv"
 
 const MedicalReport = () => {
   const Api = apiHelper()
@@ -70,8 +71,19 @@ const MedicalReport = () => {
     }, 500)
   }
   const handleDownload = () => {
-    PDF.handleDownload('pdf_table', `Medical_Report_${reportParameters.start_date}_${reportParameters.end_date}`)
+    PDF.handleDownload('medical_pdf_table', `Medical_Report_${reportParameters.start_date}_${reportParameters.end_date}`)
   }
+  const csvData = [
+    ["Employee", "Date", "Amount", "Limit (Year)", "Reciept", "Status"],
+    ...data.map((item) => [
+        item.employee_name,
+        item.date,
+        item.amount,
+       item.medical_yearly_limit,
+       `${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`,
+        item.status
+    ])
+]
   return (
     <Fragment>
     <Card>
@@ -128,10 +140,11 @@ const MedicalReport = () => {
                       <h5 className='text-white'>Medical Report {reportParameters.start_date} - {reportParameters.end_date}</h5>
                     </Col>
                     <Col md={6}>
-                      <button className='btn btn-sm btn-outline-warning float-right' onClick={handleDownload}>PDF <DownloadCloud/></button>
+                    <CSVLink className="btn btn-sm btn-outline-warning float-right" filename='HRMS_Medical_Report' data={csvData}>Excel <DownloadCloud/> </CSVLink>
+                      <button className='btn btn-sm btn-outline-warning float-right mr-1' onClick={handleDownload}>PDF <DownloadCloud/></button>
                     </Col>
                     </Row>
-                            <Table bordered striped dark responsive className='my-1' id='pdf_table'>
+                            <Table bordered responsive className='light-table my-1' id='medical_pdf_table'>
                                     <thead className='text-center'>
                                     <tr>
                                         <th scope="col" className="text-nowrap">

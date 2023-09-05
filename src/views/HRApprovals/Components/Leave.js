@@ -36,10 +36,10 @@ const Leave = ({ data, status_choices, CallBack }) => {
                                 customClass: {
                                 confirmButton: 'btn btn-success'
                                 }
-                            }).then(function (result) {
+                            }).then(async function (result) {
                                 if (result.isConfirmed) {
                                     setLoading(true)
-                                    CallBack()
+                                    await CallBack()
                                     setTimeout(() => {
                                         setLoading(false)
                                     }, 1000)

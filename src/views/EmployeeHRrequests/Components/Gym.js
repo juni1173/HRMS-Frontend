@@ -233,7 +233,7 @@ const Gym = ({ data, CallBack }) => {
                                         <td>{item.gym_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.gym_receipt}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>
                                         <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
-                                        {item.decision_reason && (<> <HelpCircle id='UnControlledExample'/><UncontrolledTooltip placement='right' target='UnControlledExample'>{item.decision_reason} </UncontrolledTooltip></>)}
+                                        {item.decision_reason && (<> <HelpCircle id={`UnControlledGym${key}`}/><UncontrolledTooltip  target={`UnControlledGym${key}`}>{item.decision_reason} </UncontrolledTooltip></>)}
                                         </td>
                                         
                                             <td className='p-1'>

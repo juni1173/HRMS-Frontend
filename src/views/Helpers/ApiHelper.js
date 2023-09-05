@@ -94,11 +94,13 @@ import Avatar from '@components/avatar'
             if (!apiResponse.ok) {
               if ([401, 405].includes(apiResponse.status)) {
                   localStorage.clear()
-                  window.location.href = "/login"
+                  window.location.href = "/"
                   return false
               }
               if (apiResponse.status === 404) {
-                return false
+                localStorage.clear()
+                  window.location.href = "/"
+                  return false
               }
             }   
             return await apiResponse.json()

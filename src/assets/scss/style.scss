@@ -12,6 +12,12 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 .pr-1 {
 	padding-right: 1rem !important;
 }
+.scrolling-wrapper-flexbox {
+	display: flex;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	
+  }
 .overflowx-scroll {
 	overflow-x: scroll;
 }
@@ -345,7 +351,7 @@ div.configuration_panel .tab-pane-orange {
 	background-color: #315180;
 	// text-align: center;
 	height:100%;
-	position: absolute;
+	// position: absolute;
 	top: 0px;
 	bottom: 0;
 	left: 0;
@@ -353,13 +359,33 @@ div.configuration_panel .tab-pane-orange {
 	overflow-y: scroll; 
   }
   
-  #right-scroll {
+  .right-scroll {
 	height:100%;
 	// background-color: #f1c40f;
 	// text-align: center;
-	position: absolute;
+	// position: absolute;
 	top: 0;
 	bottom: 0;
 	right: 0;
 	overflow-y: scroll;
+	overflow-x: scroll;
+  }
+  .mid-scroll {
+	height:100%;
+	// background-color: #f1c40f;
+	// text-align: center;
+	// position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 270px;
+	overflow-y: scroll;
+  }
+  .light-table {
+	border-color: black;
+  }
+  .light-table tr{
+	background-color: white;
+  }
+  .light-table th, .light-table td {
+	color: black;
   }

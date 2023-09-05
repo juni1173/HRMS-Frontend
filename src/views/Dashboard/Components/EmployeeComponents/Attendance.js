@@ -9,8 +9,8 @@ const Attendance = ({atndceData, CallBack}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [centeredModal, setCenteredModal] = useState(false)
-    const [check_in_time, setCheckInTime] = useState(Api.currentTime())
-    const [check_out_time, setCheckOutTime] = useState(Api.currentTime())
+    const [check_in_time, setCheckInTime] = useState(Api.currentTime)
+    const [check_out_time, setCheckOutTime] = useState(Api.currentTime)
     const [date, setDate] = useState(new Date())
     const [type, setType] = useState('')
     const [btnstatus, setBtnStatus] = useState('')
@@ -148,7 +148,7 @@ const Attendance = ({atndceData, CallBack}) => {
                         <Label className="form-label">
                          Time
                         </Label><br></br>
-                            <input className="form-control" type="time" onChange={e => setCheckInTime(e.target.value)} defaultValue={Api.currentTime}></input>
+                            <input className="form-control" type="time" onChange={e => setCheckInTime(e.target.value)} defaultValue={check_in_time}></input>
                         </Col>
                         <Col md="3">
                         <Label className='form-label' for='default-picker'>
@@ -159,13 +159,13 @@ const Attendance = ({atndceData, CallBack}) => {
                             id='default-picker' 
                             placeholder='Date'
                             options={{
-                                defaultDate: 'today',
-                                disable: [
-                                function(date) {
-                                    // Weekend disable
-                                    return (date.getDay() === 0 || date.getDay() === 6) 
-                                }
-                                ]
+                                defaultDate: date
+                                // disable: [
+                                // function(date) {
+                                //     // Weekend disable
+                                //     return (date.getDay() === 0 || date.getDay() === 6) 
+                                // }
+                                // ]
                             } }
                             />
                         </Col>
@@ -179,6 +179,7 @@ const Attendance = ({atndceData, CallBack}) => {
                                 classNamePrefix='select'
                                 name="type"
                                 options={types_choices}
+                                defaultValue={types_choices.find(pre => pre.value === type)}
                                 onChange={ (e) => setType(e.value) }
                             />
                         </Col>
@@ -197,7 +198,7 @@ const Attendance = ({atndceData, CallBack}) => {
                         <Label className="form-label">
                          Time 
                         </Label><br></br>
-                            <input className="form-control" type="time" onChange={e => setCheckOutTime(e.target.value)}></input>
+                            <input className="form-control" type="time" onChange={e => setCheckOutTime(e.target.value)} defaultValue={check_out_time}></input>
                         </Col>
                         <Col md="4">
                             <Label className='form-label' for='default-picker'>
@@ -208,13 +209,13 @@ const Attendance = ({atndceData, CallBack}) => {
                             id='default-picker' 
                             placeholder='Date'
                             options={{
-                                defaultDate: 'today',
-                                disable: [
-                                function(date) {
-                                    // Weekend disable
-                                    return (date.getDay() === 0 || date.getDay() === 6) 
-                                }
-                                ]
+                                defaultDate: date
+                                // disable: [
+                                // function(date) {
+                                //     // Weekend disable
+                                //     return (date.getDay() === 0 || date.getDay() === 6) 
+                                // }
+                                // ]
                             } }
                             />
                         </Col>

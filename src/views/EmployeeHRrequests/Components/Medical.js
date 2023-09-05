@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react'
-import { Label, Row, Col, Input, Button, Spinner, Table, Badge } from "reactstrap" 
-import { Save, XCircle, FileText } from 'react-feather'
+import { Label, Row, Col, Input, Button, Spinner, Table, Badge, UncontrolledTooltip } from "reactstrap" 
+import { Save, XCircle, FileText, HelpCircle } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -232,7 +232,10 @@ const Medical = ({ data, CallBack }) => {
                                         <td>{item.amount ? item.amount : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.medical_yearly_limit ? item.medical_yearly_limit : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.medical_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`}> <FileText /></a> : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
+                                        <td>
+                                        <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
+                                        {item.decision_reason && (<> <HelpCircle id={`UnControlledMedical${key}`}/><UncontrolledTooltip  target={`UnControlledMedical${key}`}>{item.decision_reason} </UncontrolledTooltip></>)}
+                                        </td>
                                         
                                         <td>
                                         {item.status === 'in-progress' && (

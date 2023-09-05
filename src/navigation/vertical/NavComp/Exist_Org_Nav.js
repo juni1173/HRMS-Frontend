@@ -173,6 +173,24 @@ let nav = []
         navLink: '/configurations'
   },
   {
+    id: 'nav-manuals',
+    title: 'SOP / EPM',
+    icon: <Bookmark size={30} />,
+    navLink: '/employee/manuals'
+  },
+  {
+    id: 'nav-kpi',
+    title: 'KPI',
+    icon: <Settings size={12} />,
+    navLink: '/hr/kpi'
+},
+  {
+      id: 'nav-kavskills',
+      title: 'KavSkills',
+      icon: <Settings size={12} />,
+      navLink: '/hr/kavskills'
+  },
+  {
     id: 'nav-reports',
     title: 'Reports',
     icon: <Trello size={12} />,

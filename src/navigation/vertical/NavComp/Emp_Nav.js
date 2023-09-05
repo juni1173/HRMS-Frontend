@@ -107,6 +107,13 @@ let nav = []
   },
   
   {
+    id: 'nav-kpi',
+    title: 'KPI',
+    icon: <Bookmark size={30} />,
+    navLink: '/employee/kpi'
+  },
+  
+  {
     id: 'nav-l&d',
     title: 'Learning & Development',
     icon: <Book size={30} />,

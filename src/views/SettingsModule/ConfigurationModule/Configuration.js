@@ -11,6 +11,7 @@ import EmployeeRequests from './EmployeeRequests/index'
 import Roles from './RolesConfiguration/Roles'
 import KpiSegmentationForm from './KpiSegmentations/SegmentationForm'
 import Manuals from './ManualsSettings/index'
+import Attendance from './AttendanceModule/index'
 const Configuration = () => {
   // ** State
   const [active, setActive] = useState('1')
@@ -97,6 +98,16 @@ const Configuration = () => {
             Manuals (SOP / EPM)
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink
+            active={active === '8'}
+            onClick={() => {
+              toggle('8')
+            }}
+          >
+            Attendance
+          </NavLink>
+        </NavItem>
       </Nav>
 
       <TabContent activeTab={active}>
@@ -120,6 +131,9 @@ const Configuration = () => {
         </TabPane>
         <TabPane tabId='7' className='tab-pane-blue'>
           <Manuals />
+        </TabPane>
+      <TabPane tabId='8' className='tab-pane-blue'>
+          <Attendance />
         </TabPane>
       </TabContent>
     </div>

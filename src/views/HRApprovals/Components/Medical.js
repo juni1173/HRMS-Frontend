@@ -181,7 +181,7 @@ const Medical = ({ data, status_choices, CallBack }) => {
    
     useEffect(() => {
         setSearchResults(data)
-        getSearch({ list: data, value: null })
+        getSearch({ list: data, value: null, type: 'equal' })
     }, [data])
     useEffect(() => {
         
@@ -227,7 +227,7 @@ const Medical = ({ data, status_choices, CallBack }) => {
                 classNamePrefix='select'
                 onChange={e => {
                             if (e) {
-                            getSearch({list: data, key: 'status', value: e.value }) 
+                            getSearch({list: data, key: 'status', value: e.value, type: 'equal' }) 
                             } else {
                                 getSearch({list: data, key: 'status', value: '' }) 
                             }

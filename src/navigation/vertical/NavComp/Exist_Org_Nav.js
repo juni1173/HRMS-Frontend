@@ -32,6 +32,13 @@ let nav = []
     
   },
   {
+    id: 'nav-attendance',
+    title: 'Attendance',
+    icon: <User size={30} />,
+    navLink:'/admin/attendance'
+    
+  },
+  {
     id: 'Recruitment',
     title: 'Recruitment',
     icon: <Briefcase size={20} />,

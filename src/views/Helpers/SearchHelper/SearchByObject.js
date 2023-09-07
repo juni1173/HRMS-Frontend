@@ -11,7 +11,12 @@ const SearchHelper = () => {
                         if (typeof (options.value.query[query_keys[i]]) === 'number') {
                             searchResult = searchResult.filter(data => String(data[query_keys[i]]).includes(String(options.value.query[query_keys[i]])))
                         } else {
-                            searchResult = searchResult.filter(data => data[query_keys[i]] && data[query_keys[i]].toLowerCase().includes((options.value.query[query_keys[i]]).toLowerCase()))
+                            if (options.type && options.type === 'equal') {
+                                searchResult = searchResult.filter(data => data[query_keys[i]] && data[query_keys[i]].toLowerCase() === ((options.value.query[query_keys[i]]).toLowerCase()))
+                            } else {
+                                searchResult = searchResult.filter(data => data[query_keys[i]] && data[query_keys[i]].toLowerCase().includes((options.value.query[query_keys[i]]).toLowerCase()))
+                            }
+                            
                         }
                         
                 }

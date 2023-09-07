@@ -233,6 +233,10 @@ const Routes = [
     path: '/employee/manuals',
     component: lazy(() => import('../../views/EmployeeSOPModule/index'))
   },
+  {
+    path: '/admin/attendance',
+    component: lazy(() => import('../../views/Admin_Attendance/index'))
+  },
 
   {
     path: '/forgot-password',

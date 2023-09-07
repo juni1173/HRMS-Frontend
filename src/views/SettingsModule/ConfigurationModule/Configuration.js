@@ -12,6 +12,7 @@ import Roles from './RolesConfiguration/Roles'
 import KpiSegmentationForm from './KpiSegmentations/SegmentationForm'
 import Manuals from './ManualsSettings/index'
 import Attendance from './AttendanceModule/index'
+import Holidays from './Holidays/index'
 const Configuration = () => {
   // ** State
   const [active, setActive] = useState('1')
@@ -108,6 +109,16 @@ const Configuration = () => {
             Attendance
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink
+            active={active === '9'}
+            onClick={() => {
+              toggle('9')
+            }}
+          >
+            Holidays
+          </NavLink>
+        </NavItem>
       </Nav>
 
       <TabContent activeTab={active}>
@@ -134,6 +145,9 @@ const Configuration = () => {
         </TabPane>
       <TabPane tabId='8' className='tab-pane-blue'>
           <Attendance />
+        </TabPane>
+        <TabPane tabId='9' className='tab-pane-blue'>
+          <Holidays />
         </TabPane>
       </TabContent>
     </div>

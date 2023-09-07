@@ -175,7 +175,7 @@ const PF = ({ data, status_choices, CallBack }) => {
                 </Col>   
         </Row>
         ) : (
-            <div className="text-center">No Gym Allowance Request Data Found!</div>
+            <div className="text-center">No PF Data Found!</div>
         )
         
         }

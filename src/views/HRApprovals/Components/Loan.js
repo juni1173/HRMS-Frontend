@@ -176,7 +176,7 @@ const Loan = ({ data, status_choices, CallBack }) => {
                     </Col>   
             </Row>
             ) : (
-                <div className="text-center">No Loan Request Data Found!</div>
+                <div className="text-center">No Loan Data Found!</div>
             )
             
             }

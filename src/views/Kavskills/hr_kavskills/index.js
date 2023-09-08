@@ -1,24 +1,40 @@
 import { Fragment, useEffect, useState } from "react"
-import { Spinner, Card, Row, Col, CardBody, CardSubtitle, CardTitle, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody} from "reactstrap"
-import { Download, Eye, File } from "react-feather"
+import { Container, Spinner, Card, Row, Col, CardBody, CardSubtitle, CardTitle, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody, InputGroup, Input, InputGroupText} from "reactstrap"
+import { Download, Eye, File, Search } from "react-feather"
 import apiHelper from "../../Helpers/ApiHelper"
 import KavSkillsLogo from "../../../assets/images/logo/kavskills-logo.png"
 import { CSVLink } from "react-csv"
 import KavskillView from "./KavskillView"
- 
+import Select from 'react-select'
+import ReactPaginate from "react-paginate"
+import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
 const index = () => {
     
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
+    const searchHelper = SearchHelper()
+    const [searchQuery] = useState([])
     const [preData, setPreData] = useState([])
     const [data, setData] = useState([])
     const [canvasViewPlacement, setCanvasViewPlacement] = useState('end')
     const [canvasViewOpen, setCanvasViewOpen] = useState(false)
+    const [itemsPerPage, setItemsPerPage] = useState(10)
+    const [currentitems, setCurrentItems] = useState([])
+    const [pageCount, setPageCount] = useState(0)
+    const [itemOffset, setItemOffset] = useState(0)
+    const [searchResults, setSearchResults] = useState([])
+    const itemsCount = [
+        {value: 10, label: '10'},
+        {value: 25, label: '25'},
+        {value: 50, label: '50'},
+        {value: 100, label: '100'}
+    ]
     const getPreData = async () => {
         setLoading(true)
         await Api.get(`/kav_skills/`).then(result => {
             if (result) {
                 if (result.status === 200) {
+                    setSearchResults(result.data)
                     setPreData(result.data)
                 } else {
                     Api.Toast('error', result.message)
@@ -58,7 +74,44 @@ const index = () => {
     }
     useEffect(() => {
         getPreData()
-        }, [setPreData])
+        }, [setSearchResults])
+
+        
+        useEffect(() => {
+            const endOffset = itemOffset === 0 ? itemsPerPage : itemOffset + itemsPerPage            
+            setCurrentItems(searchResults.slice(itemOffset, endOffset))
+            setPageCount(Math.ceil(searchResults.length / itemsPerPage))
+            }, [itemOffset, itemsPerPage, searchResults])
+    
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchResults.length
+            setItemOffset(newOffset)
+            }
+            const getSearch = options => {
+                if (options.value === '' || options.value === null || options.value === undefined) {
+        
+                    if (options.key in searchQuery) {
+                        delete searchQuery[options.key]
+                    } 
+                    if (Object.values(searchQuery).length > 0) {
+                        options.value = {query: searchQuery}
+                    } else {
+                        options.value = {}
+                    }
+                    setItemOffset(0)
+                    setSearchResults(searchHelper.searchObj(options))
+                    setCurrentItems(searchHelper.searchObj(options))
+                    
+                } else {
+                    
+                    searchQuery[options.key] = options.value
+                    options.value = {query: searchQuery}
+                    setItemOffset(0)
+                    setSearchResults(searchHelper.searchObj(options))
+                    setCurrentItems(searchHelper.searchObj(options))
+                }
+                
+            }
    return (
     <Fragment>
         <Row>
@@ -73,13 +126,46 @@ const index = () => {
         <Col md={6} >
             <CSVLink className="btn btn-primary float-right mt-2" filename="HRMS_Kavskills_List" data={csvData}>Download <Download/> </CSVLink>
         </Col>
+        <div className='row  my-1'>
+                 {/* <Col md={3}>
+                    <h3>Candidate List</h3>
+                    <span>Showing {Object.values(currentitems).length > 0 ? itemsPerPage : 0} results per page</span>
+                </Col>  */}
+                <Col md={4}>
+                    <InputGroup className='input-group-merge mb-2'>
+                        <InputGroupText>
+                            <Search size={14} />
+                        </InputGroupText>
+                        <Input placeholder='Search by name ...'  onChange={e => { getSearch({list: preData, key: 'full_name', value: e.target.value }) } }/>
+                    </InputGroup>
+                </Col>
+                <Col md={4}>
+                    <InputGroup className='input-group-merge mb-2'>
+                        <InputGroupText>
+                            <Search size={14} />
+                        </InputGroupText>
+                        <Input placeholder='Search by skill ...'  onChange={e => { getSearch({list: preData, key: 'skill_type_title', value: e.target.value }) } }/>
+                    </InputGroup>
+                </Col>
+                <Col md={2}>
+                    <Select 
+                    placeholder="Entries"
+                    options={itemsCount}
+                    onChange={e => {
+                        setItemsPerPage(e.value)
+                        setItemOffset(0)
+                    }}
+                    />
+                </Col>
+       
+        </div>
         </Row>
                                 
         {!loading ? (
             
-            preData && Object.values(preData).length > 0 ? (
+            currentitems && Object.values(currentitems).length > 0 ? (
                 <Row>
-               {preData.map((item, key) => (
+               {currentitems.map((item, key) => (
                 <Col md={6}>
                     <Card key={key}>
                         <CardBody>
@@ -171,6 +257,26 @@ const index = () => {
             <div className='text-center'><Spinner/></div>
         )
         }
+        <div className="mt-2">    
+        <Container> 
+           
+       <ReactPaginate
+          breakLabel="..."
+          nextLabel=">"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel="<"
+          renderOnZeroPageCount={null}
+          containerClassName='pagination'
+          pageLinkClassName='page-num'
+          previousLinkClassName='page-num'
+          nextLinkClassName='page-num'
+          activeLinkClassName='active'
+        />
+    
+        </Container>
+        </div>    
         <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} >
           <OffcanvasHeader toggle={toggleViewCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>

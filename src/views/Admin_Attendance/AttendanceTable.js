@@ -22,6 +22,7 @@ const AttendanceTable = () => {
     const [yearvalue, setyearvalue] = useState(currentYear)
     const [uniqueDates, setuniqueDates] = useState([])
     const [currentItems, setCurrentItems] = useState([])
+    const [searchResults, setSearchResults] = useState([])
     const [pageCount, setPageCount] = useState(0)
     const [itemOffset, setItemOffset] = useState(0)
     const [itemsPerPage, setItemsPerPage] = useState(50)
@@ -62,6 +63,7 @@ const AttendanceTable = () => {
                 options.value = {}
             }
             setItemOffset(0)
+            setSearchResults(searchHelper.searchObj(options))
             setCurrentItems(searchHelper.searchObj(options))
             
         } else {
@@ -69,8 +71,8 @@ const AttendanceTable = () => {
             searchQuery[options.key] = options.value
             options.value = {query: searchQuery}
             setItemOffset(0)
+            setSearchResults(searchHelper.searchObj(options))
             setCurrentItems(searchHelper.searchObj(options))
-            console.log(currentItems)
         }
         
     }
@@ -84,6 +86,7 @@ const AttendanceTable = () => {
             if (result) {
                 if (result.status === 200) {
                    setPreData(result.data)
+                   setSearchResults(result.data)
                 } else {
                     Api.Toast('error', result.message)
                 }
@@ -115,16 +118,16 @@ const AttendanceTable = () => {
     useEffect(() => {
         getPreData()
      generateUniqueDates(yearvalue, monthvalue)
-        }, [setPreData, monthvalue, yearvalue])
+        }, [setSearchResults, monthvalue, yearvalue])
        
         useEffect(() => {
-            const endOffset = itemOffset === 0 ? itemsPerPage : itemOffset + itemsPerPage
-            setCurrentItems(preData.slice(itemOffset, endOffset))
-            setPageCount(Math.ceil(preData.length / itemsPerPage))
-            }, [itemOffset, itemsPerPage, preData])
+            const endOffset = itemOffset === 0 ? itemsPerPage : itemOffset + itemsPerPage            
+            setCurrentItems(searchResults.slice(itemOffset, endOffset))
+            setPageCount(Math.ceil(searchResults.length / itemsPerPage))
+            }, [itemOffset, itemsPerPage, searchResults])
     
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % preData.length
+            const newOffset = (event.selected * itemsPerPage) % searchResults.length
             setItemOffset(newOffset)
             }
             const csvData = [

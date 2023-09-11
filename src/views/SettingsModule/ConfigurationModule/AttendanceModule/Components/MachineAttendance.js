@@ -5,12 +5,16 @@ import Select from 'react-select'
 import apiHelper from '../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import ReactPaginate from 'react-paginate'
 const MachineAttendance = () => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
     const [typeData] = useState([])
+    const [currentitems, setcurrentitems] = useState([])
+    const [pageCount, setPageCount] = useState(0)
+    const [itemOffset, setItemOffset] = useState(0)
     const [Form, setForm] = useState({
         attendance_machine: '',
         attendance_file: ''
@@ -80,9 +84,16 @@ const MachineAttendance = () => {
                     if (result.status === 200) {
                         Api.Toast('success', result.message)
                         preDataApi()
+                        setForm({
+                            attendance_machine: '',
+                            attendance_file: ''
+                        })
                     } else {
                         Api.Toast('error', result.message)
-
+                        setForm({
+                            attendance_machine: '',
+                            attendance_file: ''
+                        })
                     }
                 }
             })
@@ -141,6 +152,17 @@ const MachineAttendance = () => {
     useEffect(() => {
       preDataApi()
       }, [setData])
+
+      const handlePageClick = (event) => {
+        const newOffset = (event.selected * 25) % data.length
+        setItemOffset(newOffset)
+        }
+        useEffect(() => {
+            const endOffset = itemOffset === 0 ? 25 : itemOffset + 25           
+            setcurrentitems(data.slice(itemOffset, endOffset))
+            setPageCount(Math.ceil(data.length / 25))
+            }, [itemOffset, data])
+            
   return (
     <Fragment>
         <Row>
@@ -187,7 +209,7 @@ const MachineAttendance = () => {
                     </Button>
                         </Col>
                     </Row>
-                    {Object.values(data).length > 0 ? (
+                    {Object.values(currentitems).length > 0 ? (
                         <Row>
                         <Col md={12}>
                             <Table bordered striped responsive className='my-1'>
@@ -204,9 +226,9 @@ const MachineAttendance = () => {
                                     </thead>
                                     
                                     <tbody className='text-center'>
-                                        {Object.values(data).map((item, key) => (
+                                        {Object.values(currentitems).map((item, key) => (
                                                 <tr key={key}>
-                                                <td>{item.attendance_machine}</td>
+                                                <td>{item.attendance_machine_title}</td>
                                                 <td><a className="btn btn-primary" href={item.attendance_file} target="_blank"><File /></a></td>
                                                 </tr>
                                         )
@@ -227,6 +249,20 @@ const MachineAttendance = () => {
             )}
         <hr></hr>
             </Col>
+            <ReactPaginate
+          breakLabel="..."
+          nextLabel=">"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel="<"
+          renderOnZeroPageCount={null}
+          containerClassName='pagination'
+          pageLinkClassName='page-num'
+          previousLinkClassName='page-num'
+          nextLinkClassName='page-num'
+          activeLinkClassName='active'
+        />
         </Row>
     </Fragment>
   )

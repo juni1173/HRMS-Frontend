@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react"
 import { Search,  Download, File } from "react-feather"
-import { Spinner, Table, Row, Col, Container, Input, InputGroup, InputGroupText, Button} from "reactstrap"
+import { Spinner, Table, Row, Col, Container, Input, InputGroup, InputGroupText, Button, Label} from "reactstrap"
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate'
 import Masonry from 'react-masonry-component'
@@ -150,12 +150,81 @@ const AttendanceTable = () => {
    return (
     <Fragment>
            <Container>
-            <div className='row  my-1'>
-                <Col md={3}>
-                    <h3>Attendance List</h3>
-                    <span>Showing {Object.values(currentItems).length > 0 ? itemsPerPage : 0} results per page</span>
-                </Col>
-                <Col md={4}>
+           <Row>
+  <Col md={3} xs={12}>
+    <h3 className="mt-2">Attendance List</h3>
+  </Col>
+<Col md={3}></Col>
+<Col md={6} className="d-flex justify-content-end align-items-center">
+  <div className="mr-1">
+  <span>Showing {Object.values(currentItems).length > 0 ? itemsPerPage : 0} results per page</span>
+    <Select
+      className="mb-2"
+      placeholder="Entries"
+      options={itemsCount}
+      onChange={(e) => {
+        setItemsPerPage(e.value)
+        setItemOffset(0)
+      }}
+    />
+  </div>
+  <div>
+    <CSVLink
+      className="btn btn-primary mt-2 mb-2"
+      filename={`HRMS_Attendance_Sheet_${monthvalue}_${yearvalue}`}
+      data={csvData}
+    >
+      Download <Download />
+    </CSVLink>
+  </div>
+</Col>
+
+</Row>
+
+        </Container>
+         <Row>
+<Col md={4}>
+            <Label>Select Month</Label>
+            <Select
+            id='month'
+                isClearable={true}
+                options={monthOptions}
+                className='react-select mb-1'
+                classNamePrefix='select'
+                placeholder="Select Month"
+                onChange={(selectedOption) => {
+                    if (selectedOption !== null) {
+                        setmonthvalue(selectedOption.value)
+                    } else {
+                       
+                        setmonthvalue(currentMonth)
+                    }
+            
+              }}
+            />
+        </Col>
+<Col md={4}>
+            <Label>Select Year</Label>
+            <Select
+                isClearable={true}
+                options={yearoptions}
+                className='react-select mb-1'
+                classNamePrefix='select'
+                placeholder="Select Year"
+                onChange={(selectedOption) => {
+                    if (selectedOption !== null) {
+                        setyearvalue(selectedOption.value)
+                    } else {
+                       
+                        setyearvalue(currentYear)
+                    }
+            
+              }}
+            />
+</Col>
+<Col md={4}>
+<Label>Serach Employee</Label>
+
                     <InputGroup className='input-group-merge mb-2'>
                         <InputGroupText>
                             <Search size={14} />
@@ -163,44 +232,8 @@ const AttendanceTable = () => {
                         <Input placeholder='search employee name...'  onChange={e => { getSearch({list: preData, key: 'name', value: e.target.value }) } }/>
                     </InputGroup>
                 </Col>
-                <Col md={2}>
-                    <Select 
-                    placeholder="Entries"
-                    options={itemsCount}
-                    onChange={e => {
-                        setItemsPerPage(e.value)
-                        setItemOffset(0)
-                    }}
-                    />
-                </Col>
-                
-                    <Col md={3}>
-                    <CSVLink className="btn btn-primary float-right mt-2" filename={`HRMS_Attendance_Sheet_${monthvalue}_${yearvalue}`} data={csvData}>Download <Download/> </CSVLink>
-                    </Col>
-         
-            </div>
-        </Container>
-         <Row>
-          <Col md={6}>
-        <Select
-  id="month"
-  options={monthOptions}
-  onChange={(selectedOption) => {
-        setmonthvalue(selectedOption.value)
-  }}
-/>
-</Col>
-<Col md={6}>
-        <Select
-  id="year"
-  options={yearoptions}
-  onChange={(selectedOption) => {
-        setyearvalue(selectedOption.value)
-  }}
-/>
-</Col>
 </Row>
-<Container>
+{/* <Container> */}
 <Masonry className="row js-animation">
      {!loading ? (
                        <Table bordered striped responsive className='my-1'>
@@ -263,7 +296,7 @@ const AttendanceTable = () => {
         )
         }
         </Masonry>
-        </Container>
+      {/* </Conainer> */}
         <div className="mt-2">    
         <Container> 
            

@@ -14,17 +14,34 @@ const KpiList = ({ data, CallBack, index }) => {
     const [checkedItems, setCheckedItems] = useState([])
     // const [UpdateData, setUpdateData] = useState([])
     const handleCheck = (event) => {
-       
         const { id } = event.target
         const isChecked = event.target.checked
-    
         if (isChecked) {
-            
+          // Add the ID to checkedItems if it's not already there
           setCheckedItems([...checkedItems, id])
         } else {
+          // Remove the ID from checkedItems if it's already there
           setCheckedItems(checkedItems.filter((item) => item !== id))
         }
       }
+      
+      const handlecheckall = (event, tableData) => {
+        const isChecked = event.target.checked
+      
+        if (isChecked) {
+          // Select all checkboxes in the current table
+          const allIds = tableData
+      .filter((item) => item.kpis_status_level !== 4)
+      .map((item) => item.id.toString())
+    setCheckedItems(allIds)
+          setCheckedItems([...checkedItems, ...allIds])
+        } else {
+          // Deselect all checkboxes in the current table
+          const tableIds = tableData.map((item) => item.id.toString())// Convert to strings
+          setCheckedItems(checkedItems.filter((item) => !tableIds.includes(item)))
+        }
+      }
+      
       const multipleKpiApprove = async () => {
         // return false
         if (checkedItems.length > 0) {  
@@ -74,6 +91,11 @@ const KpiList = ({ data, CallBack, index }) => {
                                 <thead className='table-dark text-center'>
                                 <tr>
                                     <th scope="col" className="text-nowrap">
+                                    <input
+                    type="checkbox"
+                    onChange={(event) => handlecheckall(event, dataItem[0].employee_kpis_data)}
+                  />
+                  
                                     Select
                                     </th>
                                     <th scope="col" className="text-nowrap">
@@ -95,7 +117,14 @@ const KpiList = ({ data, CallBack, index }) => {
                                 <tbody className='text-center'>
                                     {Object.values(dataItem[0].employee_kpis_data).map((item, key) => (
                                             <tr key={key}>
-                                            <td>{item.kpis_status_level !== 4 ? <input className='form-check-primary' type="checkbox" id={item.id} onChange={handleCheck} /> : <input className='form-check-primary' type="checkbox" disabled/>}</td>
+                                            <td>{item.kpis_status_level !== 4 ?  <input
+          className='form-check-primary'
+          type="checkbox"
+          id={item.id}
+          onChange={handleCheck}
+          checked={checkedItems.includes(item.id.toString())}
+          // checked={checkedItems.includes(item.id)}
+        /> : <input className='form-check-primary' type="checkbox" disabled/>}</td>
                                             <td>{item.title ? item.title : 'N/A'}</td>
                                             <td>{item.ep_type_title ? item.ep_type_title : 'N/A'}</td>
                                             <td>{item.ep_complexity_title ? item.ep_complexity_title : 'N/A'}</td>

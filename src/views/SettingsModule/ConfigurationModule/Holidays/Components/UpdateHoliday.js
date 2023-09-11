@@ -10,14 +10,16 @@ import {
   import apiHelper from '../../../../Helpers/ApiHelper'
   // ** Third Party Components
   import { useForm, Controller } from 'react-hook-form'
-  
+  import Flatpickr from 'react-flatpickr'
+import '@styles/react/libs/flatpickr/flatpickr.scss'
   const UpdateHoliday = ({ holiday, CallBack, DiscardModal }) => {
       const Api = apiHelper()
     
       const {
           reset,
           control,
-          handleSubmit
+          handleSubmit,
+          setValue
         } = useForm({
           defaultValues: {
             title: holiday.title,
@@ -25,9 +27,15 @@ import {
             description: holiday.description
           }
         })
+        const onChangeParametersDetailHandler = (InputName, InputType, e) => {
+          let InputValue
+          if (InputType === 'date') {  
+              InputValue = Api.formatDate(e)
+          }
+          setValue(InputName, InputValue)
+        }
         const onSubmit = async (data) => {
           if (data.title && data.date) {
-              console.log(data.title, data.date, data.description)
               const formData = new FormData()
               formData['title'] = data.title
               formData['date'] = data.date
@@ -74,7 +82,17 @@ import {
         name='date'
         control={control}
         render={({ field }) => (
-          <Input {...field} id='date' type='date' placeholder='Select a date'  />
+          // <Input {...field} id='date' type='date' placeholder='Select a date'  />
+          <Flatpickr
+      className='form-control'
+      value={field.value} // Set the value from the useForm 'date' field
+      onChange={(e) => {
+        onChangeParametersDetailHandler('date', 'date', e)
+        field.onChange(Api.formatDate(e)) // Update the useForm 'date' field value
+      }}
+      id='date'
+      placeholder='Holiday Date'
+    />
         )}
       />
     </Col>

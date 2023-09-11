@@ -15,11 +15,28 @@ const KpiRequests = ({ data, CallBack, dropdownData, key }) => {
     const handleCheck = (event) => {
         const { id } = event.target
         const isChecked = event.target.checked
-    
+        
         if (isChecked) {
           setCheckedItems([...checkedItems, id])
         } else {
           setCheckedItems(checkedItems.filter((item) => item !== id))
+        }
+       
+      }
+      
+      const handlecheckall = (event, tableData) => {
+        const isChecked = event.target.checked
+      
+        if (isChecked) {
+          // Select all checkboxes in the current table
+          const allIds = tableData
+      .map((item) => item.id.toString())
+    setCheckedItems(allIds)
+          setCheckedItems([...checkedItems, ...allIds])
+        } else {
+          // Deselect all checkboxes in the current table
+          const tableIds = tableData.map((item) => item.id.toString())// Convert to strings
+          setCheckedItems(checkedItems.filter((item) => !tableIds.includes(item)))
         }
       }
       const multipleKpiSend = async () => {
@@ -117,6 +134,10 @@ const KpiRequests = ({ data, CallBack, dropdownData, key }) => {
                                 <thead className='table-dark text-center'>
                                 <tr>
                                     <th scope="col" className="text-nowrap">
+                                    <input
+                    type="checkbox"
+                    onChange={(event) => handlecheckall(event, dataItem.employee_kpis_data)}
+                  />
                                         Select
                                     </th>
                                     <th scope="col" className="text-nowrap">
@@ -140,7 +161,13 @@ const KpiRequests = ({ data, CallBack, dropdownData, key }) => {
                                 <tbody className='text-center'>
                                     {Object.values(dataItem.employee_kpis_data).map((item, key) => (
                                             <tr key={key}>
-                                            <td>{item.kpis_status_level === 2 ? <input className='form-check-primary' type="checkbox" id={item.id} onChange={handleCheck} /> : <input className='form-check-primary' type="checkbox" disabled/>}</td>
+                                            <td>{item.kpis_status_level === 2 ? <input
+          className='form-check-primary'
+          type="checkbox"
+          id={item.id}
+          onChange={handleCheck}
+          checked={checkedItems.includes(item.id.toString())}
+        />  : <input className='form-check-primary' type="checkbox" disabled/>}</td>
                                             <td>{item.title ? item.title : 'N/A'}</td>
                                             <td>{item.ep_type_title ? item.ep_type_title : 'N/A'}</td>
                                             <td>{item.ep_complexity_title ? item.ep_complexity_title : 'N/A'}</td>

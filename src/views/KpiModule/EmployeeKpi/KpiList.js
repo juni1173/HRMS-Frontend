@@ -13,6 +13,7 @@ const KpiList = ({ CallBack, dropdownData }) => {
     const [UpdateModal, setUpdateModal] = useState(false)
     const [checkedItems, setCheckedItems] = useState([])
     const [UpdateData, setUpdateData] = useState([])
+    const [selectAll, setSelectAll] = useState(false)
     const handleCheck = (event) => {
         const { id } = event.target
         const isChecked = event.target.checked
@@ -21,6 +22,19 @@ const KpiList = ({ CallBack, dropdownData }) => {
           setCheckedItems([...checkedItems, id])
         } else {
           setCheckedItems(checkedItems.filter((item) => item !== id))
+        }
+      }
+      const handlecheckall = (event) => {
+        const isChecked = event.target.checked
+        setSelectAll(isChecked)
+    
+        if (isChecked) {
+          // Select all items
+          const allItemIds = data.map((item) => item.id.toString())
+          setCheckedItems(allItemIds)
+        } else {
+          // Deselect all items
+          setCheckedItems([])
         }
       }
       const multipleKpiSend = async () => {
@@ -128,6 +142,11 @@ const KpiList = ({ CallBack, dropdownData }) => {
                     <thead className='table-dark text-center'>
                     <tr>
                         <th scope="col" className="text-nowrap">
+                        <input
+                        type="checkbox"
+                        onChange={handlecheckall} // Attach the handler to the "Select All" checkbox
+                        checked={selectAll} // Bind the checked state to the "Select All" checkbox
+                      />
                             Select
                         </th>
                         <th scope="col" className="text-nowrap">
@@ -154,7 +173,13 @@ const KpiList = ({ CallBack, dropdownData }) => {
                     <tbody className='text-center'>
                         {Object.values(data).map((item, key) => (
                                 <tr key={key}>
-                                <td>{item.kpis_status_level === 1 ? <input className='form-check-primary' type="checkbox" id={item.id} onChange={handleCheck} /> : <input className='form-check-primary' type="checkbox" disabled/>}</td>
+                                <td>{item.kpis_status_level === 1 ?  <input
+                            className='form-check-primary'
+                            type="checkbox"
+                            id={item.id}
+                            onChange={handleCheck}
+                            checked={checkedItems.includes(item.id.toString())} // Bind the checked state to individual checkboxes
+                          /> : <input className='form-check-primary' type="checkbox" disabled/>}</td>
                                 <td>{item.title ? item.title : 'N/A'}</td>
                                 <td>{item.evaluator_name ? item.evaluator_name : 'N/A'}</td>
                                 <td>{item.ep_type_title ? item.ep_type_title : 'N/A'}</td>

@@ -80,6 +80,7 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
 
     const onSubmitHandler = (data) => {
         if (data.official_email !== '') {
+
             const emp_joining_date = data.joining_date ? Api.formatDate(data.joining_date) : ''
             const emp_leaving_date =  data.leaving_date ? Api.formatDate(data.leaving_date) : ''
             const uuid = empData.uuid
@@ -90,7 +91,7 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
             if (data.position) formData["position"] = data.position.value
             // if (data.emp_code) formData["emp_code"] = data.emp_code
             if (data.starting_salary) formData["starting_salary"] = data.starting_salary !== 0 ? data.starting_salary : 0
-            if (!empData.official_email && empData.official_email === '') formData["official_email"] = data.official_email
+            if (data.official_email && data.official_email !== '') formData["official_email"] = data.official_email
             if (emp_joining_date !== '') formData["joining_date"] = emp_joining_date
             if (emp_leaving_date !== '') formData["leaving_date"] = emp_leaving_date
             if (data.current_salary) formData["current_salary"] = data.current_salary
@@ -99,7 +100,6 @@ const UpdateOfficeDetail = ({ CallBack, empData}) => {
             if (data.staff_classification) formData["staff_classification"] = data.staff_classification.value
             if (data.title) formData["title"] = data.title
             if (data.leaving_reason) formData["leaving_reason"] = data.leaving_reason
-           
             Api.jsonPatch(`/employees/${uuid}/`, formData)
             .then((result) => { 
               if (result) {

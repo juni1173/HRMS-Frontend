@@ -18,8 +18,8 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
       const {
           reset,
           control,
-          handleSubmit,
-          setValue
+          handleSubmit
+          // setValue
         } = useForm({
           defaultValues: {
             title: holiday.title,
@@ -27,13 +27,13 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
             description: holiday.description
           }
         })
-        const onChangeParametersDetailHandler = (InputName, InputType, e) => {
-          let InputValue
-          if (InputType === 'date') {  
-              InputValue = Api.formatDate(e)
-          }
-          setValue(InputName, InputValue)
-        }
+        // const onChangeParametersDetailHandler = (InputName, InputType, e) => {
+        //   let InputValue
+        //   if (InputType === 'date') {  
+        //       InputValue = Api.formatDate(e)
+        //   }
+        //   setValue(InputName, InputValue)
+        // }
         const onSubmit = async (data) => {
           if (data.title && data.date) {
               const formData = new FormData()
@@ -75,10 +75,10 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
     </Col>
   
     <Col xs={6}>
-      <Label className='form-label' for='date'>
+      {/* <Label className='form-label' for='date'>
         Date<Badge color='light-danger'>*</Badge>
-      </Label>
-      <Controller
+      </Label> */}
+      {/* <Controller
         name='date'
         control={control}
         render={({ field }) => (
@@ -94,7 +94,7 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
       placeholder='Holiday Date'
     />
         )}
-      />
+      /> */}
     </Col>
   
     <Col xs={12}>

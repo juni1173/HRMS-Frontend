@@ -1,14 +1,17 @@
 import { Fragment, useEffect, useState, useCallback } from "react"
-import {TabContent, TabPane, Nav, NavItem, NavLink, Spinner} from "reactstrap"
+import {TabContent, TabPane, Nav, NavItem, NavLink, Spinner, ToastHeader, Badge} from "reactstrap"
 import apiHelper from "../../Helpers/ApiHelper"
 import Employees from "./Employees"
- 
+ import CountHelper from "../../Helpers/CountHelper/counthelper"
 const viewEmployee = () => {
     
     const Api = apiHelper()
+    const counthelper = CountHelper()
     const [loading, setLoading] = useState(false)
     const [employeeActiveList, setEmployeeActiveList] = useState([])
     const [employeeInactiveList, setEmployeeInactiveList] = useState([])
+    const [totalactiveemp, settotalactivemp] = useState()
+    const [totalinactiveemp, settotalinactiveemp] = useState()
     const [active, setActive] = useState('1')
     const getEmployeeData = async () => {
         setLoading(true)
@@ -17,6 +20,8 @@ const viewEmployee = () => {
                 if (result.status === 200) {
                     setEmployeeActiveList(result.data.active_employees)
                     setEmployeeInactiveList(result.data.deactive_employees)
+                settotalactivemp(counthelper.countItems(result.data.active_employees))
+                settotalinactiveemp(counthelper.countItems(result.data.deactive_employees))
                 } else {
                     Api.Toast('error', result.message)
                 }
@@ -49,7 +54,8 @@ const viewEmployee = () => {
                                         toggle('1')
                                         }}
                                     >
-                                    Active Employees
+                                     <span style={{ marginRight: '8px' }}>Active Employees</span>
+                                     <Badge color="success">{totalactiveemp}</Badge>
                                     </NavLink>
                                     </NavItem>
                                 {/* </div>
@@ -61,7 +67,8 @@ const viewEmployee = () => {
                                         toggle('2')
                                         }}
                                     >
-                                        InActive Employees
+                                        <span style={{ marginRight: '8px' }}>InActive Employees</span>
+                                        <Badge color="danger">{totalinactiveemp}</Badge>
                                     </NavLink>
                                     </NavItem>
                                 

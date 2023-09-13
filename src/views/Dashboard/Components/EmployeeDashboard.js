@@ -9,6 +9,7 @@ import Leaves from "./EmployeeComponents/Leaves"
 import Loan from "./EmployeeComponents/Loan"
 import LearningDevelopment from "./EmployeeComponents/LearningDevelopment/index"
 import JiraIssues from "./EmployeeComponents/JiraIssues/Issues"
+import LeavesCount from "./EmployeeComponents/LeavesCount"
 const EmployeeDashboard = () => {
   const Api = apiHelper()
   const [data, setData] = useState([])
@@ -110,10 +111,20 @@ const EmployeeDashboard = () => {
             </CardBody>
           </Card>
         )}
+
         {data.loan && Object.values(data.loan).length > 0 && (
           <Card>
             <CardBody>
               <Loan data={data.loan}/>
+            </CardBody>
+          </Card>
+        )}
+        </Col>
+        <Col md={6}>
+        {data.Leaves_count && Object.values(data.Leaves_count).length > 0 && (
+          <Card>
+            <CardBody>
+              <LeavesCount data={data.Leaves_count}/>
             </CardBody>
           </Card>
         )}

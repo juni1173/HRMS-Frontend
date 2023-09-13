@@ -11,6 +11,11 @@ const list = () => {
         const currentTime = `${today.getHours()}:${today.getMinutes()}`
         return currentTime
     }
+    const yearoptions = []
+    const currentDate = new Date()
+    // Get the current month and year
+    const currentMonth = currentDate.getMonth() + 1 // Month is zero-based, so add 1
+    const currentYear = currentDate.getFullYear() 
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [atndceData, setAtndceData] = useState([])
@@ -20,29 +25,74 @@ const list = () => {
     const [date, setDate] = useState(new Date())
     const [type, setType] = useState('')
     const [btnstatus, setBtnStatus] = useState('')
+    const [monthvalue, setmonthvalue] = useState(currentMonth)
+    const [yearvalue, setyearvalue] = useState(currentYear)
+    const monthOptions = [
+        { value: 1, label: 'January' },
+        { value: 2, label: 'February' },
+        { value: 3, label: 'March' },
+        { value: 4, label: 'April' },
+        { value: 5, label: 'May' },
+        { value: 6, label: 'June' },
+        { value: 7, label: 'July' },
+        { value: 8, label: 'August' },
+        { value: 9, label: 'September' },
+        { value: 10, label: 'October' },
+        { value: 11, label: 'November' },
+        { value: 12, label: 'December' }
+      ]
+      // Generate options for the last 5 years and add them to the array
+    for (let i = 0; i < 5; i++) {
+        const year = currentYear - i
+        yearoptions.push({ value: year, label: year.toString() })
+    }
     const types_choices = [
         {value:'office', label: 'office'},
         {value: 'WFH', label: 'WFH'}
     ]
+    // const getAttendanceData = async () => {
+    //         setLoading(true)
+    //         await Api.get(`/attendance/list/all/`)
+    //         .then((result) => {
+    //             if (result) {
+    //                 if (result.status === 200) {
+    //                     if (result.data.length > 0) {
+    //                         setAtndceData(result.data)
+    //                     }
+    //                 } else {
+    //                         Api.Toast('error', result.message)
+    //                 }
+    //             } else {
+    //                 Api.Toast('error', 'Server not responding')
+    //             }
+    //         })
+    //         setTimeout(() => {
+    //             setLoading(false)
+    //           }, 1000)
+    // }
+
+
     const getAttendanceData = async () => {
-            setLoading(true)
-            await Api.get(`/attendance/list/all/`)
-            .then((result) => {
-                if (result) {
-                    if (result.status === 200) {
-                        if (result.data.length > 0) {
-                            setAtndceData(result.data)
-                        }
-                    } else {
-                            Api.Toast('error', result.message)
-                    }
+        setLoading(true)
+        const formData = new FormData()
+        formData['month'] = monthvalue
+        formData['year'] = yearvalue
+        await Api.jsonPost(`/attendance/list/all/`, formData)
+        .then(result => {
+            if (result) {
+                if (result.status === 200) {
+                   setAtndceData(result.data)
                 } else {
-                    Api.Toast('error', 'Server not responding')
+                    Api.Toast('error', result.message)
                 }
-            })
-            setTimeout(() => {
-                setLoading(false)
-              }, 1000)
+            } else {
+                Api.Toast('error', result.message)
+            }
+        })
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+       
     }
     const Check_in = async () => {
         setLoading(true)
@@ -111,12 +161,13 @@ const Check_out = async () => {
 
     useEffect(() => {
         getAttendanceData()
-    }, [setAtndceData])
+    }, [setAtndceData, monthvalue, yearvalue])
   return (
     <Fragment>
         <Card>
             <CardBody>
                 <h3 className='mb-2'>Attendance</h3>
+          
                 <Row className='mb-2'>
                     <Col className='col-6'>
                         <Button className='btn btn-success' onClick={() => {
@@ -135,6 +186,47 @@ const Check_out = async () => {
                         </Button>
                     </Col>
                 </Row>
+                <Row>
+<Col md={6}>
+            <Label>Select Month</Label>
+            <Select
+            id='month'
+                isClearable={true}
+                options={monthOptions}
+                className='react-select mb-1'
+                classNamePrefix='select'
+                placeholder="Select Month"
+                onChange={(selectedOption) => {
+                    if (selectedOption !== null) {
+                        setmonthvalue(selectedOption.value)
+                    } else {
+                       
+                        setmonthvalue(currentMonth)
+                    }
+            
+              }}
+            />
+        </Col>
+<Col md={6}>
+            <Label>Select Year</Label>
+            <Select
+                isClearable={true}
+                options={yearoptions}
+                className='react-select mb-1'
+                classNamePrefix='select'
+                placeholder="Select Year"
+                onChange={(selectedOption) => {
+                    if (selectedOption !== null) {
+                        setyearvalue(selectedOption.value)
+                    } else {
+                       
+                        setyearvalue(currentYear)
+                    }
+            
+              }}
+            />
+</Col>
+</Row>
                 <Table bordered striped responsive>
                     <thead className='table-dark text-center'>
                         <tr>

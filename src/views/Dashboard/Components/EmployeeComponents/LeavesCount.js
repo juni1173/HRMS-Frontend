@@ -10,8 +10,7 @@ import {
   CardHeader,
   Badge,
   Button,
-  Row,
-  Col
+  Row
 } from 'reactstrap'
 const LeavesCount = ({ data }) => {
   const renderStates = (data) => {
@@ -21,24 +20,29 @@ const LeavesCount = ({ data }) => {
         {data && Object.values(data).length > 0 ? (
 data.map((item, key) => (
 <div key={key} className='browser-states'>
-  <div className="col-md-12 text-start">
+  <div className="row text-start">
+    <div className="col-md-12">
       <h6 className="fw-bold no-wrap">{item.leave_type}</h6>
+      </div>
       <Row>
       <div className="col-md-6">
         <Badge color='success'>
           {item.allowed_leaves}
         </Badge>
-        <p className='nowrap'>Allowed</p>
+        <p>Allowed</p>
       </div>
-    <div className="col-md-6" >
+  
+    <div className="col-md-6">
       <Badge color='danger'>
         {item.remaining_leaves}
       </Badge>
-      <p className='nowrap'>Remaining</p>
+      <p>Remaining</p>
     </div>
 </Row>
   </div>
 </div>
+
+        
             ))
         ) : (
             <div className='text-center'>No Leaves Count data</div> 

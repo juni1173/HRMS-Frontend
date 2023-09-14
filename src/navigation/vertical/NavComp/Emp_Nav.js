@@ -112,7 +112,12 @@ let nav = []
     icon: <Bookmark size={30} />,
     navLink: '/employee/kpi'
   },
-  
+  {
+    id: 'nav-manuals',
+    title: 'SOP / EPM',
+    icon: <Bookmark size={30} />,
+    navLink: '/employee/manuals'
+  },
   {
     id: 'nav-l&d',
     title: 'Learning & Development',

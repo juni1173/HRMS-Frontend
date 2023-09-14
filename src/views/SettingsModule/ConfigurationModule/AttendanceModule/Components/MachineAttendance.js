@@ -34,6 +34,22 @@ const MachineAttendance = () => {
             InputValue = dateFomat
         } else if (InputType === 'file') {
             InputValue = e.target.files[0]
+            if (InputValue) {
+                // Check if the file is a CSV file by examining its extension
+                const fileNameParts = InputValue.name.split('.')
+                const fileExtension = fileNameParts[fileNameParts.length - 1].toLowerCase()
+    
+                if (fileExtension !== 'csv') {
+
+                
+                    // Display an error message or alert the user that only CSV files are allowed
+                    // For example, you can show a toast message:
+                    Api.Toast('error', 'Only CSV files are allowed')
+                    // Clear the file input
+                    e.target.value = null
+                    InputValue = null
+                }
+            } 
         }
 
         setForm(prevState => ({
@@ -91,15 +107,20 @@ const MachineAttendance = () => {
                     } else {
                         Api.Toast('error', result.message)
                         setForm({
-                            attendance_machine: '',
+                            // attendance_machine: '',
                             attendance_file: ''
                         })
+                       
                     }
                 }
             })
            
         } else {
             Api.Toast('error', 'Please fill all required fields!')
+            setForm({
+                // attendance_machine: '',
+                attendance_file: ''
+            })
         }
         setTimeout(() => {
             setLoading(false)
@@ -182,9 +203,12 @@ const MachineAttendance = () => {
                             isClearable={false}
                             className='react-select'
                             classNamePrefix='select'
-                            name="type"
+                            name="type"          
                             options={typeData}
                             onChange={ (e) => { onChangeAttendanceFormDetailHandler('attendance_machine', 'select', e.value) }}
+                            defaultValue={
+                                Form.attendance_machine ? typeData.find(option => option.value === Form.attendance_machine) : null
+                              }
                         />
                     </Col>
                     <Col md='5' className='mb-1'>

@@ -96,8 +96,9 @@ const KpiList = ({ data, CallBack, index }) => {
                     onChange={(event) => handlecheckall(event, dataItem[0].employee_kpis_data)}
                   />
                   
-                                    Select
+                  {/* <label className="form-check-label">Select</label> */}
                                     </th>
+
                                     <th scope="col" className="text-nowrap">
                                     Detail
                                     </th>

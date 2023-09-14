@@ -147,7 +147,7 @@ const KpiList = ({ CallBack, dropdownData }) => {
                         onChange={handlecheckall} // Attach the handler to the "Select All" checkbox
                         checked={selectAll} // Bind the checked state to the "Select All" checkbox
                       />
-                            Select
+                            {/* Select */}
                         </th>
                         <th scope="col" className="text-nowrap">
                         Detail

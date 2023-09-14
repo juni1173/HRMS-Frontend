@@ -157,7 +157,7 @@ const ApplicantList = ({ data, getApplicants, Session_id }) => {
                     )) 
                 ) : (
                     <tr>
-                      <td colSpan={5}>No Applicant Found...</td>
+                      <td colSpan={6}>No Applicant Found...</td>
                   </tr>
                 )}
             </tbody>

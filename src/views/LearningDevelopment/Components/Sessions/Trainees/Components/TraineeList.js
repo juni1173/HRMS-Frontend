@@ -119,7 +119,7 @@ const TraineeList = ({ data, CallBack }) => {
                         )) 
                     ) : (
                         <tr>
-                          <td colSpan={4}>No Trainee Found...</td>
+                          <td colSpan={5}>No Trainee Found...</td>
                       </tr>
                     )}
                 </tbody>

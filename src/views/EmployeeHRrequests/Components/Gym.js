@@ -10,6 +10,7 @@ const Gym = ({ data, CallBack }) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [reimbursementData, setReimbursementData] = useState({
         amount: '',
         date : new Date()
@@ -48,7 +49,7 @@ const Gym = ({ data, CallBack }) => {
         setGym_Receipt(null) 
       } 
     const submitForm = async () => {
-        
+        setIsButtonDisabled(true)
         if (reimbursementData.amount !== '' && reimbursementData.date !== '') {
             const formData = new FormData()
             formData.append('amount', reimbursementData.amount)
@@ -67,9 +68,11 @@ const Gym = ({ data, CallBack }) => {
                     } else {
                         Api.Toast('error', result.message)
                     }
+                   setIsButtonDisabled(false) 
                 }
             })
         } else {
+            setIsButtonDisabled(false)
             Api.Toast('error', 'Please fill all required fields!')
         }
         
@@ -186,7 +189,7 @@ const Gym = ({ data, CallBack }) => {
                 )}
               </Col>
                 <Col md={3}>
-                <Button color="primary" className="btn-next mt-2" onClick={submitForm}>
+                <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>
                 <span className="align-middle d-sm-inline-block">
                   Submit
                 </span>

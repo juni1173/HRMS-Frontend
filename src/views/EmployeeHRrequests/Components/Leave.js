@@ -11,6 +11,7 @@ const Leave = ({ data, CallBack }) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [leave_types] = useState([])
     const [attachment, setAttachment] = useState(null)
     const [leaveData, setLeaveData] = useState({
@@ -59,7 +60,7 @@ const Leave = ({ data, CallBack }) => {
         setAttachment() 
       } 
     const submitForm = async () => {
-        
+        setIsButtonDisabled(true)
         if (leaveData.leave_types !== '' && leaveData.start_date !== '' && leaveData.end_date !== '' && leaveData.duration !== '') {
             const formData = new FormData()
             formData.append('leave_types', leaveData.leave_types)
@@ -87,10 +88,12 @@ const Leave = ({ data, CallBack }) => {
                     } else {
                         Api.Toast('error', result.message)
                     }
+                    setIsButtonDisabled(false)
                 }
             })
         } else {
             Api.Toast('error', 'Please fill required fields!')
+            setIsButtonDisabled(false)
         }
        
     }
@@ -255,7 +258,7 @@ const Leave = ({ data, CallBack }) => {
             
         </Col>
         <Col md={2}>
-                <Button color="primary" className="btn-next mt-2" onClick={submitForm}>
+                <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>
                 <span className="align-middle d-sm-inline-block">
                   Submit
                 </span>

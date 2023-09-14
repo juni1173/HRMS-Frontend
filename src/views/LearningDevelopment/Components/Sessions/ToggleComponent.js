@@ -146,6 +146,12 @@ const ToggleComponent = ({ data, id, CallBack }) => {
                                                 )
                                             }</span>
                                         </div>
+                                        <div className="col-md-4 mt-2">
+                                        <Badge color='light-warning'>
+                                            Status  
+                                        </Badge><br></br>
+                                        <span className="mode" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{data.session_status || "N/A"}</span>
+                                    </div>
                                 </div>
                         <div className="row pt-3">
                             <div className="col-lg-12">

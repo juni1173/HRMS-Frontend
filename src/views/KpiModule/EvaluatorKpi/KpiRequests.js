@@ -138,7 +138,7 @@ const KpiRequests = ({ data, CallBack, dropdownData, key }) => {
                     type="checkbox"
                     onChange={(event) => handlecheckall(event, dataItem.employee_kpis_data)}
                   />
-                                        Select
+                                        {/* Select */}
                                     </th>
                                     <th scope="col" className="text-nowrap">
                                     Detail

@@ -45,7 +45,7 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
                 if (result.status === 200) {
                     const final = result.data
                     const timeSlots = final.time_slots
-                    const interviewerList = final.hrmsusers
+                    const interviewerList = final.employees
                     const interviewModesList = final.interview_modes
                     if (timeSlots.length > 0) {
                         time_slots.splice(0, time_slots.length)
@@ -56,13 +56,13 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
                     if (interviewerList.length > 0) {
                         interviewers.splice(0, interviewers.length)
                         for (let i = 0; i < interviewerList.length; i++) {
-                            interviewers.push({value: interviewerList[i].id, label: interviewerList[i].full_name})
+                            interviewers.push({value: interviewerList[i].hrmsuser, label: interviewerList[i].name})
                         }
                     }
                     if (interviewModesList.length > 0) {
                         interviewModes.splice(0, interviewModes.length)
                         for (let i = 0; i < interviewModesList.length; i++) {
-                            interviewModes.push({value: interviewModesList[i].id, label: interviewModesList[i].title})
+                            interviewModes.push({value: interviewModesList[i].hrmsuser, label: interviewModesList[i].title})
                         }
                     }
                     

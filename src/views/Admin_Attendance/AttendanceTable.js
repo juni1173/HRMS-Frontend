@@ -244,6 +244,8 @@ const AttendanceTable = () => {
                             <th>WFH</th>
         <th>Present</th>
         <th>Absent</th>
+        <th>Leaves</th>
+        <th>Holidays</th>
                             {uniqueDates.map((date, index) => (
             <th key={index} className="text-nowrap">{date}</th>
         ))}
@@ -260,6 +262,8 @@ const AttendanceTable = () => {
             <td><strong>{item.attendance_status_data?.total_wfh || '0'}</strong></td>
 <td><strong>{item.attendance_status_data?.total_presents || '0'}</strong></td>
 <td><strong>{item.attendance_status_data?.total_absesnts || '0'}</strong></td>
+<td><strong>{item.attendance_status_data?.total_leaves || '0'}</strong></td>
+<td><strong>{item.attendance_status_data?.total_holidays || '0'}</strong></td>
           {item.attendance_status_data && item.attendance_status_data.data ? (
                         uniqueDates.map((date, index) => {
                             const statusItem = item.attendance_status_data.data.find(
@@ -272,7 +276,7 @@ const AttendanceTable = () => {
                                   statusItem ? statusItem.attendance_status === "P" ? "text-success" : statusItem.attendance_status === "A" ? "text-danger" : statusItem.attendance_status === "WFH" ? "text-warning" : statusItem.attendance_status === "L" ? "text-primary" : "" : ""
                                 }
                               >
-                                {statusItem ? statusItem.attendance_status : ""}
+                                {statusItem ? statusItem.attendance_status : "N/A"}
                               </td>
                               
                             )

@@ -7,6 +7,9 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
+import DatePicker, { DateObject } from "react-multi-date-picker"
+import DatePanel from "react-multi-date-picker/plugins/date_panel"
+const format = "YYYY-MM-DD"
 const Leave = ({ data, CallBack }) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
@@ -20,6 +23,11 @@ const Leave = ({ data, CallBack }) => {
         end_date: '',
         duration: ''
    })
+   const [dates, setDates] = useState([])
+    // new DateObject().set({ day: 4, format }),
+    // new DateObject().set({ day: 25, format }),
+    // new DateObject().set({ day: 20, format })
+  
     const onChangeLeavesDetailHandler = (InputName, InputType, e) => {
         
         let InputValue
@@ -61,12 +69,18 @@ const Leave = ({ data, CallBack }) => {
       } 
     const submitForm = async () => {
         setIsButtonDisabled(true)
+        leaveData.duration = dates.length
+          const leaveDates = dates.map((date) => date.format())
+          leaveData.start_date = leaveDates[0]
+        leaveData.end_date = leaveDates[leaveDates.length - 1]
         if (leaveData.leave_types !== '' && leaveData.start_date !== '' && leaveData.end_date !== '' && leaveData.duration !== '') {
             const formData = new FormData()
             formData.append('leave_types', leaveData.leave_types)
             formData.append('start_date', leaveData.start_date)
             formData.append('end_date', leaveData.end_date)
             formData.append('duration', leaveData.duration)
+            formData.append('leave_dates', leaveDates)
+            console.log(formData)
             if (attachment !== null) formData.append('attachment', attachment)
             await Api.jsonPost(`/reimbursements/employees/leaves/`, formData, false).then(result => {
                 if (result) {
@@ -154,7 +168,7 @@ const Leave = ({ data, CallBack }) => {
         </div>
         {!loading && (
             <>
-        <Col md="4" className="mb-1">
+        <Col md="6" className="mb-1">
                 <Label className="form-label">
                 Leave Type <Badge color='light-danger'>*</Badge>
                 </Label>
@@ -167,7 +181,7 @@ const Leave = ({ data, CallBack }) => {
                     onChange={ (e) => onChangeLeavesDetailHandler('leave_types', 'select', e.value) }
                 />
         </Col>
-        <Col md='4' className='mb-1'>
+        {/* <Col md='4' className='mb-1'>
                 <label className='form-label'>
                   Duration <Badge color="light-danger">*</Badge> 
                 </label>
@@ -175,8 +189,8 @@ const Leave = ({ data, CallBack }) => {
                     name="duration"
                     onChange={ (e) => { onChangeLeavesDetailHandler('duration', 'input', e) }}
                     placeholder="Duration"  />
-        </Col>
-        <Col md={4} className="mb-1">
+        </Col> */}
+        <Col md={6} className="mb-1">
         <Label className="form-label">Attachment</Label>
             {attachment ? (
               <div className="float-right">
@@ -203,6 +217,22 @@ const Leave = ({ data, CallBack }) => {
                 )}
         </Col>
         <Col md="5" className="mb-1">
+        <Label className='form-label' for='default-picker'>
+               Leave Dates <Badge color="light-danger">*</Badge>
+            </Label>
+        <DatePicker
+          value={dates}
+          onChange={setDates}
+          multiple
+          sort
+          format={format}
+          calendarPosition="bottom-center"
+          plugins={[<DatePanel />]}
+          style={{ height: '40px' }}
+          placeholder='Leave Dates'
+        />
+            </Col>
+        {/* <Col md="5" className="mb-1">
             <Label className='form-label' for='default-picker'>
                Start Date <Badge color="light-danger">*</Badge>
             </Label>
@@ -225,8 +255,8 @@ const Leave = ({ data, CallBack }) => {
                 // ]
               } }
             />
-        </Col>
-        <Col md="5" className="mb-1">
+        </Col> */}
+        {/* <Col md="5" className="mb-1">
             <Label className='form-label' for='default-picker'>
                End Date <Badge color="light-danger">*</Badge>
             </Label>
@@ -256,7 +286,7 @@ const Leave = ({ data, CallBack }) => {
                 />
            
             
-        </Col>
+        </Col> */}
         <Col md={2}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>
                 <span className="align-middle d-sm-inline-block">

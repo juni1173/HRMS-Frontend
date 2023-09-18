@@ -1,14 +1,17 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Row, Col, Label, Button, Spinner, Input, Badge, Table } from 'reactstrap'
+import { Row, Col, Label, Button, Spinner, Input, Badge, Table, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { Save, XCircle, Edit2 } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import Update from './UpdateLeaves'
 const Leaves = ({ staffdropdown, data, CallBack }) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [show, setShow] = useState(false)
+const [currentLeaves, setCurrentLeaves] = useState()
     const [leave_types] = useState([])
     const [is_sc, setIsSC] = useState(false)
     const [leaveData, setLeaveData] = useState({
@@ -16,6 +19,16 @@ const Leaves = ({ staffdropdown, data, CallBack }) => {
         allowed_leaves : '',
         staff_classification: ''
    })
+   const DiscardModal = () => {
+    setShow(false)
+  }
+  const handleModalClosed = () => {
+    setShow(false)
+  }
+  const CallBackLeaves = () => {
+    CallBack()
+    setShow(false)
+  }
     const onChangeLeavesDetailHandler = (InputName, InputType, e) => {
         
         let InputValue
@@ -164,6 +177,8 @@ const Leaves = ({ staffdropdown, data, CallBack }) => {
                     name="staff_classification"
                     options={staffdropdown}
                     onChange={ (e) => { onChangeLeavesDetailHandler('staff_classification', 'select', e.value) }}
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
                 />
                 </Col>
                 )} 
@@ -222,6 +237,12 @@ const Leaves = ({ staffdropdown, data, CallBack }) => {
                                             <div className="col-md-6">
                                                 <button
                                                 className="border-0"
+                                                onClick={e => {
+                                                    e.preventDefault()
+                                                    // setModalType('Edit')
+                                                    setCurrentLeaves(item)
+                                                    setShow(true)
+                                                }} 
                                                 >
                                                 <Edit2 color="orange" />
                                                 </button>
@@ -268,6 +289,20 @@ const Leaves = ({ staffdropdown, data, CallBack }) => {
 
             </Col>
         </Row>
+        <Modal
+        isOpen={show}
+        onClosed={handleModalClosed}
+        toggle={() => setShow(!show)}
+        className='modal-dialog-centered modal-lg'
+      >
+        <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+        <ModalBody className='px-5 pb-5'>
+          <div className='text-center mb-2'>
+            <h1> Leaves </h1>
+          </div>
+            <Update value={currentLeaves} apiEndPoint={"/reimbursements/set/leave/duration/limit/"} CallBack={CallBackLeaves} DiscardModal={DiscardModal}/>
+        </ModalBody>
+      </Modal>
     </Fragment>
   )
 }

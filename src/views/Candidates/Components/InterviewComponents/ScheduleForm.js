@@ -93,7 +93,7 @@ const ScheduleForm = ({ uuid, stage_id, CallBack }) => {
                     if (interviewModesList.length > 0) {
                         interviewModes.splice(0, interviewModes.length)
                         for (let i = 0; i < interviewModesList.length; i++) {
-                            interviewModes.push({value: interviewModesList[i].hrmsuser, label: interviewModesList[i].title})
+                            interviewModes.push({value: interviewModesList[i].id, label: interviewModesList[i].title})
                         }
                     }
                     
@@ -120,6 +120,7 @@ const ScheduleForm = ({ uuid, stage_id, CallBack }) => {
             formData['interview_date'] =  InterviewDetail.interview_date
             formData['interview_time_slot'] = InterviewDetail.interview_time_slot.value
             formData['interview_mode'] = InterviewDetail.interview_mode.value
+            formData['stage'] = InterviewDetail.stage
             formData['stage'] = InterviewDetail.stage
            await Api.jsonPost(`/interviews/candidate/job/${uuid}/`, formData).then(result => {
                 if (result) {

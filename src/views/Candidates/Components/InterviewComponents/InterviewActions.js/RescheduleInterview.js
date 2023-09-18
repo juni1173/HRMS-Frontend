@@ -17,7 +17,6 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
         interview_mode: '',
         interview_time_slot: '',
         stage: stage_id
-
     })
     const onChangeInterviewDetailHandler = (InputName, InputType, e) => {
         let InputValue
@@ -60,9 +59,10 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
                         }
                     }
                     if (interviewModesList.length > 0) {
+                    console.log(interviewModesList)
                         interviewModes.splice(0, interviewModes.length)
                         for (let i = 0; i < interviewModesList.length; i++) {
-                            interviewModes.push({value: interviewModesList[i].hrmsuser, label: interviewModesList[i].title})
+                            interviewModes.push({value: interviewModesList[i].id, label: interviewModesList[i].title})
                         }
                     }
                     
@@ -90,6 +90,7 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
             formData['interview_time_slot'] = InterviewDetail.interview_time_slot.value
             formData['interview_mode'] = InterviewDetail.interview_mode.value
             formData['stage'] = InterviewDetail.stage
+            console.log(formData)
            await Api.jsonPost(`/interviews/candidate/job/reschedule/${uuid}/${interviewID}/`, formData).then(result => {
                 if (result) {
                     if (result.status === 200) {

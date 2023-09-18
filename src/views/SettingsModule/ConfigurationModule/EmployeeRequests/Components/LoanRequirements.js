@@ -178,6 +178,8 @@ const LoanRequirements = ({ data, CallBack }) => {
                     name="loan_type"
                     options={types}
                     onChange={ (e) => { onChangeLoanRequirementsDetailHandler('loan_type', 'select', e.value) }}
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
                 />
                 </Col>
                 <Col md='4' className='mb-1'>

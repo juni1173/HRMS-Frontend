@@ -1,75 +1,112 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink, Col, CardHeader } from 'reactstrap'
+import { Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink, Spinner } from 'reactstrap'
 import apiHelper from '../Helpers/ApiHelper'
-import Manualpdfreader from './Manualpdfreader'
+import ManualsList from './ManualsList'
 const index = () => {
     const Api = apiHelper()
-    const [active, setActive] = useState('1')
+    const [contentLoad, setContentLoad] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
-    const [filePath, setFilePath] = useState('')
-    
-    const toggle = (tab, document) => {
+    const [types] = useState([])
+    const [active, setActive] = useState('0')
+
+    const toggle =  tab => {
+        setContentLoad(true)
       if (active !== tab) {
-        setActive(tab)
+         setActive(tab)
       }
-      if (document) {
-        setFilePath(document)
-      }
+      setTimeout(() => {
+        setContentLoad(false)
+      }, 500)
     }
    
     const preDataApi = async () => {
+        setLoading(true)
         const response = await Api.get('/manuals/')
-        
+        const typesRes = await Api.get('/manual/types/')
+
         if (response.status === 200) {
             setData(response.data)
-            
         } else {
-            return Api.Toast('error', 'Pre server data not found')
+            return Api.Toast('error', 'Manuals data not found')
+        }
+        if (typesRes.status === 200) {
+            types.splice(0, types.length)
+            const typesData = typesRes.data
+            if (typesData.length > 0) {
+                for (let i = 0; i < typesData.length; i++) {
+                    types.push({value: typesData[i].id, label: typesData[i].title})
+                }
+            }
+            console.warn(types)
+            setTimeout(() => {
+                setLoading(false)
+            }, 500)
+        } else {
+            setLoading(false)
+            return false
         }
     }
     useEffect(() => {
         preDataApi()
-        }, [setData])
+        }, [setData, types])
         
   return (
     <Fragment>
-        <Card>
-            <CardHeader>
-                <h2>Policy Manuals</h2>
-            </CardHeader>
-            <CardBody>
-            <div className='row'>
-                {Object.values(data).length > 0 && (
-                    data.map((item, key) => (
-                        <Col md={2} className='border-right mb-2'>
-                        <Nav tabs className='justify-content-center'>
-                            <NavItem>
-                            <NavLink
-                            active={active === key}
-                                onClick={() => {
-                                toggle(key, item.document)
-                                }}
-                            >
-                                {item.title}<br></br>
-                                click to view
-                            </NavLink>
-                            </NavItem>
-                        </Nav>
-                        </Col>
-                    ))
-                )}
-            </div>
-      <TabContent activeTab={active}>
-        <TabPane tabId={active}>
-           {filePath && (
-            <Manualpdfreader file={filePath} />
-           )}                     
-          
-        </TabPane>
-      </TabContent>
-            </CardBody>
-        </Card>
-    </Fragment>
+        {!loading ? (
+            <>
+        <Nav tabs>
+            {types.map((item, key) => (
+                <NavItem key={key}>
+                    <NavLink
+                    active={active === item.value}
+                    onClick={() => {
+                        toggle(item.value)
+                    }}
+                    >
+                    {item.label}
+                    </NavLink>
+                </NavItem>
+            ))}
+        </Nav>
+        {!contentLoad ? (
+            <TabContent className='py-50' activeTab={active}>
+                
+            {data && data.length === 0 ? (
+                <TabPane tabId='0'>
+                <Card>
+                    <CardBody>
+                        <div className='text-center'><p>No data found...</p></div>
+                    </CardBody>
+                </Card>
+                </TabPane>
+            ) : (
+            active === '0' ? (
+                   <TabPane tabId='0'>
+                       <Card>
+                           <CardBody>
+                               <div className='text-center'><p>Select type to get manuals...</p></div>
+                           </CardBody>
+                       </Card>
+                 </TabPane>
+               ) : (
+                   <TabPane tabId={active}>
+                       <ManualsList data={data} typeId={active}/>
+                   </TabPane> 
+               )
+            )
+               }   
+           </TabContent>
+        ) : (
+            <div className='text-center'><Spinner color='primary'/></div>
+        )}
+    
+    </>
+    ) : (
+        <div className='text-center'><Spinner type='grow' color='primary'/></div>
+    )}
+  </Fragment>
+    
   )
 }
 

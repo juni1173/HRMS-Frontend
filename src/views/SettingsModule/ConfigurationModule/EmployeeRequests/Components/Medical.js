@@ -1,18 +1,31 @@
 import { Fragment, useState } from 'react'
-import { Label, Row, Col, Input, Button, Spinner, Table, Badge } from "reactstrap" 
+import { Label, Row, Col, Input, Button, Spinner, Table, Badge,  Modal, ModalBody, ModalHeader } from "reactstrap" 
 import { Edit2, Save, XCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import Update from './UpdateMedical'
 const Medical_Limit = ({ staffdropdown, data, CallBack }) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [show, setShow] = useState(false)
+const [currentMedical, setCurrentMedical] = useState()
     const [medicalData, setmedicalData] = useState({
         staff_classification: '',
         yearly_limit : ''
    })
+   const DiscardModal = () => {
+    setShow(false)
+  }
+  const handleModalClosed = () => {
+    setShow(false)
+  }
+  const CallBackMedical = () => {
+    CallBack()
+    setShow(false)
+  }
     const onChangeMedicalDetailHandler = (InputName, InputType, e) => {
         
         let InputValue
@@ -122,6 +135,7 @@ const Medical_Limit = ({ staffdropdown, data, CallBack }) => {
                 <Label className="form-label">
                 Staff Classification <Badge color='light-danger'>*</Badge>
                 </Label>
+                
                 <Select
                     isClearable={false}
                     className='react-select'
@@ -129,7 +143,10 @@ const Medical_Limit = ({ staffdropdown, data, CallBack }) => {
                     name="staff_classification"
                     options={staffdropdown}
                     onChange={ (e) => { onChangeMedicalDetailHandler('staff_classification', 'select', e.value) }}
-                />
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
+               />
+             
             </Col>
               <Col md='4' className='mb-1'>
                 <label className='form-label'>
@@ -180,6 +197,12 @@ const Medical_Limit = ({ staffdropdown, data, CallBack }) => {
                                             <div className="col">
                                                 <button
                                                 className="border-0"
+                                                onClick={e => {
+                                                    e.preventDefault()
+                                                    // setModalType('Edit')
+                                                    setCurrentMedical(item)
+                                                    setShow(true)
+                                                }} 
                                                 >
                                                 <Edit2 color="orange" />
                                                 </button>
@@ -220,6 +243,20 @@ const Medical_Limit = ({ staffdropdown, data, CallBack }) => {
 
             </Col>
         </Row>
+        <Modal
+        isOpen={show}
+        onClosed={handleModalClosed}
+        toggle={() => setShow(!show)}
+        className='modal-dialog-centered modal-lg'
+      >
+        <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+        <ModalBody className='px-5 pb-5'>
+          <div className='text-center mb-2'>
+            <h1>Medical Allowance</h1>
+          </div>
+            <Update value={currentMedical} apiEndPoint={"/reimbursements/set/medical/allowance/limit/"} CallBack={CallBackMedical} DiscardModal={DiscardModal}/>
+        </ModalBody>
+      </Modal>
     </Fragment>
   )
 }

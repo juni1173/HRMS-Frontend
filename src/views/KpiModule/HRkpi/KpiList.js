@@ -41,7 +41,7 @@ const KpiList = ({ data, CallBack, index }) => {
           setCheckedItems(checkedItems.filter((item) => !tableIds.includes(item)))
         }
       }
-      
+    
       const multipleKpiApprove = async () => {
         // return false
         if (checkedItems.length > 0) {  
@@ -94,6 +94,11 @@ const KpiList = ({ data, CallBack, index }) => {
                                     <input
                     type="checkbox"
                     onChange={(event) => handlecheckall(event, dataItem[0].employee_kpis_data)}
+                    disabled={
+                      dataItem[0].employee_kpis_data.every(
+                        (item) => item.kpis_status_level === 4
+                      )
+                    }
                   />
                   
                   {/* <label className="form-check-label">Select</label> */}

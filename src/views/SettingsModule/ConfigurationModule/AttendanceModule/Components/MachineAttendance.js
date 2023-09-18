@@ -6,6 +6,7 @@ import apiHelper from '../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import ReactPaginate from 'react-paginate'
+let selectedIndex
 const MachineAttendance = () => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
@@ -19,6 +20,7 @@ const MachineAttendance = () => {
         attendance_machine: '',
         attendance_file: ''
     })
+   
     const onChangeAttendanceFormDetailHandler = (InputName, InputType, e) => {
         
         let InputValue
@@ -26,7 +28,7 @@ const MachineAttendance = () => {
         
         InputValue = e.target.value
         } else if (InputType === 'select') {
-        
+             selectedIndex = typeData.findIndex(option => option.value === e)
         InputValue = e
         } else if (InputType === 'date') {
             let dateFomat = e.split('/')
@@ -104,12 +106,13 @@ const MachineAttendance = () => {
                             attendance_machine: '',
                             attendance_file: ''
                         })
+                        // Form.attendance_file = ''
+                        // Form.attendance_machine = ''
+                        selectedIndex = -1
+
                     } else {
                         Api.Toast('error', result.message)
-                        setForm({
-                            // attendance_machine: '',
-                            attendance_file: ''
-                        })
+                      Form.attendance_file = ''
                        
                     }
                 }
@@ -117,10 +120,8 @@ const MachineAttendance = () => {
            
         } else {
             Api.Toast('error', 'Please fill all required fields!')
-            setForm({
-                // attendance_machine: '',
-                attendance_file: ''
-            })
+            Form.attendance_file = ''
+           
         }
         setTimeout(() => {
             setLoading(false)
@@ -202,13 +203,12 @@ const MachineAttendance = () => {
                         <Select
                             isClearable={false}
                             className='react-select'
-                            classNamePrefix='select'
+                            // classNamePrefix='select'
                             name="type"          
                             options={typeData}
                             onChange={ (e) => { onChangeAttendanceFormDetailHandler('attendance_machine', 'select', e.value) }}
-                            defaultValue={
-                                Form.attendance_machine ? typeData.find(option => option.value === Form.attendance_machine) : null
-                              }
+                            // defaultValue={typeData.findIndex(option => option.value === Form.attendance_machine) || null}
+                        defaultValue={selectedIndex !== -1 ? typeData[selectedIndex] : null}
                         />
                     </Col>
                     <Col md='5' className='mb-1'>

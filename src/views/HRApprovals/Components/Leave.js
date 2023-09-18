@@ -279,9 +279,9 @@ const Leave = ({ data, status_choices, CallBack }) => {
                                     <StatusComponent item={item} key={index}/>
                                     </div>
                                 <Badge color='light-success'>
-                                Allowed
+                               Remaining/Allowed
                                     </Badge><br></br>
-                                    <h4><Badge color='light-danger'>{item.allowed_leaves ? item.allowed_leaves : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
+                                    <h4><Badge color='light-danger'>{item.remaining_leaves ? item.remaining_leaves : <Badge color='light-danger'>N/A</Badge>}/{item.allowed_leaves ? item.allowed_leaves : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
                                     
                                 </div>
                                

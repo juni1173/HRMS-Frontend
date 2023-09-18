@@ -146,6 +146,9 @@ const KpiList = ({ CallBack, dropdownData }) => {
                         type="checkbox"
                         onChange={handlecheckall} // Attach the handler to the "Select All" checkbox
                         checked={selectAll} // Bind the checked state to the "Select All" checkbox
+                        disabled={
+                            data.every((item) => item.kpis_status_level !== 1)
+                          }
                       />
                             {/* Select */}
                         </th>

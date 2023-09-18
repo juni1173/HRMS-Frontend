@@ -137,6 +137,11 @@ const KpiRequests = ({ data, CallBack, dropdownData, key }) => {
                                     <input
                     type="checkbox"
                     onChange={(event) => handlecheckall(event, dataItem.employee_kpis_data)}
+                    disabled={
+                      dataItem.employee_kpis_data.every(
+                        (item) => item.kpis_status_level !== 2
+                      )
+                    }
                   />
                                         {/* Select */}
                                     </th>

@@ -1,14 +1,17 @@
 import { Fragment, useState } from 'react'
-import { Label, Row, Col, Input, Button, Spinner, Table, Badge } from "reactstrap" 
+import { Label, Row, Col, Input, Button, Spinner, Table, Badge,  Modal, ModalBody, ModalHeader } from "reactstrap" 
 import { Edit2, Save, XCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import Update from './UpdateGym'
 const Reimbursement = ({ staffdropdown, data, CallBack }) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [show, setShow] = useState(false)
+const [currentGym, setCurrentGym] = useState()
     const [reimbursementData, setReimbursementData] = useState({
         staff_classification: '',
         monthly_limit : ''
@@ -37,6 +40,16 @@ const Reimbursement = ({ staffdropdown, data, CallBack }) => {
         }))
 
     }
+    const DiscardModal = () => {
+        setShow(false)
+      }
+      const handleModalClosed = () => {
+        setShow(false)
+      }
+      const CallBackGym = () => {
+        CallBack()
+        setShow(false)
+      }
     const submitForm = async () => {
         setLoading(true)
         if (reimbursementData.staff_classification !== '' && reimbursementData.monthly_limit !== '') {
@@ -129,7 +142,9 @@ const Reimbursement = ({ staffdropdown, data, CallBack }) => {
                             name="staff_classification"
                             options={staffdropdown}
                             onChange={ (e) => { onChangeReimbursementDetailHandler('staff_classification', 'select', e.value) }}
-                        />
+                            menuPlacement="auto" 
+                            menuPosition='fixed'
+                       />
                     </Col>
                     <Col md='4' className='mb-1'>
                         <label className='form-label'>
@@ -180,6 +195,11 @@ const Reimbursement = ({ staffdropdown, data, CallBack }) => {
                                                     <div className="col">
                                                         <button
                                                         className="border-0"
+                                                        onClick={e => {
+                                                            e.preventDefault()
+                                                            setCurrentGym(item)
+                                                            setShow(true)
+                                                        }} 
                                                         >
                                                         <Edit2 color="orange" />
                                                         </button>
@@ -218,6 +238,20 @@ const Reimbursement = ({ staffdropdown, data, CallBack }) => {
         <hr></hr>
             </Col>
         </Row>
+        <Modal
+        isOpen={show}
+        onClosed={handleModalClosed}
+        toggle={() => setShow(!show)}
+        className='modal-dialog-centered modal-lg'
+      >
+        <ModalHeader className='bg-transparent' toggle={() => setShow(!show)}></ModalHeader>
+        <ModalBody className='px-5 pb-5'>
+          <div className='text-center mb-2'>
+            <h1>Gym Allowance</h1>
+          </div>
+            <Update value={currentGym} apiEndPoint={"/reimbursements/set/gym/allowance/limit/"} CallBack={CallBackGym} DiscardModal={DiscardModal}/>    
+        </ModalBody>
+      </Modal>
     </Fragment>
   )
 }

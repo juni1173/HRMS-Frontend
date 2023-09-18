@@ -276,7 +276,7 @@ const AttendanceTable = () => {
                                   statusItem ? statusItem.attendance_status === "P" ? "text-success" : statusItem.attendance_status === "A" ? "text-danger" : statusItem.attendance_status === "WFH" ? "text-warning" : statusItem.attendance_status === "L" ? "text-primary" : "" : ""
                                 }
                               >
-                                {statusItem ? statusItem.attendance_status : "N/A"}
+                                { statusItem ? statusItem.attendance_status !== null ? statusItem.attendance_status : "N/A" : "N/A"}
                               </td>
                               
                             )

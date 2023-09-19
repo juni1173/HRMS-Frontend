@@ -10,6 +10,7 @@ import Loan from "./EmployeeComponents/Loan"
 import LearningDevelopment from "./EmployeeComponents/LearningDevelopment/index"
 import JiraIssues from "./EmployeeComponents/JiraIssues/Issues"
 import LeavesCount from "./EmployeeComponents/LeavesCount"
+import MedicalLimit from "./EmployeeComponents/MedicalLimit"
 const EmployeeDashboard = () => {
   const Api = apiHelper()
   const [data, setData] = useState([])
@@ -128,6 +129,13 @@ const EmployeeDashboard = () => {
             </CardBody>
           </Card>
         )}
+        </Col>
+        <Col md={6}>
+          <Card>
+            <CardBody>
+              <MedicalLimit data={data.medical_count}/>
+            </CardBody>
+          </Card>
         </Col>
         <Col md={12}>
         {data.course_sessions && Object.values(data.course_sessions).length > 0 && (

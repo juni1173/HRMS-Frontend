@@ -96,6 +96,7 @@ const Leave = ({ data, CallBack }) => {
                             duration: ''
                        })
                         )
+                        setDates([])
                         setTimeout(() => {
                             setLoading(false)
                         }, 1000)

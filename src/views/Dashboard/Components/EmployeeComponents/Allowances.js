@@ -56,7 +56,7 @@ const Allowances = ({ data }) => {
         ) : (
             <Badge color='light-danger' className='text-center'>No Medical allowance applied on {month}!</Badge> 
         )}
- {data.medical_count && Object.values(data.medical_count).length > 0 ? (
+ {/* {data.medical_count && Object.values(data.medical_count).length > 0 ? (
             // data.medical_count.map((item, key) => (
                 <div className='browser-states'>
               
@@ -67,7 +67,7 @@ const Allowances = ({ data }) => {
             // ))
         ) : (
             <Badge color='light-danger' className='text-center'>No Medical allowance data found!</Badge> 
-        )}
+        )} */}
         </>
         
       )

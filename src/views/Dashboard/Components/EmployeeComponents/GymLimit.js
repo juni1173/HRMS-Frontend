@@ -2,7 +2,7 @@ import React from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { Card, CardBody, CardHeader, CardTitle } from 'reactstrap'
 
-const MedicalLimit = ({ data }) => {
+const GymLimit = ({ data }) => {
   // Check if data is undefined
   if (!data) {
     return null // You can return null or any other placeholder component
@@ -12,8 +12,18 @@ const MedicalLimit = ({ data }) => {
     chart: {
       type: 'pie'
     },
-    labels: ['Approved', 'Remaining'],
+    labels: ['Used', 'Left'],
     colors: ['#315180', '#c6c8cc'],
+    // title: {
+    //     text: 'Gym Balance - Monthly',
+    //     align: 'center',
+    //     margin: 10,
+    //     style: {
+    //       fontSize: '16px',
+    //       fontWeight: 'bold'
+    //     }
+    //   },
+
     responsive: [
       {
         breakpoint: 480,
@@ -24,14 +34,13 @@ const MedicalLimit = ({ data }) => {
         }
       }
     ],
-    series: [data.emp_yearly_limit - data.remaining_allowance, data.remaining_allowance],
+    series: [data[0].amount, data[0].gym_monthly_limit - data[0].amount],
     dataLabels: {
       formatter (val, opts) {
         return opts.w.config.series[opts.seriesIndex]
     }
     }
   }
-
   const renderStates = () => {
     return (
       <>
@@ -46,7 +55,7 @@ const MedicalLimit = ({ data }) => {
     <Card className='card-browser-states'>
       <CardHeader>
         <div>
-          <CardTitle tag='h4'>Medical Balance - Yearly</CardTitle>
+          <CardTitle tag='h4'>Gym Balance - Monthly</CardTitle>
         </div>
       </CardHeader>
       <CardBody>{renderStates()}</CardBody>
@@ -54,4 +63,4 @@ const MedicalLimit = ({ data }) => {
   )
 }
 
-export default MedicalLimit
+export default GymLimit

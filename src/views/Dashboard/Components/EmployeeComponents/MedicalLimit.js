@@ -8,29 +8,31 @@ const MedicalLimit = ({ data }) => {
     return null // You can return null or any other placeholder component
   }
 
-  const { series, options } = {
-    series: [data.emp_yearly_limit, data.remaining_allowance],
-    
-    options: {
-      chart: {
-        width: 380,
-        type: 'pie'
-      },
-      labels: ['Approved', 'Remaining'],
+  const options = {
+    chart: {
+      width: 380,
+      type: 'pie'
+    },
+    labels: ['Approved', 'Remaining'],
 
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              position: 'bottom'
-            }
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
           }
         }
-      ]
+      }
+    ],
+    series: [data.emp_yearly_limit - data.remaining_allowance, data.remaining_allowance],
+    dataLabels: {
+      formatter (val, opts) {
+        return opts.w.config.series[opts.seriesIndex]
+    }
     }
   }
 
@@ -38,7 +40,7 @@ const MedicalLimit = ({ data }) => {
     return (
       <>
         <div id="chart">
-          <ReactApexChart options={options} series={series} type="pie" width={380} />
+          <ReactApexChart options={options} series={options.series} type="pie" width={380} />
         </div>
       </>
     )

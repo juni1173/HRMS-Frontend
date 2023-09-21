@@ -11,10 +11,18 @@ import {
   CardHeader,
   Badge,
   Button,
-  Row
+  Row,
+  Offcanvas, OffcanvasHeader, OffcanvasBody
 } from 'reactstrap'
 import ReactApexChart from 'react-apexcharts'
 const LeavesCount = ({ data }) => {
+  let tooltipHTML = ''
+  const [canvasPlacement, setCanvasPlacement] = useState('end')
+    const [canvasOpen, setCanvasOpen] = useState(false)
+    const toggleCanvasEnd = () => {
+    setCanvasPlacement('end')
+    setCanvasOpen(!canvasOpen)
+    }
   const [series, setSeries] = useState([0])
   const [annualSeries, setAnnualSeries] = useState([0])
   const [casualSeries, setCasualSeries] = useState([0])
@@ -70,6 +78,20 @@ const LeavesCount = ({ data }) => {
     let percentageRemaining = (totalRemainingLeaves / totalAllowedLeaves) * 100
 percentageRemaining =  100 - percentageRemaining
 setSeries([percentageRemaining.toFixed(2)])
+// Iterate over each item in the data names array
+data.forEach(data => {
+  // Generate the tooltip HTML for each item
+  const tooltipItemHTML = `
+    <div class="custom-tooltip">
+      <div><strong>${data.leave_type}</strong></div>
+      <div>Remaining Leaves: ${data.remaining_leaves}</div>
+      <div>Allowed Leaves: ${data.allowed_leaves}</div>
+    </div>
+  `
+  
+  // Append the tooltip HTML for this item to the overall tooltipHTML string
+  tooltipHTML += tooltipItemHTML
+})
 
 let percentageRemainingCasual = (RemainingCasual / CasualLeaves) * 100
 percentageRemainingCasual =  100 - percentageRemainingCasual
@@ -176,8 +198,16 @@ setMarriageSeries([percentageRemainingMarriage.toFixed(2)])
     stroke: {
       lineCap: 'round'
     },
-    labels: ['Total']
-
+    labels: ['Leaves'],
+    tooltip: {
+      enabled: true,
+      custom: () => {
+    
+        // Return the custom tooltip HTML
+        return tooltipHTML
+      }
+    }
+    
   })
   const [BereavementOptions] = useState({
     chart: {
@@ -744,63 +774,63 @@ setMarriageSeries([percentageRemainingMarriage.toFixed(2)])
       return (
         <>
   <div className="row">
-  <div className="col-md-3">
     {/* Main Chart */}
-    <div id="chart">
-      <ReactApexChart options={options} series={series} type="radialBar" height={250} />
+    <div id="chart" >
+      <ReactApexChart options={options} series={series} type="radialBar" height={210} />
     </div>
-  </div>
-  <div className="col-md-9">
-    <div className="row">
-      <div className="col-md-3">
-        {/* Sub-Chart 1 */}
-        <div id="annual-chart">
-          <ReactApexChart options={AnnualOptions} series={annualSeries} type="radialBar" height={130} />
-        </div>
-      </div>
-      <div className="col-md-3">
-        {/* Sub-Chart 2 */}
-        <div id="casual-chart">
-          <ReactApexChart options={casualOptions} series={casualSeries} type="radialBar" height={130} />
-        </div>
-      </div>
-      <div className="col-md-3">
-        {/* Sub-Chart 1 */}
-        <div id="annual-chart">
-          <ReactApexChart options={BereavementOptions} series={BereavementSeries} type="radialBar" height={130} />
-        </div>
-      </div>
-      <div className="col-md-3">
-        {/* Sub-Chart 2 */}
-        <div id="casual-chart">
-          <ReactApexChart options={UmrahOptions} series={UmrahSeries} type="radialBar" height={130} />
-        </div>
-      </div>
-    </div>
-    <div className="row">
-    <div className="col-md-4">
-        {/* Sub-Chart 1 */}
-        <div id="marraige-chart">
-          <ReactApexChart options={marraigeoptions} series={MarriageSeries} type="radialBar" height={130} />
-        </div>
-      </div>
-      <div className="col-md-4">
-        {/* Sub-Chart 2 */}
-        <div id="maternity-chart">
-          <ReactApexChart options={maternityoptions} series={MaternitySeries} type="radialBar" height={130} />
-        </div>
-      </div>
-      <div className="col-md-4">
-        {/* Sub-Chart 2 */}
-        <div id="paternity-chart">
-          <ReactApexChart options={paternityoptions} series={PaternitySeries} type="radialBar" height={130} />
-        </div>
-      </div>
-    </div>
-  </div>
-  
 </div>
 
+<Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd}>
+            <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
+            <OffcanvasBody className=''>
+             <h1>Leaves Balance</h1>
+    <div className="row">
+      <div className="col-md-6">
+        {/* Sub-Chart 1 */}
+        <div id="annual-chart">
+          <ReactApexChart options={AnnualOptions} series={annualSeries} type="radialBar" height={150} />
+        </div>
+      </div>
+      <div className="col-md-6">
+        {/* Sub-Chart 2 */}
+        <div id="casual-chart">
+          <ReactApexChart options={casualOptions} series={casualSeries} type="radialBar" height={150} />
+        </div>
+      </div>
+      <div className="col-md-6">
+        {/* Sub-Chart 1 */}
+        <div id="annual-chart">
+          <ReactApexChart options={BereavementOptions} series={BereavementSeries} type="radialBar" height={150} />
+        </div>
+      </div>
+      <div className="col-md-6">
+        {/* Sub-Chart 2 */}
+        <div id="casual-chart">
+          <ReactApexChart options={UmrahOptions} series={UmrahSeries} type="radialBar" height={150} />
+        </div>
+      </div>
+   
+    <div className="col-md-6">
+        {/* Sub-Chart 1 */}
+        <div id="marraige-chart">
+          <ReactApexChart options={marraigeoptions} series={MarriageSeries} type="radialBar" height={150} />
+        </div>
+      </div>
+      <div className="col-md-6">
+        {/* Sub-Chart 2 */}
+        <div id="maternity-chart">
+          <ReactApexChart options={maternityoptions} series={MaternitySeries} type="radialBar" height={150} />
+        </div>
+      </div>
+      <div className="col-md-6">
+        {/* Sub-Chart 2 */}
+        <div id="paternity-chart">
+          <ReactApexChart options={paternityoptions} series={PaternitySeries} type="radialBar" height={150} />
+        </div>
+      </div>
+      </div>
+            </OffcanvasBody>
+        </Offcanvas>
 
         </>
         
@@ -814,7 +844,7 @@ setMarriageSeries([percentageRemainingMarriage.toFixed(2)])
           <CardTitle tag='h4'>Leaves Balance</CardTitle>
         </div>
       </CardHeader>
-      <CardBody>
+      <CardBody onClick={toggleCanvasEnd}>
         {renderStates()}
         </CardBody>
     </Card>

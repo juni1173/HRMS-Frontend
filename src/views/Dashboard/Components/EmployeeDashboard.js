@@ -122,23 +122,10 @@ const EmployeeDashboard = () => {
           </Card>
         )}
         </Col>
-        <Col md={6}>
-          <Card>
-            <CardBody>
-              <MedicalLimit data={data.medical_count}/>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col md={6}>
-        {data.gym && Object.values(data.gym).length > 0 && (
-          <Card>
-            <CardBody>
-              <GymLimit data={data.gym}/>
-            </CardBody>
-          </Card>
-        )}
-        </Col>
-        <Col md={12}>
+        
+        {/* <Col md={12}> */}
+        <Row>
+          <Col md={4}>
         {data.Leaves_count && Object.values(data.Leaves_count).length > 0 && (
           <Card>
             <CardBody>
@@ -147,6 +134,25 @@ const EmployeeDashboard = () => {
           </Card>
         )}
         </Col>
+        <Col md={4}>
+        {data.gym && Object.values(data.gym).length > 0 && (
+          <Card>
+            <CardBody>
+              <MedicalLimit data={data.medical_count}/>
+            </CardBody>
+          </Card>
+        )}
+        </Col>
+        <Col md={4}>
+        {data.gym && Object.values(data.gym).length > 0 && (
+          <Card>
+            <CardBody>
+              <GymLimit data={data.gym}/>
+            </CardBody>
+          </Card>
+        )}
+        </Col>
+        </Row>
        
         <Col md={12}>
         {data.course_sessions && Object.values(data.course_sessions).length > 0 && (

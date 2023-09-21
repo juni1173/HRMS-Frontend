@@ -24,21 +24,32 @@ const MedicalLimit = ({ data }) => {
         }
       }
     ],
+    plotOptions: {
+      pie: {
+        dataLabels: {
+          offset: -20 
+        }
+        
+      }
+    },
     series: [data.emp_yearly_limit - data.remaining_allowance, data.remaining_allowance],
     dataLabels: {
       formatter (val, opts) {
         return opts.w.config.series[opts.seriesIndex]
     }
+    },
+    legend: {
+      position:'bottom'
     }
+    
+    
   }
 
   const renderStates = () => {
     return (
-      <>
-        <div id="chart">
-          <ReactApexChart options={options} series={options.series} type="pie" width={320} />
-        </div>
-      </>
+      <div id="chart" style={{ marginLeft: '-30px', marginRight: '-30px' }}>
+      <ReactApexChart options={options} series={options.series} type="pie" width={240} />
+    </div>
     )
   }
 
@@ -49,7 +60,7 @@ const MedicalLimit = ({ data }) => {
           <CardTitle tag='h4'>Medical Balance - Yearly</CardTitle>
         </div>
       </CardHeader>
-      <CardBody>{renderStates()}</CardBody>
+      <CardBody >{renderStates()}</CardBody>
     </Card>
   )
 }

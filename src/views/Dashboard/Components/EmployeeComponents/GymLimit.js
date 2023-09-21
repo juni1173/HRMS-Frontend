@@ -12,18 +12,9 @@ const GymLimit = ({ data }) => {
     chart: {
       type: 'pie'
     },
-    labels: ['Used', 'Left'],
-    colors: ['#315180', '#c6c8cc'],
-    // title: {
-    //     text: 'Gym Balance - Monthly',
-    //     align: 'center',
-    //     margin: 10,
-    //     style: {
-    //       fontSize: '16px',
-    //       fontWeight: 'bold'
-    //     }
-    //   },
+    labels: ['Approved', 'Remaining'],
 
+    colors: ['#315180', '#c6c8cc'],
     responsive: [
       {
         breakpoint: 480,
@@ -34,20 +25,29 @@ const GymLimit = ({ data }) => {
         }
       }
     ],
+    plotOptions: {
+        pie: {
+          dataLabels: {
+            offset: -20
+          }
+        }
+      },
     series: [data[0].amount, data[0].gym_monthly_limit - data[0].amount],
     dataLabels: {
       formatter (val, opts) {
         return opts.w.config.series[opts.seriesIndex]
     }
+    },
+    legend: {
+      position: 'bottom'
     }
   }
+
   const renderStates = () => {
     return (
-      <>
-        <div id="chart">
-          <ReactApexChart options={options} series={options.series} type="pie" width={320} />
+      <div id="chart" style={{ marginLeft: '-30px', marginRight: '-30px' }}>
+          <ReactApexChart options={options} series={options.series} type="pie" width={240} />
         </div>
-      </>
     )
   }
 

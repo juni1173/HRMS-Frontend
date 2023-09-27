@@ -180,6 +180,8 @@ const Leave = ({ data, CallBack }) => {
                     name="leave_types"
                     options={leave_types}
                     onChange={ (e) => onChangeLeavesDetailHandler('leave_types', 'select', e.value) }
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
                 />
         </Col>
         {/* <Col md='4' className='mb-1'>
@@ -335,9 +337,9 @@ const Leave = ({ data, CallBack }) => {
                             </thead>
                             
                             <tbody className='text-center'>
-                                {Object.values(data.employee_leaves).map((item, key) => (
+                                {/* {Object.values(data.employee_leaves).map((item, key) => (
                                         <tr key={key}>
-                                        <td className='nowrap'>{item.leave_types_title ? item.leave_types_title : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td className='nowrap'>{item.leave_data[0].employee_leave_records[0].leave_types_title ? item.leave_data[0].employee_leave_records[0].leave_types_title : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.duration ? item.duration : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.start_date ? item.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.end_date ? item.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
@@ -365,8 +367,51 @@ const Leave = ({ data, CallBack }) => {
 
                                         </tr>
                                 )
-                                )}
+                                )} */}
                             
+                            {Object.values(data.employee_leaves).map((employeeLeave, employeeKey) => (
+  <React.Fragment key={employeeKey}>
+    {employeeLeave.leave_data.map((leaveData, leaveDataKey) => (
+      <React.Fragment key={leaveDataKey}>
+        {leaveData.employee_leave_records.map((record, recordKey) => (
+          <tr key={recordKey}>
+            <td className='nowrap'>{record.leave_types_title ? record.leave_types_title : <Badge color='light-danger'>N/A</Badge>}</td>
+            <td className='nowrap'>{record.duration ? record.duration : <Badge color='light-danger'>N/A</Badge>}</td>
+            <td className='nowrap'>{record.start_date ? record.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
+            <td className='nowrap'>{record.end_date ? record.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
+            <td>
+              {record.attachment ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${record.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}
+            </td>
+            <td>
+              <Badge>{record.status ? record.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
+              {record.decision_reason && (
+                <>
+                  <HelpCircle id={`UnControlledLeave${recordKey}`} />
+                  <UncontrolledTooltip target={`UnControlledLeave${recordKey}`}>{record.decision_reason}</UncontrolledTooltip>
+                </>
+              )}
+            </td>
+            <td>
+              {record.status === 'in-progress' && (
+                <Row className='text-center'>
+                  <Col className='col-12'>
+                    <button
+                      className="border-0 no-background"
+                      onClick={() => removeAction(record.id)}
+                    >
+                      <XCircle color="red" />
+                    </button>
+                  </Col>
+                </Row>
+              )}
+            </td>
+          </tr>
+        ))}
+      </React.Fragment>
+    ))}
+  </React.Fragment>
+))}
+
                             </tbody>
                             
                     </Table>

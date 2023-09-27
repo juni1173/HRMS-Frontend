@@ -2,6 +2,7 @@ import { Fragment, useState } from "react"
 import {TabContent, TabPane, Nav, NavItem, NavLink} from "reactstrap"
 import EmployeeKpi from "./EmployeeKpi/index"
 import EvaluationRequests from "./EvaluatorKpi/index"
+import PreviousKpi from "./EmployeeKpi/PreviousKpi"
  
 const KpiModule = () => {
     
@@ -36,6 +37,16 @@ const KpiModule = () => {
                                         Evaluation Requests
                                     </NavLink>
                                     </NavItem>
+                                    <NavItem >
+                                     <NavLink
+                                        active={active === '3'}
+                                        onClick={() => {
+                                        toggle('3')
+                                        }}
+                                    >
+                                        Previous KPI's
+                                    </NavLink>
+                                    </NavItem>
                                 
                                 {/* </div> */}
                         </Nav>
@@ -45,6 +56,9 @@ const KpiModule = () => {
                         </TabPane>
                         <TabPane tabId={'2'} className='tab-pane'>
                                 <EvaluationRequests />
+                        </TabPane>
+                        <TabPane tabId={'3'} className='tab-pane'>
+                                <PreviousKpi />
                         </TabPane>
                     </TabContent>
                     </div>

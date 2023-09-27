@@ -80,11 +80,37 @@ const KavskillView = ({data}) => {
                                  <p style={{padding:"0.3rem 0.5rem"}}>{data.objectives ? data.objectives : 'N/A'}</p>
                              </Col>
                              <Col md="6" className='mb-1'>
+                               <Badge color='light-danger'  style={{fontSize: '15px'}}>
+                               Category
+                               </Badge>
+                                 <p style={{padding:"0.3rem 0.5rem"}}>{data.Category ? data.Category : 'N/A'}</p>
+                             </Col>
+                             <Col md="6" className='mb-1'>
+                               <Badge color='light-danger'  style={{fontSize: '15px'}}>
+                               Remark
+                               </Badge>
+                                 <p style={{padding:"0.3rem 0.5rem"}}>{data.remark ? data.remark : 'N/A'}</p>
+                             </Col>
+
+                             <Col md="6" className='mb-1'>
+                               <Badge color='light-danger'  style={{fontSize: '15px'}}>
+                             L&D Remark
+                               </Badge>
+                                 <p style={{padding:"0.3rem 0.5rem"}}>{data.lnd_remark ? data.lnd_remark : 'N/A'}</p>
+                             </Col>
+                              <Col md="6" className='mb-1'>
+                               <Badge color='light-danger'  style={{fontSize: '15px'}}>
+                          Conversion Status
+                               </Badge>
+                                 <p style={{padding:"0.3rem 0.5rem"}}>{data.conversion_status ? data.conversion_status : 'N/A'}</p>
+                             </Col>
+                             <Col md="6" className='mb-1'>
                                <Badge color='light-primary'  style={{fontSize: '15px'}}>
                                Cover Letter
                                </Badge>
                                  <p style={{padding:"0.3rem 0.5rem"}}>{data.cover_letter ? data.cover_letter : 'N/A'}</p>
                              </Col>
+                             
                             <Col md="12" className='mb-1'>
                                <Badge color='light-warning'  style={{fontSize: '15px'}}>
                                Joining Reason

@@ -53,7 +53,7 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
         }
     return (
   <Row tag='form' onSubmit={handleSubmit(onSubmit)}>
-    <Col xs={6}>
+    {value.staff_classification_title ? <Col xs={6}>
       <Label className='form-label' for='title'>
         Staff Classification
       </Label>
@@ -64,7 +64,7 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
           <Input {...field} id='title' readOnly/>
         )}
       />
-    </Col>
+    </Col> : null}
   
     <Col xs={6}>
       <Label className='form-label' for='description'>
@@ -78,7 +78,8 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
         )}
       />
     </Col>
-    <Col xs={12}>
+     
+    <Col xs={value.staff_classification_title ? 12 : 6}>
       <Label className='form-label' for='description'>
         Allowed Leaves
       </Label>

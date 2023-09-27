@@ -161,7 +161,7 @@ const Manual = () => {
                     </Col>
                     <Col md='6' className='mb-1'>
                         <label className='form-label'>
-                        Upload Document <Badge color='light-danger'>*</Badge>
+                        Attachment <Badge color='light-danger'>*</Badge>
                         </label>
                         <Input type="file" 
                             name="document"

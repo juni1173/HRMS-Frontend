@@ -239,7 +239,12 @@ const Check_out = async () => {
                     </thead>
                     {!loading ? (
                     Object.values(atndceData).length > 0 ? (
-                        atndceData.map((item, key) => (
+                        atndceData.sort((a, b) => {
+                            // Assuming that item.date is a string in the "YYYY-MM-DD" format
+                            const dateA = new Date(a.date)
+                            const dateB = new Date(b.date)
+                            return dateB - dateA // Sort in descending order by date
+                          }).map((item, key) => (
                             <tbody key={key}>
                                 <tr>
                                 <td className='nowrap'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</td>

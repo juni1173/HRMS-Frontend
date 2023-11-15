@@ -110,7 +110,7 @@ const ApplicantList = ({ data, getApplicants, Session_id }) => {
           </thead>
           
           <tbody className='text-center'>
-                {data.length > 0 ? (
+                {data && Object.values(data).length > 0 ? (
                     data.map((applicant, key) => (
                         !applicant.is_trainee && (
                             <tr key={key}>

@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState, useCallback } from "react"
-import { Spinner} from "reactstrap"
+import { Spinner, Button, Modal, ModalHeader, ModalBody} from "reactstrap"
 import apiHelper from "../../Helpers/ApiHelper"
+import DefaultEvaluationForm from "../Evaluation/DefaultEvaluationForm"
 import AddEmployeeKpi from "./AddEmployeeKpi"
  
 const index = () => {
@@ -10,7 +11,12 @@ const index = () => {
     const [preData, setPreData] = useState([])
     const [typesDropdownArr] = useState([])
     const [complexityDropdownArr] = useState([])
-    const [employeesDropdownArr] = useState([]) 
+    const [employeesDropdownArr] = useState([])
+    const [batchDropdownArr] = useState([])
+    const [scaleGroup] = useState([])
+    const [projects] = useState([]) 
+    const [basicModal, setBasicModal] = useState(false)
+    
     const getPreData = async () => {
         setLoading(true)
         await Api.get(`/kpis/pre/data/`).then(result => {
@@ -20,10 +26,16 @@ const index = () => {
                     typesDropdownArr.splice(0, typesDropdownArr.length)
                     complexityDropdownArr.splice(0, complexityDropdownArr.length)
                     employeesDropdownArr.splice(0, employeesDropdownArr.length)
+                    batchDropdownArr.splice(0, batchDropdownArr.length)
+                    scaleGroup.splice(0, scaleGroup.length)
+                    projects.splice(0, projects.length)
                     const data = result.data
                     const typeLength = data.type.length
                     const complexityLength = data.complexity.length
                     const employeeLength = data.employees.length
+                    const scaleGroupLength = data.scale_group.length
+                    const projectsLength = data.employees_projects.length
+                    const batchLength = data.ep_batch_in_progress.length
                     for (let i = 0; i < typeLength; i++) {
                         typesDropdownArr.push({value: data.type[i].id, label: data.type[i].title})
                     }
@@ -32,6 +44,15 @@ const index = () => {
                     }
                     for (let i = 0; i < employeeLength; i++) {
                         employeesDropdownArr.push({value: data.employees[i].id, label: data.employees[i].name})
+                    }
+                    for (let i = 0; i < scaleGroupLength; i++) {
+                        scaleGroup.push({value: data.scale_group[i].id, label: data.scale_group[i].title})
+                    }
+                    for (let i = 0; i < projectsLength; i++) {
+                        projects.push({value: data.employees_projects[i].id, label: data.employees_projects[i].project_title})
+                    }
+                    for (let i = 0; i < batchLength; i++) {
+                        batchDropdownArr.push({value: data.ep_batch_in_progress[i].id, label: data.ep_batch_in_progress[i].batch_no})
                     }
                     
                 } else {
@@ -45,22 +66,31 @@ const index = () => {
             setLoading(false)
         }, 1000)
     }
-   
     useEffect(() => {
-        getPreData()
+         getPreData()
         }, [])
 
         const CallBack = useCallback(() => {
             getPreData()
+            return false
           }, [preData])
    return (
     <Fragment>
+         <Button color='light' className="float-right mb-2" outline onClick={() => setBasicModal(!basicModal)}>
+          Evaluation Chart
+        </Button>
         {!loading ? (
-            <AddEmployeeKpi preData={preData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack}/>
+            <AddEmployeeKpi preData={preData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, projectsData: projects, batchData: batchDropdownArr}} CallBack={CallBack}/>
         ) : (
-            <div className='text-center'><Spinner/></div>
+            <div className='text-center'><Spinner color="white"/></div>
         )
         }
+         <Modal isOpen={basicModal} toggle={() => setBasicModal(!basicModal)} className='modal-xl'>
+          <ModalHeader toggle={() => setBasicModal(!basicModal)}>Evaulation Chart</ModalHeader>
+          <ModalBody>
+           <DefaultEvaluationForm />
+          </ModalBody>
+        </Modal>
     </Fragment>
    )
 }

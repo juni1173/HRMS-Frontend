@@ -1,11 +1,13 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Row, Col, Table, Modal, ModalHeader, ModalBody, Spinner, Button, Badge } from 'reactstrap'
-import { Edit2, Trash2 } from 'react-feather'
+import { Row, Col, Table, Modal, ModalHeader, ModalBody, Spinner, Button, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody, Card, CardBody } from 'reactstrap'
+import { Edit2, Trash2, Eye } from 'react-feather'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import apiHelper from '../../Helpers/ApiHelper'
 import UpdateKpi from '../UpdateKpi/update'
-const KpiList = ({ CallBack, dropdownData }) => {
+import Comments from '../Comments'
+import ViewKpiEvaluation from './ViewKpiEvaluation'
+const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
@@ -14,6 +16,11 @@ const KpiList = ({ CallBack, dropdownData }) => {
     const [checkedItems, setCheckedItems] = useState([])
     const [UpdateData, setUpdateData] = useState([])
     const [selectAll, setSelectAll] = useState(false)
+    const [canvasPlacement, setCanvasPlacement] = useState('end')
+    const [canvasOpen, setCanvasOpen] = useState(false)
+    const [canvasEvaluationPlacement, setCanvasEvaluationPlacement] = useState('end')
+    const [canvasEvaluationOpen, setCanvasEvaluationOpen] = useState(false)
+    const [evaluationDetailspreData, setEvaluationDetailspreData] = useState([])
     const handleCheck = (event) => {
         const { id } = event.target
         const isChecked = event.target.checked
@@ -105,131 +112,185 @@ const KpiList = ({ CallBack, dropdownData }) => {
     }
     const getKpiData = async () => {
         setLoading(true)
-        await Api.get(`/kpis/employees/`).then(result => {
-            if (result) {
-                if (result.status === 200) {
-                   setData(result.data)
-                } else {
-                    Api.Toast('error', result.message)
-                }
-            } else (
-             Api.Toast('error', 'Server not responding!')   
+        searchData && searchData.length > 0 ? (
+            setData(searchData)
+            ) : (
+            await Api.get(`/kpis/employees/`).then(result => {
+                if (result) {
+                    if (result.status === 200) {
+                       setData(result.data)
+                    } else {
+                        Api.Toast('error', result.message)
+                    }
+                } else (
+                 Api.Toast('error', 'Server not responding!')   
+                )
+            })
             )
-        })  
         setTimeout(() => {
             setLoading(false)
         }, 500)
+        return false
     }
     const UpdateKpiFunc = (item) => {
         setUpdateData(item)
         setUpdateModal(!UpdateModal)
     }
-    useEffect(() => {
-        getKpiData()
+    const CommentToggle = (item) => {
+        if (item !== null) {
+            setUpdateData(item)
+        }
+        setCanvasPlacement('end')
+        setCanvasOpen(!canvasOpen)
+        
+      }
+      const toggleCanvasEnd = () => {
+        setCanvasPlacement('end')
+        setCanvasOpen(!canvasOpen)
+      }
+      const getEvaluationDetails = (employee, kpi_id) => {
+        if (employee !== null && kpi_id !== null) {
+            setEvaluationDetailspreData({employee, kpi_id})
+        }
+        setCanvasEvaluationPlacement('end')
+        setCanvasEvaluationOpen(!canvasEvaluationOpen)
+        
+      }
+      const toggleCanvasEvaluationEnd = () => {
+        setCanvasEvaluationPlacement('end')
+        setCanvasEvaluationOpen(!canvasEvaluationOpen)
+      }
+      useEffect(() => {
+            getKpiData() 
         }, [setData])
+        
   return (
     <Fragment>
     {Object.values(data).length > 0 ? (
         !loading ? (
-        <Row>
-        <Col md={12}>
-            {checkedItems.length > 0 && (
-                <Button className='btn btn-primary mb-1' onClick={multipleKpiSend}>
-                    Send Kpi's to Evaluator
-                </Button>
-            )}
-            <Table bordered striped responsive className='my-1'>
-                    <thead className='table-dark text-center'>
-                    <tr>
-                        <th scope="col" className="text-nowrap">
-                        <input
-                        type="checkbox"
-                        onChange={handlecheckall} // Attach the handler to the "Select All" checkbox
-                        checked={selectAll} // Bind the checked state to the "Select All" checkbox
-                        disabled={
-                            data.every((item) => item.kpis_status_level !== 1)
-                          }
-                      />
-                            {/* Select */}
-                        </th>
-                        <th scope="col" className="text-nowrap">
-                        Detail
-                        </th>
-                        <th scope="col" className="text-nowrap">
-                        Evaluator
-                        </th>
-                        <th scope="col" className="text-nowrap">
-                        Type
-                        </th>
-                        <th scope="col" className="text-nowrap">
-                        Complexity
-                        </th>
-                        <th scope="col" className="text-nowrap">
-                        Status
-                        </th>
-                        <th scope="col" className="text-nowrap">
-                        Actions
-                        </th>
-                    </tr>
-                    </thead>
-                    
-                    <tbody className='text-center'>
-                        {Object.values(data).map((item, key) => (
-                                <tr key={key}>
-                                <td>{item.kpis_status_level === 1 ?  <input
-                            className='form-check-primary'
-                            type="checkbox"
-                            id={item.id}
-                            onChange={handleCheck}
-                            checked={checkedItems.includes(item.id.toString())} // Bind the checked state to individual checkboxes
-                          /> : <input className='form-check-primary' type="checkbox" disabled/>}</td>
-                                <td>{item.title ? item.title : 'N/A'}</td>
-                                <td>{item.evaluator_name ? item.evaluator_name : 'N/A'}</td>
-                                <td>{item.ep_type_title ? item.ep_type_title : 'N/A'}</td>
-                                <td>{item.ep_complexity_title ? item.ep_complexity_title : 'N/A'}</td>
-                                <td>{item.kpis_status_title ? <Badge color="light-success">{item.kpis_status_title}</Badge> : <Badge color="light-danger">N/A</Badge>}</td>
-                                <td>
-                                    <div className="row">
-                                    {item.kpis_status_level === 1 ? (
+            <Card>
+                <CardBody>
+                <Row>
+            
+            <Col md={12}>
+                {checkedItems.length > 0 && (
+                    <Button className='btn btn-primary mb-1' onClick={multipleKpiSend}>
+                        Send Kpi's to Evaluator
+                    </Button>
+                )}
+                <Table bordered striped responsive className='my-1'>
+                        <thead className='table-dark text-center'>
+                        <tr>
+                            {(type && type !== 'search') && (
+                                <th scope="col" className="text-nowrap">
+                                <input
+                                type="checkbox"
+                                onChange={handlecheckall} // Attach the handler to the "Select All" checkbox
+                                checked={selectAll} // Bind the checked state to the "Select All" checkbox
+                                disabled={
+                                    data.every((item) => item.kpis_status_level !== 1)
+                                  }
+                              />
+                                    {/* Select */}
+                                </th>
+                            )}
+                            
+                            <th scope="col" className="text-nowrap">
+                            Detail
+                            </th>
+                            <th scope="col" className="text-nowrap">
+                            Evaluator
+                            </th>
+                            <th scope="col" className="text-nowrap">
+                            Type
+                            </th>
+                            <th scope="col" className="text-nowrap">
+                            Complexity
+                            </th>
+                            <th scope="col" className="text-nowrap">
+                            Status
+                            </th>
+                            <th scope='col' className='text-nowrap'>
+                                Employment Type
+                            </th>
+                            <th scope="col" className="text-nowrap">
+                            View
+                            </th>
+                            <th scope="col" className="text-nowrap">
+                            Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        
+                        <tbody className='text-center'>
+                            {Object.values(data).reverse().map((item, key) => (
+                                    <tr key={key}>
+                                {(type && type !== 'search') && (
+                                    <td>{item.kpis_status_level === 1 ?  <input
+                                        className='form-check-primary'
+                                        type="checkbox"
+                                        id={item.id}
+                                        onChange={handleCheck}
+                                        checked={checkedItems.includes(item.id.toString())} // Bind the checked state to individual checkboxes
+                                    /> : <input className='form-check-primary' type="checkbox" disabled/>}</td>
+                                )}
+                                    <td>{item.title ? item.title : 'N/A'}</td>
+                                    <td>{item.evaluator_name ? item.evaluator_name : 'N/A'}</td>
+                                    <td>{item.ep_type_title ? item.ep_type_title : 'N/A'}</td>
+                                    <td>{item.ep_complexity_title ? item.ep_complexity_title : 'N/A'}</td>
+                                    <td>{item.kpis_status_title ? (
                                         <>
-                                        <div className="col-lg-6">
-                                        <button
-                                        className="border-0"
-                                        onClick={() => UpdateKpiFunc(item)}
-                                        
-                                        >
-                                        <Edit2 color="orange" />
-                                        </button>
-                                        </div>
-                                        <div className="col-lg-6">
+                                    <Badge color="light-success">{item.kpis_status_title}</Badge>
+                                    {item.kpis_status_level && item.kpis_status_level > 5 && <Button className='btn btn-sm btn-primary' onClick={() => getEvaluationDetails(item.employee, item.id)}>View Ratings</Button>}
+                                    </>
+                                    ) : <Badge color="light-danger">N/A</Badge>}</td>
+                                    <td>{item.mode_of_kpis_title ? item.mode_of_kpis_title : 'N/A'}</td>
+                                    <td><Eye onClick={() => CommentToggle(item)}/></td>
+                                    <td>
+                                        <div className="row">
+                                        {item.kpis_status_level === 1 ? (
+                                            <>
+                                            <div className="col-lg-6">
                                             <button
                                             className="border-0"
-                                            onClick={() => removeAction(item.id)}
+                                            onClick={() => UpdateKpiFunc(item)}
+                                            
                                             >
-                                            <Trash2 color="red" />
+                                            <Edit2 color="orange" />
                                             </button>
+                                            </div>
+                                            <div className="col-lg-6">
+                                                <button
+                                                className="border-0"
+                                                onClick={() => removeAction(item.id)}
+                                                >
+                                                <Trash2 color="red" />
+                                                </button>
+                                            </div>
+                                            </>
+                                        ) : (
+                                            <Badge color='light-danger'>No Action Available</Badge>
+                                        ) }
+                                        
                                         </div>
-                                        </>
-                                    ) : (
-                                        <Badge color='light-danger'>No Action Available</Badge>
-                                    ) }
-                                    
-                                    </div>
-                                </td>
-                                </tr>
-                        )
-                        )}
-                    
-                    </tbody>
-                    
-            </Table>
-        </Col>
-        </Row>
+                                    </td>
+                                    </tr>
+                            )
+                            )}
+                        
+                        </tbody>
+                        
+                </Table>
+            </Col>
+            </Row>
+                </CardBody>
+            </Card>
+        
         ) : (
-            <div className='text-center'><Spinner/></div>
+            <div className='text-center'><Spinner color='white'/></div>
         )
         ) : (
-            <div className="text-center">No Kpi Data Found!</div>
+            <div className="text-center text-white">No Kpi Data Found!</div>
         )
     }
     <div className='vertically-centered-modal'>
@@ -242,6 +303,30 @@ const KpiList = ({ CallBack, dropdownData }) => {
           </ModalBody>
         </Modal>
       </div>
+      <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} >
+          <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
+          <OffcanvasBody className=''>
+            {UpdateData && Object.values(UpdateData).length > 0 && (
+                <Comments data={UpdateData} />
+                )}
+            
+          </OffcanvasBody>
+        </Offcanvas>
+        <Offcanvas direction={canvasEvaluationPlacement} isOpen={canvasEvaluationOpen} toggle={toggleCanvasEvaluationEnd} >
+          <OffcanvasHeader toggle={toggleCanvasEvaluationEnd}></OffcanvasHeader>
+          <OffcanvasBody className=''>
+            {evaluationDetailspreData && Object.values(evaluationDetailspreData).length > 0 ? (
+                <ViewKpiEvaluation data={evaluationDetailspreData} />
+                ) : (
+                    <Card>
+                        <CardBody>
+                            No data found!
+                        </CardBody>
+                    </Card>
+                )}
+            
+          </OffcanvasBody>
+        </Offcanvas>
     </Fragment>
   )
 }

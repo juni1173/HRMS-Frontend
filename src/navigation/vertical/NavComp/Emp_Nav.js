@@ -14,15 +14,16 @@ import { Home, CheckSquare, Bookmark, HelpCircle, Book, Clock } from 'react-feat
 //     return list
 //   }
 // }
+// const home = true
 let nav = []
  nav =  [
   ...nav,
-  {
-    id: 'nsv-Dashboard',
-    title: 'Dashboard',
-    icon: <Home size={20} />,
-    navLink: '/employee/dashboard'
-  },
+    {
+      id: 'nsv-Dashboard',
+      title: 'Dashboard',
+      icon: <Home size="20" />,
+      navLink: '/employee/dashboard'
+    },
   
 //   {
 //     id: 'nav-Learning-Development',
@@ -123,6 +124,12 @@ let nav = []
     title: 'Learning & Development',
     icon: <Book size={30} />,
     navLink: '/employeelearninganddevelopment'
+  },
+  {
+    id: 'nav-certifications',
+    title: 'Certifications',
+    icon: <Book size={30} />,
+    navLink: '/employee/certifications'
   }
 //   {
 //     id: 'nav-roles-permissions',

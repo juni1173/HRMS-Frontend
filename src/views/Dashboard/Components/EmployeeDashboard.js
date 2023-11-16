@@ -51,6 +51,7 @@ const EmployeeDashboard = () => {
     }, [])
     const handleDataProcessing = useCallback(() => {
         preDataApi()
+        return false
       }, [data])
   return (
    <Fragment>

@@ -180,7 +180,7 @@ div.course-single-card .bg-blue:hover{
 .bg-blue h4, .bg-warning h4, .bg-grey h4{
 	color:white
 }
-.bg-blue p.text-white, .bg-warning p.text-white, .bg-grey p.text-white, .bg-green p.text-white{
+.bg-blue p.text-white, .bg-warning p.text-white, .bg-grey p.text-white, .bg-green p.text-white, .text-white{
 	color:white
 }
 p.label{
@@ -259,6 +259,9 @@ p.label{
   }
 div.configuration_panel ul.nav.nav-tabs.nav-left {
 	min-width: 25%;
+}
+.ml-5 {
+	margin-left:5px;
 }
 div.configuration_panel .nav-link {
 	background-color: white;
@@ -388,4 +391,7 @@ div.configuration_panel .tab-pane-orange {
   }
   .light-table th, .light-table td {
 	color: black;
+  }
+  .dark-shadow{
+	box-shadow: 0 4px 24px 0 rgb(34 41 47 / 55%) !important;
   }

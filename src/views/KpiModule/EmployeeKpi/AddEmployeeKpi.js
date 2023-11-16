@@ -4,14 +4,17 @@ import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import { Save } from 'react-feather'
 import KpiList from './KpiList'
-const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
+const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [employeeKpiData, setEmployeeKpiData] = useState({
         title: '',
         ep_type : '',
         evaluator: '',
-        ep_complexity: ''
+        ep_complexity: '',
+        scale_group: '',
+        employees_project: '',
+        ep_batch: ''
    })
     const onChangemployeeKpiDetailHandler = (InputName, InputType, e) => {
         
@@ -40,23 +43,44 @@ const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
     const submitForm = async () => {
         
         if (employeeKpiData.title !== '' && employeeKpiData.ep_type !== '' && employeeKpiData.evaluator !== ''
-        && employeeKpiData.ep_complexity !== '') {
+        && employeeKpiData.ep_complexity !== '' && employeeKpiData.scale_group !== '' && employeeKpiData.ep_batch !== '') {
             setLoading(true)
             const formData = new FormData()
             formData['title'] = employeeKpiData.title
             formData['ep_type'] = employeeKpiData.ep_type
-            formData['evaluator'] = employeeKpiData.evaluator
+            if (type === 'evaluator') {
+                formData['employee'] = employeeKpiData.evaluator
+            } else {
+                formData['evaluator'] = employeeKpiData.evaluator
+            }
             formData['ep_complexity'] = employeeKpiData.ep_complexity
-            await Api.jsonPost(`/kpis/employees/`, formData).then(result => {
-                if (result) {
-                    if (result.status === 200) {
-                        Api.Toast('success', result.message)
-                        CallBack()
-                    } else {
-                        Api.Toast('error', result.message)
+            formData['ep_batch'] = employeeKpiData.ep_batch
+            formData['scale_group'] = employeeKpiData.scale_group
+            formData['employee_project'] = employeeKpiData.employees_project
+            if (type === 'evaluator') {
+                await Api.jsonPost(`/kpis/team/lead/employees/`, formData).then(result => {
+                    if (result) {
+                        if (result.status === 200) {
+                            Api.Toast('success', result.message)
+                            CallBack()
+                        } else {
+                            Api.Toast('error', result.message)
+                        }
                     }
-                }
-            })
+                })
+            } else {
+                await Api.jsonPost(`/kpis/employees/`, formData).then(result => {
+                    if (result) {
+                        if (result.status === 200) {
+                            Api.Toast('success', result.message)
+                            CallBack()
+                        } else {
+                            Api.Toast('error', result.message)
+                        }
+                    }
+                })
+            }
+            
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
@@ -70,7 +94,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
   return (
     <Fragment>
         <div className='content-header' >
-            <h5 className='mb-2'>KPI Details</h5>
+            <h3 className='text-white'>Add Your KPI</h3>
             </div>
         {!loading ? (
         <>
@@ -79,8 +103,48 @@ const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
                 <Row>
                     <Col md={12}>
                     <Row>
-                    <Col md={2} className='mb-1'></Col>
-                    <Col md="3" className="mb-1">
+                     
+                    <Col md="4" className="mb-1">
+                        <Label className="form-label">
+                        Scale Group <Badge color='light-danger'>*</Badge>
+                        </Label>
+                        <Select
+                            isClearable={false}
+                            className='react-select'
+                            classNamePrefix='select'
+                            name="scale_group"
+                            options={dropdownData.scaleGroupData ? dropdownData.scaleGroupData : ''}
+                            onChange={ (e) => { onChangemployeeKpiDetailHandler('scale_group', 'select', e.value) }}
+                        />
+                    </Col>
+                    <Col md="4" className="mb-1">
+                        <Label className="form-label">
+                        Batch <Badge color='light-danger'>*</Badge>
+                        </Label>
+                        <Select
+                            isClearable={false}
+                            className='react-select'
+                            classNamePrefix='select'
+                            name="scale_group"
+                            options={dropdownData.batchData ? dropdownData.batchData : ''}
+                            onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_batch', 'select', e.value) }}
+                        />
+                    </Col>
+                    <Col md="4" className="mb-1">
+                        <Label className="form-label">
+                        Projects 
+                        </Label>
+                        <Select
+                            isClearable={false}
+                            className='react-select'
+                            classNamePrefix='select'
+                            name="project"
+                            options={dropdownData.projectsData ? dropdownData.projectsData : ''}
+                            onChange={ (e) => { onChangemployeeKpiDetailHandler('employee_project', 'select', e.value) }}
+                        />
+                    </Col>
+                    
+                    <Col md="4" className="mb-1">
                         <Label className="form-label">
                         Type <Badge color='light-danger'>*</Badge>
                         </Label>
@@ -94,7 +158,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
                         />
                     </Col>
                     
-                    <Col md='2' className='mb-1'>
+                    <Col md='4' className='mb-1'>
                         <label className='form-label'>
                         Complexity <Badge color='light-danger'>*</Badge>
                         </label>
@@ -107,9 +171,9 @@ const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
                             onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_complexity', 'select', e.value) }}
                         />
                     </Col>
-                    <Col md='3' className='mb-1'>
+                    <Col md='4' className='mb-1'>
                         <label className='form-label'>
-                        Evaluator <Badge color='light-danger'>*</Badge>
+                       {type === 'evaluator' ? 'Employee' : 'Evaluator'} <Badge color='light-danger'>*</Badge>
                         </label>
                         <Select
                             isClearable={false}
@@ -120,9 +184,8 @@ const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
                             onChange={ (e) => { onChangemployeeKpiDetailHandler('evaluator', 'select', e.value) }}
                         />
                     </Col>
-                    <Col md={2} className='mb-1'></Col>
-                    <Col md={2} className='mb-1'></Col>
-                    <Col md='6' className='mb-1'>
+                    
+                    <Col md='8' className='mb-1'>
                         <label className='form-label'>
                         Kpi Details <Badge color='light-danger'>*</Badge>
                         </label>
@@ -131,7 +194,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
                             onChange={ (e) => { onChangemployeeKpiDetailHandler('title', 'input', e) }}
                             placeholder="Write your kpi description!"  />
                     </Col>
-                    <Col md={2}>
+                    <Col md={4}>
                     <Button color="primary" className="btn-next mt-4" onClick={submitForm}>
                     <span className="align-middle d-sm-inline-block">
                     Save
@@ -142,7 +205,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
                     ></Save>
                 </Button>
                     </Col>
-                    <Col md={2} className='mb-1'></Col>
+                    
                     </Row>
                 
                     </Col>
@@ -159,7 +222,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, CallBack}) => {
             
         </>
         ) : (
-            <div className="text-center"><Spinner /></div>
+            <div className="text-center"><Spinner color='white'/></div>
         )
         }
 

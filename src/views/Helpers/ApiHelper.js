@@ -8,6 +8,7 @@ import Avatar from '@components/avatar'
   const apiHelper = () => {
     const MySwal = withReactContent(Swal)
     let token = localStorage.getItem('accessToken')
+    const controller = new AbortController()
     if (!token) {
       localStorage.clear()
       // window.location.href = "/login"
@@ -66,16 +67,20 @@ import Avatar from '@components/avatar'
               
         )
       }
+    
     const callAPI = async (endpointurl, options = {}) => {
+      
         endpointurl = ApiBaseLink + endpointurl
         const defaultHTTPMethod = "GET"
         const defaultHTTPHeaders = {  //set defaultHeaders of Http request
             // Accept: "application/json",
             Authorization: token
         }
-        const controller = new AbortController() //using  AbortController to cancel ongoing fetch requests
-        options.signal = controller.signal
-
+        //  const controller = new AbortController() //using  AbortController to cancel ongoing fetch requests
+        if (!options.signal) {
+          options.signal = controller.signal
+        }
+        
         options.method = options.method || defaultHTTPMethod
 
         options.headers = options.headers ? { ...defaultHTTPHeaders, ...options.headers } : defaultHTTPHeaders
@@ -110,7 +115,7 @@ import Avatar from '@components/avatar'
             return err
         }
     }
-
+    
     //calling get API For fetching data
     const get = (endpointurl, options = {}) => callAPI(endpointurl, options)
 
@@ -487,6 +492,7 @@ import Avatar from '@components/avatar'
         getMonthName,
         convertUTCtoDate,
         currentTime,
+        controller,
         org,
         user_id,
         user,

@@ -38,7 +38,6 @@ const index = () => {
                     types.push({value: typesData[i].id, label: typesData[i].title})
                 }
             }
-            console.warn(types)
             setTimeout(() => {
                 setLoading(false)
             }, 500)

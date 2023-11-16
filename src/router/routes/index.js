@@ -153,6 +153,14 @@ const Routes = [
     component: lazy(() => import('../../views/LearningDevelopment/Components/Dashboard'))
   },
   {
+    path: '/employee/certifications',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Certification'))
+  },
+  {
+    path: '/hr/certifications',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Certification/HRApprovals'))
+  },
+  {
     path: '/kind_notes',
     component: lazy(() => import('../../views/Kind-Notes'))
   },

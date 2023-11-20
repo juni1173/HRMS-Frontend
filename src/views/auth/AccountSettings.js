@@ -31,7 +31,7 @@ const ChangePassword = () => {
     if (path) {
         const user = JSON.parse(localStorage.getItem('user'))
         const userToUpdate = user
-        userToUpdate.profile_image = `${Api.BaseUrl}${path}`
+        userToUpdate.profile_image = path
         localStorage.setItem('user', JSON.stringify(user))
         window.location.reload()
     }

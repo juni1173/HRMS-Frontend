@@ -96,6 +96,12 @@ let nav = []
         navLink: '/hr/certifications'
       },
       {
+        id: 'nav-trainings',
+        title: 'Trainings',
+        icon: <Book size={30} />,
+        navLink: '/hr/trainings'
+      },
+      {
         id: 'L&D_Dashboard',
         title: 'Dashboard',
         icon: <Circle size={12} />,

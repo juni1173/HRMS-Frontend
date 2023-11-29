@@ -181,7 +181,7 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
                 <Table bordered striped responsive className='my-1'>
                         <thead className='table-dark text-center'>
                         <tr>
-                            {(type && type !== 'search') && (
+                            {(type !== 'search') && (
                                 <th scope="col" className="text-nowrap">
                                 <input
                                 type="checkbox"
@@ -194,7 +194,6 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
                                     {/* Select */}
                                 </th>
                             )}
-                            
                             <th scope="col" className="text-nowrap">
                             Detail
                             </th>
@@ -225,7 +224,7 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
                         <tbody className='text-center'>
                             {Object.values(data).reverse().map((item, key) => (
                                     <tr key={key}>
-                                {(type && type !== 'search') && (
+                                {(type !== 'search') && (
                                     <td>{item.kpis_status_level === 1 ?  <input
                                         className='form-check-primary'
                                         type="checkbox"

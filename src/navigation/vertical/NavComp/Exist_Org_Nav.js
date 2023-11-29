@@ -100,55 +100,55 @@ let nav = []
         title: 'Trainings',
         icon: <Book size={30} />,
         navLink: '/hr/trainings'
-      },
-      {
-        id: 'L&D_Dashboard',
-        title: 'Dashboard',
-        icon: <Circle size={12} />,
-        navLink: '/learning_development/dashboard'
-      },
-      {
-        id: 'Employee Sheet',
-        title: 'Employee Sheet',
-        icon: <Circle size={12} />,
-        navLink: '/learning_development/employee/sheet'
-      },
-      {
-        id: 'Subjects',
-        title: 'Subjects',
-        icon: <Circle size={12} />,
-        navLink: '/subjects'
-      },
-      {
-        id: 'Programs',
-        title: 'Programs',
-        icon: <Circle size={12} />,
-        navLink: '/programs'
-      },
-      {
-        id: 'Courses',
-        title: 'Courses',
-        icon: <Circle size={12} />,
-        navLink: '/courses'
-      },
-      {
-        id: 'Instructor',
-        title: 'Instructors',
-        icon: <Circle size={12} />,
-        navLink: '/instructor'
-      },
-      {
-        id: 'Sessions',
-        title: 'Sessions',
-        icon: <Circle size={12} />,
-        navLink: '/course-sessions'
-      },
-      {
-        id: 'applicants_trainees',
-        title: 'Applicants/Trainees',
-        icon: <Circle size={12} />,
-        navLink: '/applicants/trainees'
       }
+      // {
+      //   id: 'L&D_Dashboard',
+      //   title: 'Dashboard',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/learning_development/dashboard'
+      // },
+      // {
+      //   id: 'Employee Sheet',
+      //   title: 'Employee Sheet',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/learning_development/employee/sheet'
+      // },
+      // {
+      //   id: 'Subjects',
+      //   title: 'Subjects',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/subjects'
+      // },
+      // {
+      //   id: 'Programs',
+      //   title: 'Programs',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/programs'
+      // },
+      // {
+      //   id: 'Courses',
+      //   title: 'Courses',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/courses'
+      // },
+      // {
+      //   id: 'Instructor',
+      //   title: 'Instructors',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/instructor'
+      // },
+      // {
+      //   id: 'Sessions',
+      //   title: 'Sessions',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/course-sessions'
+      // },
+      // {
+      //   id: 'applicants_trainees',
+      //   title: 'Applicants/Trainees',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/applicants/trainees'
+      // }
     ] 
     
   },

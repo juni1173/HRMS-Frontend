@@ -12,7 +12,6 @@ const Job_Description = () => {
       setCount(current => current + 1)
     }
     const toggleCanvasEnd = () => {
-      console.warn('hello')
       setCanvasPlacement('end')
       setCanvasOpen(!canvasOpen)
     

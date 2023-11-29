@@ -209,7 +209,7 @@ const CandidateListTable = (props) => {
                                     <td className="text-nowrap">{candidate.cnic_no ? candidate.cnic_no : <Badge color="light-danger">N/A</Badge>}</td> 
                                     <td>{candidate.job_title ? candidate.job_title : <Badge color="light-danger">N/A</Badge>}</td>
                                     <td>
-                                        <a className="btn btn-primary btn-sm" target="_blank" href={`${process.env.REACT_APP_BACKEND_URL}${candidate.resume}`}><File/></a>
+                                        <a className="btn btn-primary btn-sm" target="_blank" href={`${process.env.REACT_APP_PUBLIC_URL}${candidate.resume}`}><File/></a>
                                     </td>
                                     <td className="text-nowrap">{candidate.time_interval_title ? candidate.time_interval_title : <Badge color="danger">N/A</Badge>}</td>
                                     <td>{(Object.values(candidate.candidate_job_assessments).length > 0) ? (

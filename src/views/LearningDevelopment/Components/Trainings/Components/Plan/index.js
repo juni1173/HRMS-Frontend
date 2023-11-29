@@ -36,6 +36,7 @@ const index = () => {
 
         const CallBack = useCallback(() => {
             getTrainings()
+            setCanvasOpen(false)
           }, [data])
   return (
     <Fragment>
@@ -62,7 +63,7 @@ const index = () => {
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             {/* {Canvas(active)} */}
-            <AddPlan/>
+            <AddPlan CallBack={CallBack}/>
           </OffcanvasBody>
         </Offcanvas>
     </Fragment>

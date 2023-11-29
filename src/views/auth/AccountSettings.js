@@ -14,7 +14,7 @@ const ChangePassword = () => {
     const dispatch = useDispatch()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
-    const img = Api.user.profile_image ? `${process.env.REACT_APP_BACKEND_URL}${Api.user.profile_image}` : defaultAvatar
+    const img = Api.user.profile_image ? `${process.env.REACT_APP_PUBLIC_URL}${Api.user.profile_image}` : defaultAvatar
     const [avatar, setAvatar] = useState(img)
     const [isUppercaseValid, setIsUppercaseValid] = useState(false)
   const [isSpecialCharValid, setIsSpecialCharValid] = useState(false)

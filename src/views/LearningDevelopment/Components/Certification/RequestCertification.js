@@ -141,6 +141,18 @@ const RequestCertification = ({ preData, CallBack }) => {
                         </Col>
                         <Col md="4" className="mb-1">
                             <Label className="form-label">
+                            Cost <Badge color='light-danger'>*</Badge>
+                            </Label>
+                            <Input
+                                isClearable={false}
+                                type="number"
+                               placeholder="Cost"
+                                name="cost"
+                                onChange={ (e) => { onChangeCertificateDetailHandler('cost', 'input', e) }}
+                            />
+                        </Col>
+                        <Col md="4" className="mb-1">
+                            <Label className="form-label">
                             Relevance
                             </Label>
                             <Select

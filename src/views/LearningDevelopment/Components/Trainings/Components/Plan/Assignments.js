@@ -5,7 +5,7 @@ import SearchHelper from '../../../../../Helpers/SearchHelper/SearchByObject'
 import apiHelper from '../../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-const Assignments = ({ data, training_id, CallBack }) => {
+const Assignments = ({ data, training_id, CallBack, type }) => {
     const Api = apiHelper()
     const searchHelper = SearchHelper()
     const MySwal = withReactContent(Swal)
@@ -122,7 +122,7 @@ const Assignments = ({ data, training_id, CallBack }) => {
                             <InputGroupText>
                             <Search size={14} />
                             </InputGroupText>
-                            <Input placeholder='search title...' onChange={e => { getSearch({list: data, key: 'title', value: e.target.value }) } }/>
+                            <Input placeholder='search Assignment title...' onChange={e => { getSearch({list: data, key: 'title', value: e.target.value }) } }/>
                         </InputGroup>
                         {searchResults && searchResults.length > 0 ? (
                             searchResults.map((assignment, key) => (
@@ -147,13 +147,16 @@ const Assignments = ({ data, training_id, CallBack }) => {
                                                     >
                                                     <a href={`${process.env.REACT_APP_PUBLIC_URL}${assignment.assignment}`} target="_blank" rel="noopener noreferrer" download><Download color="orange"/></a>
                                                 </button>
-                                                <button
+                                                {type !== 'employee' && (
+                                                    <button
                                                     className="border-0 no-background"
                                                     title="Delete"
                                                     onClick={() => deleteAssignment(assignment.id)}
                                                     >
                                                     <Trash2 color="red"/>
                                                 </button>
+                                                )}
+                                                
                                             </div>
                                         </div>
                                     </div>

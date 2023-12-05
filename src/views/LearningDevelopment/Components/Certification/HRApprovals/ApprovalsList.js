@@ -1,19 +1,72 @@
-import React, { Fragment, useState } from 'react'
-import { Card, CardBody, CardTitle, CardSubtitle, Badge, Row, Col, Button, Label, Input, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from 'reactstrap'
-import { Edit, Eye, XCircle } from 'react-feather'
+import React, { Fragment, useState, useEffect } from 'react'
+import { Card, CardBody, CardTitle, CardSubtitle, Badge, Row, Col, Button, Label, InputGroup, Input, InputGroupText, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from 'reactstrap'
+import { Edit, Eye, XCircle, Search } from 'react-feather'
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import apiHelper from '../../../../Helpers/ApiHelper'
 import ReasonsTable from './ReasonsTable'
+import SearchHelper from '../../../../Helpers/SearchHelper/SearchByObject'
+import ReactPaginate from 'react-paginate'
 
 const ApprovalsList = ({ data, CallBack, status_choices }) => {
     const Api = apiHelper()
+    const searchHelper = SearchHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [searchResults, setSearchResults] = useState([])
+    const [searchQuery] = useState([])
+    const [currentItems, setCurrentItems] = useState([])
+    const [pageCount, setPageCount] = useState(0)
+    const [itemOffset, setItemOffset] = useState(0)
+    const [itemsPerPage, setItemsPerPage] = useState(50)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
     const [reasonData, setReasonsData] = useState([])
+    
+    const status_choices_search = [
+        {value: 0, label: 'Select Status'},
+        {value: 1, label: 'Pending'},
+        {value: 2, label: 'Approved By Team Lead'},
+        {value: 3, label: 'Rejected By Team Lead'},
+        {value: 4, label: 'Approved By HR'},
+        {value: 5, label: 'Rejected By HR'}
+    ]
+    const itemsCount = [
+        {value: 50, label: '50'},
+        {value: 100, label: '100'},
+        {value: 150, label: '150'},
+        {value: 200, label: '200'}
+    ]
+    const getSearch = options => {
+
+        if (options.value === '' || options.value === null || options.value === undefined || options.value === 0) {
+
+            if (options.key in searchQuery) {
+                delete searchQuery[options.key]
+            } 
+            if (Object.values(searchQuery).length > 0) {
+                options.value = {query: searchQuery}
+            } else {
+                options.value = {}
+            }
+            setItemOffset(0)
+            setSearchResults(searchHelper.searchObj(options))
+            setCurrentItems(searchHelper.searchObj(options))
+            
+        } else {
+            
+            searchQuery[options.key] = options.value
+            options.value = {query: searchQuery}
+            setItemOffset(0)
+            setSearchResults(searchHelper.searchObj(options))
+            setCurrentItems(searchHelper.searchObj(options))
+        }
+    }
+    const handlePageClick = (event) => {
+        const newOffset = (event.selected * itemsPerPage) % searchResults.length
+        setItemOffset(newOffset)
+        }
     const toggleCanvasEnd = (reasons) => {
         if (reasons && Object.values(reasons).length > 0) {
             setReasonsData(reasons)
@@ -38,7 +91,7 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
                 const formData = new FormData()
                 formData['certification_status'] = status_value
                 if (comment !== '') formData['reason'] = comment
-                 Api.jsonPatch(`/certification/team/lead/approval/${id}/`, formData)
+                 Api.jsonPatch(`/certification/hr/approval/${id}/`, formData)
                     .then((result) => {
                         if (result.status === 200) {
                             MySwal.fire({
@@ -131,13 +184,75 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
         </div>
     )
     }
+    useEffect(() => {
+        setLoading(true)
+        setSearchResults(data)
+        getSearch({ list: data, value: null })
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+    }, [data])
+    useEffect(() => {
+        if (searchResults && Object.values(searchResults).length > 0) {
+            const endOffset = itemOffset === 0 ? itemsPerPage : itemOffset + itemsPerPage            
+            setCurrentItems(searchResults.slice(itemOffset, endOffset))
+            setPageCount(Math.ceil(searchResults.length / itemsPerPage))
+        }
+        }, [itemOffset, itemsPerPage, searchResults])
   return (
     <Fragment>
+        <Row>
+            <Col md={4}>
+                <Label>
+                    Employee
+                </Label>
+                <InputGroup className='input-group-merge mb-2'>
+                    <InputGroupText>
+                    <Search size={14} />
+                    </InputGroupText>
+                    <Input placeholder='search Employee...' onChange={e => { getSearch({list: data, key: 'employee_name', value: e.target.value }) } }/>
+                </InputGroup>
+            </Col>
+            <Col md={4}>
+                <Label>
+                    Status
+                </Label>
+                <Select 
+                type='select'
+                options={status_choices_search}
+                defaultValue={status_choices_search[0]}
+                onChange={e => { getSearch({list: data, key: 'certification_status', value: e.value }) } }
+                />
+            </Col>
+            <Col md={4}>
+                <Label>
+                    Course
+                </Label>
+                <InputGroup className='input-group-merge mb-2'>
+                    <InputGroupText>
+                    <Search size={14} />
+                    </InputGroupText>
+                    <Input placeholder='search Course...' onChange={e => { getSearch({list: data, key: 'title', value: e.target.value }) } }/>
+                </InputGroup>
+            </Col>
+            <Col md={3} className='mb-2'>
+            <span>Showing {currentItems && Object.values(currentItems).length > 0 ? itemsPerPage : 0} results per page</span>
+            <Select 
+                placeholder="Entries"
+                options={itemsCount}
+                onChange={e => {
+                    setItemsPerPage(e.value)
+                    setItemOffset(0)
+                }}
+            />
+        </Col>
+        </Row>
+        
       {!loading ? (
-        (data && Object.values(data).length > 0) ? (
+        (currentItems && Object.values(currentItems).length > 0) ? (
             <Row>
                 <Col md={12}>
-                    {Object.values(data).map((item, index) => (
+                    {Object.values(currentItems).map((item, index) => (
                         <Card key={index}>
                         <CardBody>
                             <div className="row">
@@ -145,7 +260,8 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
                                 <div className="col-md-4">
                                 <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
                                 <CardSubtitle>
-                                <h4><Badge color='light-success'>{item.position_title ? item.position_title : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
+                                  Course: <b>{item.title ? item.title : 'Title not found!'}</b>
+                                <h4><Badge color='light-success'>{item.position_title ? item.position_title : <Badge color='light-danger'>N/A</Badge>} - Cost: <Badge color='light-secondary'>{item.cost ? item.cost : 'N/A' }</Badge></Badge></h4>
                                     <h4><Badge color='light-warning'>{`${item.certification_status_title ? item.certification_status_title : <Badge color='light-danger'>N/A</Badge>}`}</Badge></h4></CardSubtitle>
                                 </div>
                                 <div className="col-md-4">
@@ -182,7 +298,21 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
       )
       
         }
-
+    <hr></hr>
+        <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+            containerClassName='pagination'
+            pageLinkClassName='page-num'
+            previousLinkClassName='page-num'
+            nextLinkClassName='page-num'
+            activeLinkClassName='active'
+        />
          <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} className="Job-Form-Canvas">
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>

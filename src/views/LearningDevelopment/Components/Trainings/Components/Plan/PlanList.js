@@ -13,7 +13,6 @@ import withReactContent from 'sweetalert2-react-content'
 import Projects from './Projects'
 import NewEmployeeAssignments from './NewEmployeeAssignments'
 const PlanList = ({ data, CallBack}) => {
-    console.warn(data)
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const searchHelper = SearchHelper()

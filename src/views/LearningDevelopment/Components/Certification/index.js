@@ -43,7 +43,7 @@ const index = () => {
                          <CertificationFunction />
                     </TabPane>
                     <TabPane tabId={'2'} className='tab-pane-blue'>
-                                    <ApprovalsList />
+                        <ApprovalsList />
                     </TabPane>
                    
         </TabContent>

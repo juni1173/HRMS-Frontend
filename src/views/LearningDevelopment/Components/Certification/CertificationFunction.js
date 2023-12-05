@@ -69,7 +69,7 @@ const CertificationFunction = () => {
                 <div className='text-center'>No Data Found</div>
             )}
             
-            <CertificatesList data={data} />
+            <CertificatesList data={data} CallBack={CallBack}/>
             
             </>
            

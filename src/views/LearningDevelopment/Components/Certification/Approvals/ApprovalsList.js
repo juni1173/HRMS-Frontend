@@ -145,7 +145,8 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
                                 <div className="col-md-4">
                                 <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
                                 <CardSubtitle>
-                                <h4><Badge color='light-success'>{item.position_title ? item.position_title : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
+                                Course: <b>{item.title ? item.title : 'Title not found!'}</b>
+                                <h4><Badge color='light-success'>{item.position_title ? item.position_title : <Badge color='light-danger'>N/A</Badge>} - Cost: {item.cost ? item.cost : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
                                     <h4><Badge color='light-warning'>{`${item.certification_status_title ? item.certification_status_title : <Badge color='light-danger'>N/A</Badge>}`}</Badge></h4></CardSubtitle>
                                 </div>
                                 <div className="col-md-4">
@@ -167,6 +168,7 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
                                 Relevance 
                                     </Badge><Eye className='float-right' onClick={() => toggleCanvasEnd(item.decision)}/><br></br>
                                     <h4><Badge color='light-danger'>{item.relevance_title ? item.relevance_title : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
+                                    
                                 </div>
                             </div>
                         </CardBody>

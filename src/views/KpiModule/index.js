@@ -30,22 +30,25 @@ const KpiModule = () => {
       const getPreData = async () => {
         setLoading(true)
         await Api.get(`/kpis/pre/data/`).then(result => {
+            console.warn(result)
             if (result) {
                 if (result.status === 200) {
                     const data = result.data
+                    
                     setPreData(data)
                     typesDropdownArr.splice(0, typesDropdownArr.length)
                     complexityDropdownArr.splice(0, complexityDropdownArr.length)
                     employeesDropdownArr.splice(0, employeesDropdownArr.length)
                     ep_batch.splice(0, ep_batch.length)
-                    const typeLength = data.type.length
+                    const type = data.type
                     const complexityLength = data.complexity.length
                     const employeeLength = data.employees.length
                     const ep_batch_completed = data.ep_batch_completed.length
                     const ep_batch_in_progress = data.ep_batch_in_progress.length
-                    for (let i = 0; i < typeLength; i++) {
-                        typesDropdownArr.push({value: data.type[i].id, label: data.type[i].title})
-                    }
+                    
+                    type.forEach(element => {
+                        typesDropdownArr.push({value: element.id, label: element.title})
+                    })
                     for (let i = 0; i < complexityLength; i++) {
                         complexityDropdownArr.push({value: data.complexity[i].id, label: data.complexity[i].title})
                     }

@@ -215,7 +215,7 @@ const Employees = ({ employeeList, CallBack, type }) => {
                             <div className="col-md-3">
                             <CardTitle tag='h1'> </CardTitle>
                                 <Badge color='light-warning'>
-                                {item.profile_image ?  <img src={`${Api.BackendBaseLink}${item.profile_image}`} style={{height: '50px', width: "50px"}} alt="logo" /> : <img src={user_blank} style={{height: '50px', width: "50px"}} alt="logo" />}   
+                                {item.profile_image ?  <img src={`${Api.BaseUrl}${item.profile_image}`} style={{height: '50px', width: "50px"}} alt="logo" /> : <img src={user_blank} style={{height: '50px', width: "50px"}} alt="logo" />}   
                                 </Badge> 
                             </div>
                             <div className="col-md-3">

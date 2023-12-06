@@ -56,7 +56,7 @@ const UserDropdown = () => {
           <span className='user-name fw-bold'>{(userData && userData.name) || 'user'}</span>
           <span className='user-status'>{localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).user_role : ''}</span>
         </div>
-        <Avatar img={userAvatar !== '' ? `${process.env.REACT_APP_BACKEND_URL}${userAvatar}` : defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
+        <Avatar img={userAvatar !== '' ? `${process.env.REACT_APP_PUBLIC_URL}${userAvatar}` : defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>
       <DropdownMenu end>
       {JSON.parse(localStorage.getItem('userData')).user_role === 'employee' && (

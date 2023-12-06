@@ -24,7 +24,7 @@ import Avatar from '@components/avatar'
     const role = localStorage.getItem('userData') && JSON.parse(localStorage.getItem('userData')).user_role
      
     const ApiBaseLink = process.env.REACT_APP_API_URL
-
+    const BaseUrl = process.env.REACT_APP_PUBLIC_URL
     const BackendBaseLink = process.env.REACT_APP_BACKEND_URL 
 
     const ToastContent = ({ type, message }) => (
@@ -499,6 +499,7 @@ import Avatar from '@components/avatar'
         role,
         token,
         ApiBaseLink,
+        BaseUrl,
         BackendBaseLink
         
     }

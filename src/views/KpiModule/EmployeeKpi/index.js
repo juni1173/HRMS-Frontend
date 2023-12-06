@@ -56,7 +56,7 @@ const index = () => {
                     }
                     
                 } else {
-                    Api.Toast('error', result.message)
+                    // Api.Toast('error', result.message)
                 }
             } else (
              Api.Toast('error', 'Server not responding!')   
@@ -72,7 +72,6 @@ const index = () => {
 
         const CallBack = useCallback(() => {
             getPreData()
-            return false
           }, [preData])
    return (
     <Fragment>

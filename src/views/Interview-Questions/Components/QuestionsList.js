@@ -54,7 +54,7 @@ const getQuestions = async (paperType, quesPosition = null) => {
                   if (list.length > 0) {
                      setQuestions(list)
                      setSearchResults(list)
-                     setExportPath(process.env.REACT_APP_BACKEND_URL + result.file_data.assessment_file)
+                     setExportPath(process.env.REACT_APP_PUBLIC_URL + result.file_data.assessment_file)
                   } else {
                       Api.Toast('error', 'No Question Data Available For This Type/Position')
                   }
@@ -261,7 +261,7 @@ const getQuestions = async (paperType, quesPosition = null) => {
                         </div>
                     </div>
                     <div className='col-lg-2 my-1'>
-                    <a href={`${Api.BackendBaseLink}/media/assessment-test/sample-assessment-questions.csv`} target="_blank" rel="noopener noreferrer" download>
+                    <a href={`${Api.BaseUrl}/media/assessment-test/sample-assessment-questions.csv`} target="_blank" rel="noopener noreferrer" download>
                         <button className="btn btn-primary float-right">
                             Sample file <i className="fa fa-download"></i>
                         </button>

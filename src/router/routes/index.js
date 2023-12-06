@@ -161,6 +161,10 @@ const Routes = [
     component: lazy(() => import('../../views/LearningDevelopment/Components/Certification/HRApprovals'))
   },
   {
+    path: '/hr/trainings',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Trainings/index'))
+  },
+  {
     path: '/kind_notes',
     component: lazy(() => import('../../views/Kind-Notes'))
   },

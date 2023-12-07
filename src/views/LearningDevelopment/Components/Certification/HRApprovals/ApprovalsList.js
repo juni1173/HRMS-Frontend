@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import { Card, CardBody, CardTitle, CardSubtitle, Badge, Row, Col, Button, Label, InputGroup, Input, InputGroupText, Offcanvas, OffcanvasHeader, OffcanvasBody, Spinner } from 'reactstrap'
-import { Edit, Eye, XCircle, Search } from 'react-feather'
+import { Edit, Eye, XCircle, Search, DollarSign } from 'react-feather'
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -8,8 +8,10 @@ import apiHelper from '../../../../Helpers/ApiHelper'
 import ReasonsTable from './ReasonsTable'
 import SearchHelper from '../../../../Helpers/SearchHelper/SearchByObject'
 import ReactPaginate from 'react-paginate'
+import HR_Reimbursement from './HR_Reimbursement'
 
 const ApprovalsList = ({ data, CallBack, status_choices }) => {
+    console.warn(data)
     const Api = apiHelper()
     const searchHelper = SearchHelper()
     const MySwal = withReactContent(Swal)
@@ -23,6 +25,7 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
     const [reasonData, setReasonsData] = useState([])
+    const [CanvasType, setCanvasType] = useState('')
     
     const status_choices_search = [
         {value: 0, label: 'Select Status'},
@@ -67,7 +70,8 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
         const newOffset = (event.selected * itemsPerPage) % searchResults.length
         setItemOffset(newOffset)
         }
-    const toggleCanvasEnd = (reasons) => {
+    const toggleCanvasEnd = (reasons, type) => {
+        if (type) setCanvasType(type)
         if (reasons && Object.values(reasons).length > 0) {
             setReasonsData(reasons)
         } 
@@ -274,14 +278,20 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
                                         Mode
                                     </Badge><br></br>
                                     <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.mode_of_course_title && item.mode_of_course_title}</span>
+                                   {item.reimbursement_status > 0 && (
+                                    <>
+                                        <br></br>
+                                        <span style={{color: "black", fontWeight:"10px", cursor:"pointer"}}><Badge color='light-danger' onClick={() => toggleCanvasEnd(item, 'reimbursement_approval')}>{item.reimbursement_status_title && item.reimbursement_status_title}</Badge></span>
+                                    </>
+                                   )}
                                 </div>
                                 <div className="col-md-4">
                                 <div className="mb-1">
                                     <StatusComponent item={item} key={index}/>
                                     </div>
                                 <Badge color='light-success'>
-                                Relevance 
-                                    </Badge><Eye className='float-right' onClick={() => toggleCanvasEnd(item.decision)}/><br></br>
+                                     Relevance 
+                                    </Badge><Eye className='float-right' onClick={() => toggleCanvasEnd(item.decision, 'decision')}/><br></br>
                                     <h4><Badge color='light-danger'>{item.relevance_title ? item.relevance_title : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
                                 </div>
                             </div>
@@ -294,7 +304,7 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
             <div className="text-center">No Certifications Data Found!</div>
         )
       ) : (
-        <div className='text-center'><Spinner color='white'/></div>
+        <div className='text-center'><Spinner/></div>
       )
       
         }
@@ -316,7 +326,12 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
          <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} className="Job-Form-Canvas">
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
-            <ReasonsTable reasonsData={reasonData}/>
+            {CanvasType === 'decision' && (
+                <ReasonsTable reasonsData={reasonData}/>
+            )}
+            {CanvasType === 'reimbursement_approval' && (
+                <HR_Reimbursement data={reasonData} CallBack={CallBack}/>
+            )}
           </OffcanvasBody>
         </Offcanvas>
     </Fragment>

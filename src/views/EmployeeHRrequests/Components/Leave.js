@@ -80,7 +80,6 @@ const Leave = ({ data, CallBack }) => {
             formData.append('end_date', leaveData.end_date)
             formData.append('duration', leaveData.duration)
             formData.append('leave_dates', leaveDates)
-            console.log(formData)
             if (attachment !== null) formData.append('attachment', attachment)
             await Api.jsonPost(`/reimbursements/employees/leaves/`, formData, false).then(result => {
                 if (result) {
@@ -223,6 +222,7 @@ const Leave = ({ data, CallBack }) => {
         <Label className='form-label' for='default-picker'>
                Leave Dates <Badge color="light-danger">*</Badge>
             </Label>
+            <div style={{ height: '200px', overflow: 'auto' }}>
         <DatePicker
           value={dates}
           onChange={setDates}
@@ -234,6 +234,7 @@ const Leave = ({ data, CallBack }) => {
           style={{ height: '40px' }}
           placeholder='Leave Dates'
         />
+        </div>
             </Col>
         {/* <Col md="5" className="mb-1">
             <Label className='form-label' for='default-picker'>

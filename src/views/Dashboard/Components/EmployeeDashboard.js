@@ -136,7 +136,7 @@ const EmployeeDashboard = () => {
         )}
         </Col>
         <Col md={4}>
-        {data.gym && Object.values(data.gym).length > 0 && (
+        {data.medical_count && Object.values(data.medical_count).length > 0 && (
           <Card>
             <CardBody>
               <MedicalLimit data={data.medical_count}/>

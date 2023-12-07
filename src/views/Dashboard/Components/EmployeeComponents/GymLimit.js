@@ -32,7 +32,7 @@ const GymLimit = ({ data }) => {
           }
         }
       },
-    series: [data[0].amount, data[0].gym_monthly_limit - data[0].amount],
+    series: [data[0].status === 'approved' ? data[0].amount : 0, data[0].status === 'approved' ? data[0].gym_monthly_limit - data[0].amount : data[0].gym_monthly_limit],
     dataLabels: {
       formatter (val, opts) {
         return opts.w.config.series[opts.seriesIndex]

@@ -5,7 +5,6 @@ import { Settings } from 'react-feather'
 // ** Reactstrap Imports
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import EmailIndex from '../EmailModule'
-import SalaryComposition from './SalaryComposition'
 import CandidateStages from './Candidatestages/Components/candidate_stages'
 import EmployeeRequests from './EmployeeRequests/index'
 import Roles from './RolesConfiguration/Roles'
@@ -56,7 +55,7 @@ const Configuration = () => {
               toggle('3')
             }}
           >
-            Salary Composition
+            Set Employee Allowances
           </NavLink>
         </NavItem>
         <NavItem>
@@ -66,7 +65,7 @@ const Configuration = () => {
               toggle('4')
             }}
           >
-            Set Employee Allowances
+            Project Roles
           </NavLink>
         </NavItem>
         <NavItem>
@@ -76,7 +75,7 @@ const Configuration = () => {
               toggle('5')
             }}
           >
-            Project Roles
+            KPI Segmentation
           </NavLink>
         </NavItem>
         <NavItem>
@@ -86,7 +85,7 @@ const Configuration = () => {
               toggle('6')
             }}
           >
-            KPI Segmentation
+            Manuals (SOP / EPM)
           </NavLink>
         </NavItem>
         <NavItem>
@@ -96,7 +95,7 @@ const Configuration = () => {
               toggle('7')
             }}
           >
-            Manuals (SOP / EPM)
+            Attendance
           </NavLink>
         </NavItem>
         <NavItem>
@@ -104,16 +103,6 @@ const Configuration = () => {
             active={active === '8'}
             onClick={() => {
               toggle('8')
-            }}
-          >
-            Attendance
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink
-            active={active === '9'}
-            onClick={() => {
-              toggle('9')
             }}
           >
             Holidays
@@ -129,24 +118,21 @@ const Configuration = () => {
           <EmailIndex/>
         </TabPane>
         <TabPane tabId='3' className='tab-pane-blue'>
-          <SalaryComposition />
-        </TabPane>
-        <TabPane tabId='4' className='tab-pane-blue'>
           <EmployeeRequests />
         </TabPane>
-        <TabPane tabId='5' className='tab-pane-blue'>
+        <TabPane tabId='4' className='tab-pane-blue'>
           <Roles />
         </TabPane>
-        <TabPane tabId='6' className='tab-pane'>
+        <TabPane tabId='5' className='tab-pane'>
           <KpiSegmentationForm />
         </TabPane>
-        <TabPane tabId='7' className='tab-pane-blue'>
+        <TabPane tabId='6' className='tab-pane-blue'>
           <Manuals />
         </TabPane>
-      <TabPane tabId='8' className='tab-pane-blue'>
+      <TabPane tabId='7' className='tab-pane-blue'>
           <Attendance />
         </TabPane>
-        <TabPane tabId='9' className='tab-pane-blue'>
+        <TabPane tabId='8' className='tab-pane-blue'>
           <Holidays />
         </TabPane>
       </TabContent>

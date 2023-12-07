@@ -1,13 +1,16 @@
 import React from 'react'
 import Composition from './Components/composition'
-const index = () => {
+
+const Index = () => {
+
   return (
     <div className='row'>
-        <div className='col-lg-12'>
-            <Composition />
-        </div>
+      <div className='col-lg-12'>
+          <Composition />
+      </div>
+
     </div>
   )
 }
 
-export default index
+export default Index

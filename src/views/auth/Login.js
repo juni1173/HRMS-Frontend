@@ -79,6 +79,7 @@ const Login = () => {
             localStorage.setItem('organization', JSON.stringify(data.org))
             localStorage.setItem('user', JSON.stringify(result.user))
             localStorage.setItem('user_id', data.user_id)
+            localStorage.setItem('is_superuser', result.is_privileged)
             if (result.admin) {
               // history.push('/admin/dashboard')              
               history.push('/organizationHome')

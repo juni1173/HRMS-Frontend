@@ -75,7 +75,7 @@ const index = () => {
                                         toggle('3')
                                         }}
                                     >
-                                        Complete Trainings <Badge className="bg-danger ml-5"> {(data && data.complete && Object.keys(data.complete).length > 0) ? Object.keys(data.complete).length : 0}</Badge>
+                                        Complete Trainings <Badge className="bg-danger ml-5"> {(data && data.completed && Object.keys(data.completed).length > 0) ? Object.keys(data.completed).length : 0}</Badge>
                                     </NavLink>
                                     </NavItem>
                                 
@@ -89,7 +89,7 @@ const index = () => {
                             <TrainingList data={data.inProgress} CallBack={handleDataProcessing}/>
                         </TabPane>
                         <TabPane tabId={'3'} className='tab-pane-blue'>
-                            <TrainingList data={data.complete} CallBack={handleDataProcessing}/>
+                            <TrainingList data={data.completed} CallBack={handleDataProcessing}/>
                         </TabPane>
             </TabContent>
         </div> 

@@ -3,6 +3,7 @@ import { Row, Col, Spinner, Button, Card, Badge, Offcanvas, OffcanvasHeader, Off
 import { Eye, Upload } from 'react-feather'
 import TrainingDetails from './TrainingDetails'
 import Assignments from './Assignments'
+import TrainingReimbursement from './TrainingReimbursement'
 const TrainingList = ({ data, CallBack }) => {
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
@@ -34,7 +35,7 @@ const TrainingList = ({ data, CallBack }) => {
                                         <CardBody>
                                         <div className="row">
                                         <div className="col-md-6">
-                                            <h3>{item.title ? item.title : 'N/A'}</h3>
+                                            <h3>{item.training_title ? item.training_title : 'N/A'}</h3>
                                                 <Badge color='light-warning'>
                                                     {`${item.mode_of_training_title ? item.mode_of_training_title : 'N/A'}`} 
                                                 </Badge><br></br>
@@ -68,7 +69,7 @@ const TrainingList = ({ data, CallBack }) => {
                                                     className="border-0 no-background"
                                                     title="Reimbursement"
                                                     >
-                                                    <a className='btn'>Reimbursement</a>
+                                                    <a className='btn' onClick={() => toggleCanvasEnd(item, 'reimbursement')}>Reimbursement</a>
                                                 </button>
                                             )}
                                         </div>
@@ -99,6 +100,9 @@ const TrainingList = ({ data, CallBack }) => {
             )}
             {toggleType === 'assignments' && (
                 <Assignments data={detailData} CallBack={runCallback}/>
+            )}
+            {toggleType === 'reimbursement' && (
+                <TrainingReimbursement data={detailData} CallBack={runCallback}/>
             )}
             </OffcanvasBody>
         </Offcanvas>

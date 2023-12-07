@@ -55,7 +55,7 @@ const TrainingDetails = ({ data, CallBack }) => {
     <Fragment>
         <Row>
             <Col md={6}>
-                <h2>{data.title ? data.title : 'No title found'}</h2>
+                <h2>{data.training_title ? data.training_title : 'No title found'}</h2>
             </Col>
             <Col md={6}>
                 {data.training_status === 1 && (
@@ -90,6 +90,9 @@ const TrainingDetails = ({ data, CallBack }) => {
             </Col>
             <Col md={4} className='my-2'>
                 <b>Cost</b>: <Badge>{data.training_cost ? data.training_cost : 'N/A'}</Badge>
+            </Col>
+            <Col md={6} className='my-2'>
+                <b>From</b>: <Badge>{data.start_date ? data.start_date : 'N/A'}</Badge> - <b>To</b>: <Badge>{data.end_date ? data.end_date : 'N/A'}</Badge>
             </Col>
             
         </Row>

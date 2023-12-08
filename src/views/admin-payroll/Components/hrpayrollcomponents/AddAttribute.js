@@ -16,6 +16,7 @@ const AddAttribute = ({CallBack, onPrevious, salarybatch, batch}) => {
   const [deductiondata, setdeductiondata] = useState([])
   const [customizeddata, setcustomizeddata] = useState([])
   const [selectedItems, setSelectedItems] = useState([])
+  const [is_gross_allowed, setIs_gross_allowed] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const getData = async () => {
@@ -74,7 +75,12 @@ const handleCheckboxChange = (item) => {
     getData()
   }, [setcustomizeddata, salarybatch])
 const submitbatch = async() => {
-await Api.jsonPost(`/payroll/create/salary/batch/`, salarybatch).then(result => {
+  const updatedSalaryBatch = new FormData()
+  for (const [key, value] of Object.entries(salarybatch)) {
+    updatedSalaryBatch[key] = value
+}
+  updatedSalaryBatch['is_gross_allowed'] = is_gross_allowed
+await Api.jsonPost(`/payroll/create/salary/batch/`, updatedSalaryBatch).then(result => {
       if (result) {
           if (result.status === 200) {
             const formData = new FormData()
@@ -95,6 +101,19 @@ await Api.jsonPost(`/payroll/create/salary/batch/`, salarybatch).then(result => 
       {!loading ? (
         <Fragment>
           <div>
+          <FormGroup check>
+  <Label check>
+    <Input
+      type="checkbox"
+      checked={is_gross_allowed}            
+      onChange={() => {
+        setIs_gross_allowed(!is_gross_allowed)
+      }}
+    />
+    Gross Salary
+  </Label>
+</FormGroup>
+
             <h3 className="brand-text">Addons</h3>
             {addondata.length > 0 ? (
               addondata.map((item, index) => (

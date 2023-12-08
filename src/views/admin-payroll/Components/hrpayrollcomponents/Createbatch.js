@@ -116,6 +116,7 @@ const CreateBatch = ({ DiscardModal, onNext, batch }) => {
             )}
           />
         </Col>
+        
         <Col className="text-center mt-2" xs={12}>
           <Button type="submit" color="primary" className="me-1">
             Next

@@ -3,9 +3,12 @@ import { Download, Eye, Search, Trash2, Upload } from 'react-feather'
 import { Card, CardBody, Label, Row, Col, Button, Badge, InputGroup, Input, InputGroupText, Modal, ModalHeader, ModalBody, ModalFooter, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import SearchHelper from '../../../../Helpers/SearchHelper/SearchByObject'
 import apiHelper from '../../../../Helpers/ApiHelper'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 const Assignments = ({ data, CallBack }) => {
     const Api = apiHelper()
     const searchHelper = SearchHelper()
+    const MySwal = withReactContent(Swal)
     const [searchResults, setSearchResults] = useState(data.training_assignments)
     const [searchQuery] = useState([])
     const [basicModal, setBasicModal] = useState(false)
@@ -84,6 +87,50 @@ const Assignments = ({ data, CallBack }) => {
           return Api.Toast('error', 'Data not found')
       }
    }
+   const deleteAssignmentEmployee = (id) => {
+    MySwal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to remove this assignment!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Remove it!',
+        customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ms-1'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.value) {
+            Api.deleteData(`/training/assignment/uploaded/by/employee/${id}/`, {method:'delete'})
+            .then((deleteResult) => {
+                if (deleteResult.status === 200) {
+                    MySwal.fire({
+                        icon: 'success',
+                        title: 'Assignment Removed!',
+                        text: 'Assignment is Removed.',
+                        customClass: {
+                        confirmButton: 'btn btn-success'
+                        }
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            CallBack()
+                        }
+                    })
+                } else {
+                    MySwal.fire({
+                        icon: 'error',
+                        title: deleteResult.message ? deleteResult.message : 'Assignment can not be Removed!',
+                        text: 'Assignment is not Removed.',
+                        customClass: {
+                        confirmButton: 'btn btn-danger'
+                        }
+                    })
+                }
+                    
+                })
+        } 
+    })
+}
    useEffect(() => {
     uploadedAssignments()
     }, [setUploadedAssignmentList])
@@ -194,6 +241,13 @@ const Assignments = ({ data, CallBack }) => {
                                                     title="Download"
                                                     >
                                                     <a href={`${process.env.REACT_APP_PUBLIC_URL}${assignment.submitted_assignment}`} target="_blank" rel="noopener noreferrer" download><Download color="orange"/></a>
+                                                </button>
+                                                <button
+                                                    className="border-0 no-background"
+                                                    title="delete"
+                                                    onClick={() => deleteAssignmentEmployee(assignment.id)}
+                                                    >
+                                                    <Trash2 color='red'/>
                                                 </button>
                                             </div>
                                         </div>

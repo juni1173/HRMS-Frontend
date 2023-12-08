@@ -55,13 +55,14 @@ const TrainingReimbursement = ({ data, CallBack }) => {
                                     <CardBody>
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <h4>{data.training_title ? data.training_title : 'No title found'}</h4>
-                                            <b>{data.description ? data.description : 'No description found'}</b><br></br>
-                                            Duration: <Badge>{data.duration ? data.duration : 'N/A'}</Badge><br></br>
+                                            <h4>{data.training_title && data.training_title}</h4>
+                                            <h4>{data.title && data.title}</h4>
+                                            <b>{data.description ? data.description : 'No description found'}</b><br></br><br></br>
+                                            Duration: <Badge>{data.duration ? data.duration : 'N/A'}</Badge><br></br><br></br>
                                             Mode: <Badge>{data.mode_of_training_title ? data.mode_of_training_title : 'N/A'}</Badge>
                                             
                                             {data.training_cost && (
-                                                <p>Cost: <Badge>{data.training_cost ? data.training_cost : 'N/A'}</Badge></p>
+                                                <p className='mt-1'>Cost: <Badge>{data.training_cost ? data.training_cost : 'N/A'}</Badge></p>
                                             )}
                                             
                                         </div>

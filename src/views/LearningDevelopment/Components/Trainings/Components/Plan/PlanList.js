@@ -212,7 +212,7 @@ const PlanList = ({ data, CallBack}) => {
            
             
         </div>
-        <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} className={toggleType === 'new_employees' ? 'largeCanvas' : ''}>
+        <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} className={(toggleType === 'new_employees' || toggleType === 'employees') ? 'largeCanvas' : ''}>
         <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
         <OffcanvasBody className=''>
             {toggleType === 'update' && (

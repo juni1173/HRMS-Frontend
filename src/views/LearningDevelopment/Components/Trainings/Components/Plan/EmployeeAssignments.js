@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Card, CardBody, Badge } from 'reactstrap'
-import { Eye, Download } from 'react-feather'
+import { Eye, Download, Trash2 } from 'react-feather'
 import apiHelper from '../../../../../Helpers/ApiHelper'
 const EmployeeAssignments = ({ data }) => {
     const Api = apiHelper()
@@ -30,6 +30,7 @@ const EmployeeAssignments = ({ data }) => {
                                                     >
                                                     <a href={`${process.env.REACT_APP_PUBLIC_URL}${assignment.submitted_assignment}`} target="_blank" rel="noopener noreferrer" download><Download color="orange"/></a>
                                                 </button>
+                                                
                                             </div>
                                         </div>
                                     </div>

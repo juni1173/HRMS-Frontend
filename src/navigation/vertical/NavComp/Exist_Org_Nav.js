@@ -93,7 +93,7 @@ let nav = []
         id: 'nav-certifications',
         title: 'Certifications',
         icon: <Book size={30} />,
-        navLink: '/hr/certifications'
+        navLink: '/hr/certifications' 
       },
       {
         id: 'nav-trainings',
@@ -184,7 +184,43 @@ let nav = []
     icon: <Bookmark size={30} />,
     navLink: '/statusrequests'
   },
-
+  {
+    id: 'nav-payroll',
+    title: 'Payroll',
+    icon: <BookOpen size={30}/>,
+    children: [  
+      {
+        id: 'Payroll-Configuration',
+        title: 'Payroll Configuration',
+        icon: <Circle size={12} />,
+        navLink: '/payroll-configuration'
+      },   
+      {
+        id: 'Salary-permissions',
+        title: 'Salary Permissions',
+        icon: <Circle size={12} />,
+        navLink: '/salary-permissions'
+      },
+      {
+        id: 'Salary-Batch',
+        title: 'Salary Batch',
+        icon: <Circle size={12} />,
+        navLink: '/payroll/salarybatch'
+      },
+      {
+        id: 'Emp-Salary',
+        title: 'Emp Slary',
+        icon: <Circle size={12} />,
+        navLink: '/payroll/selectbatch'
+      }, 
+       {
+        id: 'Salary-Record',
+        title: 'Salary Record',
+        icon: <Circle size={12} />,
+        navLink: '/payroll/salary/batches'
+      }
+    ] 
+  },
   {
         id: 'nav-configurations',
         title: 'Configurations',

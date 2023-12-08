@@ -258,6 +258,43 @@ const Routes = [
       authRoute: true
     }
   },
+  // Payroll Routes
+  {
+    path: '/payroll-configuration',
+    component: lazy(() => import('../../views/admin-payroll/Components/PayrollConfigurations'))
+  },
+  {
+    path: '/salary-permissions',
+    component: lazy(() => import('../../views/admin-payroll/Components/emp-salary'))
+  },
+  {
+    path: '/hr/payroll',
+    component: lazy(() => import('../../views/admin-payroll/Components/hrpayroll'))
+  },
+  {
+    path: '/accountant/payroll',
+    component: lazy(() => import('../../views/admin-payroll/Components/AccountantView.js/AllEmpSalary'))
+  },
+  {
+    path: '/payroll/salarybatch',
+    component: lazy(() => import('../../views/admin-payroll/Components/hrpayrollcomponents/AllPayrollBatches'))
+  },
+  {
+    path: '/payroll/attributes',
+    component: lazy(() => import('../../views/admin-payroll/Components/PayrollConfigurations/Addons_Deductions/List'))
+  },
+  {
+    path: '/payroll/selectbatch',
+    component: lazy(() => import('../../views/admin-payroll/Components/AccountantView.js/AllSalaryBatches'))
+  },
+  {
+    path: '/payroll/salary/batches',
+    component: lazy(() => import('../../views/admin-payroll/Components/SalaryRecords/SalaryBatches'))
+  },
+  {
+    path: '/payroll/salary/record',
+    component: lazy(() => import('../../views/admin-payroll/Components/SalaryRecords/Record'))
+  },
   {
     path: '/reset-password/:id/:token',
     component: lazy(() => import('../../views/auth/ForgotPassword/ResetPassword')),

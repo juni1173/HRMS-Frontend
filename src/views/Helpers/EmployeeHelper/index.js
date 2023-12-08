@@ -10,10 +10,10 @@ const EmployeeHelper = () => {
         Emp_types:[]
         
     })
-
+    const employeeDropdown = useState([])
     const fetchFormPreData = async () => {
         const response = await Api.get(`/employees/pre/data/${Api.org.id}/`)
-        // console.warn(response)
+        console.warn(response)
         if (response.status === 200) {
             const data = response.data 
             if (Object.values(data).length > 0) {
@@ -42,7 +42,23 @@ const EmployeeHelper = () => {
             Api.Toast('error', response.message)
         }
     } 
-
+    const fetchEmployeeDropdown = async () => {
+        const response = await Api.get(`/employees/`)
+        if (response.status === 200) {
+            const data = response.data.active_employees
+            if (Object.values(data).length > 0) {
+                employeeDropdown.splice(0, data.length)
+               data.forEach(element => {
+                employeeDropdown.push({value: element.id, label: element.name})
+               })
+                return employeeDropdown
+            } else {
+                Api.Toast('error', 'No Employee Found!')
+            }
+        } else {
+            Api.Toast('error', response.message)
+        }
+    } 
     // start Delete Api's for Employees
     
     const DeleteEmpContact = async (uuid, id) => {
@@ -146,6 +162,7 @@ const EmployeeHelper = () => {
 
     return {
         fetchFormPreData,
+        fetchEmployeeDropdown,
         DeleteEmpContact,
         DeleteEmpEducation,
         DeleteEmpExperience,

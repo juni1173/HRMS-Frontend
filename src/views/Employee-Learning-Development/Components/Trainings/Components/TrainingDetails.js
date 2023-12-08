@@ -5,6 +5,7 @@ import apiHelper from '../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const TrainingDetails = ({ data, CallBack }) => {
+    console.warn(data)
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const changeTraining = (id, training_status) => {
@@ -60,12 +61,12 @@ const TrainingDetails = ({ data, CallBack }) => {
             <Col md={6}>
                 {data.training_status === 1 && (
                     <div className='float-right'>
-                        <Button className='btn btn-success' onClick={() => changeTraining(data.id, '2')}>Start Training</Button>
+                        <Button className='btn btn-success' onClick={() => changeTraining(data.training, '2')}>Start Training</Button>
                     </div>
                 )}
                 {data.training_status === 2 && (
                     <div className='float-right'>
-                        <Button className='btn btn-success' onClick={() => changeTraining(data.id, '3')}>Complete Training</Button>
+                        <Button className='btn btn-success' onClick={() => changeTraining(data.training, '3')}>Complete Training</Button>
                     </div>
                 )}
             </Col>
@@ -83,13 +84,13 @@ const TrainingDetails = ({ data, CallBack }) => {
                 <b>Training Mode</b>: <Badge>{data.mode_of_training_title ? data.mode_of_training_title : 'N/A'}</Badge> 
             </Col>
             <Col md={4} className='my-2'>
-                <b>Participants</b>: <Badge>{data.number_of_employee ? data.number_of_employee : 'N/A'}</Badge> 
-            </Col>
-            <Col md={4} className='my-2'>
                 <b>Status</b>: <Badge>{data.training_status_title ? data.training_status_title : 'N/A'}</Badge> 
             </Col>
             <Col md={4} className='my-2'>
                 <b>Cost</b>: <Badge>{data.training_cost ? data.training_cost : 'N/A'}</Badge>
+            </Col>
+            <Col md={4} className='my-2'>
+                <b>Evaluator</b>: <Badge>{data.training_evaluator_name ? data.training_evaluator_name : 'N/A'}</Badge>
             </Col>
             <Col md={6} className='my-2'>
                 <b>From</b>: <Badge>{data.start_date ? data.start_date : 'N/A'}</Badge> - <b>To</b>: <Badge>{data.end_date ? data.end_date : 'N/A'}</Badge>

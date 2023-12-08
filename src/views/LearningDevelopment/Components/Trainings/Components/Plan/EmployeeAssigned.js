@@ -5,7 +5,9 @@ import Assignments from './Assignments'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import apiHelper from '../../../../../Helpers/ApiHelper'
+import EmployeeAssignments from './EmployeeAssignments'
 const EmployeeAssigned = ({ data, CallBack }) => {
+    console.warn(data)
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
@@ -68,8 +70,8 @@ const EmployeeAssigned = ({ data, CallBack }) => {
             <thead className='table-dark text-center'>
             <tr>
                 <th>Employee</th>
-                <th>Start Date</th>
-                <th>End Date</th>
+                <th>Evaluator</th>
+                {/* <th>End Date</th> */}
                 <th>Status</th>
                 <th>Assignments</th>
             </tr>
@@ -79,8 +81,8 @@ const EmployeeAssigned = ({ data, CallBack }) => {
                 data.map((employee, key) => (
                     <tr key={key}>
                         <td>{employee.employee_name ? employee.employee_name : 'N/A'} <Delete className='float-right' color='red' size={20} onClick={() => deleteAssignedEmployee(employee.id)}/></td>
-                        <td>{employee.start_date ? employee.start_date : 'N/A'}</td>
-                        <td>{employee.end_date ? employee.end_date : 'N/A'}</td>
+                        <td>{employee.training_evaluator_name ? employee.training_evaluator_name : 'N/A'}</td>
+                        {/* <td>{employee.end_date ? employee.end_date : 'N/A'}</td> */}
                         <td>{employee.training_status_title ? employee.training_status_title : 'N/A'}</td>
                         <td>{employee.employee_training_assignment ? <Button className='btn btn-success' onClick={() => toggleCanvasEnd(employee.employee_training_assignment)}>Details</Button> : 'Not submitted'}</td>
                     </tr>
@@ -96,7 +98,7 @@ const EmployeeAssigned = ({ data, CallBack }) => {
         <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} >
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
-          <Assignments data={assignments}/>
+          <EmployeeAssignments data={assignments}/>
           </OffcanvasBody>
         </Offcanvas>
 </Fragment>

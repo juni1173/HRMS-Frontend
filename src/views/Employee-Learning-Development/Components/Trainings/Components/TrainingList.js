@@ -39,7 +39,7 @@ const TrainingList = ({ data, CallBack }) => {
                                                 <Badge color='light-warning'>
                                                     {`${item.mode_of_training_title ? item.mode_of_training_title : 'N/A'}`} 
                                                 </Badge><br></br>
-                                                <Badge color='light-info'>
+                                                <Badge color='light-danger'>
                                                     {`${item.training_status_title ? item.training_status_title : 'N/A'}`} 
                                                 </Badge>
                                         </div>
@@ -55,21 +55,22 @@ const TrainingList = ({ data, CallBack }) => {
                                                 {item.training_status === 2 && (
                                                     <>
                                                         <button
-                                                            className="border-0 no-background"
+                                                            className="border-0 btn-warning"
                                                             title="Assignments"
                                                             onClick={() => toggleCanvasEnd(item, 'assignments')}
                                                             >
-                                                            <Upload color='orange'/>
+                                                                Assignments
                                                         </button>
                                                     </>
                                                 )}
                                             </div>
-                                            {(item.training_status === 2 && item.mode_of_training !== 2) && (
+                                            {(item.training_status === 3 && item.mode_of_training !== 2) && (
                                                 <button
-                                                    className="border-0 no-background"
+                                                    className="border-0 btn-warning mt-1 float-right"
                                                     title="Reimbursement"
+                                                    onClick={() => toggleCanvasEnd(item, 'reimbursement')}
                                                     >
-                                                    <a className='btn' onClick={() => toggleCanvasEnd(item, 'reimbursement')}>Reimbursement</a>
+                                                    Reimbursement
                                                 </button>
                                             )}
                                         </div>

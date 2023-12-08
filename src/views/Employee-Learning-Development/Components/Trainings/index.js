@@ -18,7 +18,7 @@ const index = () => {
     const preDataApi = async () => {
       const response = await Api.get('/training/employee/training/data/')
       if (response.status === 200) {
-        console.warn(response.data)
+        // console.warn(response.data)
         const responseData = response.data
         setData(prev => ({
             ...prev,

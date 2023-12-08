@@ -51,6 +51,7 @@ const Assignments = ({ data, CallBack }) => {
             const formData = new FormData()
             formData.append("training_assignment", assignment_id)
             formData.append("submitted_assignment", file)
+            formData.append("action", 'submit')
             await Api.jsonPost(`/training/assignment/upload/by/employee/`, formData, false).then(result => {
                 if (result) {
                     if (result.status === 200) {
@@ -73,8 +74,9 @@ const Assignments = ({ data, CallBack }) => {
     setBasicModal(!basicModal)
    }
    const uploadedAssignments = async () => {
-    const response = await Api.get(`/training/assignment/upload/by/employee/${Api.user_id}/`)
+    const response = await Api.get(`/training/assignment/upload/by/employee/${data.training}/`)
       if (response.status === 200) {
+        console.warn(response.data)
         const responseData = response.data
         setUploadedAssignmentList(responseData)
          
@@ -175,9 +177,9 @@ const Assignments = ({ data, CallBack }) => {
                                     <CardBody>
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <h4>{assignment.title ? assignment.title : 'No title found'}</h4>
+                                            <h4>{assignment.training_assignment_title ? assignment.training_assignment_title : 'No title found'}</h4>
                                             <Badge>{assignment.updated_at ? Api.formatDate(assignment.updated_at) : 'N/A'}</Badge>
-                                            <Badge className='m-1'>{assignment.marks ? assignment.marks : 'N/A'}</Badge>
+                                            <Badge className='m-1'>{assignment.obtained_marks ? assignment.obtained_marks : 'N/A'}</Badge>
                                         </div>
                                         <div className="col-md-6">
                                             <div className="float-right">
@@ -185,13 +187,13 @@ const Assignments = ({ data, CallBack }) => {
                                                     className="border-0 no-background"
                                                     title="View"
                                                     >
-                                                    <a href={`${process.env.REACT_APP_PUBLIC_URL}${assignment.assignment}`} target="_blank" ><Eye color="green"/></a>
+                                                    <a href={`${process.env.REACT_APP_PUBLIC_URL}${assignment.submitted_assignment}`} target="_blank" ><Eye color="green"/></a>
                                                 </button>
                                                 <button
                                                     className="border-0 no-background"
                                                     title="Download"
                                                     >
-                                                    <a href={`${process.env.REACT_APP_PUBLIC_URL}${assignment.assignment}`} target="_blank" rel="noopener noreferrer" download><Download color="orange"/></a>
+                                                    <a href={`${process.env.REACT_APP_PUBLIC_URL}${assignment.submitted_assignment}`} target="_blank" rel="noopener noreferrer" download><Download color="orange"/></a>
                                                 </button>
                                             </div>
                                         </div>

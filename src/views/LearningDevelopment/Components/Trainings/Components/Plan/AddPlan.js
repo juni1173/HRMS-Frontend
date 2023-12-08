@@ -1,13 +1,16 @@
-import { Fragment, useState } from "react"
+import { Fragment, useState, useEffect } from "react"
 import {Label, Row, Col, Input, Form, Spinner, Badge } from "reactstrap" 
 import Select from 'react-select'
 import apiHelper from "../../../../../Helpers/ApiHelper"
-
+import EmployeeHelper from "../../../../../Helpers/EmployeeHelper"
 const AddPlan = ({ CallBack }) => {
   const Api = apiHelper()
+  const employeeHelper = EmployeeHelper()
     const [loading, setLoading] = useState(false)
+    const [employees, setEmployeeDropdown] = useState([])
     const [plan, setPlan] = useState({
          title : '',
+         evaluator: '',
          duration : '',
          description : '',
          mode_of_training: ''
@@ -42,10 +45,11 @@ const AddPlan = ({ CallBack }) => {
 
     const Submit = async (e) => {
         e.preventDefault()
-        if (plan.title !== '' && plan.duration !== '' && plan.mode_of_training !== '') {
+        if (plan.title !== '' && plan.evaluator !== '' && plan.duration !== '' && plan.mode_of_training !== '') {
             setLoading(true)
             const formData = new FormData()
             formData['title'] = plan.title
+            formData['evaluator'] = plan.evaluator.value
             formData['duration'] = plan.duration
             formData['mode_of_training'] = plan.mode_of_training.value
             if (plan.description !== '') formData['description'] = plan.description
@@ -70,6 +74,15 @@ const AddPlan = ({ CallBack }) => {
          }
         
     }
+    const getEmployeeData = async () => {
+      await employeeHelper.fetchEmployeeDropdown().then(result => {
+        setEmployeeDropdown(result)
+       })
+    }
+    useEffect(() => {
+      getEmployeeData()
+      return false
+    }, [setEmployeeDropdown])
   return (
     <Fragment>
     {!loading ? (
@@ -85,6 +98,17 @@ const AddPlan = ({ CallBack }) => {
                     onChange={ (e) => { onChangeHandler('title', 'input', e) }}
                     placeholder="Title"
                     
+                    />
+            </Col>
+            <Col md="6" className="mb-1">
+                <Label className="form-label">
+               Evaluator<Badge color='light-danger'>*</Badge>
+                </Label>
+                <Select
+                    type="text"
+                    name="evaluator"
+                    options={employees}
+                    onChange={ (e) => { onChangeHandler('evaluator', 'select', e) }}
                     />
             </Col>
             <Col md="6" className="mb-1">
@@ -124,12 +148,11 @@ const AddPlan = ({ CallBack }) => {
                     />
                 
             </Col>
-        </Row>
-        <Row>
-            <Col md="12" className="mb-1">
+        
+            <Col md="6" className="mb-1">
                <button className="btn-next float-right btn btn-success" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
             </Col>
-        </Row>
+            </Row>
     </Form>
     ) : (
         <div className="text-center"><Spinner/></div>

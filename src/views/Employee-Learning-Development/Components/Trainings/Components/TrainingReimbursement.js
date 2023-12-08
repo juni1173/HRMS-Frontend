@@ -57,7 +57,7 @@ const TrainingReimbursement = ({ data, CallBack }) => {
                                         <div className="col-md-6">
                                             <h4>{data.training_title ? data.training_title : 'No title found'}</h4>
                                             <b>{data.description ? data.description : 'No description found'}</b><br></br>
-                                            Duration: <Badge>{data.duration ? data.duration : 'N/A'}</Badge>
+                                            Duration: <Badge>{data.duration ? data.duration : 'N/A'}</Badge><br></br>
                                             Mode: <Badge>{data.mode_of_training_title ? data.mode_of_training_title : 'N/A'}</Badge>
                                             
                                             {data.training_cost && (

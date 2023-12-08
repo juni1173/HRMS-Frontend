@@ -65,16 +65,16 @@ const MachineAttendance = () => {
       setLoading(true)
       const response = await Api.get('/attendance/machines/')
       
-      if (response.length > 0) {
+      if (response.data.length > 0) {
           typeData.splice(0, typeData.length)
-          const types = response
+          const types = response.data
           for (let i = 0; i < types.length; i++) {
             typeData.push({value: types[i].id, label: types[i].machine_title})
           }
       } else {
         setTimeout(() => {
             setLoading(false)
-          }, 500)
+          }, 1000)
           return Api.Toast('error', 'Machine data not found')
       }
       const Response = await Api.get('/attendance/machine/data/')

@@ -63,7 +63,6 @@ const TreeComponent = ({ treeData }) => {
   const [centeredModal, setCenteredModal] = useState(false)
   const departmentNames = Object.keys(treeData)
   let maxLevel = 0
-
   // Calculate the maximum level across all departments
   departmentNames.forEach((departmentName) => {
     const departmentData = treeData[departmentName]
@@ -95,61 +94,47 @@ const TreeComponent = ({ treeData }) => {
         </thead>
         <tbody>
         {[...Array(maxLevel).keys()].map((rowIndex) => (
-              <tr key={rowIndex}>
-                <td>{`${rowIndex + 1}`}</td>
-                {departmentNames.map((departmentName) => (
-                  <td key={departmentName}>
-                    {treeData[departmentName][`${rowIndex + 1}`] ? (
-                      <div>
-                        {treeData[departmentName][`${rowIndex + 1}`].map((employee) => (
-                          <div key={employee.id}>
-                 <Card className='m-1' key={employee.id} style={{width: "22rem"}}>
-                   <CardBody className='p-0'>
-                         <div className="row">
-                             <div className="col-md-3">
-                                 <Badge color='light-warning'>
-                                 {employee.profile_image ?  <img src={employee.profile_image} style={{height: '50px', width: "50px"}} alt="logo" /> : <img src={user_blank} style={{height:"50px", width: "50px"}} alt="logo" />}   
-                                 </Badge> 
-                             </div>
-                             <div className="col-md-9">
-                                <strong>{employee.name ? employee.name : <Badge color="light-danger">N/A</Badge>}</strong>
-                                 <br></br>
-                                 <Badge color='light-info p-0'>
-                                     {employee.staff_classification_title && employee.staff_classification_title}
-                                 </Badge>
-                             </div>
-                         </div>
-                    </CardBody>
-               </Card> 
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      // If there's no data for this level in this department, display an empty cell
-                      <p>No data</p>
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
+  <tr key={rowIndex}>
+    <td>{`${rowIndex + 1}`}</td>
+    {departmentNames.map((departmentName) => {
+      const employee = treeData[departmentName][`${rowIndex + 1}`]
+      return (
+        <td key={departmentName}>
+          {employee && (
+            <div key={employee.id}>
+              <Card className='m-1' key={employee.id} style={{ width: "22rem" }}>
+                <CardBody className='p-0'>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <Badge color='light-warning'>
+                        {employee.profile_image ? <img src={employee.profile_image} style={{ height: '50px', width: "50px" }} alt="logo" /> : <img src={user_blank} style={{ height: "50px", width: "50px" }} alt="logo" />}
+                      </Badge>
+                    </div>
+                    <div className="col-md-9">
+                      <strong>{employee.name ? employee.name : <Badge color="light-danger">N/A</Badge>}</strong>
+                      <br></br>
+                      <Badge color='light-info p-0'>
+                        {employee.staff_classification_title && employee.staff_classification_title}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          )}
+        </td>
+      )
+    })}
+  </tr>
+))}
+
+
         </tbody>
       </table>
-     {/* { treeData.data.map((node) => (
-      <div className='col' key={node.id}>
-        <TreeNode key={node.id} node={node} />
-      </div>
-      ))} */}
       </div>
       <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered modal-fullscreen'>
           <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Organogram</ModalHeader>
           <ModalBody>
-          {/* <div style={{ display: 'flex', overflowX: 'auto', whiteSpace: 'nowrap' }}>
-            { treeData.map((node) => (
-              <div className='col' key={node.id}>
-                <TreeNode key={node.id} node={node} />
-              </div>
-              ))}
-              </div> */}
               <table border="1" className='table  table-bordered"'>
         <thead>
           <tr>
@@ -161,43 +146,40 @@ const TreeComponent = ({ treeData }) => {
         </thead>
         <tbody>
         {[...Array(maxLevel).keys()].map((rowIndex) => (
-              <tr key={rowIndex}>
-                <td>{`${rowIndex + 1}`}</td>
-                {departmentNames.map((departmentName) => (
-                  <td key={departmentName}>
-                    {treeData[departmentName][`${rowIndex + 1}`] ? (
-                      <div>
-                        {treeData[departmentName][`${rowIndex + 1}`].map((employee) => (
-                          <div key={employee.id}>
-                 <Card className='m-1' key={employee.id} style={{width: "22rem"}}>
-                   <CardBody className='p-0'>
-                         <div className="row">
-                             <div className="col-md-3">
-                                 <Badge color='light-warning'>
-                                 {employee.profile_image ?  <img src={employee.profile_image} style={{height: '50px', width: "50px"}} alt="logo" /> : <img src={user_blank} style={{height:"50px", width: "50px"}} alt="logo" />}   
-                                 </Badge> 
-                             </div>
-                             <div className="col-md-9">
-                                <strong>{employee.name ? employee.name : <Badge color="light-danger">N/A</Badge>}</strong>
-                                 <br></br>
-                                 <Badge color='light-info p-0'>
-                                     {employee.staff_classification_title && employee.staff_classification_title}
-                                 </Badge>
-                             </div>
-                         </div>
-                    </CardBody>
-               </Card> 
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      // If there's no data for this level in this department, display an empty cell
-                      <p>No data</p>
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
+  <tr key={rowIndex}>
+    <td>{`${rowIndex + 1}`}</td>
+    {departmentNames.map((departmentName) => {
+      const employee = treeData[departmentName][`${rowIndex + 1}`]
+
+      return (
+        <td key={departmentName}>
+          {employee && (
+            <div key={employee.id}>
+              <Card className='m-1' key={employee.id} style={{ width: "22rem" }}>
+                <CardBody className='p-0'>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <Badge color='light-warning'>
+                        {employee.profile_image ? <img src={employee.profile_image} style={{ height: '50px', width: "50px" }} alt="logo" /> : <img src={user_blank} style={{ height: "50px", width: "50px" }} alt="logo" />}
+                      </Badge>
+                    </div>
+                    <div className="col-md-9">
+                      <strong>{employee.name ? employee.name : <Badge color="light-danger">N/A</Badge>}</strong>
+                      <br></br>
+                      <Badge color='light-info p-0'>
+                        {employee.staff_classification_title && employee.staff_classification_title}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          )}
+        </td>
+      )
+    })}
+  </tr>
+))}
         </tbody>
       </table>
               

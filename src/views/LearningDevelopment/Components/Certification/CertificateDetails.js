@@ -1,5 +1,6 @@
 import {Fragment} from 'react'
 import { Row, Col, Badge } from 'reactstrap'
+import ReasonsTable from './Approvals/ReasonsTable'
 const CertificateDetails = ({ data }) => {
     console.warn(data)
   return (
@@ -29,6 +30,13 @@ const CertificateDetails = ({ data }) => {
             </Col>
             <Col md={12} className='my-2'>
                 <b>Reimbursement</b>: <Badge>{data.reimbursement_status ? data.reimbursement_status_title : 'Not Applied'}</Badge>
+            </Col>
+            <Col md={12} className='my-2'>
+                <b>Course Reason</b>: <Badge>{data.course_reason ? data.course_reason : 'N/A'}</Badge>
+            </Col>
+            <Col md={12} className='my-2'>
+                <b>Decisions</b> :<br></br>
+                <ReasonsTable reasonsData={(data.decision && (data.decision).length > 0) ? data.decision : []}/>
             </Col>
 
         </Row>

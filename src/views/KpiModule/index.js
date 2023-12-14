@@ -18,6 +18,8 @@ const KpiModule = () => {
     const [typesDropdownArr] = useState([])
     const [complexityDropdownArr] = useState([])
     const [employeesDropdownArr] = useState([]) 
+    const [yearlySegmentation] = useState([])
+    const [segmentationData, setSegmentationData] = useState([])
     const [ep_batch] = useState([])
     const getCount = (name, value) => {
         if (name && value) {
@@ -43,7 +45,8 @@ const KpiModule = () => {
                     const type = data.type
                     const complexityLength = data.complexity.length
                     const employeeLength = data.employees.length
-                    const ep_batch_completed = data.ep_batch_completed.length
+                    const yearly_segmentation = data.yearly_segmentation.length
+                    // const ep_batch_completed = data.ep_batch_completed.length
                     const ep_batch_in_progress = data.ep_batch_in_progress.length
                     
                     type.forEach(element => {
@@ -55,9 +58,13 @@ const KpiModule = () => {
                     for (let i = 0; i < employeeLength; i++) {
                         employeesDropdownArr.push({value: data.employees[i].id, label: data.employees[i].name})
                     }
-                    for (let i = 0; i < ep_batch_completed; i++) {
-                        ep_batch.push({value: data.ep_batch_completed[i].id, label: data.ep_batch_completed[i].batch_no})
+                    // for (let i = 0; i < ep_batch_completed; i++) {
+                    //     ep_batch.push({value: data.ep_batch_completed[i].id, label: data.ep_batch_completed[i].batch_no})
+                    // }
+                    for (let i = 0; i < yearly_segmentation; i++) {
+                        yearlySegmentation.push({value: data.yearly_segmentation[i].id, label: data.yearly_segmentation[i].year})
                     }
+                    setSegmentationData(data.yearly_segmentation)
                     for (let i = 0; i < ep_batch_in_progress; i++) {
                         ep_batch.push({value: data.ep_batch_in_progress[i].id, label: data.ep_batch_in_progress[i].batch_no})
                     }
@@ -132,39 +139,31 @@ const KpiModule = () => {
                                         History
                                     </NavLink>
                                     </NavItem>
-                                    <NavItem >
-                                     <NavLink
-                                        active={active === '3'}
-                                        onClick={() => {
-                                        toggle('3')
-                                        }}
-                                    >
-                                        Previous KPI's
-                                    </NavLink>
-                                    </NavItem>
+                                    
                                 
                                 {/* </div> */}
             </Nav>
             <TabContent className='py-50' activeTab={active}>
                         <TabPane tabId={'1'} className='tab-pane-blue'>
-                                <EmployeeKpi />
+                             {active === '1' ? <EmployeeKpi /> : null }   
                         </TabPane>
                         <TabPane tabId={'2'} className='tab-pane-blue'>
-                                <EvaluationRequests type='evaluation' countData={getCount}/>
+                        {active === '2' ? <EvaluationRequests type='evaluation' countData={getCount}/> : null }
                         </TabPane>
                         <TabPane tabId={'3'} className='tab-pane-blue'>
-                                <EvaluationRequests type='recheck' countData={getCount}/>
+                        {active === '3' ? <EvaluationRequests type='recheck' countData={getCount}/> : null }
                         </TabPane>
                         <TabPane tabId={'4'} className='tab-pane-blue'>
-                                <EvaluationRequests type='cancel' countData={getCount}/>
+                        {active === '4' ? <EvaluationRequests type='cancel' countData={getCount}/> : null }
                         </TabPane>
                         <TabPane tabId={'5'} className='tab-pane-blue'>
-                        {!loading ? (
-                           <EmployeeKpiSearch dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, ep_batch}} CallBack={CallBack} type='search'/> 
-                        ) : (
-                            <div className='text-center'><Spinner color="white"/></div>
-                        )
-                        }
+                        {active === '5' ? (
+                            !loading ? (
+                                <EmployeeKpiSearch segmentation={segmentationData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, yearlySegmentation}} CallBack={CallBack} type='search'/> 
+                             ) : (
+                                 <div className='text-center'><Spinner color="white"/></div>
+                             )
+                        ) : null}
                         </TabPane>
 
             </TabContent>

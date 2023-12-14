@@ -16,6 +16,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
         employees_project: '',
         ep_batch: ''
    })
+   const [addBtn, setAddBtn] = useState(false)
     const onChangemployeeKpiDetailHandler = (InputName, InputType, e) => {
         
         let InputValue
@@ -76,6 +77,16 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
                             CallBack()
                         } else {
                             Api.Toast('error', result.message)
+                            setEmployeeKpiData(prevState => ({
+                                ...prevState,
+                                title: '',
+                                ep_type : '',
+                                evaluator: '',
+                                ep_complexity: '',
+                                scale_group: '',
+                                employees_project: '',
+                                ep_batch: ''
+                            }))
                         }
                     }
                 })
@@ -86,6 +97,16 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
             }, 1000)
         } else {
             Api.Toast('error', 'Please fill all required fields!')
+            setEmployeeKpiData(prevState => ({
+                ...prevState,
+                title: '',
+                ep_type : '',
+                evaluator: '',
+                ep_complexity: '',
+                scale_group: '',
+                employees_project: '',
+                ep_batch: ''
+            }))
         }
         
     }
@@ -94,131 +115,137 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
   return (
     <Fragment>
         <div className='content-header' >
-            <h3 className='text-white'>Add Your KPI</h3>
+            <Button className='btn btn-success' onClick={() => setAddBtn(!addBtn)}>Add Your KPI </Button>
             </div>
         {!loading ? (
         <>
-        <Card>
-            <CardBody>
-                <Row>
-                    <Col md={12}>
+        {addBtn && (
+            <Card>
+                <CardBody>
                     <Row>
-                     
-                    <Col md="4" className="mb-1">
-                        <Label className="form-label">
-                        Scale Group <Badge color='light-danger'>*</Badge>
-                        </Label>
-                        <Select
-                            isClearable={false}
-                            className='react-select'
-                            classNamePrefix='select'
-                            name="scale_group"
-                            options={dropdownData.scaleGroupData ? dropdownData.scaleGroupData : ''}
-                            onChange={ (e) => { onChangemployeeKpiDetailHandler('scale_group', 'select', e.value) }}
-                        />
-                    </Col>
-                    <Col md="4" className="mb-1">
-                        <Label className="form-label">
-                        Batch <Badge color='light-danger'>*</Badge>
-                        </Label>
-                        <Select
-                            isClearable={false}
-                            className='react-select'
-                            classNamePrefix='select'
-                            name="scale_group"
-                            options={dropdownData.batchData ? dropdownData.batchData : ''}
-                            onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_batch', 'select', e.value) }}
-                        />
-                    </Col>
-                    <Col md="4" className="mb-1">
-                        <Label className="form-label">
-                        Projects 
-                        </Label>
-                        <Select
-                            isClearable={false}
-                            className='react-select'
-                            classNamePrefix='select'
-                            name="project"
-                            options={dropdownData.projectsData ? dropdownData.projectsData : ''}
-                            onChange={ (e) => { onChangemployeeKpiDetailHandler('employee_project', 'select', e.value) }}
-                        />
-                    </Col>
+                        <Col md={12}>
+                        <Row>
+                        
+                        <Col md="4" className="mb-1">
+                            <Label className="form-label">
+                            Scale Group <Badge color='light-danger'>*</Badge>
+                            </Label>
+                            <Select
+                                isClearable={false}
+                                className='react-select'
+                                classNamePrefix='select'
+                                name="scale_group"
+                                options={dropdownData.scaleGroupData ? dropdownData.scaleGroupData : ''}
+                                onChange={ (e) => { onChangemployeeKpiDetailHandler('scale_group', 'select', e.value) }}
+                            />
+                        </Col>
+                        <Col md="4" className="mb-1">
+                            <Label className="form-label">
+                            Batch <Badge color='light-danger'>*</Badge>
+                            </Label>
+                            <Select
+                                isClearable={false}
+                                className='react-select'
+                                classNamePrefix='select'
+                                name="scale_group"
+                                options={dropdownData.batchData ? dropdownData.batchData : ''}
+                                onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_batch', 'select', e.value) }}
+                            />
+                        </Col>
+                        <Col md="4" className="mb-1">
+                            <Label className="form-label">
+                            Projects 
+                            </Label>
+                            <Select
+                                isClearable={false}
+                                className='react-select'
+                                classNamePrefix='select'
+                                name="project"
+                                options={dropdownData.projectsData ? dropdownData.projectsData : ''}
+                                onChange={ (e) => { onChangemployeeKpiDetailHandler('employee_project', 'select', e.value) }}
+                            />
+                        </Col>
+                        
+                        <Col md="4" className="mb-1">
+                            <Label className="form-label">
+                            Type <Badge color='light-danger'>*</Badge>
+                            </Label>
+                            <Select
+                                isClearable={false}
+                                className='react-select'
+                                classNamePrefix='select'
+                                name="type"
+                                options={dropdownData.typeDropdown ? dropdownData.typeDropdown : ''}
+                                onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_type', 'select', e.value) }}
+                            />
+                        </Col>
+                        
+                        <Col md='4' className='mb-1'>
+                            <label className='form-label'>
+                            Complexity <Badge color='light-danger'>*</Badge>
+                            </label>
+                            <Select
+                                isClearable={false}
+                                className='react-select'
+                                classNamePrefix='select'
+                                name="complexity"
+                                options={dropdownData.complexityDropdown ? dropdownData.complexityDropdown : ''}
+                                onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_complexity', 'select', e.value) }}
+                            />
+                        </Col>
+                        <Col md='4' className='mb-1'>
+                            <label className='form-label'>
+                        {type === 'evaluator' ? 'Employee' : 'Evaluator'} <Badge color='light-danger'>*</Badge>
+                            </label>
+                            <Select
+                                isClearable={false}
+                                className='react-select'
+                                classNamePrefix='select'
+                                name="evaluator"
+                                options={dropdownData.employeesDropdown ? dropdownData.employeesDropdown : ''}
+                                onChange={ (e) => { onChangemployeeKpiDetailHandler('evaluator', 'select', e.value) }}
+                            />
+                        </Col>
+                        
+                        <Col md='8' className='mb-1'>
+                            <label className='form-label'>
+                            Kpi Details <Badge color='light-danger'>*</Badge>
+                            </label>
+                            <Input type="textarea" 
+                                name="title"
+                                onChange={ (e) => { onChangemployeeKpiDetailHandler('title', 'input', e) }}
+                                placeholder="Write your kpi description!"  />
+                        </Col>
+                        <Col md={4}>
+                        <Button color="primary" className="btn-next mt-4" onClick={submitForm}>
+                        <span className="align-middle d-sm-inline-block">
+                        Save
+                        </span>
+                        <Save
+                        size={14}
+                        className="align-middle ms-sm-25 ms-0"
+                        ></Save>
+                    </Button>
+                        </Col>
+                        
+                        </Row>
                     
-                    <Col md="4" className="mb-1">
-                        <Label className="form-label">
-                        Type <Badge color='light-danger'>*</Badge>
-                        </Label>
-                        <Select
-                            isClearable={false}
-                            className='react-select'
-                            classNamePrefix='select'
-                            name="type"
-                            options={dropdownData.typeDropdown ? dropdownData.typeDropdown : ''}
-                            onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_type', 'select', e.value) }}
-                        />
-                    </Col>
-                    
-                    <Col md='4' className='mb-1'>
-                        <label className='form-label'>
-                        Complexity <Badge color='light-danger'>*</Badge>
-                        </label>
-                        <Select
-                            isClearable={false}
-                            className='react-select'
-                            classNamePrefix='select'
-                            name="complexity"
-                            options={dropdownData.complexityDropdown ? dropdownData.complexityDropdown : ''}
-                            onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_complexity', 'select', e.value) }}
-                        />
-                    </Col>
-                    <Col md='4' className='mb-1'>
-                        <label className='form-label'>
-                       {type === 'evaluator' ? 'Employee' : 'Evaluator'} <Badge color='light-danger'>*</Badge>
-                        </label>
-                        <Select
-                            isClearable={false}
-                            className='react-select'
-                            classNamePrefix='select'
-                            name="evaluator"
-                            options={dropdownData.employeesDropdown ? dropdownData.employeesDropdown : ''}
-                            onChange={ (e) => { onChangemployeeKpiDetailHandler('evaluator', 'select', e.value) }}
-                        />
-                    </Col>
-                    
-                    <Col md='8' className='mb-1'>
-                        <label className='form-label'>
-                        Kpi Details <Badge color='light-danger'>*</Badge>
-                        </label>
-                        <Input type="textarea" 
-                            name="title"
-                            onChange={ (e) => { onChangemployeeKpiDetailHandler('title', 'input', e) }}
-                            placeholder="Write your kpi description!"  />
-                    </Col>
-                    <Col md={4}>
-                    <Button color="primary" className="btn-next mt-4" onClick={submitForm}>
-                    <span className="align-middle d-sm-inline-block">
-                    Save
-                    </span>
-                    <Save
-                    size={14}
-                    className="align-middle ms-sm-25 ms-0"
-                    ></Save>
-                </Button>
-                    </Col>
-                    
+                        </Col>
                     </Row>
-                
-                    </Col>
-                </Row>
-            </CardBody>
-        </Card>
-        <Card>
-            <CardBody>
-                <Row>
-                    <KpiList preData={preData} CallBack={CallBack} dropdownData={dropdownData}/>
-                </Row>
-            </CardBody>
-        </Card>    
+                </CardBody>
+            </Card>
+        )}
+        {type !== 'evaluation' ? (
+            <Card>
+                <CardBody>
+                    <Row>
+                        <KpiList preData={preData} CallBack={CallBack} dropdownData={dropdownData}/>
+                    </Row>
+                </CardBody>
+            </Card>  
+        ) : (
+            <p></p>
+        )}
             
         </>
         ) : (

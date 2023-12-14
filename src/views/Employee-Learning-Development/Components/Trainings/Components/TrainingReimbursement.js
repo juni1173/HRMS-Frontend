@@ -16,9 +16,11 @@ const TrainingReimbursement = ({ data, CallBack }) => {
     }
    
     const addReimbursement = async () => {
-            const formData = new FormData()
-            if (training_receipt !== '') formData.append("training_receipt", training_receipt)
-            if (training_cost !== '') formData.append("training_cost", training_cost)
+            
+            if (training_receipt !== '' && training_cost !== '') {
+                const formData = new FormData()
+                formData.append("training_receipt", training_receipt)
+            formData.append("training_cost", training_cost)
             await Api.jsonPatch(`/training/upload/invoice/employee/id/${data.id}/`, formData, false).then(result => {
                 if (result) {
                     if (result.status === 200) {
@@ -32,6 +34,10 @@ const TrainingReimbursement = ({ data, CallBack }) => {
                     Api.Toast('error', 'Server Error!')
                 }
             })
+            } else {
+                Api.Toast('error', 'Please fill all required fields!')
+            }
+            
         
     }
     
@@ -49,14 +55,12 @@ const TrainingReimbursement = ({ data, CallBack }) => {
                     
                 <Col md={12} className='my-2'>
                         <>
-                        
                         {(data && Object.values(data).length > 0 && data.reimbursement_status) ? (
                                 <Card className='dark-shadow'>
                                     <CardBody>
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <h4>{data.training_title && data.training_title}</h4>
-                                            <h4>{data.title && data.title}</h4>
+                                            <h4>{data.training_title ? data.training_title : 'No title found'}</h4>
                                             <b>{data.description ? data.description : 'No description found'}</b><br></br><br></br>
                                             Duration: <Badge>{data.duration ? data.duration : 'N/A'}</Badge><br></br><br></br>
                                             Mode: <Badge>{data.mode_of_training_title ? data.mode_of_training_title : 'N/A'}</Badge>
@@ -99,7 +103,7 @@ const TrainingReimbursement = ({ data, CallBack }) => {
                    <Row>
                     <Col md="4" className="mb-1">
                         <Label className="form-label">
-                        Training Receipt
+                        Training Receipt <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Input
                             type="file"
@@ -111,10 +115,10 @@ const TrainingReimbursement = ({ data, CallBack }) => {
                     </Col>
                     <Col md="4" className="mb-1">
                         <Label className="form-label">
-                        Training Cost
+                        Training Cost <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Input
-                            type="input"
+                            type="number"
                             id="cost"
                             name="cost"
                             onChange={(e) => setTraining_cost(e.target.value)}

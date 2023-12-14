@@ -1,16 +1,21 @@
-import { Fragment, useState } from "react"
+import { Fragment, useState, useEffect } from "react"
 import {Label, Row, Col, Input, Form, Spinner, Badge } from "reactstrap" 
 import Select from 'react-select'
 import apiHelper from "../../../../../Helpers/ApiHelper"
-
+import EmployeeHelper from "../../../../../Helpers/EmployeeHelper"
 const UpdatePlan = ({ data, CallBack }) => {
+    console.warn(data)
   const Api = apiHelper()
+  const employeeHelper = EmployeeHelper()
     const [loading, setLoading] = useState(false)
+    const [employees, setEmployeeDropdown] = useState([])
     const [plan, setPlan] = useState({
          title : data.title ? data.title : '',
+         evaluator: data.evaluator ? data.evaluator : '',
          duration : data.duration ? data.duration : '',
          description : data.description ? data.description : '',
-         mode_of_training: data.mode_of_training ? data.mode_of_training : ''
+         mode_of_training: data.mode_of_training ? data.mode_of_training : '',
+         cost: data.cost ? data.cost : ''
     })
     const mode_of_training_choices = [
       {value: 1, label: 'Paid'},
@@ -42,9 +47,17 @@ const UpdatePlan = ({ data, CallBack }) => {
 
     const Submit = async (e) => {
         e.preventDefault()
-        if (plan.title !== '' && plan.duration !== '' && plan.mode_of_training !== '') {
+        if (plan.title !== '' && plan.duration !== '' && plan.mode_of_training !== '' && data.evaluator !== '') {
             setLoading(true)
             const formData = new FormData()
+            if (plan.mode_of_training.value === 1 && plan.cost === '') {
+                return Api.Toast('error', 'Paid cost is required!') 
+              } else {
+                formData['cost'] = plan.cost
+              }
+            if (plan.mode_of_training.value !== 1 || plan.mode_of_training !== 1) {
+                formData['cost'] = ''
+            }
             formData['title'] = plan.title
             formData['duration'] = plan.duration
             formData['mode_of_training'] = plan.mode_of_training.value
@@ -64,12 +77,25 @@ const UpdatePlan = ({ data, CallBack }) => {
             })
             setTimeout(() => {
                 setLoading(false)
-            }, 1000)
+            }, 500)
          } else {
             Api.Toast('error', 'Please fill all required fields')
          }
         
     }
+    const getEmployeeData = async () => {
+        setLoading(true)
+        await employeeHelper.fetchEmployeeDropdown().then(result => {
+          setEmployeeDropdown(result)
+         })
+         setTimeout(() => {
+            setLoading(false)
+        }, 500)
+      }
+      useEffect(() => {
+        getEmployeeData()
+        return false
+      }, [setEmployeeDropdown])
   return (
     <Fragment>
     {!loading ? (
@@ -90,6 +116,18 @@ const UpdatePlan = ({ data, CallBack }) => {
             </Col>
             <Col md="6" className="mb-1">
                 <Label className="form-label">
+               Evaluator<Badge color='light-danger'>*</Badge>
+                </Label>
+                <Select
+                    type="text"
+                    name="evaluator"
+                    options={employees}
+                    defaultValue={employees.length > 0 ? (employees.find(pre => pre.value === data.evaluator) ? employees.find(pre => pre.value === data.evaluator) : '') : ''}
+                    onChange={ (e) => { onChangeHandler('evaluator', 'select', e) }}
+                    />
+            </Col>
+            <Col md="6" className="mb-1">
+                <Label className="form-label">
                Mode of Training<Badge color='light-danger'>*</Badge>
                 </Label>
                 <Select
@@ -100,9 +138,23 @@ const UpdatePlan = ({ data, CallBack }) => {
                     onChange={ (e) => { onChangeHandler('mode_of_training', 'select', e) }}
                     />
             </Col>
+            {(plan.mode_of_training.value === 1 || plan.mode_of_training === 1) && (
+              <Col md="6" className="mb-1">
+                  <Label className="form-label">
+                    Cost<Badge color='light-danger'>*</Badge>
+                  </Label>
+                  <Input
+                      type="number"
+                      name="cost"
+                      defaultValue={data.cost ? data.cost : ''}
+                      onChange={ (e) => { onChangeHandler('cost', 'input', e) }}
+                      placeholder="Cost"
+                  />
+              </Col>
+            )}
             <Col md="6" className="mb-1">
                 <Label className="form-label">
-               Duration
+               Duration <Badge color='light-danger'>*</Badge>
                 </Label>
                 <Input
                     type="number"
@@ -126,9 +178,7 @@ const UpdatePlan = ({ data, CallBack }) => {
                     />
                 
             </Col>
-        </Row>
-        <Row>
-            <Col md="12" className="mb-1">
+            <Col md={(plan.mode_of_training || plan.mode_of_training.value) === 1 ? '12' : '6'} className="mt-2">
                <button className="btn-next float-right btn btn-warning" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Update</span></button>
             </Col>
         </Row>

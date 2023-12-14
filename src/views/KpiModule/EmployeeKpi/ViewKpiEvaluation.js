@@ -43,6 +43,7 @@ const ViewKpiEvaluation = ({ data }) => {
                     <Card className='dark-shadow'>
                         <CardHeader>
                         <Badge color="light-primary">Employee </Badge> <h3>{details.employee_name && details.employee_name}</h3>
+                        <Badge color='light-warning'>Status</Badge> <h5>{details.kpis_status_title && details.kpis_status_title}</h5>
                         </CardHeader>
                         <CardBody>
                             <Row>

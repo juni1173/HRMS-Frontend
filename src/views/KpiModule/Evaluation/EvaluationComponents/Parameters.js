@@ -8,7 +8,7 @@ const Parameters = ({ data }) => {
     {data && (
         data.map((item, key) => (
             <>
-            <Row>
+            <Row style={{ width: '70%', float: 'right'}}>
             <Card key={key} className="dark-shadow">
                 <CardBody>
                 {item.title}

@@ -14,6 +14,8 @@ const index = () => {
     const [typesDropdownArr] = useState([])
     const [complexityDropdownArr] = useState([])
     const [employeesDropdownArr] = useState([]) 
+    const [yearlySegmentation] = useState([])
+    const [segmentationData, setSegmentationData] = useState([])
     const [ep_batch] = useState([])
     const [active, setActive] = useState('1')
     const [count, setCount] = useState([
@@ -113,7 +115,8 @@ const index = () => {
                     const typeLength = data.type.length
                     const complexityLength = data.complexity.length
                     const employeeLength = data.employees.length
-                    const ep_batch_completed = data.ep_batch_completed.length
+                    const yearly_segmentation = data.yearly_segmentation.length
+                    setSegmentationData(data.yearly_segmentation)
                     const ep_batch_in_progress = data.ep_batch_in_progress.length
                     for (let i = 0; i < typeLength; i++) {
                         typesDropdownArr.push({value: data.type[i].id, label: data.type[i].title})
@@ -124,8 +127,8 @@ const index = () => {
                     for (let i = 0; i < employeeLength; i++) {
                         employeesDropdownArr.push({value: data.employees[i].id, label: data.employees[i].name})
                     }
-                    for (let i = 0; i < ep_batch_completed; i++) {
-                        ep_batch.push({value: data.ep_batch_completed[i].id, label: data.ep_batch_completed[i].batch_no})
+                    for (let i = 0; i < yearly_segmentation; i++) {
+                        yearlySegmentation.push({value: data.yearly_segmentation[i].id, label: data.yearly_segmentation[i].year})
                     }
                     for (let i = 0; i < ep_batch_in_progress; i++) {
                         ep_batch.push({value: data.ep_batch_in_progress[i].id, label: data.ep_batch_in_progress[i].batch_no})
@@ -253,7 +256,7 @@ const index = () => {
                         </TabPane>
                         <TabPane tabId={'4'} className='tab-pane-blue'>
                         {!loading ? (
-                           <KpiByBatch dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, ep_batch}} CallBack={CallBack} type='search'/> 
+                           <KpiByBatch segmentation={segmentationData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, yearlySegmentation}} CallBack={CallBack} type='search'/> 
                         ) : (
                             <div className='text-center'><Spinner color="white"/></div>
                         )

@@ -2,9 +2,12 @@ import { useEffect, useState, Fragment } from "react"
 import { Label, Button, Table, Spinner } from "reactstrap"
 import Select from 'react-select'
 import apiHelper from "../../../../../Helpers/ApiHelper"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { Trash2 } from "react-feather"
 const Projects = ({ data, CallBack, training_id }) => {
-    
     const Api = apiHelper()
+    const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
     const [assignedProjects] = useState(data.training_projects ? data.training_projects : [])
     const [projectsArr] = useState([])
@@ -62,10 +65,53 @@ const Projects = ({ data, CallBack, training_id }) => {
         getPreData()
         }, [])
 
-        // const CallBack = useCallback(() => {
-        //     getTrainings()
-        //     setCanvasOpen(false)
+        // const CallBackAction = useCallback(() => {
+        //     getPreData()
         //   }, [data])
+          const removeProject = (id) => {
+            MySwal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to remove this project from this training!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Remove it!',
+                customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger ms-1'
+                },
+                buttonsStyling: false
+            }).then(function (result) {
+                if (result.value) {
+                    Api.deleteData(`/training/project/remove/${id}/`, {method: 'DELETE'})
+                    .then((deleteResult) => {
+                        if (deleteResult.status === 200) {
+                            MySwal.fire({
+                                icon: 'success',
+                                title: 'Project Removed!',
+                                text: 'Project is Removed.',
+                                customClass: {
+                                confirmButton: 'btn btn-success'
+                                }
+                            }).then(function (result) {
+                                if (result.isConfirmed) {
+                                    CallBack()
+                                }
+                            })
+                        } else {
+                            MySwal.fire({
+                                icon: 'error',
+                                title: deleteResult.message ? deleteResult.message : 'Project can not be Removed!',
+                                text: 'Project is not removed.',
+                                customClass: {
+                                confirmButton: 'btn btn-danger'
+                                }
+                            })
+                        }
+                            
+                        })
+                } 
+            })
+        }
   return (
     <Fragment>
         {!loading ? (
@@ -97,6 +143,9 @@ const Projects = ({ data, CallBack, training_id }) => {
                     <th>
                         Project Assigned
                     </th>
+                    <th>
+                        Remove
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -104,11 +153,12 @@ const Projects = ({ data, CallBack, training_id }) => {
                 assignedProjects.map(item => (
                     <tr key={item.id}>
                         <td className="text-center"><b>{item.project_title ? item.project_title : 'N/A'}</b></td>
+                        <td className="text-center"><Trash2 color="red" onClick={() => removeProject(item.id)}/></td>
                     </tr>
                 ))
             ) : (
                 <tr>
-                    <td>No Project Assigned</td>
+                    <td colSpan={2}>No Project Assigned</td>
                 </tr>
             )
         }

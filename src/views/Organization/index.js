@@ -32,7 +32,11 @@
     // Tabs Toggle State Set
     
     const toggle = tab => {
-      setActive(tab)
+      setLoading(true)
+        setActive(tab)
+      setTimeout(() => {
+        setLoading(false)
+      }, 500)
     }
     
     // Canvas Panel On and Off Function Call
@@ -42,15 +46,15 @@
       setCanvasOpen(!canvasOpen)
     }
     
-    const getDashCount = () => {
+    const getDashCount = async () => {
       setLoading(true)
-      Api.get(`/organizations/data/count/`).then(result => {
-        if (result.status === 200) {
-          setDashcount(result.data)
-        } else {
-          if (Api.org.id) Api.Toast('error', 'No Count Data Available')
-        }
-      })
+        await Api.get(`/organizations/data/count/`).then(result => {
+          if (result.status === 200) {
+            setDashcount(result.data)
+          } else {
+            if (Api.org.id) Api.Toast('error', 'No Count Data Available')
+          }
+        })
       setTimeout(() => {
         setLoading(false)
       }, 1000)
@@ -218,22 +222,36 @@
 
         <TabContent className='py-50' activeTab={active}>
           <TabPane tabId='1'>
-            <OrganizationDetails stepperStatus={false}/>
+            {active === '1' ? <OrganizationDetails stepperStatus={false}/> : null}
           </TabPane>
           <TabPane tabId='2'>
-            <button className='btn btn-primary float-right' onClick={toggleCanvasEnd}>Add Group Head</button> 
-            <GroupHead stepperStatus={false} list={true} count={count} fetchGroupHeads={CallBack}/>
+          {active === '2' ? (
+            <>
+             <button className='btn btn-primary float-right' onClick={toggleCanvasEnd}>Add Group Head</button> 
+             <GroupHead stepperStatus={false} list={true} count={count} fetchGroupHeads={CallBack}/>
+            </>
+          ) : null }
           </TabPane>
           <TabPane tabId='3'>
+          {active === '3' ? (
+            <>
           <button className='btn btn-primary float-right' onClick={toggleCanvasEnd}>Add Staff Classification</button> 
             <StaffClassification stepperStatus={false} list={true} count={count} fetchStaffClassification={CallBack}/>
+            </>
+          ) : null }
           </TabPane>
           <TabPane tabId='4'>
-            <button className='btn btn-primary float-right' onClick={toggleCanvasEnd}>Add Department</button> 
-          <DepartmentsInfo stepperStatus={false} count={count} list={true} fetchDepCallBack={CallBack}/>
+          {active === '4' ? (
+            <>
+              <button className='btn btn-primary float-right' onClick={toggleCanvasEnd}>Add Department</button> 
+              <DepartmentsInfo stepperStatus={false} count={count} list={true} fetchDepCallBack={CallBack}/>
+            </>
+            ) : null }
           </TabPane>
           <TabPane tabId='5'>
+          {active === '5' ? (
             <Positions/>
+          ) : null }
           </TabPane>
         </TabContent> 
 

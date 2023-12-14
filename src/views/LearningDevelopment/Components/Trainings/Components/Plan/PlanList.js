@@ -129,15 +129,18 @@ const PlanList = ({ data, CallBack}) => {
                                                 <div className="col-md-4">
                                                 <CardTitle tag='h1'>{item.title}</CardTitle>
                                                 <CardSubtitle><Badge color='light-warning'>
-                                                {`${item.mode_of_training_title}`} 
+                                                    {`${item.mode_of_training_title}`} 
                                                     </Badge><br></br>
-                                                    <button className='btn btn-outline-dark btn-sm mt-1' onClick={() => toggleCanvasEnd(item, 'projects', item.id)}>Projects</button></CardSubtitle>
+                                                    {item.status !== 2 && (
+                                                    <button className='btn btn-outline-dark btn-sm mt-1' onClick={() => toggleCanvasEnd(item, 'projects', item.id)}>Projects</button>
+                                                    )}
+                                                    </CardSubtitle>
                                                 </div>
                                                 <div className="col-md-4">
                                                     <Badge color='light-info'>
                                                             Employees 
                                                     </Badge><br></br>
-                                                    <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}><b>{item.number_of_employee ? item.number_of_employee : 0}</b> / <UserPlus color='green' size={15} onClick={() => toggleCanvasEnd(item, 'new_employees', item.id)}/></span><br></br>
+                                                    <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}><b>{item.number_of_employee ? item.number_of_employee : 0}</b> / {item.status !== 2 && <UserPlus color='green' size={15} onClick={() => toggleCanvasEnd(item, 'new_employees', item.id)}/>} </span><br></br>
                                                     <Badge color='light-success'>
                                                         Status
                                                     </Badge><br></br>
@@ -157,21 +160,26 @@ const PlanList = ({ data, CallBack}) => {
                                                             >
                                                             <Eye color="green"/>
                                                         </button>
-                                                        <button
-                                                            className="border-0 no-background"
-                                                            title="Edit"
-                                                            onClick={() => toggleCanvasEnd(item, 'update')}
-                                                            >
-                                                            <Edit color="orange"/>
-                                                        </button>
-                                                        <button
-                                                            className="border-0 no-background"
-                                                            title="Stop the Training"
-                                                            onClick={() => stopTraining(item.id)}
-                                                            >
-                                                            <StopCircle color="red"/>
-                                                        </button>
-                                                        <hr></hr>
+                                                        {item.status !== 2 && (
+                                                            <>
+                                                                <button
+                                                                    className="border-0 no-background"
+                                                                    title="Edit"
+                                                                    onClick={() => toggleCanvasEnd(item, 'update')}
+                                                                    >
+                                                                    <Edit color="orange"/>
+                                                                </button>
+                                                                <button
+                                                                    className="border-0 no-background"
+                                                                    title="Stop the Training"
+                                                                    onClick={() => stopTraining(item.id)}
+                                                                    >
+                                                                    <StopCircle color="red"/>
+                                                                </button>
+                                                                <hr></hr>
+                                                            </>
+                                                        )}
+                                                        
                                                         <button
                                                             className="border-0 no-background"
                                                             title="Employees assigned"
@@ -179,6 +187,7 @@ const PlanList = ({ data, CallBack}) => {
                                                             >
                                                             <Users color="purple"/>
                                                         </button>
+                                                        {item.status !== 2 && (
                                                         <button
                                                             className="border-0 no-background"
                                                             title="Assignments"
@@ -186,6 +195,7 @@ const PlanList = ({ data, CallBack}) => {
                                                             >
                                                             <FileText color="blue"/>
                                                         </button>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>

@@ -4,12 +4,14 @@ import { Card, CardBody, Row, Col, Label, Badge, Button } from 'reactstrap'
 import { Search } from 'react-feather'
 import Select from 'react-select'
 import KpiList from './KpiList'
-const EmployeeKpiSearch = ({dropdownData, CallBack}) => {
+const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
+    const [dropdown_ep_batch] = useState([])
     const [kpiData, setKpiData] = useState({
-        ep_batch : ''
+        ep_batch : '',
+        yearly_segmentation: ''
    })
     const onChangeKpiDetailHandler = (InputName, InputType, e) => {
         
@@ -35,11 +37,21 @@ const EmployeeKpiSearch = ({dropdownData, CallBack}) => {
         }))
 
     }
+    const handleSegmentation = (id) => {
+        dropdown_ep_batch.splice(0, dropdown_ep_batch.length)
+        onChangeKpiDetailHandler('yearly_segmentation', 'select', id)
+        const seg = segmentation.find(pre => pre.id === id).ep_batches
+        seg.forEach(element => {
+            dropdown_ep_batch.push({ value: element.id, label: element.title})
+        })
+    
+       }
     const submitForm = async () => {
         
-        if (kpiData.ep_batch !== '') {
+        if (kpiData.yearly_segmentation !== '' && kpiData.ep_batch !== '') {
             setLoading(true)
             const formData = new FormData()
+            formData['ep_yearly_segmentation'] = kpiData.yearly_segmentation
             formData['ep_batch'] = kpiData.ep_batch
             // return false
                 await Api.jsonPost(`/kpis/employee/pervious/batch/kpis/data/`, formData).then(result => {
@@ -65,7 +77,20 @@ const EmployeeKpiSearch = ({dropdownData, CallBack}) => {
         <Card>
             <CardBody>
             <Row>
-                   
+                    <Col md="4" className="mb-1">
+                       <Label className="form-label">
+                       Yearly Segmentation <Badge color='light-danger'>*</Badge>
+                       </Label>
+                       <Select
+                           isClearable={false}
+                           className='react-select'
+                           classNamePrefix='select'
+                           name="scale_group"
+                           options={dropdownData.yearlySegmentation ? dropdownData.yearlySegmentation : ''}
+                           onChange={ (e) => { handleSegmentation(e.value) }}
+                       />
+                   </Col>
+                   {kpiData.yearly_segmentation !== '' && (
                    <Col md="4" className="mb-1">
                        <Label className="form-label">
                        Batch <Badge color='light-danger'>*</Badge>
@@ -75,10 +100,11 @@ const EmployeeKpiSearch = ({dropdownData, CallBack}) => {
                            className='react-select'
                            classNamePrefix='select'
                            name="scale_group"
-                           options={dropdownData.ep_batch ? dropdownData.ep_batch : ''}
+                           options={dropdown_ep_batch}
                            onChange={ (e) => { onChangeKpiDetailHandler('ep_batch', 'select', e.value) }}
                        />
                    </Col>
+                   )}
                    {/* <Col md="4" className="mb-1">
                        <Label className="form-label">
                        Employee <Badge color='light-danger'>*</Badge>

@@ -25,14 +25,16 @@ const index = ({ type, countData }) => {
                 if (result.status === 200) {
                     setPreData(result.data.employee_kpis_data)
                     let evaluationTotal = 0
-                    result.data.employee_kpis_data[0].forEach(element => {
-                        element.employee_kpis_data.forEach(kpiData => {
-                            if (kpiData.employee_kpis_data) {
-                                evaluationTotal += kpiData.employee_kpis_data.length
-                            }
+                    if (result.data.employee_kpis_data) {
+                        result.data.employee_kpis_data[0].forEach(element => {
+                            element.employee_kpis_data.forEach(kpiData => {
+                                if (kpiData.employee_kpis_data) {
+                                    evaluationTotal += kpiData.employee_kpis_data.length
+                                }
+                            })
                         })
-                    })
-                    countData('evaluation', evaluationTotal)
+                        countData('evaluation', evaluationTotal)
+                    }
                 } else {
                     // Api.Toast('error', result.message)
                     return false
@@ -89,14 +91,17 @@ const index = ({ type, countData }) => {
                 if (result.status === 200) {
                     setCancelData(result.data.employee_kpis_data)
                     let cancelTotal = 0
-                    result.data.employee_kpis_data[0].forEach(element => {
-                        element.employee_kpis_data.forEach(kpiData => {
-                            if (kpiData.employee_kpis_data) {
-                                cancelTotal += kpiData.employee_kpis_data.length
-                            }
+                    if (result.data.employee_kpis_data) {
+                        result.data.employee_kpis_data[0].forEach(element => {
+                            element.employee_kpis_data.forEach(kpiData => {
+                                if (kpiData.employee_kpis_data) {
+                                    cancelTotal += kpiData.employee_kpis_data.length
+                                }
+                            })
                         })
-                    })
-                    countData('cancel', cancelTotal)
+                        countData('cancel', cancelTotal)
+                    }
+                    
                 } else {
                     // Api.Toast('error', result.message)
                     return false
@@ -111,6 +116,7 @@ const index = ({ type, countData }) => {
                 if (result.status === 200) {
                     setRecheckData(result.data.employee_kpis_data)
                     let recheckTotal = 0
+                    if (result.data.employee_kpis_data) {
                     result.data.employee_kpis_data[0].forEach(element => {
                         element.employee_kpis_data.forEach(kpiData => {
                             if (kpiData.employee_kpis_data) {
@@ -119,6 +125,7 @@ const index = ({ type, countData }) => {
                         })
                     })
                     countData('recheck', recheckTotal)
+                }
                 } else {
                     // Api.Toast('error', result.message)
                     return false
@@ -166,12 +173,12 @@ const index = ({ type, countData }) => {
                 (cancelData && Object.values(cancelData).length > 0) ? (
                     Object.values(cancelData).map((item, key) => (
                     <div key={key}>
-                        <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, batchDropdown: batchDropdownArr}} CallBack={CallBack} type={type}/>
+                        <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr}} CallBack={CallBack} type={type}/>
                      </div>    
                     ))
                 
                     ) : (
-                        <div className="text-center"><p>No data found!</p></div>
+                        <div className="text-center text-white"><p>No data found!</p></div>
                     )
             ) }
             {(type !== 'cancel' && type !== 'recheck') && (
@@ -179,7 +186,7 @@ const index = ({ type, countData }) => {
                 Object.values(preData).map((item, key) => (
                     
                 <div key={key}>
-                    <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, batchDropdown: batchDropdownArr}} type={type} CallBack={CallBack} />
+                    <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr}} type={type} CallBack={CallBack} />
                  </div>    
                 ))
             
@@ -197,7 +204,7 @@ const index = ({ type, countData }) => {
           <ModalHeader toggle={() => setBasicModal(!basicModal)}>Add Kpi</ModalHeader>
           <ModalBody>
           {!loading ? (
-                <AddEmployeeKpi preData={preData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, projectsData: projects, batchData: batchDropdownArr}} type='evaluator' CallBack={CallBack}/>
+                <AddEmployeeKpi preData={preData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, projectsData: projects, batchData: batchDropdownArr}} type='evaluation' CallBack={CallBack}/>
             ) : (
                 <div className='text-center'><Spinner color="white"/></div>
             )}

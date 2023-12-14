@@ -168,7 +168,7 @@ const OrganizationDetails = ({ stepper, type, stepperStatus }) => {
               <div className="float-right">
                 <img
                   src={URL.createObjectURL(selectedImage)}
-                  alt="Thumb"
+                  alt="Logo"
                   width="50"
                 />
                 <button className="btn" onClick={removeSelectedImage}>

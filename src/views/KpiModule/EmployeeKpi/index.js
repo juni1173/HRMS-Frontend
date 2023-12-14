@@ -52,7 +52,7 @@ const index = () => {
                         projects.push({value: data.employees_projects[i].id, label: data.employees_projects[i].project_title})
                     }
                     for (let i = 0; i < batchLength; i++) {
-                        batchDropdownArr.push({value: data.ep_batch_in_progress[i].id, label: data.ep_batch_in_progress[i].batch_no})
+                        batchDropdownArr.push({value: data.ep_batch_in_progress[i].id, label: data.ep_batch_in_progress[i].title})
                     }
                     
                 } else {

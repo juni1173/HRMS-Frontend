@@ -112,28 +112,28 @@ const Configuration = () => {
 
       <TabContent activeTab={active}>
         <TabPane tabId='1' className='tab-pane-blue'>
-          <CandidateStages />
+        {active === '1' ? <CandidateStages /> : null }
         </TabPane>
         <TabPane tabId='2' className='tab-pane-blue'>
-          <EmailIndex/>
+        {active === '2' ? <EmailIndex/> : null }
         </TabPane>
         <TabPane tabId='3' className='tab-pane-blue'>
-          <EmployeeRequests />
+          {active === '3' ? <EmployeeRequests /> : null }
         </TabPane>
         <TabPane tabId='4' className='tab-pane-blue'>
-          <Roles />
+          {active === '4' ? <Roles /> : null }
         </TabPane>
         <TabPane tabId='5' className='tab-pane'>
-          <KpiSegmentationForm />
+          {active === '5' ? <KpiSegmentationForm /> : null }
         </TabPane>
         <TabPane tabId='6' className='tab-pane-blue'>
-          <Manuals />
+          {active === '6' ? <Manuals /> : null }
         </TabPane>
       <TabPane tabId='7' className='tab-pane-blue'>
-          <Attendance />
+        {active === '7' ? <Attendance /> : null }
         </TabPane>
         <TabPane tabId='8' className='tab-pane-blue'>
-          <Holidays />
+          {active === '8' ? <Holidays /> : null }
         </TabPane>
       </TabContent>
     </div>

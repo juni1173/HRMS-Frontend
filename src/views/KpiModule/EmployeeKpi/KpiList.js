@@ -233,7 +233,7 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
                                         checked={checkedItems.includes(item.id.toString())} // Bind the checked state to individual checkboxes
                                     /> : <input className='form-check-primary' type="checkbox" disabled/>}</td>
                                 )}
-                                    <td>{item.title ? item.title : 'N/A'}</td>
+                                    <td>{item.title ? (item.title).substring(0, 20) : 'N/A'}</td>
                                     <td>{item.evaluator_name ? item.evaluator_name : 'N/A'}</td>
                                     <td>{item.ep_type_title ? item.ep_type_title : 'N/A'}</td>
                                     <td>{item.ep_complexity_title ? item.ep_complexity_title : 'N/A'}</td>
@@ -319,7 +319,7 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
                 ) : (
                     <Card>
                         <CardBody>
-                            No data found!
+                            <p className='text-white'>No Data found!</p>
                         </CardBody>
                     </Card>
                 )}

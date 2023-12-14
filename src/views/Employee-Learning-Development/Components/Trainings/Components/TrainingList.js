@@ -51,11 +51,11 @@ const TrainingList = ({ data, CallBack }) => {
                                                     onClick={() => toggleCanvasEnd(item, 'view')}
                                                     >
                                                     <Eye color="green"/>
-                                                </button>
-                                                {item.training_status === 2 && (
+                                                </button><br></br>
+                                                {(item.training_status === 2 || item.training_status === 3) && (
                                                     <>
                                                         <button
-                                                            className="border-0 btn-warning"
+                                                            className="border-0 btn-warning mt-1 float-right"
                                                             title="Assignments"
                                                             onClick={() => toggleCanvasEnd(item, 'assignments')}
                                                             >

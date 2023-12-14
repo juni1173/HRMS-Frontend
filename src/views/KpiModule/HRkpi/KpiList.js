@@ -263,7 +263,7 @@ const KpiList = ({ data, CallBack, index, type }) => {
                                                 ) : <input className='form-check-primary' type="checkbox" disabled/>}</td>
                                               )}
                                               <td>{kpi.ep_type_title ? kpi.ep_type_title : 'N/A'}</td>
-                                              <td>{kpi.title ? kpi.title : 'N/A'}</td>
+                                              <td>{kpi.title ? (kpi.title).substring(0, 20) : 'N/A'}</td>
                                               <td>{kpi.ep_complexity_title ? kpi.ep_complexity_title : 'N/A'}</td>
                                               <td>{kpi.kpis_status_title ? (
                                                       <>

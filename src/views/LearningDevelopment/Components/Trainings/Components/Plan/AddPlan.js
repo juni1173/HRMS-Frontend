@@ -13,7 +13,8 @@ const AddPlan = ({ CallBack }) => {
          evaluator: '',
          duration : '',
          description : '',
-         mode_of_training: ''
+         mode_of_training: '',
+         cost: ''
     })
     const mode_of_training_choices = [
       {value: 1, label: 'Paid'},
@@ -48,10 +49,18 @@ const AddPlan = ({ CallBack }) => {
         if (plan.title !== '' && plan.evaluator !== '' && plan.duration !== '' && plan.mode_of_training !== '') {
             setLoading(true)
             const formData = new FormData()
+            if (plan.mode_of_training.value === 1 && plan.cost === '') {
+              return Api.Toast('error', 'Paid cost is required!') 
+            } else {
+              formData['cost'] = plan.cost
+            }
+            if (plan.mode_of_training.value !== 1) {
+              formData['cost'] = ''
+            }
             formData['title'] = plan.title
             formData['evaluator'] = plan.evaluator.value
             formData['duration'] = plan.duration
-            formData['mode_of_training'] = plan.mode_of_training.value
+            formData['mode_of_training'] = plan.mode_of_training.value 
             if (plan.description !== '') formData['description'] = plan.description
         await Api.jsonPost(`/training/`, formData)
             .then(result => {
@@ -122,9 +131,23 @@ const AddPlan = ({ CallBack }) => {
                     onChange={ (e) => { onChangeHandler('mode_of_training', 'select', e) }}
                     />
             </Col>
+            {plan.mode_of_training.value === 1 && (
+              <Col md="6" className="mb-1">
+                  <Label className="form-label">
+                    Cost<Badge color='light-danger'>*</Badge>
+                  </Label>
+                  <Input
+                      type="number"
+                      name="cost"
+                      onChange={ (e) => { onChangeHandler('cost', 'input', e) }}
+                      placeholder="Cost"
+                  />
+              </Col>
+            )}
+            
             <Col md="6" className="mb-1">
                 <Label className="form-label">
-               Duration
+               Duration <Badge color='light-danger'>*</Badge>
                 </Label>
                 <Input
                     type="number"
@@ -149,7 +172,7 @@ const AddPlan = ({ CallBack }) => {
                 
             </Col>
         
-            <Col md="6" className="mb-1">
+            <Col md={plan.mode_of_training.value === 1 ? '12' : '6'} className="mb-1">
                <button className="btn-next float-right btn btn-success" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Save</span></button>
             </Col>
             </Row>

@@ -45,7 +45,7 @@ const GroupHead = ({ stepper, stepperStatus, list, createForm, fetchGroupHeads, 
   )
   const fetchData = async () => {
       setLoading(true)
-      api.get('/organization/grouphead/')
+     await api.get('/organization/grouphead/')
         .then(res => {
             if (res && res.data) {
               setList(res.data)

@@ -8,8 +8,8 @@ import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
 const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
     const [updatedImage, setUpdatedImage] = useState(null)
-    const [updatedCreatedBy, setUpdatedCreatedBy] = useState('junaid')
-    const [imgPath, setImgPath] = useState(detail.logo !== null ? process.env.REACT_APP_BACKEND_URL + detail.logo : null)
+    const [updatedCreatedBy, setUpdatedCreatedBy] = useState('')
+    const [imgPath, setImgPath] = useState(detail.logo !== null ? process.env.REACT_APP_PUBLIC_URL + detail.logo : null)
     let token = localStorage.getItem('accessToken')
     token = token.replaceAll('"', '')
     token = `Bearer ${token}`

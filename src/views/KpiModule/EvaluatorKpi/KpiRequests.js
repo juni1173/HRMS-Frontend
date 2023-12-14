@@ -294,19 +294,17 @@ const KpiRequests = ({ data, CallBack, dropdownData, index, type }) => {
                                                             <Edit2 color="orange" />
                                                             </button>
                                                             </div>
-                                                            
-                                                            
                                                             </>
                                                         ) }
                                                         {(kpi.kpis_status_level === 4 || kpi.kpis_status_level === 5 || kpi.kpis_status_level === 7 || kpi.kpis_status_level === 8) && (
-                                                              <div className="col-lg-8">
-                                                              <button
-                                                              className="btn btn-primary btn-sm border-0"
-                                                              onClick={() => evaluationAction(dataItem.name, kpi.title, kpi)}
-                                                              >
-                                                              {`${kpi.scale_group_title} Evaluation`}
-                                                              </button>
-                                                          </div>
+                                                                <div className="col-lg-10">
+                                                                    <button
+                                                                    className="btn btn-primary btn-sm border-0"
+                                                                    onClick={() => evaluationAction(dataItem.name, kpi.title, kpi)}
+                                                                    >
+                                                                    {`${kpi.scale_group_title} Evaluation`}
+                                                                    </button>
+                                                                </div>
                                                             )}
                                                         
                                                         </div>

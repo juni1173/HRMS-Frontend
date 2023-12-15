@@ -14,7 +14,7 @@ const VerticalMenuHeader = props => {
   // const { menuCollapsed, setGroupOpen, menuHover } = props
   const [orgImgPath, setOrgImgPath] = useState(null)
   const checkImage = () => {
-    const imageUrl = process.env.REACT_APP_BACKEND_URL + JSON.parse(localStorage.getItem('organization')).logo
+    const imageUrl = process.env.REACT_APP_PUBLIC_URL + JSON.parse(localStorage.getItem('organization')).logo
     const img = new Image()
       img.src = imageUrl
       if (img.complete) {

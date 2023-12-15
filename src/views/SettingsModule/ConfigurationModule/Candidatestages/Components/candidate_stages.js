@@ -1,6 +1,6 @@
 import {useState, useEffect, Fragment} from 'react'
 import { Edit } from 'react-feather'
-import { Table, Row, Col, CardBody, Card, Spinner, Offcanvas, OffcanvasHeader, OffcanvasBody } from 'reactstrap'
+import { Table, Row, Col, CardBody, Card, Spinner, Offcanvas, OffcanvasHeader, OffcanvasBody, Badge } from 'reactstrap'
 import apiHelper from '../../../../Helpers/ApiHelper'
 import UpdateStage from './UpdateStage'
 
@@ -85,7 +85,7 @@ const candidate_stages = () => {
                                     StagesList.map((item, key) => (
                                         <tr key={key}>
                                             <td>{item.title ? item.title : 'N/A'}</td>
-                                            <td>{item.email_template ? item.email_template : 'N/A'}</td>
+                                            <td>{item.email_template_title ? item.email_template_title : <Badge color='light-danger'>N/A</Badge>}</td>
                                             <td> <button
                                                     className="border-0 no-background "
                                                     title="Edit"

@@ -271,7 +271,7 @@ const RoleCards = () => {
   return (
     <Fragment>
       <Row>
-        <Col md={6} tag={'h3'} className={'pt-1'}>Roles & Permissions</Col> 
+        <Col md={6} tag={'h3'} className='pt-1 text-white'>Roles & Permissions</Col> 
         <Col md={6}>
             <Button
                 color='success'
@@ -366,7 +366,7 @@ const RoleCards = () => {
             )}
         </>
         ) : (
-            <div className='text-center'><Spinner type='grow'/></div>
+            <div className='text-center'><Spinner type='grow' color='white'/></div>
         )
         }
       </Row>

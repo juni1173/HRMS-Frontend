@@ -1,4 +1,4 @@
-import React, { Fragment, useState,  useEffect } from 'react'
+import React, { Fragment, useState,  useEffect, useCallback } from 'react'
 import { Row, Input, Button, Spinner, Badge, Col, Label } from 'reactstrap'
 import Select from 'react-select'
 import apiHelper from '../../../Helpers/ApiHelper'
@@ -59,39 +59,41 @@ const KpiSegmentationForm = () => {
             setLoading(false)
         }, 500)
     }
-    const submitForm = async () => {
-        if (segmentationData.duration !== '' && segmentationData.brainstorming_period !== ''
-        && segmentationData.brainstorming_period_for_evaluator !== '' && segmentationData.evaluation_period !== '') {
-            const formData = new FormData()
-            formData['duration'] = segmentationData.duration
-            formData['brainstorming_period'] = segmentationData.brainstorming_period
-            formData['brainstorming_period_for_evaluator'] = segmentationData.brainstorming_period_for_evaluator
-            formData['evaluation_period'] = segmentationData.evaluation_period
-            await Api.jsonPost(`/kpis/set/yearly/segmentation/`, formData).then(result => {
-                if (result) {
-                    if (result.status === 200) {
-                        Api.Toast('success', result.message)
-                        setLoading(true)
-                        preDataApi()
-                        setTimeout(() => {
-                            setLoading(false)
-                        }, 1000)
-                    } else {
-                        Api.Toast('error', result.message)
-                    }
-                }
-            })
-           
-        } else {
-            Api.Toast('error', 'Please fill all required fields!')
-        }
-        
-    }
-   
     useEffect(() => {
         preDataApi()
-        }, [setData])
-        
+        }, [])
+        const CallBack = useCallback(() => {
+            preDataApi()
+          }, [data])
+
+          const submitForm = async () => {
+            if (segmentationData.duration !== '' && segmentationData.brainstorming_period !== ''
+            && segmentationData.brainstorming_period_for_evaluator !== '' && segmentationData.evaluation_period !== '') {
+                const formData = new FormData()
+                formData['duration'] = segmentationData.duration
+                formData['brainstorming_period'] = segmentationData.brainstorming_period
+                formData['brainstorming_period_for_evaluator'] = segmentationData.brainstorming_period_for_evaluator
+                formData['evaluation_period'] = segmentationData.evaluation_period
+                await Api.jsonPost(`/kpis/set/yearly/segmentation/`, formData).then(result => {
+                    if (result) {
+                        if (result.status === 200) {
+                            Api.Toast('success', result.message)
+                            setLoading(true)
+                            CallBack()
+                            setTimeout(() => {
+                                setLoading(false)
+                            }, 1000)
+                        } else {
+                            Api.Toast('error', result.message)
+                        }
+                    }
+                })
+               
+            } else {
+                Api.Toast('error', 'Please fill all required fields!')
+            }
+            
+        }
   return (
     <Fragment>
         <div className='content-header' >
@@ -101,7 +103,7 @@ const KpiSegmentationForm = () => {
         Object.values(data).length > 0 ? (
         <>
             <Row>
-                <SegmentationTable kpidata={data ? data : null} CallBack={preDataApi}/>
+                <SegmentationTable kpidata={data ? data : null} CallBack={CallBack}/>
             </Row>
         </>
         ) : (

@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import { Row, Col, Table, Badge, Modal, ModalHeader, ModalBody, Spinner, Card, CardBody } from 'reactstrap'
-import { Lock, Edit2, UserCheck, UserMinus, UserX } from 'react-feather'
+import { Lock, Edit2, UserCheck, UserMinus, UserX, Check } from 'react-feather'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import apiHelper from '../../../Helpers/ApiHelper'
@@ -48,6 +48,54 @@ const SegmentationTable = ({ kpidata, CallBack }) => {
                             icon: 'error',
                             title: 'Kpi Segmentation can not be locked!',
                             text: deleteResult.message ? deleteResult.message : 'Kpi Segmentation is not locked.',
+                            customClass: {
+                            confirmButton: 'btn btn-danger'
+                            }
+                        })
+                    }
+                            
+                    })
+            } 
+        })
+    }
+    const completeSegmentationAction = (id) => {
+        MySwal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to complete this Segment of KPI!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, mark as complete!',
+            customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.value) {
+                Api.jsonPatch(`/kpis/make/yearly/segmentation/completed/`, {ep_batch_completed: id})
+                .then((deleteResult) => {
+                    if (deleteResult.status === 200) {
+                        MySwal.fire({
+                            icon: 'success',
+                            title: 'Kpi Segment is marked as completed!',
+                            text: 'Kpi Segment is completed.',
+                            customClass: {
+                            confirmButton: 'btn btn-success'
+                            }
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                setLoading(true)
+                                 CallBack()
+                                setTimeout(() => {
+                                    setLoading(false)
+                                }, 500)
+                            }
+                        }) 
+                    } else {
+                        MySwal.fire({
+                            icon: 'error',
+                            title: 'Kpi Segment can not be completed!',
+                            text: deleteResult.message ? deleteResult.message : 'Kpi Segment is not completed.',
                             customClass: {
                             confirmButton: 'btn btn-danger'
                             }
@@ -165,7 +213,7 @@ const SegmentationTable = ({ kpidata, CallBack }) => {
             <Card key={key}>
                 <CardBody>
                     <Row>
-                        <Col md={10}>
+                        <Col md={9}>
                             <Row>
                             <Col md={6}><b>Duration</b>: {item.duration ? item.duration : 'N/A'}</Col>
                         <Col md={6}><b>Brainstorming Period</b>: {item.brainstorming_period ? item.brainstorming_period : 'N/A'}</Col>
@@ -173,13 +221,19 @@ const SegmentationTable = ({ kpidata, CallBack }) => {
                         <Col md={6} className='mt-2'><b>Evaluator Period</b>: {item.evaluation_period ? item.evaluation_period : 'N/A'}</Col>
                             </Row>
                         </Col>
-                        <Col md={2}>
+                        <Col md={3}>
                         {item.is_lock ? (
                                         <>
                                             <Badge color='light-success'>Locked</Badge>
                                             at
                                             {item.locked_date && <p className='nowrap'>{item.locked_date}</p>}
-                                            
+                                            <button
+                                                className="btn btn-success"
+                                                style={{marginRight: '10px'}}
+                                                onClick={() => completeSegmentationAction(item.id)}
+                                                >
+                                               Complete
+                                            </button>
                                         </>
                                     ) : (
                                         <>
@@ -270,7 +324,9 @@ const SegmentationTable = ({ kpidata, CallBack }) => {
                     ))}
                     </Row>
                 )}
+                <hr style={{color: 'gray'}}></hr>
                 </>
+                
         ))}
             
         </Col>

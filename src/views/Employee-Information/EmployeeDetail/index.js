@@ -89,7 +89,6 @@ const EmployeeDetail = () => {
        await Api.get(`/employees/pre/complete/data/${url_params.uuid}/`).then(result => {
             if (result) {
                 if (result.status === 200) {
-                    console.warn(result.data)
                     const finalData = result.data
                     setEmpData(prevState => ({
                         ...prevState,

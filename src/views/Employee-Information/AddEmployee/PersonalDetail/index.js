@@ -71,7 +71,7 @@ const PersonalDetail = ({state, CallBack, emp_state}) => {
             if (data.blood_group !== '') formData.append("blood_group", data.blood_group.value)
             if (data.passport_no) formData.append("passport_no", data.passport_no)
             if (passport_expiry !== '') formData.append("date_of_expiry", passport_expiry)
-            if (data.marital_status !== '') formData.append("marital_status", data.marital_status.value)
+            if (data.marital_status !== '') formData.append("martial_status", data.martial_status.value)
             if (profileImage) formData.append("profile_image", profileImage ? profileImage : null)
             Api.jsonPost(`/employees/`, formData, false).then(result => {
                 if (result.status === 200) {
@@ -329,8 +329,8 @@ const PersonalDetail = ({state, CallBack, emp_state}) => {
                       </Label>
                       <Controller
                           control={control}
-                          id="marital_status"
-                          name="marital_status"
+                          id="martial_status"
+                          name="martial_status"
                           render={({ field }) => (
                               <Select
                                 isClearable={false}

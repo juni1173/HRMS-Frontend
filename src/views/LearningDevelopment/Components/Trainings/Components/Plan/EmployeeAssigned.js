@@ -139,7 +139,7 @@ const EmployeeAssigned = ({ data, CallBack }) => {
             {data && data.length > 0 ? (
                 data.map((employee, key) => (
                     <tr key={key}>
-                        <td>{employee.employee_name ? employee.employee_name : 'N/A'} <Delete className='float-right' color='red' size={20} onClick={() => deleteAssignedEmployee(employee.id)}/></td>
+                        <td>{employee.employee_name ? employee.employee_name : 'N/A'} {employee.training_status < 2 && <Delete className='float-right' color='red' size={20} onClick={() => deleteAssignedEmployee(employee.id)}/>}</td>
                         <td>{employee.training_evaluator_name ? employee.training_evaluator_name : 'N/A'}</td>
                         {/* <td>{employee.end_date ? employee.end_date : 'N/A'}</td> */}
                         <td>{employee.training_status_title ? employee.training_status_title : 'N/A'}</td>

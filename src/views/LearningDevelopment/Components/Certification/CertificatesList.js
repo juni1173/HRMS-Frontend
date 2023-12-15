@@ -75,7 +75,7 @@ const CertificateList = ({ data, CallBack }) => {
             <Row>
                 <Col md={12}>
                     {Object.values(data).map((item, index) => (
-                        <Card key={index}>
+                        <Card key={index} className="dark-shadow">
                         <CardBody>
                             <div className="row">
                                 

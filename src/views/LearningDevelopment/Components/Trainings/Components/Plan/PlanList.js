@@ -123,7 +123,7 @@ const PlanList = ({ data, CallBack}) => {
                             <Masonry className="row js-animation">
                                 {Object.values(searchResults).map((item) => (
                                     <Col md={6} key={item.id}>
-                                        <Card >
+                                        <Card className="dark-shadow">
                                         <CardBody>
                                             <div className="row">
                                                 <div className="col-md-4">

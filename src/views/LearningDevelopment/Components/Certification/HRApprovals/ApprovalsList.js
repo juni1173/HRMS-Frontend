@@ -257,7 +257,7 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
             <Row>
                 <Col md={12}>
                     {Object.values(currentItems).map((item, index) => (
-                        <Card key={index}>
+                        <Card key={index} className="dark-shadow">
                         <CardBody>
                             <div className="row">
                                 

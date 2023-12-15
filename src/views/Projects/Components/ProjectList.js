@@ -91,7 +91,7 @@ const ProjectList = ({ data, CallBack }) => {
             <Masonry className="row js-animation">
               {currentItems.map((item, key) => (
                   <Col md={6} key={key}>
-                    <Card>
+                    <Card className="dark-shadow">
                     <CardBody>
                     <CardTitle tag='h4'>{item.name ? item.name : 'N/A'}
                       <div className='float-right'>

@@ -9,7 +9,6 @@ import InputMask from 'react-input-mask'
 import { XCircle } from "react-feather"
  
 const UpdatePersonalDetail = ({CallBack, empData}) => {
-    console.warn(empData)
       const [profileImage, setProfileImage] = useState(null)
       const [imageUpload, setImageUpload] = useState(false)
       const BloodGrup = [
@@ -80,7 +79,7 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
             }
             formData.append("father_name", data.father_name)
             formData.append("blood_group", data.blood_group.value)
-            formData.append("martial_status", data.martial_status.value)
+            formData.append("marital_status", data.martial_status.value)
             
             if (data.passport_no !== '') formData.append("passport_no", data.passport_no)
             if (data.date_of_expiry !== '') formData.append("date_of_expiry", passport_expiry)
@@ -151,7 +150,7 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
                         (empData.profile_image && !imageUpload) ? (
                             <>
                                 <img
-                                src={`${process.env.REACT_APP_BACKEND_URL}/${empData.profile_image}`}
+                                src={`${process.env.REACT_APP_PUBLIC_URL}${empData.profile_image}`}
                                 alt="Thumb"
                                 width="100"
                                 />
@@ -276,7 +275,7 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
                       </Label>
                       <Controller
                           control={control}
-                          id="bloof_group"
+                          id="blood_group"
                           name="blood_group"
                           defaultValue={defaultValues.blood_group}
                           render={({ field }) => (
@@ -360,14 +359,14 @@ const UpdatePersonalDetail = ({CallBack, empData}) => {
                       </Label>
                       <Controller
                           control={control}
-                          id="merital_status"
-                          name="merital_status"
+                          id="martial_status"
+                          name="martial_status"
                           defaultValue={MeritalStatus[0]}
                           render={({ field }) => (
                               <Select
                                 isClearable={false}
-                                id='merital_status'
-                                name='merital_status'
+                                id='martial_status'
+                                name='martial_status'
                                 className='react-select'
                                 classNamePrefix='select'
                                 options={MeritalStatus}

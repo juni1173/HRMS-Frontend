@@ -7,6 +7,7 @@ import { Save } from 'react-feather'
 const RequestCertification = ({ preData, CallBack }) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
+    const [addForm, setAddForm] = useState(false)
     const [certificateDetail, setCertificateDetail] = useState({
         title: '',
         duration : '',
@@ -77,118 +78,120 @@ const RequestCertification = ({ preData, CallBack }) => {
   return (
     <Fragment>
     <div className='content-header' >
-        <h3 className='text-white'>Request New Certification</h3>
+        <Button className='btn btn-success mb-2' onClick={() => setAddForm(!addForm)}>Request New Certification</Button>
         </div>
     {!loading ? (
     <>
-    <Card>
-        <CardBody>
-            <Row>
-                <Col md={12}>
-                    <Row>
-                        <Col md='4' className='mb-1'>
-                            <label className='form-label'>
-                            Title <Badge color='light-danger'>*</Badge>
-                            </label>
-                            <Input type="text" 
-                                name="title"
-                                onChange={ (e) => { onChangeCertificateDetailHandler('title', 'input', e) }}
-                                placeholder="Title!"  />
-                        </Col>
-                        <Col md='4' className='mb-1'>
-                            <label className='form-label'>
-                            Duration <Badge color='light-danger'>*</Badge>
-                            </label>
-                            <Input type="text" 
-                                name="duration"
-                                onChange={ (e) => { onChangeCertificateDetailHandler('duration', 'input', e) }}
-                                placeholder="Duration!"  />
-                        </Col>
-                        <Col md='4' className='mb-1'>
-                            <label className='form-label'>
-                            Course URL <Badge color='light-danger'>*</Badge>
-                            </label>
-                            <Input type="text" 
-                                name="duration"
-                                onChange={ (e) => { onChangeCertificateDetailHandler('course_url', 'input', e) }}
-                                placeholder="Course Link!"  />
-                        </Col>
-                        <Col md="4" className="mb-1">
-                            <Label className="form-label">
-                            Team Lead
-                            </Label>
-                            <Select
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                name="mode_of_course"
-                                options={preData.employeesList ? preData.employeesList : ''}
-                                onChange={ (e) => { onChangeCertificateDetailHandler('team_lead', 'select', e.value) }}
-                            />
-                        </Col>
-                        <Col md="4" className="mb-1">
-                            <Label className="form-label">
-                            Mode Of Course
-                            </Label>
-                            <Select
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                name="mode_of_course"
-                                options={preData.mode_of_course_choice ? preData.mode_of_course_choice : ''}
-                                onChange={ (e) => { onChangeCertificateDetailHandler('mode_of_course', 'select', e.value) }}
-                            />
-                        </Col>
-                        <Col md="4" className="mb-1">
-                            <Label className="form-label">
-                            Cost <Badge color='light-danger'>*</Badge>
-                            </Label>
-                            <Input
-                                isClearable={false}
-                                type="number"
-                               placeholder="Cost"
-                                name="cost"
-                                onChange={ (e) => { onChangeCertificateDetailHandler('cost', 'input', e) }}
-                            />
-                        </Col>
-                        <Col md="4" className="mb-1">
-                            <Label className="form-label">
-                            Relevance
-                            </Label>
-                            <Select
-                                isClearable={false}
-                                className='react-select'
-                                classNamePrefix='select'
-                                name="scale_group"
-                                options={preData.relevance_choice ? preData.relevance_choice : ''}
-                                onChange={ (e) => { onChangeCertificateDetailHandler('relevance', 'select', e.value) }}
-                            />
-                        </Col>
-                        <Col md='4' className='mb-1'>
-                            <label className='form-label'>
-                            Course Reason   
-                            </label>
-                            <Input type="textarea" 
-                                name="course_reason"
-                                onChange={ (e) => { onChangeCertificateDetailHandler('course_reason', 'input', e) }}
-                                placeholder="Describe Course Reason!"  />
-                        </Col>
-                        <Col md={4}>
-                        <Button color="primary" className="btn-next mt-4" onClick={submitForm}>
-                        <span className="align-middle d-sm-inline-block">
-                        Save
-                        </span>
-                        <Save
-                        size={14}
-                        className="align-middle ms-sm-25 ms-0"
-                        ></Save>
-                    </Button>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
-        </CardBody>
-    </Card>
+    {addForm && (
+        <Card>
+            <CardBody>
+                <Row>
+                    <Col md={12}>
+                        <Row>
+                            <Col md='4' className='mb-1'>
+                                <label className='form-label'>
+                                Title <Badge color='light-danger'>*</Badge>
+                                </label>
+                                <Input type="text" 
+                                    name="title"
+                                    onChange={ (e) => { onChangeCertificateDetailHandler('title', 'input', e) }}
+                                    placeholder="Title!"  />
+                            </Col>
+                            <Col md='4' className='mb-1'>
+                                <label className='form-label'>
+                                Duration <Badge color='light-danger'>*</Badge>
+                                </label>
+                                <Input type="text" 
+                                    name="duration"
+                                    onChange={ (e) => { onChangeCertificateDetailHandler('duration', 'input', e) }}
+                                    placeholder="Duration!"  />
+                            </Col>
+                            <Col md='4' className='mb-1'>
+                                <label className='form-label'>
+                                Course URL <Badge color='light-danger'>*</Badge>
+                                </label>
+                                <Input type="text" 
+                                    name="duration"
+                                    onChange={ (e) => { onChangeCertificateDetailHandler('course_url', 'input', e) }}
+                                    placeholder="Course Link!"  />
+                            </Col>
+                            <Col md="4" className="mb-1">
+                                <Label className="form-label">
+                                Team Lead
+                                </Label>
+                                <Select
+                                    isClearable={false}
+                                    className='react-select'
+                                    classNamePrefix='select'
+                                    name="mode_of_course"
+                                    options={preData.employeesList ? preData.employeesList : ''}
+                                    onChange={ (e) => { onChangeCertificateDetailHandler('team_lead', 'select', e.value) }}
+                                />
+                            </Col>
+                            <Col md="4" className="mb-1">
+                                <Label className="form-label">
+                                Mode Of Course
+                                </Label>
+                                <Select
+                                    isClearable={false}
+                                    className='react-select'
+                                    classNamePrefix='select'
+                                    name="mode_of_course"
+                                    options={preData.mode_of_course_choice ? preData.mode_of_course_choice : ''}
+                                    onChange={ (e) => { onChangeCertificateDetailHandler('mode_of_course', 'select', e.value) }}
+                                />
+                            </Col>
+                            <Col md="4" className="mb-1">
+                                <Label className="form-label">
+                                Cost <Badge color='light-danger'>*</Badge>
+                                </Label>
+                                <Input
+                                    isClearable={false}
+                                    type="number"
+                                placeholder="Cost"
+                                    name="cost"
+                                    onChange={ (e) => { onChangeCertificateDetailHandler('cost', 'input', e) }}
+                                />
+                            </Col>
+                            <Col md="4" className="mb-1">
+                                <Label className="form-label">
+                                Relevance
+                                </Label>
+                                <Select
+                                    isClearable={false}
+                                    className='react-select'
+                                    classNamePrefix='select'
+                                    name="scale_group"
+                                    options={preData.relevance_choice ? preData.relevance_choice : ''}
+                                    onChange={ (e) => { onChangeCertificateDetailHandler('relevance', 'select', e.value) }}
+                                />
+                            </Col>
+                            <Col md='4' className='mb-1'>
+                                <label className='form-label'>
+                                Course Reason   
+                                </label>
+                                <Input type="textarea" 
+                                    name="course_reason"
+                                    onChange={ (e) => { onChangeCertificateDetailHandler('course_reason', 'input', e) }}
+                                    placeholder="Describe Course Reason!"  />
+                            </Col>
+                            <Col md={4}>
+                            <Button color="primary" className="btn-next mt-4" onClick={submitForm}>
+                            <span className="align-middle d-sm-inline-block">
+                            Save
+                            </span>
+                            <Save
+                            size={14}
+                            className="align-middle ms-sm-25 ms-0"
+                            ></Save>
+                        </Button>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
+    )}
     </>
     ) : (
         <div className="text-center"><Spinner color='white'/></div>

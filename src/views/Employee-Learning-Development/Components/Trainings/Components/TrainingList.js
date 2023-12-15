@@ -31,49 +31,51 @@ const TrainingList = ({ data, CallBack }) => {
                         <Row>
                             {Object.values(data).map((item, key) => (
                                 <Col md={6} key={key}>
-                                    <Card>
+                                    <Card className="dark-shadow">
                                         <CardBody>
                                         <div className="row">
-                                        <div className="col-md-6">
-                                            <h3>{item.training_title ? item.training_title : 'N/A'}</h3>
+                                            <div className='col-md-12'>
+                                                <h3>{item.training_title ? item.training_title : 'N/A'}</h3>
+                                            </div>
+                                            <div className="col-md-6">
                                                 <Badge color='light-warning'>
                                                     {`${item.mode_of_training_title ? item.mode_of_training_title : 'N/A'}`} 
                                                 </Badge><br></br>
                                                 <Badge color='light-danger'>
                                                     {`${item.training_status_title ? item.training_status_title : 'N/A'}`} 
                                                 </Badge>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className='float-right'>
-                                                <button
-                                                    className="border-0 no-background"
-                                                    title="View"
-                                                    onClick={() => toggleCanvasEnd(item, 'view')}
-                                                    >
-                                                    <Eye color="green"/>
-                                                </button><br></br>
-                                                {(item.training_status === 2 || item.training_status === 3) && (
-                                                    <>
-                                                        <button
-                                                            className="border-0 btn-warning mt-1 float-right"
-                                                            title="Assignments"
-                                                            onClick={() => toggleCanvasEnd(item, 'assignments')}
-                                                            >
-                                                                Assignments
-                                                        </button>
-                                                    </>
+                                                {(item.training_status === 3 && item.mode_of_training !== 2) && (
+                                                    <button
+                                                        className="btn border-0 btn-warning"
+                                                        title="Reimbursement"
+                                                        onClick={() => toggleCanvasEnd(item, 'reimbursement')}
+                                                        >
+                                                        Reimbursement
+                                                    </button>
                                                 )}
                                             </div>
-                                            {(item.training_status === 3 && item.mode_of_training !== 2) && (
-                                                <button
-                                                    className="border-0 btn-warning mt-1 float-right"
-                                                    title="Reimbursement"
-                                                    onClick={() => toggleCanvasEnd(item, 'reimbursement')}
-                                                    >
-                                                    Reimbursement
-                                                </button>
-                                            )}
-                                        </div>
+                                            <div className="col-md-6">
+                                                <div className='float-right'>
+                                                    <button
+                                                        className="border-0 no-background"
+                                                        title="View"
+                                                        onClick={() => toggleCanvasEnd(item, 'view')}
+                                                        >
+                                                        <Eye color="green"/>
+                                                    </button><br></br>
+                                                    {(item.training_status === 2 || item.training_status === 3) && (
+                                                        <>
+                                                            <button
+                                                                className="btn border-0 btn-warning mt-1 float-right"
+                                                                title="Assignments"
+                                                                onClick={() => toggleCanvasEnd(item, 'assignments')}
+                                                                >
+                                                                    Assignments
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
                                         </CardBody>
                                     </Card>

@@ -33,13 +33,15 @@ const KpiList = ({ data, CallBack, index, type }) => {
       
       const handlecheckall = (event, tableData) => {
         const isChecked = event.target.checked
-      
+      // console.warn(tableData)
         if (isChecked) {
           // Select all checkboxes in the current table
           const allIds = tableData
-      .filter((item) => item.kpis_status_level !== 4)
-      .map((item) => item.id.toString())
-    setCheckedItems(allIds)
+          .filter((item) => item.employee_kpis_data && (
+          item.employee_kpis_data.filter(kpi => kpi.kpis_status_level === 11))
+          .map((final) => final.id.toString()))
+          console.warn(allIds)
+          setCheckedItems(allIds)
           setCheckedItems([...checkedItems, ...allIds])
         } else {
           // Deselect all checkboxes in the current table
@@ -72,6 +74,30 @@ const KpiList = ({ data, CallBack, index, type }) => {
             Api.Toast('error', 'Please select a kpi to send!')
         }
     }
+    const multipleCancelKpiApprove = async () => {
+      // return false
+      if (checkedItems.length > 0) {  
+          setLoading(true)
+              await Api.jsonPost(`/kpis/hr/cancel/approval/list/`, {kpis_array: checkedItems})
+              .then(result => {
+                  if (result) {
+                      if (result.status === 200) {
+                      Api.Toast('success', result.message)
+                      CallBack()
+                      } else {
+                          Api.Toast('error', result.message)
+                      }
+                  } else {
+                      Api.Toast('error', 'Server not responding!')
+                  }
+              })
+      setTimeout(() => {
+          setLoading(false)
+      }, 500)
+      } else {
+          Api.Toast('error', 'Please select a kpi to send!')
+      }
+  }
     const CommentToggle = (item) => {
       if (item !== null) {
           setUpdateData(item)
@@ -188,10 +214,15 @@ const KpiList = ({ data, CallBack, index, type }) => {
     <Fragment key={index}>
         {/* <h3 className='text-white'>Evaluator: <b>{data.evaluator_name ? data.evaluator_name : 'N/A'}</b></h3> */}
         {(checkedItems.length > 0 && type !== 'cancel' && type !== 'recheck' && type !== 'search') && (
-                            <Button className='btn btn-warning mb-1' onClick={multipleKpiApprove}>
-                                Approve Selected Kpi's
-                            </Button>
-                        )}
+            <Button className='btn btn-warning mb-1' onClick={multipleKpiApprove}>
+                Approve Selected Kpi's
+            </Button>
+        )}
+        {(checkedItems.length > 0 && type === 'cancel') && (
+          <Button className='btn btn-warning mb-1' onClick={multipleCancelKpiApprove}>
+              Approve Selected Kpi's
+          </Button>
+        )}
     {!loading ? (  
     data.employee_kpis_data && Object.values(data.employee_kpis_data[0]).length > 0 ? (
     <>
@@ -210,17 +241,17 @@ const KpiList = ({ data, CallBack, index, type }) => {
                                 <tr>
                                   {type !== 'search' && (
                                     <th scope="col" className="text-nowrap">
-                                    <input
-                                      type="checkbox"
-                                      onChange={(event) => handlecheckall(event, dataItem[0].employee_kpis_data)}
-                                      disabled={
-                                        dataItem[0].employee_kpis_data.every(
-                                          (item) => item.kpis_status_level === 4
-                                        )
-                                      }
-                                    />
+                                        <input
+                                          type="checkbox"
+                                          onChange={(event) => handlecheckall(event, dataItem[0].employee_kpis_data)}
+                                          disabled={
+                                            dataItem[0].employee_kpis_data.every(
+                                              (item) => (item.kpis_status_level === 3 && item.kpis_status_level === 11)
+                                            )
+                                          }
+                                        />
                   
-                  {/* <label className="form-check-label">Select</label> */}
+                                    {/* <label className="form-check-label">Select</label> */}
                                     </th>
                                   )}
                                     <th scope="col" className="text-nowrap">
@@ -251,7 +282,7 @@ const KpiList = ({ data, CallBack, index, type }) => {
                                           <Fragment key={kpiIndex}>
                                             <tr key={key}>
                                               {type !== 'search' && (
-                                                 <td>{kpi.kpis_status_level === 3 ?  (
+                                                 <td>{(kpi.kpis_status_level === 3 || kpi.kpis_status_level === 11) ? (
                                                   <input
                                                   className='form-check-primary'
                                                   type="checkbox"
@@ -268,7 +299,7 @@ const KpiList = ({ data, CallBack, index, type }) => {
                                               <td>{kpi.kpis_status_title ? (
                                                       <>
                                                         <Badge color="light-success">{kpi.kpis_status_title}</Badge>
-                                                        {kpi.kpis_status_level && kpi.kpis_status_level > 5 && <Button className='btn btn-sm btn-primary' onClick={() => getEvaluationDetails(kpi.employee, kpi.id)}>View Ratings</Button>}
+                                                        {(kpi.kpis_status_level && kpi.kpis_status_level > 5 && kpi.kpis_status_level < 11) && <Button className='btn btn-sm btn-primary' onClick={() => getEvaluationDetails(kpi.employee, kpi.id)}>View Ratings</Button>}
                                                       </>
                                                     ) : <Badge color="light-danger">N/A</Badge>}</td>
                                               <td>

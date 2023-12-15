@@ -13,6 +13,7 @@ const Assignments = ({ data, training_id, CallBack, type }) => {
     const [searchQuery] = useState([])
     const [basicModal, setBasicModal] = useState(false)
     const [title, setTitle] = useState('')
+    const [marks, setMarks] = useState('')
     const [file, setFile] = useState('')
     const getSearch = options => {
         
@@ -46,12 +47,15 @@ const Assignments = ({ data, training_id, CallBack, type }) => {
             const formData = new FormData()
             formData.append("title", title)
             formData.append("assignment", file)
+            if (marks !== '') formData.append("marks", marks)
             await Api.jsonPost(`/training/assignment/${training_id}/`, formData, false).then(result => {
                 if (result) {
                     if (result.status === 200) {
                         Api.Toast('success', result.message)
                         setBasicModal(!basicModal)
                         CallBack()
+                    } else {
+                        Api.Toast('error', result.message)
                     }
                 } else {
                     Api.Toast('error', 'Server Error!')
@@ -126,12 +130,12 @@ const Assignments = ({ data, training_id, CallBack, type }) => {
                         </InputGroup>
                         {searchResults && searchResults.length > 0 ? (
                             searchResults.map((assignment, key) => (
-                                <Card key={key}>
+                                <Card key={key} className="dark-shadow">
                                     <CardBody>
                                     <div className="row">
                                         <div className="col-md-6">
                                             <h4>{assignment.title ? assignment.title : 'No title found'}</h4>
-                                            <Badge>{assignment.updated_at ? Api.formatDate(assignment.updated_at) : 'N/A'}</Badge>
+                                            <Badge>{assignment.updated_at ? Api.formatDate(assignment.updated_at) : 'N/A'}</Badge>{assignment.marks && (<Badge color='light-danger'>{assignment.marks}</Badge>)}
                                         </div>
                                         <div className="col-md-6">
                                             <div className="float-right">
@@ -176,7 +180,7 @@ const Assignments = ({ data, training_id, CallBack, type }) => {
                 <ModalHeader toggle={() => setBasicModal(!basicModal)}>Add new Assignment</ModalHeader>
                 <ModalBody>
                    <Row>
-                   <Col md="6" className="mb-1">
+                   <Col md="4" className="mb-1">
                         <Label className="form-label">
                         Title<Badge color='light-danger'>*</Badge>
                         </Label>
@@ -187,7 +191,7 @@ const Assignments = ({ data, training_id, CallBack, type }) => {
                             placeholder="Title"
                             />
                     </Col>
-                    <Col md="6" className="mb-1">
+                    <Col md="4" className="mb-1">
                         <Label className="form-label">
                         File<Badge color='light-danger'>*</Badge>
                         </Label>
@@ -197,6 +201,18 @@ const Assignments = ({ data, training_id, CallBack, type }) => {
                             name="assignment"
                             accept="image/*"
                             onChange={imageChange}
+                            />
+                    </Col>
+                    <Col md="4" className="mb-1">
+                        <Label className="form-label">
+                        Marks
+                        </Label>
+                        <Input
+                            type="number"
+                            id="marks"
+                            name="marks"
+                            onChange={ (e) => setMarks(e.target.value)}
+                            placeholder='Marks'
                             />
                     </Col>
                    </Row>

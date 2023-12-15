@@ -57,7 +57,7 @@ const EmployeeDashboard = () => {
    <Fragment>
     {!loading ? (
       <>
-      {process.env.REACT_APP_API_URL === 'http://3.249.98.208/api' && (
+      {/* {process.env.REACT_APP_API_URL === 'http://3.249.98.208/api' && ( */}
         <Row>
         <Col md={12}>
         {data.employee_project_roles && Object.values(data.employee_project_roles).length > 0 && (
@@ -96,7 +96,7 @@ const EmployeeDashboard = () => {
         )}
         </Col>
       </Row>
-      )}
+      {/* )} */}
       
       <Masonry className="row js-animation">
         

@@ -257,7 +257,7 @@ const Employees = ({ employeeList, CallBack, type }) => {
                                 ) : (
                                     <button
                                     className="border-0 no-background"
-                                    title="Deactivate Employee"
+                                    title="Activate Employee"
                                     onClick={() => activateAction(item.uuid)}
                                     >
                                     <UserCheck color="green"/>

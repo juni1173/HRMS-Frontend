@@ -251,12 +251,12 @@ const Leave = ({ data, status_choices, CallBack }) => {
             <>
         {(currentItems && Object.values(currentItems).length > 0) ? (
             <Row>
-             <Col md={12}>
-             {Object.values(currentItems).map((item, index) => (
+                <Col md={12}>
+                    {Object.values(currentItems).map((item, index) => (
                         <Card key={index}>
                         <CardBody>
                             <div className="row">
-                               
+                                
                                 <div className="col-md-4">
                                 <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
                                 <CardSubtitle>
@@ -279,24 +279,22 @@ const Leave = ({ data, status_choices, CallBack }) => {
                                     <StatusComponent item={item} key={index}/>
                                     </div>
                                 <Badge color='light-success'>
-                               Remaining/Allowed
+                                Remaining/Allowed
                                     </Badge><br></br>
                                     <h4><Badge color='light-danger'>{item.remaining_leaves ? item.remaining_leaves : <Badge color='light-danger'>N/A</Badge>}/{item.allowed_leaves ? item.allowed_leaves : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
                                     
                                 </div>
-                               
+                                
                             </div>
                                 
                         </CardBody>
                         </Card> 
                     ))}
                 </Col>   
-        </Row>
+            </Row>
         ) : (
             <div className="text-center">No Leaves Data Found!</div>
-        )
-        
-        }
+        )}
             </>
         ) : (
             <div className="text-center"><Spinner /></div>

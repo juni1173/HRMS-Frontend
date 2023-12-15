@@ -289,7 +289,7 @@ const Medical = ({ data, status_choices, CallBack }) => {
                                     <Badge color='light-success'>
                                             Receipt
                                         </Badge><br></br>
-                                        <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.medical_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`} width={20} height={20}/></a> : <Badge color='light-danger'>N/A</Badge>}</span>
+                                        <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.medical_receipt ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.medical_receipt}`}> <img src={`${process.env.REACT_APP_PUBLIC_URL}${item.medical_receipt}`} width={20} height={20}/></a> : <Badge color='light-danger'>N/A</Badge>}</span>
                                         
                                     </div>
                                    

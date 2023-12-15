@@ -344,7 +344,7 @@ const Leave = ({ data, CallBack }) => {
                                         <td className='nowrap'>{item.duration ? item.duration : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.start_date ? item.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.end_date ? item.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.attachment ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td>{item.attachment ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>
                                         <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
                                         {item.decision_reason && (<> <HelpCircle id={`UnControlledLeave${key}`}/><UncontrolledTooltip  target={`UnControlledLeave${key}`}>{item.decision_reason} </UncontrolledTooltip></>)}
@@ -381,7 +381,7 @@ const Leave = ({ data, CallBack }) => {
             <td className='nowrap'>{record.start_date ? record.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
             <td className='nowrap'>{record.end_date ? record.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
             <td>
-              {record.attachment ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${record.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}
+              {record.attachment ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${record.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}
             </td>
             <td>
               <Badge>{record.status ? record.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 

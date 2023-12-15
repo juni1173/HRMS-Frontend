@@ -234,7 +234,7 @@ const Medical = ({ data, CallBack }) => {
                                         <td className='nowrap'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.amount ? item.amount : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.medical_yearly_limit ? item.medical_yearly_limit : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.medical_receipt ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.medical_receipt}`}> <FileText /></a> : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td>{item.medical_receipt ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.medical_receipt}`}> <FileText /></a> : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>
                                         <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
                                         {item.decision_reason && (<> <HelpCircle id={`UnControlledMedical${key}`}/><UncontrolledTooltip  target={`UnControlledMedical${key}`}>{item.decision_reason} </UncontrolledTooltip></>)}

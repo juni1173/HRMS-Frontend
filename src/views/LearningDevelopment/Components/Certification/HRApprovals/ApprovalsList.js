@@ -265,7 +265,7 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
                                 <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
                                 <CardSubtitle>
                                   Course: <b>{item.title ? item.title : 'Title not found!'}</b>
-                                <h4><Badge color='light-success'>{item.position_title ? item.position_title : <Badge color='light-danger'>N/A</Badge>} - Cost: <Badge color='light-secondary'>{item.cost ? item.cost : 'N/A' }</Badge></Badge></h4>
+                                <h4><Badge color='light-success'>Cost: <Badge color='light-secondary'>{item.cost ? item.cost : 'N/A' }</Badge></Badge></h4>
                                     <h4><Badge color='light-warning'>{`${item.certification_status_title ? item.certification_status_title : <Badge color='light-danger'>N/A</Badge>}`}</Badge></h4></CardSubtitle>
                                 </div>
                                 <div className="col-md-4">
@@ -277,11 +277,11 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
                                     <br></br><Badge color='light-danger'>
                                         Mode
                                     </Badge><br></br>
-                                    <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.mode_of_course_title && item.mode_of_course_title}</span>
+                                    <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.mode_of_course_title ? item.mode_of_course_title : 'N/A'}</span>
                                    {item.reimbursement_status > 0 && (
                                     <>
                                         <br></br>
-                                        <span style={{color: "black", fontWeight:"10px", cursor:"pointer"}}><Badge color='light-danger' onClick={() => toggleCanvasEnd(item, 'reimbursement_approval')}>{item.reimbursement_status_title && item.reimbursement_status_title}</Badge></span>
+                                        <span style={{color: "black", fontWeight:"10px", cursor:"pointer"}}><Button className='btn btn-danger btn-sm' onClick={() => toggleCanvasEnd(item, 'reimbursement_approval')}>{item.reimbursement_status_title && item.reimbursement_status_title}</Button></span>
                                     </>
                                    )}
                                 </div>

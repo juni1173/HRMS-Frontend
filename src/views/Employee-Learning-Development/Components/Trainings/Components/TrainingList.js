@@ -35,14 +35,14 @@ const TrainingList = ({ data, CallBack }) => {
                                         <CardBody>
                                         <div className="row">
                                             <div className='col-md-12'>
-                                                <h3>{item.training_title ? item.training_title : 'N/A'}</h3>
+                                                <h3>{item.training_title ? item.training_title : (item.title ? item.title : 'N/A')}</h3>
                                             </div>
                                             <div className="col-md-6">
                                                 <Badge color='light-warning'>
                                                     {`${item.mode_of_training_title ? item.mode_of_training_title : 'N/A'}`} 
                                                 </Badge><br></br>
                                                 <Badge color='light-danger'>
-                                                    {`${item.training_status_title ? item.training_status_title : 'N/A'}`} 
+                                                    {`${item.training_status_title ? item.training_status_title : 'No Status'}`} 
                                                 </Badge>
                                                 {(item.training_status === 3 && item.mode_of_training !== 2) && (
                                                     <button

@@ -4,8 +4,8 @@ import Assignments from '../../../../LearningDevelopment/Components/Trainings/Co
 import apiHelper from '../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { Award } from 'react-feather'
 const TrainingDetails = ({ data, CallBack }) => {
-    console.warn(data)
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const changeTraining = (id, training_status) => {
@@ -56,10 +56,10 @@ const TrainingDetails = ({ data, CallBack }) => {
     <Fragment>
         <Row>
             <Col md={6}>
-                <h2>{data.training_title ? data.training_title : 'No title found'}</h2>
+                <h2>{data.training_title ? data.training_title : (data.title ? data.title : 'No title found')}</h2>
             </Col>
             <Col md={6}>
-                {data.training_status === 1 && (
+                {(!data.training_status || data.training_status === 1)  && (
                     <div className='float-right'>
                         <Button className='btn btn-success' onClick={() => changeTraining(data.training, 2)}>Start Training</Button>
                     </div>
@@ -67,6 +67,11 @@ const TrainingDetails = ({ data, CallBack }) => {
                 {data.training_status === 2 && (
                     <div className='float-right'>
                         <Button className='btn btn-success' onClick={() => changeTraining(data.training, 3)}>Complete Training</Button>
+                    </div>
+                )}
+                {data.training_status === 3 && (
+                    <div className='float-right'>
+                       <h3 className='text-success'>Congratulation <Award color='green' size={48}/></h3> 
                     </div>
                 )}
             </Col>
@@ -84,7 +89,7 @@ const TrainingDetails = ({ data, CallBack }) => {
                 <b>Training Mode</b>: <Badge>{data.mode_of_training_title ? data.mode_of_training_title : 'N/A'}</Badge> 
             </Col>
             <Col md={4} className='my-2'>
-                <b>Status</b>: <Badge>{data.training_status_title ? data.training_status_title : 'N/A'}</Badge> 
+                <b>Status</b>: <Badge color={data.training_status ? (data.training_status && data.training_status === 1 ? 'light-danger' : (data.training_status === 2 ? 'light-warning' : (data.training_status === 3 ? 'light-success' : ''))) : ''}>{data.training_status_title ? data.training_status_title : 'N/A'}</Badge> 
             </Col>
             <Col md={4} className='my-2'>
                 <b>Cost</b>: <Badge>{data.training_cost ? data.training_cost : (data.cost ? data.cost : 'N/A')}</Badge>

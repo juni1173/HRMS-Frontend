@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect, useCallback } from 'react'
 import {TabContent, TabPane, Nav, NavItem, NavLink, Badge} from "reactstrap"
 import apiHelper from '../../../Helpers/ApiHelper'
+import ProjectBasedTrainings from './Components/ProjectBasedTrainings'
 import TrainingList from './Components/TrainingList'
 const index = () => {
   const Api = apiHelper()
@@ -77,6 +78,14 @@ const index = () => {
                                     >
                                         Complete Trainings <Badge className="bg-danger ml-5"> {(data && data.completed && Object.keys(data.completed).length > 0) ? Object.keys(data.completed).length : 0}</Badge>
                                     </NavLink>
+                                    <NavLink
+                                        active={active === '4'}
+                                        onClick={() => {
+                                        toggle('4')
+                                        }}
+                                    >
+                                        Projects Trainings 
+                                    </NavLink>
                                     </NavItem>
                                 
                                 {/* </div> */}
@@ -90,6 +99,11 @@ const index = () => {
                         </TabPane>
                         <TabPane tabId={'3'} className='tab-pane-blue'>
                             <TrainingList data={data.completed} CallBack={handleDataProcessing}/>
+                        </TabPane>
+                        <TabPane tabId={'4'} className='tab-pane-blue'>
+                          {active === '4' ? (
+                            <ProjectBasedTrainings/>
+                          ) : null}  
                         </TabPane>
             </TabContent>
         </div> 

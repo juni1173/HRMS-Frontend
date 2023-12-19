@@ -28,10 +28,6 @@ const DownloadPDF = () => {
       doc.save(`${file_name}.pdf`)
   })
   
-  //   const pdf = new jsPDF({ unit: "px", format: "letter", userUnit: "px" })
-  //  pdf.html(table, { html2canvas: { scale: 0.47 } }).then(() => {
-  //    pdf.save(`${file_name}.pdf`)
-  //  })
     // Create a canvas from the table
     // html2canvas(table).then((canvas) => {
     //   // Convert canvas to base64 image

@@ -1,12 +1,10 @@
 import { Fragment, useState } from 'react'
 import { Eye } from 'react-feather'
 import { Card, CardBody, Label, Row, Col, Button, Badge, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-
 import apiHelper from '../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const Reimbursement = ({ data, CallBack }) => {
-    console.warn(data)
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [basicModal, setBasicModal] = useState(false)

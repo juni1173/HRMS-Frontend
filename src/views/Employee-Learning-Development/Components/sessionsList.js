@@ -13,7 +13,6 @@ const SessionsList = ({ data, CallBack }) => {
     const [loading, setLoading] = useState(false)
     const [detailData, setDetailData] = useState([])
     const toggleCanvasEnd = (itemData) => {
-        console.warn(itemData)
         setDetailData(itemData)
         setCanvasPlacement('end')
         setCanvasOpen(!canvasOpen)

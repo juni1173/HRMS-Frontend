@@ -3,7 +3,7 @@ import { Card, CardBody, CardTitle, Col, Offcanvas, OffcanvasHeader, OffcanvasBo
 import Masonry from 'react-masonry-component'
 import JiraIssues from './Issues'
 import apiHelper from '../../../Helpers/ApiHelper'
-import DashboardChart from './JiraDashoardCharts'
+// import DashboardChart from './JiraDashoardCharts'
 const JiraIndex = () => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
@@ -39,7 +39,7 @@ const JiraIndex = () => {
       }, [setJiraProjects])
   return (
     <Fragment>
-        <DashboardChart dashboardId='10024'/>
+        {/* <DashboardChart dashboardId='10024'/> */}
         <h2 className='mb-2'>Jira Projects</h2>
         {
       !loading ? (

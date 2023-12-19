@@ -52,7 +52,6 @@ const RolePermissions = ({ role_id, CallBack, DiscardModal }) => {
                             }
                         }
                       
-                        console.warn(watchValues)
                     } else {
                         role_navigation.splice(0, role_navigation.length)
                     }

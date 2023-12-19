@@ -14,7 +14,6 @@ const JiraHelper = () => {
         })
     }
     const postJiraTokens = async (data) => {
-        console.warn(data)
         await Api.jsonPost(`/jira/tokens/`, data).then(result => {
             if (result) {
                 if (result.status === 200) {

@@ -1,14 +1,53 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button } from "reactstrap" 
 import { Edit, XCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-const PF = ({ data, status_choices, CallBack }) => {
+const PF = ({ status_choices, yearoptions }) => {
+    const currentDate = new Date()
+    // Get the current month and year
+    const currentMonth = currentDate.getMonth() + 1 // Month is zero-based, so add 1
+    const currentYear = currentDate.getFullYear() 
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [data, setData] = useState([])
+    const [yearvalue, setyearvalue] = useState(currentYear)
+    const [monthvalue, setmonthvalue] = useState(currentMonth)
+    const monthNames = [
+        {value: currentMonth, label: 'Select Month'},
+        {value: 1, label: "January"},
+        {value: 2, label: "February"},
+        {value: 3, label: "March"},
+        {value: 4, label: "April"},
+        {value: 5, label: "May"},
+        {value: 6, label: "June"},
+        {value: 7, label: "July"},
+        {value: 8, label: "August"},
+        {value: 9, label: "September"},
+        {value: 10, label: "October"},
+        {value: 11, label: "November"},
+        {value: 12, label: "December"}
+      ]
+    const preDataApi = async () => {
+        const formData = new FormData()
+        formData['year'] = yearvalue
+        formData['month'] = monthvalue
+        const response = await Api.jsonPost('/reimbursements/employee/requests/pf/data/', formData)
+        if (response.status === 200) {
+            setData(response.data)
+        } else {
+            return Api.Toast('error', 'Pre server data not found')
+        }
+    }
+useEffect(() => {
+preDataApi()
+}, [setData, monthvalue, yearvalue])
+const CallBack = () => {
+    preDataApi()
+}
     const onStatusUpdate = async (id, status_value, comment) => {
         MySwal.fire({
             title: 'Are you sure?',
@@ -129,7 +168,43 @@ const PF = ({ data, status_choices, CallBack }) => {
      <div className='content-header' >
       <h5 className='mb-2'>PF Requests</h5>
     </div>
-    
+    </Col>
+    <Col md={3}>
+            <Label>Select Year</Label>
+            <Select
+                isClearable={true}
+                options={yearoptions}
+                className='react-select mb-1'
+                classNamePrefix='select'
+                placeholder="Select Year"
+                onChange={(selectedOption) => {
+                    if (selectedOption !== null) {
+                        setyearvalue(selectedOption.value)
+                    } else {  
+                        setyearvalue(currentYear)
+                    }
+            
+              }}
+            />
+</Col>
+        <Col md={3}>
+            <Label>Search Month</Label>
+            <Select
+                isClearable={true}
+                options={monthNames}
+                className='react-select mb-1'
+                classNamePrefix='select'
+                defaultValue={monthNames[0]}
+                onChange={(selectedOption) => {
+                    if (selectedOption !== null) {
+                        setmonthvalue(selectedOption.value)
+                    } else {  
+                        setmonthvalue(currentMonth)
+                    }
+            
+              }}
+            />
+        </Col>
     {!loading ? (
             <>
         {(data && Object.values(data).length > 0) ? (
@@ -186,7 +261,7 @@ const PF = ({ data, status_choices, CallBack }) => {
         
    }
     <hr></hr>
-        </Col>
+        {/* </Col> */}
     </Row>
 </Fragment>
   )

@@ -178,6 +178,8 @@ const Loan = ({ data, CallBack }) => {
                     name="loan_types"
                     options={loan_types}
                     onChange={ (e) => onChangeLoansDetailHandler('loan_type', 'select', e.value) }
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
                 />
         </Col>
         <Col md='4' className='mb-1'>
@@ -191,6 +193,8 @@ const Loan = ({ data, CallBack }) => {
                     name="purpose_of_loan"
                     options={purpose_of_loan}
                     onChange={ (e) => onChangeLoansDetailHandler('purpose_of_loan', 'select', e.value) }
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
                 />
         </Col>
         <Col md="4" className="mb-1">

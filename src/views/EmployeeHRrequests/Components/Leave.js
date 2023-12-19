@@ -307,7 +307,8 @@ const Leave = ({ data, CallBack }) => {
         </Row>
         {!loading ? (
                 <>
-        {(data.employee_leaves && Object.values(data.employee_leaves).length > 0) ? (
+
+        {/* {(data.employee_leaves && Object.values(data.employee_leaves).length > 0) ? (
                 <Row>
                 <Col md={12}>
                     <Table bordered striped responsive className='my-1'>
@@ -338,38 +339,6 @@ const Leave = ({ data, CallBack }) => {
                             </thead>
                             
                             <tbody className='text-center'>
-                                {/* {Object.values(data.employee_leaves).map((item, key) => (
-                                        <tr key={key}>
-                                        <td className='nowrap'>{item.leave_data[0].employee_leave_records[0].leave_types_title ? item.leave_data[0].employee_leave_records[0].leave_types_title : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td className='nowrap'>{item.duration ? item.duration : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td className='nowrap'>{item.start_date ? item.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td className='nowrap'>{item.end_date ? item.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.attachment ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>
-                                        <Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
-                                        {item.decision_reason && (<> <HelpCircle id={`UnControlledLeave${key}`}/><UncontrolledTooltip  target={`UnControlledLeave${key}`}>{item.decision_reason} </UncontrolledTooltip></>)}
-                                        </td>
-                                        
-                                        <td>
-                                            {item.status === 'in-progress' && (
-                                            <Row className='text-center'>
-                                           
-                                            <Col className='col-12'>
-                                                <button
-                                                className="border-0 no-background"
-                                                onClick={() => removeAction(item.id)}
-                                                >
-                                                <XCircle color="red" />
-                                                </button>
-                                            </Col>
-                                            </Row>
-                                            )}
-                                        </td>
-
-                                        </tr>
-                                )
-                                )} */}
-                            
                             {Object.values(data.employee_leaves).map((employeeLeave, employeeKey) => (
   <React.Fragment key={employeeKey}>
     {employeeLeave.leave_data.map((leaveData, leaveDataKey) => (
@@ -422,7 +391,99 @@ const Leave = ({ data, CallBack }) => {
                     <div className="text-center">No Leave Data Found!</div>
                 )
                 
-                }
+                } */}
+                {(data.employee_leaves && Object.values(data.employee_leaves).length > 0) ? (
+  <Row>
+    <Col md={12}>
+      {Object.values(data.employee_leaves).map((employeeLeave, employeeKey) => (
+        <React.Fragment key={employeeKey}>
+          {employeeLeave.leave_data.some(leaveData => leaveData.employee_leave_records.length > 0) && (
+            <Table bordered striped responsive className='my-1'>
+              <thead className='table-dark text-center'>
+                <tr>
+                  <th scope="col" className="text-nowrap">
+                    Type
+                  </th>
+                  <th scope="col" className="text-nowrap">
+                    Duration
+                  </th>
+                  <th scope="col" className="text-nowrap">
+                    Start Date
+                  </th>
+                  <th scope="col" className="text-nowrap">
+                    End Date
+                  </th>
+                  <th scope="col" className="text-nowrap">
+                    Attachment
+                  </th>
+                  <th scope="col" className="text-nowrap">
+                    Status
+                  </th>
+                  <th scope="col" className="text-nowrap">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className='text-center'>
+                            {Object.values(data.employee_leaves).map((employeeLeave, employeeKey) => (
+  <React.Fragment key={employeeKey}>
+    {employeeLeave.leave_data.map((leaveData, leaveDataKey) => (
+      <React.Fragment key={leaveDataKey}>
+        {leaveData.employee_leave_records.map((record, recordKey) => (
+          <tr key={recordKey}>
+            <td className='nowrap'>{record.leave_types_title ? record.leave_types_title : <Badge color='light-danger'>N/A</Badge>}</td>
+            <td className='nowrap'>{record.duration ? record.duration : <Badge color='light-danger'>N/A</Badge>}</td>
+            <td className='nowrap'>{record.start_date ? record.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
+            <td className='nowrap'>{record.end_date ? record.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
+            <td>
+              {record.attachment ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${record.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}
+            </td>
+            <td>
+              <Badge>{record.status ? record.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
+              {record.decision_reason && (
+                <>
+                  <HelpCircle id={`UnControlledLeave${recordKey}`} />
+                  <UncontrolledTooltip target={`UnControlledLeave${recordKey}`}>{record.decision_reason}</UncontrolledTooltip>
+                </>
+              )}
+            </td>
+            <td>
+              {record.status === 'in-progress' && (
+                <Row className='text-center'>
+                  <Col className='col-12'>
+                    <button
+                      className="border-0 no-background"
+                      onClick={() => removeAction(record.id)}
+                    >
+                      <XCircle color="red" />
+                    </button>
+                  </Col>
+                </Row>
+              )}
+            </td>
+          </tr>
+        ))}
+      </React.Fragment>
+    ))}
+  </React.Fragment>
+))}
+
+                            </tbody>
+          
+            </Table>
+          )}
+        </React.Fragment>
+      ))}
+  {!Object.values(data.employee_leaves).some(employeeLeave => employeeLeave.leave_data.some(leaveData => leaveData.employee_leave_records.length > 0)
+      ) && (
+        <div className="text-center">No Leave Data Found!</div>
+      )}
+    </Col>
+  </Row>
+) : (
+  <div className="text-center">No Leave Data Found!</div>
+)}
+
                     </>
                 ) : (
                     <div className="text-center"><Spinner /></div>

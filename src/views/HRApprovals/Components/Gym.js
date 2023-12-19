@@ -7,19 +7,40 @@ import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import ReactPaginate from 'react-paginate'
-const Gym = ({ data, status_choices, CallBack }) => {
+const Gym = ({ status_choices, yearoptions }) => {
+    const currentDate = new Date()
+    // Get the current month and year
+    const currentMonth = currentDate.getMonth() + 1 // Month is zero-based, so add 1
+    const currentYear = currentDate.getFullYear() 
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
     const [searchResults, setSearchResults] = useState([])
     const [searchQuery] = useState([])
     const [currentItems, setCurrentItems] = useState([])
+    const [data, setData] = useState([])
+    const [yearvalue, setyearvalue] = useState(currentYear)
+    const [monthvalue, setmonthvalue] = useState(currentMonth)
     const [pageCount, setPageCount] = useState(0)
     const [itemOffset, setItemOffset] = useState(0)
     const [itemsPerPage, setItemsPerPage] = useState(50)
     const searchHelper = SearchHelper()
+    const preDataApi = async () => {
+        const formData = new FormData()
+        formData['year'] = yearvalue
+        formData['month'] = monthvalue
+        const response = await Api.jsonPost('/reimbursements/employee/requests/gym/data/', formData)
+        if (response.status === 200) {
+            setData(response.data)
+        } else {
+            return Api.Toast('error', 'Gym data not found')
+        }
+    }
+    const CallBack = () => {
+        preDataApi()
+    }
     const monthNames = [
-        {value: 0, label: 'Select Month'},
+        {value: currentMonth, label: 'Select Month'},
         {value: 1, label: "January"},
         {value: 2, label: "February"},
         {value: 3, label: "March"},
@@ -185,6 +206,9 @@ const Gym = ({ data, status_choices, CallBack }) => {
                 setLoading(false)
             }, 1000)
         }, [data])
+useEffect(() => {
+preDataApi()
+}, [setData, yearvalue, monthvalue])
         useEffect(() => {
             if (searchResults && Object.values(searchResults).length > 0) {
                 const endOffset = itemOffset === 0 ? itemsPerPage : itemOffset + itemsPerPage            
@@ -197,6 +221,7 @@ const Gym = ({ data, status_choices, CallBack }) => {
             const newOffset = (event.selected * itemsPerPage) % searchResults.length
             setItemOffset(newOffset)
             }
+           
   return (
     <Fragment>
         <Row>
@@ -205,18 +230,43 @@ const Gym = ({ data, status_choices, CallBack }) => {
           <h5 className='mb-2'>Gym Allowance Requests</h5>
           </div>
         </Col>
-        <Col md={4}>
+        <Col md={3}>
+            <Label>Select Year</Label>
+            <Select
+                isClearable={true}
+                options={yearoptions}
+                className='react-select mb-1'
+                classNamePrefix='select'
+                placeholder="Select Year"
+                onChange={(selectedOption) => {
+                    if (selectedOption !== null) {
+                        setyearvalue(selectedOption.value)
+                    } else {  
+                        setyearvalue(currentYear)
+                    }
+            
+              }}
+            />
+</Col>
+        <Col md={3}>
             <Label>Search Month</Label>
             <Select
-                isClearable={false}
+                isClearable={true}
                 options={monthNames}
                 className='react-select mb-1'
                 classNamePrefix='select'
                 defaultValue={monthNames[0]}
-                onChange={e => { getSearch({list: data, key: 'month', value: e.value }) } }
+                onChange={(selectedOption) => {
+                    if (selectedOption !== null) {
+                        setmonthvalue(selectedOption.value)
+                    } else {  
+                        setmonthvalue(currentMonth)
+                    }
+            
+              }}
             />
         </Col>
-        <Col md={4}>
+        <Col md={3}>
             <Label>
                 Search Status
             </Label>
@@ -236,8 +286,8 @@ const Gym = ({ data, status_choices, CallBack }) => {
             />
                 
         </Col>
-        <Col md={4}>
-            <span>Showing {currentItems && Object.values(currentItems).length > 0 ? itemsPerPage : 0} results per page</span>
+        <Col md={3}>
+            <span>Showing {currentItems && Object.values(currentItems).length > 0 ? itemsPerPage : 0} results</span>
             <Select 
                 placeholder="Entries"
                 options={itemsCount}

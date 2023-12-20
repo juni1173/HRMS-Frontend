@@ -162,6 +162,8 @@ const EvaluationForm = ({ data, CallBack }) => {
                                                                 options={ratingsData}
                                                                 className='react-select mb-1'
                                                                 classNamePrefix='select'
+                                                                menuPortalTarget={document.body} 
+                                                                styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                                                                 defaultValue={ratingsData.find((pre) => pre.value === parameter.scale_rating) ? ratingsData.find((pre) => pre.value === parameter.scale_rating) : ''}
                                                                 onChange={(statusData) => updateRating(statusData.value, {paraIndex, aspectIndex, index})}
                                                                 />

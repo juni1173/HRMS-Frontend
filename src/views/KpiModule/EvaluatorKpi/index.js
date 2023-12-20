@@ -20,14 +20,14 @@ const index = ({ type, countData }) => {
     const getPreData = async () => {
         setLoading(true)
         await Api.get(`/kpis/requests/to/team/lead/`).then(result => {
-            
+            console.warn(result.data)
             if (result) {
                 if (result.status === 200) {
                     setPreData(result.data.employee_kpis_data)
                     let evaluationTotal = 0
                     if (result.data.employee_kpis_data) {
-                        result.data.employee_kpis_data[0].forEach(element => {
-                            element.employee_kpis_data.forEach(kpiData => {
+                        result.data.employee_kpis_data.forEach(element => {
+                            element[0].employee_kpis_data.forEach(kpiData => {
                                 if (kpiData.employee_kpis_data) {
                                     evaluationTotal += kpiData.employee_kpis_data.length
                                 }

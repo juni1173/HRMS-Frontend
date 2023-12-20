@@ -115,11 +115,13 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
   return (
     <Fragment>
         <div className='content-header' >
-            <Button className='btn btn-success' onClick={() => setAddBtn(!addBtn)}>Add Your KPI </Button>
+            {type !== 'evaluation' && (
+                <Button className='btn btn-success' onClick={() => setAddBtn(!addBtn)}>Add Your KPI </Button>
+            )}
             </div>
         {!loading ? (
         <>
-        {addBtn && (
+        {(addBtn || type === 'evaluation') && (
             <Card>
                 <CardBody>
                     <Row>

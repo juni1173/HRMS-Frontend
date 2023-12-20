@@ -28,6 +28,9 @@ const CertificateDetails = ({ data }) => {
             <Col md={6} className='my-2'>
                 <b>Cost</b>: <Badge>{data.cost ? data.cost : 'N/A'}</Badge>
             </Col>
+            <Col md={6} className='my-2'>
+                <b>Team Lead</b>: <Badge>{data.team_lead_name ? data.team_lead_name : 'No Lead'}</Badge>
+            </Col>
             <Col md={12} className='my-2'>
                 <b>Reimbursement</b>: <Badge>{data.reimbursement_status ? data.reimbursement_status_title : 'Not Applied'}</Badge>
             </Col>

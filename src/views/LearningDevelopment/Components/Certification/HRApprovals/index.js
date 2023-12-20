@@ -7,7 +7,6 @@ const index = () => {
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
     const status_choices = [
-        {value: 0, label: 'Change Status'},
         {value: 1, label: 'Pending'},
         {value: 4, label: 'Approved By HR'},
         {value: 5, label: 'Rejected By HR'}

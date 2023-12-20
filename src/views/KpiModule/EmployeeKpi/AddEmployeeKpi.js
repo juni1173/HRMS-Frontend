@@ -18,7 +18,18 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
    })
    const [addBtn, setAddBtn] = useState(false)
     const onChangemployeeKpiDetailHandler = (InputName, InputType, e) => {
-        
+        if (!e) {
+            e = {
+              target: InputName,
+              value: ''
+            }
+            setEmployeeKpiData(prevState => ({
+                ...prevState,
+                [InputName] : ''
+                
+                }))
+                return false
+          }
         let InputValue
         if (InputType === 'input') {
         
@@ -57,7 +68,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
             formData['ep_complexity'] = employeeKpiData.ep_complexity
             formData['ep_batch'] = employeeKpiData.ep_batch
             formData['scale_group'] = employeeKpiData.scale_group
-            formData['employee_project'] = employeeKpiData.employees_project
+            if (employeeKpiData.employees_project !== '') formData['employee_project'] = employeeKpiData.employees_project
             if (type === 'evaluator') {
                 await Api.jsonPost(`/kpis/team/lead/employees/`, formData).then(result => {
                     if (result) {
@@ -97,16 +108,6 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
             }, 1000)
         } else {
             Api.Toast('error', 'Please fill all required fields!')
-            setEmployeeKpiData(prevState => ({
-                ...prevState,
-                title: '',
-                ep_type : '',
-                evaluator: '',
-                ep_complexity: '',
-                scale_group: '',
-                employees_project: '',
-                ep_batch: ''
-            }))
         }
         
     }
@@ -138,7 +139,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
                                 classNamePrefix='select'
                                 name="scale_group"
                                 options={dropdownData.scaleGroupData ? dropdownData.scaleGroupData : ''}
-                                onChange={ (e) => { onChangemployeeKpiDetailHandler('scale_group', 'select', e.value) }}
+                                onChange={ (e) => { onChangemployeeKpiDetailHandler('scale_group', 'select', e ? e.value : null) }}
                             />
                         </Col>
                         <Col md="4" className="mb-1">
@@ -159,12 +160,12 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
                             Projects 
                             </Label>
                             <Select
-                                isClearable={false}
+                                isClearable={true}
                                 className='react-select'
                                 classNamePrefix='select'
                                 name="project"
-                                options={dropdownData.projectsData ? dropdownData.projectsData : ''}
-                                onChange={ (e) => { onChangemployeeKpiDetailHandler('employee_project', 'select', e.value) }}
+                                options={dropdownData.projectsData ? dropdownData.projectsData : null}
+                                onChange={ (e) => { onChangemployeeKpiDetailHandler('employees_project', 'select', e ? e.value : null) }}
                             />
                         </Col>
                         

@@ -20,7 +20,6 @@ const index = ({ type, countData }) => {
     const getPreData = async () => {
         setLoading(true)
         await Api.get(`/kpis/requests/to/team/lead/`).then(result => {
-            console.warn(result.data)
             if (result) {
                 if (result.status === 200) {
                     setPreData(result.data.employee_kpis_data)

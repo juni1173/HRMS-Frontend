@@ -32,11 +32,9 @@ const KpiModule = () => {
       const getPreData = async () => {
         setLoading(true)
         await Api.get(`/kpis/pre/data/`).then(result => {
-            console.warn(result)
             if (result) {
                 if (result.status === 200) {
                     const data = result.data
-                    
                     setPreData(data)
                     typesDropdownArr.splice(0, typesDropdownArr.length)
                     complexityDropdownArr.splice(0, complexityDropdownArr.length)

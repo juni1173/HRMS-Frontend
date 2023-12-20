@@ -101,7 +101,7 @@ const UpdateKpi = ({ data, CallBack, dropdownData, type }) => {
                 </Col>
                  
                  
-                 <Col md={type === 'employee' ? '3' : '4'} className='mb-1'>
+                 <Col md={type === 'employee' ? '2' : '4'} className='mb-1'>
                      <label className='form-label'>
                      Complexity <Badge color='light-danger'>*</Badge>
                      </label>

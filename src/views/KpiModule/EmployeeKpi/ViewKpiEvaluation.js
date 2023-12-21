@@ -56,6 +56,7 @@ const ViewKpiEvaluation = ({ data }) => {
                                     <Fragment key={index}>
                                         
                                             <h3 className='text-center mb-2'>{`${item.scale_group_title} Evaluation`}</h3>
+                                            <h4 className='text-center'>Total Score: <Badge color='light-success'>{item.result ? `${item.result}%` : 'N/A'}</Badge></h4>
                                             {item.kpi_aspects && item.kpi_aspects.length > 0 ? (
                                                 <>
                                                 {item.kpi_aspects.map((aspect, aspectIndex) => (

@@ -141,8 +141,8 @@ const KpiList = ({ data, CallBack, index, type }) => {
                   if (deleteResult.status === 200) {
                       MySwal.fire({
                           icon: 'success',
-                          title: 'Recheck Kpi!',
-                          text: 'Kpi status changed to Re-check successfully.',
+                          title: 'Re-Evaluation Kpi!',
+                          text: 'Kpi status changed to Re-Evaluate successfully.',
                           customClass: {
                           confirmButton: 'btn btn-success'
                           }
@@ -154,8 +154,8 @@ const KpiList = ({ data, CallBack, index, type }) => {
                   } else {
                       MySwal.fire({
                           icon: 'error',
-                          title: 'Kpi can not be rechecked!',
-                          text: deleteResult.message ? deleteResult.message : 'Kpi is not in recheck process.',
+                          title: 'Kpi can not be re-evaluated!',
+                          text: deleteResult.message ? deleteResult.message : 'Kpi is not in re-evaluation process.',
                           customClass: {
                           confirmButton: 'btn btn-danger'
                           }
@@ -311,14 +311,14 @@ const KpiList = ({ data, CallBack, index, type }) => {
                                                   <Col>
                                                   <Button className='btn btn-primary btn-sm'
                                                   onClick={() => recheckAction(kpi.id)}
-                                                  >Recheck</Button>
+                                                  >Re-Evaluate</Button>
                                                   </Col>
                                                  )}
                                                  {kpi.kpis_status_level && kpi.kpis_status_level === 9 && (
                                                   <Col>
                                                   <Button className='btn btn-primary btn-sm'
                                                   onClick={() => recheckApproval(kpi.id)}
-                                                  >Recheck Approval</Button>
+                                                  >Re-Evaluation Approval</Button>
                                                   </Col>
                                                  )}
                                                 </Row>

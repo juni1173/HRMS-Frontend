@@ -118,7 +118,7 @@ const KpiModule = () => {
                                         toggle('3')
                                         }}
                                     >
-                                        Recheck Kpi's <Badge className="bg-danger ml-5">{(count && count.recheck > 0) && count.recheck}</Badge>
+                                        Re-Evaluations <Badge className="bg-danger ml-5">{(count && count.recheck > 0) && count.recheck}</Badge>
                                     </NavLink>
                                     <NavLink
                                         active={active === '4'}

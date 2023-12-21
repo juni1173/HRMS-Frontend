@@ -140,6 +140,8 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
                                 name="scale_group"
                                 options={dropdownData.scaleGroupData ? dropdownData.scaleGroupData : ''}
                                 onChange={ (e) => { onChangemployeeKpiDetailHandler('scale_group', 'select', e ? e.value : null) }}
+                                menuPlacement="auto" 
+                                menuPosition='fixed'
                             />
                         </Col>
                         <Col md="4" className="mb-1">

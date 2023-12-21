@@ -14,10 +14,10 @@ const Loan = ({ status_choices, yearoptions }) => {
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
-    const [yearvalue, setyearvalue] = useState(currentYear)
-    const [monthvalue, setmonthvalue] = useState(currentMonth)
+    const [yearvalue, setyearvalue] = useState()
+    const [monthvalue, setmonthvalue] = useState()
     const monthNames = [
-        {value: currentMonth, label: 'Select Month'},
+        {value: 0, label: 'Select Month'},
         {value: 1, label: "January"},
         {value: 2, label: "February"},
         {value: 3, label: "March"},
@@ -195,7 +195,6 @@ preDataApi()
                 options={monthNames}
                 className='react-select mb-1'
                 classNamePrefix='select'
-                defaultValue={monthNames[0]}
                 onChange={(selectedOption) => {
                     if (selectedOption !== null) {
                         setmonthvalue(selectedOption.value)

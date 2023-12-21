@@ -88,6 +88,8 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
                            name="scale_group"
                            options={dropdownData.yearlySegmentation ? dropdownData.yearlySegmentation : ''}
                            onChange={ (e) => { handleSegmentation(e.value) }}
+                           menuPlacement="auto" 
+                           menuPosition='fixed'
                        />
                    </Col>
                    {kpiData.yearly_segmentation !== '' && (
@@ -102,6 +104,8 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
                            name="scale_group"
                            options={dropdown_ep_batch}
                            onChange={ (e) => { onChangeKpiDetailHandler('ep_batch', 'select', e.value) }}
+                           menuPlacement="auto" 
+                    menuPosition='fixed'
                        />
                    </Col>
                    )}

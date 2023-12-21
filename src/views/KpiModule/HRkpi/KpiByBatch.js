@@ -92,6 +92,8 @@ const KpiByBatch = ({segmentation, dropdownData, CallBack}) => {
                            name="scale_group"
                            options={dropdownData.yearlySegmentation ? dropdownData.yearlySegmentation : ''}
                            onChange={ (e) => { handleSegmentation(e.value) }}
+                           menuPlacement="auto" 
+                    menuPosition='fixed'
                        />
                    </Col>
                    {kpiData.yearly_segmentation !== '' && (

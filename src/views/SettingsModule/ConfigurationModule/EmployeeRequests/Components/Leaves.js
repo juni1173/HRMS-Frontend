@@ -159,6 +159,8 @@ const [currentLeaves, setCurrentLeaves] = useState()
                     name="leave_types"
                     options={leave_types}
                     onChange={ (e) => { onChangeLeaveType(e.value) }}
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
                 />
         </Col>
         {Object.values(staffdropdown).length > 0 ?  (

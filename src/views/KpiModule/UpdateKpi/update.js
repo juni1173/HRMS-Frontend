@@ -97,6 +97,8 @@ const UpdateKpi = ({ data, CallBack, dropdownData, type }) => {
                         options={dropdownData.typeDropdown ? dropdownData.typeDropdown : ''}
                         defaultValue={dropdownData.typeDropdown.find(pre => pre.value === data.ep_type) ? dropdownData.typeDropdown.find(pre => pre.value === data.ep_type) : ''}
                         onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_type', 'select', e.value) }}
+                        menuPlacement="auto" 
+                    menuPosition='fixed'
                     />
                 </Col>
                  
@@ -113,6 +115,8 @@ const UpdateKpi = ({ data, CallBack, dropdownData, type }) => {
                          options={dropdownData.complexityDropdown ? dropdownData.complexityDropdown : ''}
                          defaultValue={dropdownData.complexityDropdown.find(pre => pre.value === data.ep_complexity) ? dropdownData.complexityDropdown.find(pre => pre.value === data.ep_complexity) : ''}
                          onChange={ (e) => { onChangemployeeKpiDetailHandler('ep_complexity', 'select', e.value) }}
+                         menuPlacement="auto" 
+                    menuPosition='fixed'
                      />
                  </Col>
                  {type === 'employee' && (
@@ -128,6 +132,8 @@ const UpdateKpi = ({ data, CallBack, dropdownData, type }) => {
                                 options={dropdownData.employeesDropdown ? dropdownData.employeesDropdown : ''}
                                 defaultValue={dropdownData.employeesDropdown.find(pre => pre.value === data.evaluator) ? dropdownData.employeesDropdown.find(pre => pre.value === data.evaluator) : ''}
                                 onChange={ (e) => { onChangemployeeKpiDetailHandler('evaluator', 'select', e.value) }}
+                                menuPlacement="auto" 
+                    menuPosition='fixed'
                             />
                         </Col>
                  )}
@@ -143,6 +149,8 @@ const UpdateKpi = ({ data, CallBack, dropdownData, type }) => {
                     options={dropdownData.scaleGroupData}
                     defaultValue={dropdownData.scaleGroupData && (dropdownData.scaleGroupData.find(pre => pre.value === data.scale_group) ? dropdownData.scaleGroupData.find(pre => pre.value === data.scale_group) : '')}
                     onChange={(e) => onChangemployeeKpiDetailHandler('scale_group', 'select', e.value)}
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
                     />
                  </Col>
                  <Col md={4} className='mb-1'>
@@ -153,6 +161,8 @@ const UpdateKpi = ({ data, CallBack, dropdownData, type }) => {
                     options={dropdownData.batchData}
                     defaultValue={dropdownData.batchData && (dropdownData.batchData.find(pre => pre.value === data.ep_batch) ? dropdownData.batchData.find(pre => pre.value === data.ep_batch) : '') }
                     onChange={(e) => onChangemployeeKpiDetailHandler('ep_batch', 'select', e.value)}
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
                     />
                  </Col>
                  <Col md={2} className='mb-1'></Col>

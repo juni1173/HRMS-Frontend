@@ -229,7 +229,7 @@ const Leave = ({ data, CallBack }) => {
           multiple
           sort
           format={format}
-          calendarPosition="bottom-center"
+          calendarPosition="right"
           plugins={[<DatePanel />]}
           style={{ height: '40px' }}
           placeholder='Leave Dates'

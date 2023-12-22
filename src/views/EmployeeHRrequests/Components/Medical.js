@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect, useRef } from 'react'
 import { Label, Row, Col, Input, Button, Spinner, Table, Badge, UncontrolledTooltip } from "reactstrap" 
 import { Save, XCircle, FileText, HelpCircle } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
@@ -6,10 +6,14 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
-const Medical = ({ data, CallBack }) => {
+import Select from 'react-select'
+const Medical = ({yearoptions}) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [data, setData] = useState()
+    const [yearvalue, setYearValue] = useState(null)
+    const yearValueRef = useRef(null)
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [medicalData, setMedicalData] = useState({
         amount: '',
@@ -122,6 +126,23 @@ const Medical = ({ data, CallBack }) => {
             } 
         })
     }
+    const medicaldata = async () => {
+        setLoading(true)
+        const formData = new FormData()
+        formData['year'] = yearvalue
+        const response = await Api.jsonPost('/reimbursements/employee/recode/medical/data/', formData)
+        if (response.status === 200) {
+            setData(response.data)
+        } else {
+            return Api.Toast('error', 'Pre server data not found')
+        }
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+    }
+useEffect(() => {
+medicaldata()
+}, [setData, yearvalue])
   return (
     <Fragment>
         <Row>
@@ -200,7 +221,30 @@ const Medical = ({ data, CallBack }) => {
                 ></Save>
               </Button>
                 </Col>
-                </Row>
+                
+                <Col md={4}></Col>
+        <Col md={4}></Col>
+        <Col md={4} className="mt-2">
+    <Label>Select Year</Label>
+    <Select
+      isClearable={true}
+      options={yearoptions}
+      className='react-select mb-1'
+      classNamePrefix='select'
+      placeholder="Select Year"
+      value={yearoptions.find(option => option.value === yearvalue)}
+      onChange={(selectedOption) => {
+        if (selectedOption !== null) {
+          setYearValue(selectedOption.value)
+          yearValueRef.current = selectedOption.value
+        } else {
+          setYearValue(currentYear)
+          yearValueRef.current = currentYear
+        }
+      }}
+    />
+  </Col>
+  </Row>
             {(data && Object.values(data).length > 0) ? (
                 <Row>
                 <Col md={12}>

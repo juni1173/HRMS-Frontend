@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState, useRef } from 'react'
 import { Row, Col, Label, Button, Spinner, Input, Badge, Table, UncontrolledTooltip } from 'reactstrap'
 import { Save, XCircle, FileText, HelpCircle } from 'react-feather'
 import Select from 'react-select'
@@ -10,11 +10,14 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
 import DatePicker, { DateObject } from "react-multi-date-picker"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
 const format = "YYYY-MM-DD"
-const Leave = ({ data, CallBack }) => {
+const Leave = ({leavedata, yearoptions}) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
+    const [data, setData] = useState()
+    const [yearvalue, setYearValue] = useState(null)
+    const yearValueRef = useRef(null)
     const [leave_types] = useState([])
     const [attachment, setAttachment] = useState(null)
     const [leaveData, setLeaveData] = useState({
@@ -27,7 +30,7 @@ const Leave = ({ data, CallBack }) => {
     // new DateObject().set({ day: 4, format }),
     // new DateObject().set({ day: 25, format }),
     // new DateObject().set({ day: 20, format })
-  
+    
     const onChangeLeavesDetailHandler = (InputName, InputType, e) => {
         
         let InputValue
@@ -52,13 +55,32 @@ const Leave = ({ data, CallBack }) => {
 
     }
     const leave_types_dropdown = () => {
-        if (Object.values(data).length > 0) {
-            leave_types.splice(0, leave_types.length)
-            for (let i = 0; i < data['leave_types'].length; i++) {
-                    leave_types.push({value:data['leave_types'][i].id, label: data['leave_types'][i].title })
-            } 
-    }
-    }
+      if (Object.values(leavedata).length > 0) {
+        leave_types.splice(0, leave_types.length)
+        for (let i = 0; i < leavedata['leave_types'].length; i++) {
+                leave_types.push({value:leavedata['leave_types'][i].id, label: leavedata['leave_types'][i].title })
+        } 
+}
+}
+    const leaves = async () => {
+      setLoading(true)
+      const formData = new FormData()
+      formData['year'] = yearvalue
+      const response = await Api.jsonPost('/reimbursements/employee/recode/leave/data/', formData)
+      if (response.status === 200) {
+          setData(response.data)
+          leave_types_dropdown()
+      } else {
+          return Api.Toast('error', 'Pre server data not found')
+      }
+      setTimeout(() => {
+          setLoading(false)
+      }, 2000)
+  }
+  useEffect(() => {
+    leaves()
+  }, [setData, yearvalue])
+
     const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
           setAttachment(e.target.files[0]) 
@@ -155,10 +177,7 @@ const Leave = ({ data, CallBack }) => {
             } 
         })
     }
-  
-    useEffect(() => {
-        leave_types_dropdown()
-    }, [data])
+    
   return (
     <Fragment>
         <Row>
@@ -229,68 +248,21 @@ const Leave = ({ data, CallBack }) => {
           multiple
           sort
           format={format}
+          containerStyle={{
+            width: "180px",
+            margin: "auto"
+          }}
+          style={{ //input style
+            width: "100%",
+            height: "40px",
+            boxSizing: "border-box"
+          }}
           calendarPosition="right"
           plugins={[<DatePanel />]}
-          style={{ height: '40px' }}
           placeholder='Leave Dates'
         />
         </div>
             </Col>
-        {/* <Col md="5" className="mb-1">
-            <Label className='form-label' for='default-picker'>
-               Start Date <Badge color="light-danger">*</Badge>
-            </Label>
-            <Flatpickr className='form-control'  
-            onChange={(date) => onChangeLeavesDetailHandler('start_date', 'date', date)} 
-            id='default-picker' 
-            placeholder='Start Date'
-            options={{
-                minDate: "today"
-                // disable: [
-                // // function(date) {
-                // //     // Weekend disable
-                // //     return (date.getDay() === 0 || date.getDay() === 6) 
-                // // }, 
-                // function(date) {
-                //     // past dates disable
-                //     const d = new Date()
-                //     return (date <= d) 
-                // }
-                // ]
-              } }
-            />
-        </Col> */}
-        {/* <Col md="5" className="mb-1">
-            <Label className='form-label' for='default-picker'>
-               End Date <Badge color="light-danger">*</Badge>
-            </Label>
-                <Flatpickr className='form-control'  
-                onChange={(date) => onChangeLeavesDetailHandler('end_date', 'date', date)} 
-                id='default-picker' 
-                placeholder='End Date'
-                options={{
-                    minDate: new Date(leaveData.start_date)
-                    // disable: [
-                    // // function(date) {
-                    // //     // Weekend disable
-                    // //     return (date.getDay() === 0 || date.getDay() === 6) 
-                    // // }, 
-                    // function(date) {
-                    //     // past dates disable
-                    //     let startDate = null
-                    //     const d = new Date()
-                    //     if (leaveData.start_date !== '') {
-                    //         startDate = new Date(leaveData.start_date)
-                    //         return (date < startDate) 
-                    //     } 
-                    //     return (date <= d) 
-                    // }
-                    // ]
-                  } }
-                />
-           
-            
-        </Col> */}
         <Col md={2}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>
                 <span className="align-middle d-sm-inline-block">
@@ -306,189 +278,127 @@ const Leave = ({ data, CallBack }) => {
         )}
         </Row>
         {!loading ? (
-                <>
-
-        {/* {(data.employee_leaves && Object.values(data.employee_leaves).length > 0) ? (
-                <Row>
-                <Col md={12}>
-                    <Table bordered striped responsive className='my-1'>
-                            <thead className='table-dark text-center'>
-                            <tr>
-                                <th scope="col" className="text-nowrap">
-                                Type
-                                </th>
-                                <th scope="col" className="text-nowrap">
-                                Duration
-                                </th>
-                                <th scope="col" className="text-nowrap">
-                                Start Date
-                                </th>
-                                <th scope="col" className="text-nowrap">
-                                End Date
-                                </th>
-                                <th scope="col" className="text-nowrap">
-                                Attachment
-                                </th>
-                                <th scope="col" className="text-nowrap">
-                                Status
-                                </th>
-                                <th scope="col" className="text-nowrap">
-                                Actions
-                                </th>
-                            </tr>
-                            </thead>
-                            
-                            <tbody className='text-center'>
-                            {Object.values(data.employee_leaves).map((employeeLeave, employeeKey) => (
-  <React.Fragment key={employeeKey}>
-    {employeeLeave.leave_data.map((leaveData, leaveDataKey) => (
-      <React.Fragment key={leaveDataKey}>
-        {leaveData.employee_leave_records.map((record, recordKey) => (
-          <tr key={recordKey}>
-            <td className='nowrap'>{record.leave_types_title ? record.leave_types_title : <Badge color='light-danger'>N/A</Badge>}</td>
-            <td className='nowrap'>{record.duration ? record.duration : <Badge color='light-danger'>N/A</Badge>}</td>
-            <td className='nowrap'>{record.start_date ? record.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
-            <td className='nowrap'>{record.end_date ? record.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
-            <td>
-              {record.attachment ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${record.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}
-            </td>
-            <td>
-              <Badge>{record.status ? record.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
-              {record.decision_reason && (
-                <>
-                  <HelpCircle id={`UnControlledLeave${recordKey}`} />
-                  <UncontrolledTooltip target={`UnControlledLeave${recordKey}`}>{record.decision_reason}</UncontrolledTooltip>
-                </>
-              )}
-            </td>
-            <td>
-              {record.status === 'in-progress' && (
-                <Row className='text-center'>
-                  <Col className='col-12'>
-                    <button
-                      className="border-0 no-background"
-                      onClick={() => removeAction(record.id)}
-                    >
-                      <XCircle color="red" />
-                    </button>
-                  </Col>
-                </Row>
-              )}
-            </td>
-          </tr>
-        ))}
-      </React.Fragment>
-    ))}
-  </React.Fragment>
-))}
-
-                            </tbody>
-                            
-                    </Table>
-                </Col>
-            </Row>
-                ) : (
-                    <div className="text-center">No Leave Data Found!</div>
-                )
-                
-                } */}
-                {(data.employee_leaves && Object.values(data.employee_leaves).length > 0) ? (
+  <>
   <Row>
-    <Col md={12}>
-      {Object.values(data.employee_leaves).map((employeeLeave, employeeKey) => (
-        <React.Fragment key={employeeKey}>
-          {employeeLeave.leave_data.some(leaveData => leaveData.employee_leave_records.length > 0) && (
-            <Table bordered striped responsive className='my-1'>
-              <thead className='table-dark text-center'>
-                <tr>
-                  <th scope="col" className="text-nowrap">
-                    Type
-                  </th>
-                  <th scope="col" className="text-nowrap">
-                    Duration
-                  </th>
-                  <th scope="col" className="text-nowrap">
-                    Start Date
-                  </th>
-                  <th scope="col" className="text-nowrap">
-                    End Date
-                  </th>
-                  <th scope="col" className="text-nowrap">
-                    Attachment
-                  </th>
-                  <th scope="col" className="text-nowrap">
-                    Status
-                  </th>
-                  <th scope="col" className="text-nowrap">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className='text-center'>
-                            {Object.values(data.employee_leaves).map((employeeLeave, employeeKey) => (
-  <React.Fragment key={employeeKey}>
-    {employeeLeave.leave_data.map((leaveData, leaveDataKey) => (
-      <React.Fragment key={leaveDataKey}>
-        {leaveData.employee_leave_records.map((record, recordKey) => (
-          <tr key={recordKey}>
-            <td className='nowrap'>{record.leave_types_title ? record.leave_types_title : <Badge color='light-danger'>N/A</Badge>}</td>
-            <td className='nowrap'>{record.duration ? record.duration : <Badge color='light-danger'>N/A</Badge>}</td>
-            <td className='nowrap'>{record.start_date ? record.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
-            <td className='nowrap'>{record.end_date ? record.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
-            <td>
-              {record.attachment ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${record.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}
-            </td>
-            <td>
-              <Badge>{record.status ? record.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
-              {record.decision_reason && (
-                <>
-                  <HelpCircle id={`UnControlledLeave${recordKey}`} />
-                  <UncontrolledTooltip target={`UnControlledLeave${recordKey}`}>{record.decision_reason}</UncontrolledTooltip>
-                </>
-              )}
-            </td>
-            <td>
-              {record.status === 'in-progress' && (
-                <Row className='text-center'>
-                  <Col className='col-12'>
-                    <button
-                      className="border-0 no-background"
-                      onClick={() => removeAction(record.id)}
-                    >
-                      <XCircle color="red" />
-                    </button>
-                  </Col>
-                </Row>
-              )}
-            </td>
-          </tr>
-        ))}
-      </React.Fragment>
-    ))}
-  </React.Fragment>
-))}
-
-                            </tbody>
-          
-            </Table>
-          )}
-        </React.Fragment>
-      ))}
-  {!Object.values(data.employee_leaves).some(employeeLeave => employeeLeave.leave_data.some(leaveData => leaveData.employee_leave_records.length > 0)
-      ) && (
-        <div className="text-center">No Leave Data Found!</div>
-      )}
-    </Col>
+                <Col md={4}></Col>
+        <Col md={4}></Col>
+        <Col md={4} className="mt-2">
+    <Label>Select Year</Label>
+    <Select
+      isClearable={true}
+      options={yearoptions}
+      className='react-select mb-1'
+      classNamePrefix='select'
+      placeholder="Select Year"
+      value={yearoptions.find(option => option.value === yearvalue)}
+      onChange={(selectedOption) => {
+        if (selectedOption !== null) {
+          setYearValue(selectedOption.value)
+          yearValueRef.current = selectedOption.value
+        } else {
+          setYearValue(currentYear)
+          yearValueRef.current = currentYear
+        }
+      }}
+    />
+  </Col>
   </Row>
+   {!loading ? (
+  <>
+    {(data.length > 0) ? (
+      <Row>
+        <Col md={12}>
+          {data.map((employeeData, employeeKey) => (
+            <React.Fragment key={employeeKey}>
+              {employeeData.leave_data.length > 0 && (
+                <Table bordered striped responsive className='my-1' key={employeeKey}>
+                  <thead className='table-dark text-center'>
+                    <tr>
+                      <th scope="col" className="text-nowrap">
+                        Type
+                      </th>
+                      <th scope="col" className="text-nowrap">
+                        Duration
+                      </th>
+                      <th scope="col" className="text-nowrap">
+                        Start Date
+                      </th>
+                      <th scope="col" className="text-nowrap">
+                        End Date
+                      </th>
+                      <th scope="col" className="text-nowrap">
+                        Attachment
+                      </th>
+                      <th scope="col" className="text-nowrap">
+                        Status
+                      </th>
+                      <th scope="col" className="text-nowrap">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className='text-center'>
+                    {employeeData.leave_data.map((leaveData, leaveDataKey) => (
+                      <React.Fragment key={leaveDataKey}>
+                        {leaveData.employee_leave_records.map((record, recordKey) => (
+                          <tr key={recordKey}>
+                            <td className='nowrap'>{record.leave_types_title ? record.leave_types_title : <Badge color='light-danger'>N/A</Badge>}</td>
+                            <td className='nowrap'>{record.duration ? record.duration : <Badge color='light-danger'>N/A</Badge>}</td>
+                            <td className='nowrap'>{record.start_date ? record.start_date : <Badge color='light-danger'>N/A</Badge>}</td>
+                            <td className='nowrap'>{record.end_date ? record.end_date : <Badge color='light-danger'>N/A</Badge>}</td>
+                            <td>
+                              {record.attachment ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${record.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}
+                            </td>
+                            <td>
+                              <Badge>{record.status ? record.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
+                              {record.decision_reason && (
+                                <>
+                                  <HelpCircle id={`UnControlledLeave${recordKey}`} />
+                                  <UncontrolledTooltip target={`UnControlledLeave${recordKey}`}>{record.decision_reason}</UncontrolledTooltip>
+                                </>
+                              )}
+                            </td>
+                            <td>
+                              {record.status === 'in-progress' && (
+                                <Row className='text-center'>
+                                  <Col className='col-12'>
+                                    <button
+                                      className="border-0 no-background"
+                                      onClick={() => removeAction(record.id)}
+                                    >
+                                      <XCircle color="red" />
+                                    </button>
+                                  </Col>
+                                </Row>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
+            </React.Fragment>
+          ))}
+          {!data.some(employeeData => employeeData.leave_data.some(leaveData => leaveData.employee_leave_records.length > 0)) && (
+            <div className="text-center">No Leave Data Found!</div>
+          )}
+        </Col>
+      </Row>
+    ) : (
+      <div className="text-center">No Leave Data Found!</div>
+    )}
+  </>
 ) : (
-  <div className="text-center">No Leave Data Found!</div>
+  <div className="text-center"><Spinner /></div>
 )}
 
-                    </>
-                ) : (
-                    <div className="text-center"><Spinner /></div>
-                )  
-            }
+  </>
+) : (
+  <div className="text-center"><Spinner /></div>
+)}
+
     </Fragment>
   )
 }

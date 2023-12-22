@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState, useRef } from 'react'
 import { Label, Row, Col, Input, Button, Spinner, Table, Badge, UncontrolledTooltip  } from "reactstrap" 
 import { Save, XCircle, HelpCircle, FileText } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
@@ -6,10 +6,14 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
-const Gym = ({ data, CallBack }) => {
+import Select from 'react-select'
+const Gym = ({yearoptions}) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [data, setData] = useState([])
+    const [yearvalue, setYearValue] = useState(null)
+    const yearValueRef = useRef(null)
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [reimbursementData, setReimbursementData] = useState({
         amount: '',
@@ -121,6 +125,23 @@ const Gym = ({ data, CallBack }) => {
             } 
         })
     }
+    const gymdata = async () => {
+        setLoading(true)
+        const formData = new FormData()
+        formData['year'] = yearvalue
+        const response = await Api.jsonPost('/reimbursements/employee/recode/gym/data/', formData)
+        if (response.status === 200) {
+            setData(response.data)
+        } else {
+            return Api.Toast('error', 'Pre server data not found')
+        }
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+    }
+useEffect(() => {
+gymdata()
+}, [setData, yearvalue])
   return (
     <Fragment>
         <Row>
@@ -129,7 +150,6 @@ const Gym = ({ data, CallBack }) => {
           <h5 className='mb-2'>Claim Gym Allowance</h5>
           {/* <small>Add position.</small> */}
         </div>
-        
         {!loading ? (
                 <>
                 <Row>
@@ -199,7 +219,30 @@ const Gym = ({ data, CallBack }) => {
                 ></Save>
               </Button>
                 </Col>
-                </Row>
+                
+                <Col md={4}></Col>
+        <Col md={4}></Col>
+        <Col md={4} className="mt-2">
+    <Label>Select Year</Label>
+    <Select
+      isClearable={true}
+      options={yearoptions}
+      className='react-select mb-1'
+      classNamePrefix='select'
+      placeholder="Select Year"
+      value={yearoptions.find(option => option.value === yearvalue)}
+      onChange={(selectedOption) => {
+        if (selectedOption !== null) {
+          setYearValue(selectedOption.value)
+          yearValueRef.current = selectedOption.value
+        } else {
+          setYearValue(currentYear)
+          yearValueRef.current = currentYear
+        }
+      }}
+    />
+  </Col>
+  </Row>
             {(data && Object.values(data).length > 0) ? (
                 <Row>
                 <Col md={12}>

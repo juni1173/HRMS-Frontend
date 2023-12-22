@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState, useRef} from 'react'
 import { Row, Col, Label, Button, Spinner, Input, Badge, Table, UncontrolledTooltip } from 'reactstrap'
 import { Save, XCircle, HelpCircle } from 'react-feather'
 import Select from 'react-select'
@@ -7,10 +7,13 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
-const Loan = ({ data, CallBack }) => {
+const Loan = ({ loandata, yearoptions}) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [data, setData] = useState()
+    const [yearvalue, setYearValue] = useState(null)
+    const yearValueRef = useRef(null)
     const [loan_types] = useState([])
     const [purpose_of_loan] = useState([])
     const [loanData, setLoanData] = useState({
@@ -54,17 +57,17 @@ const Loan = ({ data, CallBack }) => {
 
     }
     const dropdown = () => {
-        if (Object.values(data).length > 0) {
-            if (Object.values(data.types).length > 0) {
+        if (Object.values(loandata).length > 0) {
+            if (Object.values(loandata.types).length > 0) {
                 loan_types.splice(0, loan_types.length)
-                for (let i = 0; i < data['types'].length; i++) {
-                        loan_types.push({value:data['types'][i].id, label: data['types'][i].title })
+                for (let i = 0; i < loandata['types'].length; i++) {
+                        loan_types.push({value:loandata['types'][i].id, label: loandata['types'][i].title })
                 } 
             }
-            if (Object.values(data['purpose_of_loan']).length > 0) {
+            if (Object.values(loandata['purpose_of_loan']).length > 0) {
                 purpose_of_loan.splice(0, purpose_of_loan.length)
-                for (let i = 0; i < data['purpose_of_loan'].length; i++) {
-                    purpose_of_loan.push({value:data['purpose_of_loan'][i].id, label: data['purpose_of_loan'][i].title })
+                for (let i = 0; i < loandata['purpose_of_loan'].length; i++) {
+                    purpose_of_loan.push({value:loandata['purpose_of_loan'][i].id, label: loandata['purpose_of_loan'][i].title })
                 } 
             }
         }
@@ -154,10 +157,26 @@ const Loan = ({ data, CallBack }) => {
             } 
         })
     }
-  
+    const loan = async () => {
+        setLoading(true)
+        const formData = new FormData()
+        formData['year'] = yearvalue
+        const response = await Api.jsonPost('/reimbursements/employee/recode/loan/data/', formData)
+        if (response.status === 200) {
+            setData(response.data)
+        } else {
+            return Api.Toast('error', 'Pre server data not found')
+        }
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+    }
+useEffect(() => {
+loan()
+}, [setData, yearvalue])
     useEffect(() => {
         dropdown()
-    }, [data])
+    }, [loandata])
   return (
     <Fragment>
         <Row>
@@ -243,10 +262,33 @@ const Loan = ({ data, CallBack }) => {
         </Col>
         </>
         )}
+        <Col md={4}></Col>
+        <Col md={4}></Col>
+        <Col md={4} className="mt-2">
+    <Label>Select Year</Label>
+    <Select
+      isClearable={true}
+      options={yearoptions}
+      className='react-select mb-1'
+      classNamePrefix='select'
+      placeholder="Select Year"
+      value={yearoptions.find(option => option.value === yearvalue)}
+      onChange={(selectedOption) => {
+        if (selectedOption !== null) {
+          setYearValue(selectedOption.value)
+          yearValueRef.current = selectedOption.value
+        } else {
+          setYearValue(currentYear)
+          yearValueRef.current = currentYear
+        }
+      }}
+    />
+  </Col>
         </Row>
+    
         {!loading ? (
                 <>
-        {(data.employee_loan && Object.values(data.employee_loan).length > 0) ? (
+        {(data && Object.values(data).length > 0) ? (
                 <Row>
                 <Col md={12}>
                     <Table bordered striped responsive className='my-1'>
@@ -271,7 +313,7 @@ const Loan = ({ data, CallBack }) => {
                             </thead>
                             
                             <tbody className='text-center'>
-                                {Object.values(data.employee_loan).map((item, key) => (
+                                {Object.values(data).map((item, key) => (
                                         <tr key={key}>
                                         <td className='nowrap'>{item.amount ? item.amount : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td className='nowrap'>{item.number_of_loan_installment ? item.number_of_loan_installment : <Badge color='light-danger'>N/A</Badge>}</td>

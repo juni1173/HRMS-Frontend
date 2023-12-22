@@ -1,13 +1,17 @@
-import { Fragment, useState } from 'react'
-import { Row, Col, Button, Spinner, Table, Badge } from "reactstrap" 
+import { Fragment, useState, useEffect, useRef } from 'react'
+import { Row, Col, Button, Spinner, Table, Badge, Label } from "reactstrap" 
 import { Save } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-const PF = ({ data, CallBack }) => {
+import Select from 'react-select'
+const PF = ({yearoptions}) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [yearvalue, setYearValue] = useState(null)
+    const yearValueRef = useRef(null)
+    const [data, setData] = useState()
    
     const applyPF = () => {
         MySwal.fire({
@@ -59,6 +63,23 @@ const PF = ({ data, CallBack }) => {
             } 
         })
     }
+    const pfdata = async () => {
+        setLoading(true)
+        const formData = new FormData()
+        formData['year'] = yearvalue
+        const response = await Api.jsonPost('/reimbursements/employee/recode/pf/data/', formData)
+        if (response.status === 200) {
+            setData(response.data)
+        } else {
+            return Api.Toast('error', 'Pre server data not found')
+        }
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
+    }
+useEffect(() => {
+pfdata()
+}, [setData, yearvalue])
   return (
     <Fragment>
         <Row>
@@ -66,7 +87,31 @@ const PF = ({ data, CallBack }) => {
             <div className='content-header' >
                     <h5 className='mb-2'>Provident Fund</h5>
                 </div>
-        
+                </Col>
+                </Row>
+                <Row>
+                <Col md={4}></Col>
+        <Col md={4}></Col>
+        <Col md={4} className="mt-2">
+    <Label>Select Year</Label>
+    <Select
+      isClearable={true}
+      options={yearoptions}
+      className='react-select mb-1'
+      classNamePrefix='select'
+      placeholder="Select Year"
+      value={yearoptions.find(option => option.value === yearvalue)}
+      onChange={(selectedOption) => {
+        if (selectedOption !== null) {
+          setYearValue(selectedOption.value)
+          yearValueRef.current = selectedOption.value
+        } else {
+          setYearValue(currentYear)
+          yearValueRef.current = currentYear
+        }
+      }}
+    />
+  </Col>
         {!loading ? (
                 <>
             {(data && Object.values(data).length > 0) ? (
@@ -137,7 +182,7 @@ const PF = ({ data, CallBack }) => {
             
        }
         <hr></hr>
-            </Col>
+            
         </Row>
     </Fragment>
   )

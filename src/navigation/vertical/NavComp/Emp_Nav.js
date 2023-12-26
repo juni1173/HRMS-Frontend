@@ -130,6 +130,12 @@ let nav = []
     title: 'Certifications',
     icon: <Book size={30} />,
     navLink: '/employee/certifications'
+  },
+  {
+    id: 'nav-payroll',
+    title: 'Payroll',
+    icon: <Book size={30} />,
+    navLink: '/employee/payroll'
   }
 //   {
 //     id: 'nav-roles-permissions',

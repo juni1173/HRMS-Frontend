@@ -304,6 +304,10 @@ const Routes = [
     }
   },
   {
+    path: '/employee/payroll',
+    component: lazy(() => import('../../views/employee-payroll/'))
+  },
+  {
     path: '/error',
     component: lazy(() => import('../../views/Error')),
     layout: 'BlankLayout'

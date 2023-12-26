@@ -2,7 +2,6 @@ import React, { Fragment, useState, lazy, Suspense, useEffect} from 'react'
 import { Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import { HelpCircle } from 'react-feather'
 import apiHelper from '../Helpers/ApiHelper'
-const Api = apiHelper()
 // Lazy-loaded components
 const Gym = lazy(() => import('./Components/Gym'))
 const Medical = lazy(() => import('./Components/Medical'))
@@ -12,7 +11,7 @@ const Loan = lazy(() => import('./Components/Loan'))
 
 const Index = () => {
   const yearoptions = []
-
+  const Api = apiHelper()
   const currentDate = new Date()
   const currentYear = currentDate.getFullYear()
   const [active, setActive] = useState('1')
@@ -33,16 +32,12 @@ const [loanData, setLoanData] = useState({
     yearoptions.push({ value: year, label: year.toString() })
   }
 
-  const toggle = (tab) => {
-    if (active !== tab) {
-      setActive(tab)
-    }
-  }
+
   const preDataApi = async () => {
     const response = await Api.get('/reimbursements/employee/pre/data/')
     if (response.status === 200) {
         // setData(response.data)
-        console.warn(response.data)
+        // console.warn(response.data)
         setLeaveData(prevState => ({
           ...prevState,
           leave_types : response.data.leave_types
@@ -65,7 +60,11 @@ const [loanData, setLoanData] = useState({
 useEffect(() => {
     preDataApi()
     }, [])
-
+    const toggle = (tab) => {
+      if (active !== tab) {
+        setActive(tab)
+      }
+    }
   const renderComponent = () => {
     switch (active) {
       case '1':

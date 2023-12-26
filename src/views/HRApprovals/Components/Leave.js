@@ -330,7 +330,7 @@ const Leave = ({ status_choices, yearoptions }) => {
                                 <Badge color='light-success'>
                                 Allowed
                                     </Badge><br></br>
-                                    <h4><Badge color='light-danger'>{item.allowed_leaves ? item.allowed_leaves : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
+                                    <h4><Badge color='light-danger'>{item.emp_yearly_leaves ? item.emp_yearly_leaves : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
                                     
                                 </div>
                                 

@@ -311,7 +311,9 @@ const Leave = ({leavedata, yearoptions}) => {
           {data.map((employeeData, employeeKey) => (
             <React.Fragment key={employeeKey}>
               {employeeData.leave_data.length > 0 && (
+                
                 <Table bordered striped responsive className='my-1' key={employeeKey}>
+                  {employeeData.leave_data.some(leaveData => leaveData.employee_leave_records.length > 0) && (
                   <thead className='table-dark text-center'>
                     <tr>
                       <th scope="col" className="text-nowrap">
@@ -337,6 +339,7 @@ const Leave = ({leavedata, yearoptions}) => {
                       </th>
                     </tr>
                   </thead>
+                  )}
                   <tbody className='text-center'>
                     {employeeData.leave_data.map((leaveData, leaveDataKey) => (
                       <React.Fragment key={leaveDataKey}>

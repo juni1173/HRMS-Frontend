@@ -55,6 +55,7 @@ getData()
             const formData = new FormData()
             formData['salary_batch'] = batch.salary.id
             formData['employee_id'] = item.id
+            formData['payroll_batch'] = content.payroll_batch
               Api.jsonPost(`/payroll/add/emp/pf/`, formData)
               .then((deleteResult) => {
                   if (deleteResult.status === 200) {

@@ -132,13 +132,15 @@ const Medical = ({yearoptions}) => {
         formData['year'] = yearvalue
         const response = await Api.jsonPost('/reimbursements/employee/recode/medical/data/', formData)
         if (response.status === 200) {
+          setLoading(false)
             setData(response.data)
         } else {
+          setLoading(false)
             return Api.Toast('error', 'Pre server data not found')
         }
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000)
+        // setTimeout(() => {
+        //     setLoading(false)
+        // }, 1000)
     }
 useEffect(() => {
 medicaldata()
@@ -156,7 +158,7 @@ medicaldata()
                 <>
                 <Row>
                     
-            <Col md="3" className="mb-1">
+            <Col md="6" className="mb-1">
             <Label className='form-label' for='default-picker'>
                 Date <Badge color="light-danger">*</Badge>
             </Label>
@@ -174,7 +176,7 @@ medicaldata()
               } }
             />
             </Col>
-              <Col md='3' className='mb-1'>
+              <Col md='6' className='mb-1'>
                 <label className='form-label'>
                   Amount <Badge color="light-danger">*</Badge> 
                 </label>
@@ -184,7 +186,7 @@ medicaldata()
                     onChange={ (e) => { onChangeMedicalDetailHandler('amount', 'input', e) }}
                     placeholder="Amount"  />
               </Col>
-              <Col md={3}>
+              <Col md={6}>
               <Label className="form-label">Receipt <Badge color="light-danger">*</Badge> </Label>
               {medical_receipt ? (
               <div className="float-right">
@@ -210,7 +212,7 @@ medicaldata()
               </div>
             )}
               </Col>
-                <Col md={3}>
+                <Col md={6}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>
                 <span className="align-middle d-sm-inline-block">
                   Submit

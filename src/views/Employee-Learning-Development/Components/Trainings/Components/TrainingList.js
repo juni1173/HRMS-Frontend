@@ -4,7 +4,7 @@ import { Eye, Upload } from 'react-feather'
 import TrainingDetails from './TrainingDetails'
 import Assignments from './Assignments'
 import TrainingReimbursement from './TrainingReimbursement'
-const TrainingList = ({ data, CallBack }) => {
+const TrainingList = ({ data, CallBack, is_project_base }) => {
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
     const [loading] = useState(false)
@@ -37,6 +37,7 @@ const TrainingList = ({ data, CallBack }) => {
                                             <div className='col-md-12'>
                                                 <h3>{item.training_title ? item.training_title : (item.title ? item.title : 'N/A')}</h3>
                                             </div>
+                                            
                                             <div className="col-md-6">
                                                 <Badge color='light-warning'>
                                                     {`${item.mode_of_training_title ? item.mode_of_training_title : 'N/A'}`} 
@@ -44,16 +45,22 @@ const TrainingList = ({ data, CallBack }) => {
                                                 <Badge color='light-danger'>
                                                     {`${item.training_status_title ? item.training_status_title : 'No Status'}`} 
                                                 </Badge>
+                                                <Row>
+                                                {!is_project_base ?   <>
                                                 {(item.training_status === 3 && item.mode_of_training !== 2) && (
                                                     <button
                                                         className="btn border-0 btn-warning"
                                                         title="Reimbursement"
                                                         onClick={() => toggleCanvasEnd(item, 'reimbursement')}
+                                                        style={{ fontSize: '12px' }}
                                                         >
                                                         Reimbursement
                                                     </button>
                                                 )}
+                                                </> : null}
+                                                </Row>
                                             </div>
+                                            
                                             <div className="col-md-6">
                                                 <div className='float-right'>
                                                     <button
@@ -63,17 +70,21 @@ const TrainingList = ({ data, CallBack }) => {
                                                         >
                                                         <Eye color="green"/>
                                                     </button><br></br>
+                                                    <Row>
                                                     {(item.training_status === 2 || item.training_status === 3) && (
                                                         <>
                                                             <button
                                                                 className="btn border-0 btn-warning mt-1 float-right"
                                                                 title="Assignments"
                                                                 onClick={() => toggleCanvasEnd(item, 'assignments')}
+                                                                style={{ fontSize: '12px' }}
                                                                 >
                                                                     Assignments
                                                             </button>
                                                         </>
+                                                        
                                                     )}
+                                                    </Row>
                                                 </div>
                                             </div>
                                         </div>
@@ -99,10 +110,10 @@ const TrainingList = ({ data, CallBack }) => {
             <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
             <OffcanvasBody className=''>
             {toggleType === 'view' && (
-                <TrainingDetails data={detailData} CallBack={runCallback}/>
+                <TrainingDetails data={detailData} CallBack={runCallback} is_project_base={is_project_base}/>
             )}
             {toggleType === 'assignments' && (
-                <Assignments data={detailData} CallBack={runCallback}/>
+                <Assignments data={detailData} CallBack={runCallback} is_project_base={is_project_base}/>
             )}
             {toggleType === 'reimbursement' && (
                 <TrainingReimbursement data={detailData} CallBack={runCallback}/>

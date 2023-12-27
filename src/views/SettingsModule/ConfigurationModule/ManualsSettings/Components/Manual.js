@@ -179,6 +179,8 @@ const Manual = () => {
                             name="type"
                             options={typeData}
                             onChange={ (e) => { onChangeManualFormDetailHandler('manual_type', 'select', e.value) }}
+                            menuPlacement="auto" 
+                            menuPosition='fixed'
                         />
                     </Col>
                         <Col md={6}>

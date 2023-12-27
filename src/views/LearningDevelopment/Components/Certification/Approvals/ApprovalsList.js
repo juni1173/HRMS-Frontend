@@ -82,38 +82,40 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
         {toggleThisElement ? (
             <div className="row min-width-300">
             <div className="col-lg-8">
-            <Select
-                isClearable={false}
-                options={status_choices}
-                className='react-select mb-1'
-                classNamePrefix='select'
-                defaultValue={status_choices.find(({value}) => value === item.certification_status) ? status_choices.find(({value}) => value === item.certification_status) : status_choices[0] }
-                onChange={(statusData) => setStatusValue(statusData.value)}
-                />
-                    <>
-                    <Label>
-                    Reason
-                </Label>
-                <Input 
-                    type='textarea'
-                    className='mb-1'
-                    name='commentText'
-                    placeholder="Add Reason"
-                    onChange={ (e) => { setComment(e.target.value) }}
-                />
-                </>
-                
-                <Button className="btn btn-primary" onClick={ async () => {
-                    await onStatusUpdate(item.id, statusValue, comment).then(() => {
-                        setToggleThisElement((prev) => !prev)
-                    })
-                }}>
-                    Submit
-                </Button>
-            </div>
-            <div className="col-lg-4 float-right">
-            <XCircle color="red" onClick={() => setToggleThisElement((prev) => !prev)}/>
-            </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Select
+            isClearable={false}
+            options={status_choices}
+            className='react-select mb-1'
+            classNamePrefix='select'
+            defaultValue={status_choices.find(({ value }) => value === item.certification_status) ? status_choices.find(({ value }) => value === item.certification_status) : status_choices[0]}
+            onChange={(statusData) => setStatusValue(statusData.value)}
+        />
+        <XCircle color="red" size={36} onClick={() => setToggleThisElement((prev) => !prev)} style={{ marginLeft: '10px' }} />
+    </div>
+
+    <>
+        <Label>
+            Reason<Badge color='light-danger'>*</Badge>
+        </Label>
+        <Input
+            type='textarea'
+            className='mb-1'
+            name='commentText'
+            placeholder="Add Reason"
+            onChange={(e) => { setComment(e.target.value) }}
+        />
+    </>
+
+    <Button className="btn btn-primary" onClick={async () => {
+        await onStatusUpdate(item.id, statusValue, comment).then(() => {
+            setToggleThisElement((prev) => !prev)
+        })
+    }}>
+        Submit
+    </Button>
+</div>
+
         </div>
         ) : (
             <div className="row min-width-225">

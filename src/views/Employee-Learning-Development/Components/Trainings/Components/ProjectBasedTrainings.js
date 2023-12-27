@@ -29,7 +29,7 @@ const ProjectBasedTrainings = () => {
   return (
     <Fragment>
         {!loading ? (
-            <TrainingList data={data} CallBack={handleDataProcessing} />
+            <TrainingList data={data} CallBack={handleDataProcessing} is_project_base={true}/>
         ) : <div className="text-center"><Spinner type="grow" color="white"/></div>
         }
         

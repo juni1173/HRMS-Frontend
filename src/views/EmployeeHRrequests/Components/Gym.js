@@ -132,12 +132,14 @@ const Gym = ({yearoptions}) => {
         const response = await Api.jsonPost('/reimbursements/employee/recode/gym/data/', formData)
         if (response.status === 200) {
             setData(response.data)
+            setLoading(false)
         } else {
+            setLoading(false)
             return Api.Toast('error', 'Pre server data not found')
         }
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000)
+        // setTimeout(() => {
+        //     setLoading(false)
+        // }, 1000)
     }
 useEffect(() => {
 gymdata()
@@ -154,7 +156,7 @@ gymdata()
                 <>
                 <Row>
                     
-            <Col md="3" className="mb-1">
+            <Col md="6" className="mb-1">
             <Label className='form-label' for='default-picker'>
                 Date <Badge color="light-danger">*</Badge>
             </Label>
@@ -172,7 +174,7 @@ gymdata()
               } }
             />
             </Col>
-              <Col md='3' className='mb-1'>
+              <Col md='6' className='mb-1'>
                 <label className='form-label'>
                   Amount <Badge color="light-danger">*</Badge> 
                 </label>
@@ -182,7 +184,7 @@ gymdata()
                     onChange={ (e) => { onChangeReimbursementDetailHandler('amount', 'input', e) }}
                     placeholder="Amount"  />
               </Col>
-              <Col md={3}>
+              <Col md={6}>
               <Label className="form-label">Receipt <Badge color="light-danger">*</Badge> </Label>
               {gym_receipt ? (
               <div className="float-right">
@@ -208,7 +210,7 @@ gymdata()
                 </div>
                 )}
               </Col>
-                <Col md={3}>
+                <Col md={6}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>
                 <span className="align-middle d-sm-inline-block">
                   Submit

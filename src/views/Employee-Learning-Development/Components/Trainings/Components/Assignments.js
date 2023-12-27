@@ -5,7 +5,7 @@ import SearchHelper from '../../../../Helpers/SearchHelper/SearchByObject'
 import apiHelper from '../../../../Helpers/ApiHelper'
 // import Swal from 'sweetalert2'
 // import withReactContent from 'sweetalert2-react-content'
-const Assignments = ({ data, CallBack }) => {
+const Assignments = ({ data, CallBack, is_project_base }) => {
     const Api = apiHelper()
     const searchHelper = SearchHelper()
     // const MySwal = withReactContent(Swal)
@@ -151,7 +151,7 @@ const Assignments = ({ data, CallBack }) => {
                         Training Assignments
                     </NavLink>
                     </NavItem>
-                    <NavItem>
+                    {!is_project_base ? <NavItem>
                     <NavLink
                         active={active === '2'}
                         onClick={() => {
@@ -160,7 +160,7 @@ const Assignments = ({ data, CallBack }) => {
                     >
                         Uploaded Assignments
                     </NavLink>
-                    </NavItem>
+                    </NavItem> : null}
                 </Nav>
                 <TabContent className='py-50' activeTab={active}>
                     <TabPane tabId='1'>

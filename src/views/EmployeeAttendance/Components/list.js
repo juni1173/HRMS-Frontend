@@ -47,7 +47,7 @@ const list = () => {
         yearoptions.push({ value: year, label: year.toString() })
     }
     const types_choices = [
-        {value:'office', label: 'office'},
+        {value:'office', label: 'Office'},
         {value: 'WFH', label: 'WFH'}
     ]
     // const getAttendanceData = async () => {

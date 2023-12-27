@@ -1,18 +1,38 @@
-import { Fragment, useState, useEffect, useRef } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Row, Col, Button, Spinner, Table, Badge, Label } from "reactstrap" 
 import { Save } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import Select from 'react-select'
-const PF = ({yearoptions}) => {
+// import Select from 'react-select'
+const PF = () => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
-    const [yearvalue, setYearValue] = useState(null)
-    const yearValueRef = useRef(null)
+    // const [yearvalue, setYearValue] = useState(null)
+    // const yearValueRef = useRef(null)
     const [data, setData] = useState()
    
+    
+    const pfdata = async () => {
+        setLoading(true)
+        // const formData = new FormData()
+        // formData['year'] = yearvalue
+        const response = await Api.jsonPost('/reimbursements/employee/recode/pf/data/')
+        if (response.status === 200) {
+            setLoading(false)
+            setData(response.data)
+        } else {
+            setLoading(false)
+            return Api.Toast('error', 'Pre server data not found')
+        }
+        // setTimeout(() => {
+        //     setLoading(false)
+        // }, 1000)
+    }
+    const CallBack = () => {
+        pfdata()
+    }
     const applyPF = () => {
         MySwal.fire({
             title: 'Are you sure?',
@@ -27,6 +47,7 @@ const PF = ({yearoptions}) => {
             buttonsStyling: false
         }).then(function (result) {
             if (result.value) {
+                setLoading(true)
                 const formData = new FormData()
                 formData['has_approval'] = true
                 Api.jsonPost(`/reimbursements/employees/provident-fund/`, formData)
@@ -41,11 +62,11 @@ const PF = ({yearoptions}) => {
                             }
                         }).then(function (result) {
                             if (result.isConfirmed) {
-                                setLoading(true)
+                                // setLoading(true)
                                 CallBack()
-                                setTimeout(() => {
-                                    setLoading(false)
-                                }, 1000)
+                                // setTimeout(() => {
+                                //     setLoading(false)
+                                // }, 1000)
                             }
                         }) 
                     } else {
@@ -57,29 +78,16 @@ const PF = ({yearoptions}) => {
                             confirmButton: 'btn btn-danger'
                             }
                         })
+                        setLoading(false)
                     }
                             
                     })
             } 
         })
     }
-    const pfdata = async () => {
-        setLoading(true)
-        const formData = new FormData()
-        formData['year'] = yearvalue
-        const response = await Api.jsonPost('/reimbursements/employee/recode/pf/data/', formData)
-        if (response.status === 200) {
-            setData(response.data)
-        } else {
-            return Api.Toast('error', 'Pre server data not found')
-        }
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000)
-    }
 useEffect(() => {
 pfdata()
-}, [setData, yearvalue])
+}, [setData])
   return (
     <Fragment>
         <Row>
@@ -90,7 +98,12 @@ pfdata()
                 </Col>
                 </Row>
                 <Row>
-                <Col md={4}></Col>
+        
+        {!loading ? (
+                <>
+            {(data && Object.values(data).length > 0) ? (
+                <Row>
+        {/* <Col md={4}></Col>
         <Col md={4}></Col>
         <Col md={4} className="mt-2">
     <Label>Select Year</Label>
@@ -111,12 +124,8 @@ pfdata()
         }
       }}
     />
-  </Col>
-        {!loading ? (
-                <>
-            {(data && Object.values(data).length > 0) ? (
-                <Row>
-                    <Badge color='light-success'>You have already applied for provident fund! </Badge>
+  </Col> */}
+                    {/* <Badge color='light-success'>You have already applied for provident fund! </Badge> */}
                 <Col md={12}>
                     <Table bordered striped responsive className='my-1'>
                             <thead className='table-dark text-center'>

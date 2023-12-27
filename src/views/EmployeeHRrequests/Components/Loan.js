@@ -163,13 +163,15 @@ const Loan = ({ loandata, yearoptions}) => {
         formData['year'] = yearvalue
         const response = await Api.jsonPost('/reimbursements/employee/recode/loan/data/', formData)
         if (response.status === 200) {
+            setLoading(false)
             setData(response.data)
         } else {
+            setLoading(false)
             return Api.Toast('error', 'Pre server data not found')
         }
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000)
+        // setTimeout(() => {
+        //     setLoading(false)
+        // }, 1000)
     }
 useEffect(() => {
 loan()

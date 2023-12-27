@@ -5,7 +5,7 @@ import apiHelper from '../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { Award } from 'react-feather'
-const TrainingDetails = ({ data, CallBack }) => {
+const TrainingDetails = ({ data, CallBack, is_project_base }) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const changeTraining = (id, training_status) => {
@@ -94,12 +94,13 @@ const TrainingDetails = ({ data, CallBack }) => {
             <Col md={4} className='my-2'>
                 <b>Cost</b>: <Badge>{data.training_cost ? data.training_cost : (data.cost ? data.cost : 'N/A')}</Badge>
             </Col>
+            {!is_project_base ? <>
             <Col md={4} className='my-2'>
                 <b>Evaluator</b>: <Badge>{data.training_evaluator_name ? data.training_evaluator_name : 'N/A'}</Badge>
             </Col>
             <Col md={6} className='my-2'>
                 <b>From</b>: <Badge>{data.start_date ? data.start_date : 'N/A'}</Badge> - <b>To</b>: <Badge>{data.end_date ? data.end_date : 'N/A'}</Badge>
-            </Col>
+            </Col> </>  : null}
             
         </Row>
         <hr></hr>

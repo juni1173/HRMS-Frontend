@@ -92,13 +92,13 @@ const index = () => {
             </Nav>
             <TabContent className='py-50' activeTab={active}>
                         <TabPane tabId={'1'} className='tab-pane-blue'>
-                            <TrainingList data={data.pending} CallBack={handleDataProcessing}/>
+                            <TrainingList data={data.pending} CallBack={handleDataProcessing} is_project_base={false}/>
                         </TabPane>
                         <TabPane tabId={'2'} className='tab-pane-blue'>
-                            <TrainingList data={data.inProgress} CallBack={handleDataProcessing}/>
+                            <TrainingList data={data.inProgress} CallBack={handleDataProcessing} is_project_base={false}/>
                         </TabPane>
                         <TabPane tabId={'3'} className='tab-pane-blue'>
-                            <TrainingList data={data.completed} CallBack={handleDataProcessing}/>
+                            <TrainingList data={data.completed} CallBack={handleDataProcessing} is_project_base={false}/>
                         </TabPane>
                         <TabPane tabId={'4'} className='tab-pane-blue'>
                           {active === '4' ? (

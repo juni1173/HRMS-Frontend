@@ -70,12 +70,14 @@ const Leave = ({leavedata, yearoptions}) => {
       if (response.status === 200) {
           setData(response.data)
           leave_types_dropdown()
-      } else {
-          return Api.Toast('error', 'Pre server data not found')
-      }
-      setTimeout(() => {
           setLoading(false)
-      }, 2000)
+      } else {
+        setLoading(false)
+        return Api.Toast('error', 'Pre server data not found')   
+      }
+      // setTimeout(() => {
+      //     setLoading(false)
+      // }, 1000)
   }
   useEffect(() => {
     leaves()
@@ -237,7 +239,7 @@ const Leave = ({leavedata, yearoptions}) => {
                 </div>
                 )}
         </Col>
-        <Col md="5" className="mb-1">
+        <Col md="6" className="mb-1">
         <Label className='form-label' for='default-picker'>
                Leave Dates <Badge color="light-danger">*</Badge>
             </Label>
@@ -263,7 +265,7 @@ const Leave = ({leavedata, yearoptions}) => {
         />
         </div>
             </Col>
-        <Col md={2}>
+        <Col md={6}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>
                 <span className="align-middle d-sm-inline-block">
                   Submit

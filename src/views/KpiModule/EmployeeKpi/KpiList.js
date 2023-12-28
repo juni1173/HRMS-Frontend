@@ -288,7 +288,7 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
             <div className='text-center'><Spinner color='white'/></div>
         )
         ) : (
-            <div className="text-center text-white">No Kpi Data Found!</div>
+            <div className="text-center text-black">No Kpi Data Found!</div>
         )
     }
     <div className='vertically-centered-modal'>

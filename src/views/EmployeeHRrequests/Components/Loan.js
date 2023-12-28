@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState, useRef} from 'react'
-import { Row, Col, Label, Button, Spinner, Input, Badge, Table, UncontrolledTooltip } from 'reactstrap'
+import { Row, Col, Label, Button, Spinner, Input, Badge, Table, UncontrolledTooltip, CardBody, Card } from 'reactstrap'
 import { Save, XCircle, HelpCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
@@ -13,6 +13,7 @@ const Loan = ({ loandata, yearoptions}) => {
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState()
     const [yearvalue, setYearValue] = useState(null)
+    const [showform, setshowform] = useState(false)
     const yearValueRef = useRef(null)
     const [loan_types] = useState([])
     const [purpose_of_loan] = useState([])
@@ -181,14 +182,20 @@ loan()
     }, [loandata])
   return (
     <Fragment>
-        <Row>
          <div className='content-header' >
           <h5 className='mb-2'>Loan Requests</h5>
           {/* <small>Add position.</small> */}
         </div>
+        <Row>
         {!loading && (
             <>
-        <Col md="4" className="mb-1">
+            <Col md={12}>
+        <Button className='btn btn-success mb-2' onClick={() => setshowform(!showform)}>Request Loan </Button>
+        {showform ?  <Card>
+            <CardBody>
+                <h5 className='mb-2'>Add Loan Requests</h5>
+                <Row>
+                <Col md="4" className="mb-1">
                 <Label className="form-label">
                 Loan Type <Badge color='light-danger'>*</Badge>
                 </Label>
@@ -262,31 +269,33 @@ loan()
                 ></Save>
               </Button>
         </Col>
+        </Row>
+                </CardBody></Card> : null}
+       </Col>
         </>
         )}
-        <Col md={4}></Col>
-        <Col md={4}></Col>
-        <Col md={4} className="mt-2">
-    <Label>Select Year</Label>
+        <Card>
+            <CardBody>
+                <Col md={6} className="mt-2">
+    <Label>Seaarch By Year</Label>
     <Select
       isClearable={true}
       options={yearoptions}
       className='react-select mb-1'
       classNamePrefix='select'
-      placeholder="Select Year"
+      placeholder="Search By Year"
       value={yearoptions.find(option => option.value === yearvalue)}
       onChange={(selectedOption) => {
         if (selectedOption !== null) {
           setYearValue(selectedOption.value)
           yearValueRef.current = selectedOption.value
         } else {
-          setYearValue(currentYear)
-          yearValueRef.current = currentYear
-        }
+            setYearValue(null)
+            yearValueRef.current = null
+          }
       }}
     />
   </Col>
-        </Row>
     
         {!loading ? (
                 <>
@@ -357,6 +366,10 @@ loan()
                     <div className="text-center"><Spinner /></div>
                 )  
             }
+            </CardBody>
+            </Card>
+            </Row>
+        
     </Fragment>
   )
 }

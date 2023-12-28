@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect, useRef } from 'react'
-import { Label, Row, Col, Input, Button, Spinner, Table, Badge, UncontrolledTooltip } from "reactstrap" 
+import { Label, Row, Col, Input, Button, Spinner, Table, Badge, UncontrolledTooltip, CardBody, Card } from "reactstrap" 
 import { Save, XCircle, FileText, HelpCircle } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
@@ -11,6 +11,7 @@ const Medical = ({yearoptions}) => {
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
+    const [showform, setshowform] = useState(false)
     const [data, setData] = useState()
     const [yearvalue, setYearValue] = useState(null)
     const yearValueRef = useRef(null)
@@ -150,14 +151,17 @@ medicaldata()
         <Row>
             <Col md={12}>
          <div className='content-header' >
-          <h5 className='mb-2'>Claim Medical Allowance</h5>
+          <h5 className='mb-2'>Medical Allowance</h5>
           {/* <small>Add position.</small> */}
         </div>
         
         {!loading ? (
                 <>
-                <Row>
-                    
+                <Button className='btn btn-success mb-2' onClick={() => setshowform(!showform)}>Request Medical Allowance </Button>
+              {showform ? <Card>
+                  <CardBody>
+                  <h5 className='mb-2'>Claim Medical Allowance</h5>
+                  <Row>              
             <Col md="6" className="mb-1">
             <Label className='form-label' for='default-picker'>
                 Date <Badge color="light-danger">*</Badge>
@@ -223,30 +227,29 @@ medicaldata()
                 ></Save>
               </Button>
                 </Col>
-                
-                <Col md={4}></Col>
-        <Col md={4}></Col>
-        <Col md={4} className="mt-2">
-    <Label>Select Year</Label>
+                </Row>
+                  </CardBody>
+                </Card> : null}
+             <Card><CardBody><Col md={6} className="mt-2">
+    <Label>Search By Year</Label>
     <Select
       isClearable={true}
       options={yearoptions}
       className='react-select mb-1'
       classNamePrefix='select'
-      placeholder="Select Year"
+      placeholder="Search By Year"
       value={yearoptions.find(option => option.value === yearvalue)}
       onChange={(selectedOption) => {
         if (selectedOption !== null) {
           setYearValue(selectedOption.value)
           yearValueRef.current = selectedOption.value
         } else {
-          setYearValue(currentYear)
-          yearValueRef.current = currentYear
+          setYearValue(null)
+          yearValueRef.current = null
         }
       }}
     />
   </Col>
-  </Row>
             {(data && Object.values(data).length > 0) ? (
                 <Row>
                 <Col md={12}>
@@ -314,7 +317,8 @@ medicaldata()
                     <div className="text-center">No Medical Allowance Data Found!</div>
                 )
                 
-                }
+                }</CardBody></Card>
+        
                     </>
                 ) : (
                     <div className="text-center"><Spinner /></div>

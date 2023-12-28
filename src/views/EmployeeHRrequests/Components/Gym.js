@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState, useRef } from 'react'
-import { Label, Row, Col, Input, Button, Spinner, Table, Badge, UncontrolledTooltip  } from "reactstrap" 
+import { Label, Row, Col, Input, Button, Spinner, Table, Badge, UncontrolledTooltip, Card, CardBody  } from "reactstrap" 
 import { Save, XCircle, HelpCircle, FileText } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
@@ -15,6 +15,7 @@ const Gym = ({yearoptions}) => {
     const [yearvalue, setYearValue] = useState(null)
     const yearValueRef = useRef(null)
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
+    const [showform, setshowform] = useState(false)
     const [reimbursementData, setReimbursementData] = useState({
         amount: '',
         date : new Date()
@@ -149,13 +150,16 @@ gymdata()
         <Row>
             <Col md={12}>
          <div className='content-header' >
-          <h5 className='mb-2'>Claim Gym Allowance</h5>
+          <h5 className='mb-2'>Gym Allowance</h5>
           {/* <small>Add position.</small> */}
         </div>
         {!loading ? (
                 <>
-                <Row>
-                    
+                  <Button className='btn btn-success mb-2' onClick={() => setshowform(!showform)}>Request Gym Allowance </Button>
+                  {showform ?  <Card>
+                  <CardBody> 
+                  <h5 className='mb-2'>Claim Gym Allowance</h5>
+                <Row>      
             <Col md="6" className="mb-1">
             <Label className='form-label' for='default-picker'>
                 Date <Badge color="light-danger">*</Badge>
@@ -221,30 +225,32 @@ gymdata()
                 ></Save>
               </Button>
                 </Col>
-                
-                <Col md={4}></Col>
-        <Col md={4}></Col>
-        <Col md={4} className="mt-2">
-    <Label>Select Year</Label>
+                </Row>
+                </CardBody></Card> : null }
+                <Card>
+                  <CardBody>
+        <Col md={6} className="mt-2">
+    <Label>Search By Year</Label>
     <Select
       isClearable={true}
       options={yearoptions}
       className='react-select mb-1'
       classNamePrefix='select'
-      placeholder="Select Year"
+      placeholder="Search By Year"
       value={yearoptions.find(option => option.value === yearvalue)}
       onChange={(selectedOption) => {
         if (selectedOption !== null) {
           setYearValue(selectedOption.value)
           yearValueRef.current = selectedOption.value
         } else {
-          setYearValue(currentYear)
-          yearValueRef.current = currentYear
+          setYearValue(null)
+          yearValueRef.current = null
         }
       }}
     />
   </Col>
-  </Row>
+ 
+  
             {(data && Object.values(data).length > 0) ? (
                 <Row>
                 <Col md={12}>
@@ -314,6 +320,8 @@ gymdata()
             )
             
             }
+            </CardBody>
+            </Card>
                 </>
             ) : (
                 <div className="text-center"><Spinner /></div>

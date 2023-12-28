@@ -16,11 +16,16 @@ const Index = () => {
   const currentYear = currentDate.getFullYear()
   const [active, setActive] = useState('1')
 
-  for (let i = 0; i < 5; i++) {
-    const year = currentYear - i
+  // for (let i = 0; i < 5; i++) {
+  //   const year = currentYear - i
+  //   yearoptions.push({ value: year, label: year.toString() })
+  // }
+
+  for (let i = 1; i >= -4; i--) {
+    const year = currentYear + i
     yearoptions.push({ value: year, label: year.toString() })
   }
-
+  
   const status_choices = [
     { value: 'in-progress', label: 'in-progress' },
     { value: 'under-review', label: 'under-review' },

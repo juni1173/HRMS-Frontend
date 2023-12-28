@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect } from 'react'
-import { Row, Col, Button, Spinner, Table, Badge, Label } from "reactstrap" 
+import { Row, Col, Button, Spinner, Table, Badge, Label, CardBody, Card } from "reactstrap" 
 import { Save } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
@@ -96,7 +96,9 @@ pfdata()
                     <h5 className='mb-2'>Provident Fund</h5>
                 </div>
                 </Col>
-                </Row>
+                
+                <Card>
+                    <CardBody>
                 <Row>
         
         {!loading ? (
@@ -137,7 +139,7 @@ pfdata()
                                 Name
                                 </th>
                                 <th scope="col" className="text-nowrap">
-                                Employee Approval
+                                PF Request
                                 </th>
                                 <th scope="col" className="text-nowrap">
                                 Percentage
@@ -153,7 +155,7 @@ pfdata()
                                         <tr key={key}>
                                         <td className='nowrap'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</td>
-                                        <td>{item.has_approval ? <Badge color='light-success'>Approved</Badge> : <Badge color='light-danger'>N/A</Badge>}</td>
+                                        <td>{item.has_approval ? <Badge color='light-success'>Requested</Badge> : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td>{item.percentage ? `${item.percentage}%` : <Badge color='light-danger'>N/A</Badge>}</td>
                                         <td><Badge>{item.status ? item.status : <Badge color='light-danger'>N/A</Badge>}</Badge></td>
                                         
@@ -192,6 +194,9 @@ pfdata()
        }
         <hr></hr>
             
+        </Row>
+        </CardBody>
+        </Card>
         </Row>
     </Fragment>
   )

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState, useRef } from 'react'
-import { Row, Col, Label, Button, Spinner, Input, Badge, Table, UncontrolledTooltip } from 'reactstrap'
+import { Row, Col, Label, Button, Spinner, Input, Badge, Table, UncontrolledTooltip, CardBody, Card } from 'reactstrap'
 import { Save, XCircle, FileText, HelpCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
@@ -15,6 +15,7 @@ const Leave = ({leavedata, yearoptions}) => {
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(true)
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
+    const [showform, setshowform] = useState(false)
     const [data, setData] = useState()
     const [yearvalue, setYearValue] = useState(null)
     const yearValueRef = useRef(null)
@@ -183,13 +184,19 @@ const Leave = ({leavedata, yearoptions}) => {
   return (
     <Fragment>
         <Row>
+          <Col md={12}>
          <div className='content-header' >
-          <h5 className='mb-2'>Add Leaves Request</h5>
+          <h5 className='mb-2'>Leaves Request</h5>
           {/* <small>Add position.</small> */}
         </div>
         {!loading && (
             <>
-        <Col md="6" className="mb-1">
+            <Button className='btn btn-success mb-2' onClick={() => setshowform(!showform)}>Add Leave Request </Button>
+            {showform ?  <Card>
+            <CardBody>
+            <h5 className='mb-2'>Add Leaves Request</h5>
+            <Row>
+               <Col md="6" className="mb-1">
                 <Label className="form-label">
                 Leave Type <Badge color='light-danger'>*</Badge>
                 </Label>
@@ -243,17 +250,17 @@ const Leave = ({leavedata, yearoptions}) => {
         <Label className='form-label' for='default-picker'>
                Leave Dates <Badge color="light-danger">*</Badge>
             </Label>
-            <div style={{ height: '200px', overflow: 'auto' }}>
+            {/* <div style={{ height: '200px', overflow: 'auto' }}> */}
         <DatePicker
           value={dates}
           onChange={setDates}
           multiple
           sort
           format={format}
-          containerStyle={{
-            width: "180px",
-            margin: "auto"
-          }}
+          // containerStyle={{
+          //   width: "180px",
+          //   margin: "auto"
+          // }}
           style={{ //input style
             width: "100%",
             height: "40px",
@@ -263,7 +270,7 @@ const Leave = ({leavedata, yearoptions}) => {
           plugins={[<DatePanel />]}
           placeholder='Leave Dates'
         />
-        </div>
+        {/* </div> */}
             </Col>
         <Col md={6}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>
@@ -276,35 +283,35 @@ const Leave = ({leavedata, yearoptions}) => {
                 ></Save>
               </Button>
         </Col>
+        </Row>
+        </CardBody></Card> : null}
+            
         </>
         )}
-        </Row>
+        </Col>
+       
         {!loading ? (
   <>
-  <Row>
-                <Col md={4}></Col>
-        <Col md={4}></Col>
-        <Col md={4} className="mt-2">
-    <Label>Select Year</Label>
+  <Card><CardBody>        <Col md={6} className="mt-2">
+    <Label>Search By Year</Label>
     <Select
       isClearable={true}
       options={yearoptions}
       className='react-select mb-1'
       classNamePrefix='select'
-      placeholder="Select Year"
+      placeholder="Search By Year"
       value={yearoptions.find(option => option.value === yearvalue)}
       onChange={(selectedOption) => {
         if (selectedOption !== null) {
           setYearValue(selectedOption.value)
           yearValueRef.current = selectedOption.value
         } else {
-          setYearValue(currentYear)
-          yearValueRef.current = currentYear
+          setYearValue(null)
+          yearValueRef.current = null
         }
       }}
     />
   </Col>
-  </Row>
    {!loading ? (
   <>
     {(data.length > 0) ? (
@@ -397,12 +404,14 @@ const Leave = ({leavedata, yearoptions}) => {
   </>
 ) : (
   <div className="text-center"><Spinner /></div>
-)}
+)}</CardBody></Card>
+
 
   </>
 ) : (
   <div className="text-center"><Spinner /></div>
 )}
+ </Row>
 
     </Fragment>
   )

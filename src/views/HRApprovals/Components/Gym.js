@@ -201,7 +201,7 @@ const Gym = ({ status_choices, yearoptions }) => {
         useEffect(() => {
             setLoading(true)
             setSearchResults(data)
-            getSearch({ list: data, value: null })
+            getSearch({ list: data, value: null, type: 'equal' })
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
@@ -277,7 +277,7 @@ preDataApi()
                 classNamePrefix='select'
                 onChange={e => {
                             if (e) {
-                            getSearch({list: data, key: 'status', value: e.value }) 
+                            getSearch({list: data, key: 'status', value: e.value, type: 'equal' }) 
                             } else {
                                 getSearch({list: data, key: 'status', value: '' }) 
                             }

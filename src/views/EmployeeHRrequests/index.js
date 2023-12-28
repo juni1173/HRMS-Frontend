@@ -27,11 +27,10 @@ const [loanData, setLoanData] = useState({
   set_loan_requirements: ''
 })
 
-  for (let i = 0; i < 5; i++) {
-    const year = currentYear - i
+  for (let i = 1; i >= -4; i--) {
+    const year = currentYear + i
     yearoptions.push({ value: year, label: year.toString() })
   }
-
 
   const preDataApi = async () => {
     const response = await Api.get('/reimbursements/employee/pre/data/')

@@ -274,7 +274,9 @@ const KpiRequests = ({ data, CallBack, dropdownData, index, type }) => {
                                                     <td>{kpi.kpis_status_title ? (
                                                       <>
                                                         <Badge color="light-success">{kpi.kpis_status_title}</Badge>
+                                                        { type !== 'cancel' ? <>
                                                         {kpi.kpis_status_level && kpi.kpis_status_level > 5 && <Button className='btn btn-sm btn-primary' onClick={() => getEvaluationDetails(kpi.employee, kpi.id)}>View Ratings</Button>}
+                                                        </> : null}
                                                       </>
                                                     ) : <Badge color="light-danger">N/A</Badge>}</td>
                                                     <td>{kpi.mode_of_kpis_title ? kpi.mode_of_kpis_title : 'N/A'}</td>

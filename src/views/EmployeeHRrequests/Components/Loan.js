@@ -73,7 +73,25 @@ const Loan = ({ loandata, yearoptions}) => {
             }
         }
     }
-  
+    const loan = async () => {
+        setLoading(true)
+        const formData = new FormData()
+        formData['year'] = yearvalue
+        const response = await Api.jsonPost('/reimbursements/employee/recode/loan/data/', formData)
+        if (response.status === 200) {
+            setLoading(false)
+            setData(response.data)
+        } else {
+            setLoading(false)
+            return Api.Toast('error', 'Pre server data not found')
+        }
+        // setTimeout(() => {
+        //     setLoading(false)
+        // }, 1000)
+    }
+    const CallBack = () => {
+       loan() 
+    }
     const submitForm = async () => {
        
         if (loanData.loan_type !== '' && loanData.amount !== '' && loanData.loan_start_date !== '' && loanData.number_of_loan_installment !== ''
@@ -158,22 +176,7 @@ const Loan = ({ loandata, yearoptions}) => {
             } 
         })
     }
-    const loan = async () => {
-        setLoading(true)
-        const formData = new FormData()
-        formData['year'] = yearvalue
-        const response = await Api.jsonPost('/reimbursements/employee/recode/loan/data/', formData)
-        if (response.status === 200) {
-            setLoading(false)
-            setData(response.data)
-        } else {
-            setLoading(false)
-            return Api.Toast('error', 'Pre server data not found')
-        }
-        // setTimeout(() => {
-        //     setLoading(false)
-        // }, 1000)
-    }
+   
 useEffect(() => {
 loan()
 }, [setData, yearvalue])
@@ -294,6 +297,8 @@ loan()
             yearValueRef.current = null
           }
       }}
+      menuPlacement="auto" 
+      menuPosition='fixed'
     />
   </Col>
     

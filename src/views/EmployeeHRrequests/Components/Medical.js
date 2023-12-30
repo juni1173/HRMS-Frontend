@@ -54,6 +54,25 @@ const Medical = ({yearoptions}) => {
     const remove_medical_receipt = () => {
         setMedical_Receipt(null) 
       } 
+      const medicaldata = async () => {
+        setLoading(true)
+        const formData = new FormData()
+        formData['year'] = yearvalue
+        const response = await Api.jsonPost('/reimbursements/employee/recode/medical/data/', formData)
+        if (response.status === 200) {
+            setData(response.data)
+            setLoading(false)
+        } else {
+            setLoading(false)
+            return Api.Toast('error', 'Pre server data not found')
+        }
+        // setTimeout(() => {
+        //     setLoading(false)
+        // }, 1000)
+    }
+    const CallBack = () => {
+      medicaldata()
+    }
     const submitForm = async () => {
         setIsButtonDisabled(true)
         if (medicalData.amount !== '' && medicalData.date !== '') {
@@ -127,22 +146,7 @@ const Medical = ({yearoptions}) => {
             } 
         })
     }
-    const medicaldata = async () => {
-        setLoading(true)
-        const formData = new FormData()
-        formData['year'] = yearvalue
-        const response = await Api.jsonPost('/reimbursements/employee/recode/medical/data/', formData)
-        if (response.status === 200) {
-          setLoading(false)
-            setData(response.data)
-        } else {
-          setLoading(false)
-            return Api.Toast('error', 'Pre server data not found')
-        }
-        // setTimeout(() => {
-        //     setLoading(false)
-        // }, 1000)
-    }
+   
 useEffect(() => {
 medicaldata()
 }, [setData, yearvalue])
@@ -248,6 +252,8 @@ medicaldata()
           yearValueRef.current = null
         }
       }}
+      menuPlacement="auto" 
+      menuPosition='fixed'
     />
   </Col>
             {(data && Object.values(data).length > 0) ? (

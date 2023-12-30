@@ -63,7 +63,7 @@ const Leave = ({leavedata, yearoptions}) => {
         } 
 }
 }
-    const leaves = async () => {
+  const leaves = async () => {
       setLoading(true)
       const formData = new FormData()
       formData['year'] = yearvalue
@@ -79,6 +79,9 @@ const Leave = ({leavedata, yearoptions}) => {
       // setTimeout(() => {
       //     setLoading(false)
       // }, 1000)
+  }
+  const CallBack = () => {
+    leaves()
   }
   useEffect(() => {
     leaves()
@@ -310,6 +313,8 @@ const Leave = ({leavedata, yearoptions}) => {
           yearValueRef.current = null
         }
       }}
+      menuPlacement="auto" 
+      menuPosition='fixed'
     />
   </Col>
    {!loading ? (

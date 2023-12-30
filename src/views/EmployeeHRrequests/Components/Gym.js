@@ -53,6 +53,25 @@ const Gym = ({yearoptions}) => {
     const remove_gym_receipt = () => {
         setGym_Receipt(null) 
       } 
+      const gymdata = async () => {
+        setLoading(true)
+        const formData = new FormData()
+        formData['year'] = yearvalue
+        const response = await Api.jsonPost('/reimbursements/employee/recode/gym/data/', formData)
+        if (response.status === 200) {
+            setData(response.data)
+            setLoading(false)
+        } else {
+            setLoading(false)
+            return Api.Toast('error', 'Pre server data not found')
+        }
+        // setTimeout(() => {
+        //     setLoading(false)
+        // }, 1000)
+    }
+    const CallBack = () => {
+      gymdata()
+    }
     const submitForm = async () => {
         setIsButtonDisabled(true)
         if (reimbursementData.amount !== '' && reimbursementData.date !== '') {
@@ -126,22 +145,7 @@ const Gym = ({yearoptions}) => {
             } 
         })
     }
-    const gymdata = async () => {
-        setLoading(true)
-        const formData = new FormData()
-        formData['year'] = yearvalue
-        const response = await Api.jsonPost('/reimbursements/employee/recode/gym/data/', formData)
-        if (response.status === 200) {
-            setData(response.data)
-            setLoading(false)
-        } else {
-            setLoading(false)
-            return Api.Toast('error', 'Pre server data not found')
-        }
-        // setTimeout(() => {
-        //     setLoading(false)
-        // }, 1000)
-    }
+    
 useEffect(() => {
 gymdata()
 }, [setData, yearvalue])
@@ -247,6 +251,8 @@ gymdata()
           yearValueRef.current = null
         }
       }}
+      menuPlacement="auto" 
+      menuPosition='fixed'
     />
   </Col>
  

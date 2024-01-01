@@ -100,7 +100,7 @@ const KpiSegmentationForm = () => {
             <h5 className='mb-2'>Kpi Yearly Segmentations</h5>
             </div>
         {!loading ? (
-        Object.values(data).length > 0 ? (
+        (Object.values(data).length > 0 && (data[0] && data[0].status !== 'completed')) ? (
         <>
             <Row>
                 <SegmentationTable kpidata={data ? data : null} CallBack={CallBack}/>

@@ -420,6 +420,22 @@ import Avatar from '@components/avatar'
          
       return [year, month, day].join('-')
     }
+    const dmyformat = (date) => {
+      const d = new Date(date)
+      console.log(d)
+        let month = (`${d.getMonth() + 1}`)
+        let day = `${d.getDate()}`
+        const year = d.getFullYear()
+
+      if (month.length < 2) {
+        month = `0${month}`
+      }
+      if (day.length < 2) {
+        day = `0${day}`
+      }
+         
+      return [day, month, year].join('-')
+    }
 
     //format time function
 
@@ -487,6 +503,7 @@ import Avatar from '@components/avatar'
         successModal,
         cancelModal,
         formatDate,
+        dmyformat,
         formatTime,
         getMonth,
         getMonthName,

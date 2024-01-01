@@ -12,7 +12,10 @@ import {
   Form,
   Button,
   Input,
-  ButtonGroup
+  ButtonGroup,
+  Modal,
+  ModalHeader,
+  ModalBody
 } from "reactstrap"
 import { Eye, Edit, Trash2, Check } from "react-feather"
 import { useLocation, useHistory } from 'react-router-dom'
@@ -20,17 +23,20 @@ import apiHelper from "../../../Helpers/ApiHelper"
 import { useState, useEffect, Fragment } from "react"
 import PayView from "./PayView"
 import { CSVLink } from "react-csv"
+import GenerateCSV from "./CSV"
 const AllEmpSalary = () => {
   const Api = apiHelper()
   const location = useLocation()
   const history = useHistory()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
-  const [csvData, setCsvData] = useState([])
+  // const [csvData, setCsvData] = useState([])
   const [canvasViewPlacement, setCanvasViewPlacement] = useState('end')
   const [canvasViewOpen, setCanvasViewOpen] = useState(false)
   const [selectedData, setSelectedData] = useState()
   const [selectedItems, setSelectedItems] = useState([])
+  const [modal, setModal] = useState(false)
+  const toggle = () => setModal(!modal)
   const handleCheckboxChange = (itemId) => {
     // Step 3
     const updatedSelection = [...selectedItems]
@@ -61,68 +67,6 @@ const AllEmpSalary = () => {
       setLoading(false)
     }, 1000)
   }
-  const getUniqueCompositions = (salaries) => {
-    const compositionsSet = new Set()
-    salaries.forEach((salary) => {
-      salary.compositions.forEach((comp) => compositionsSet.add(Object.keys(comp)[0]))
-    })
-    return Array.from(compositionsSet)
-  }
-
-  const getUniqueAttributes = (salaries, attributeKey, nestedKey) => {
-    const attributesSet = new Set()
-    salaries.forEach((salary) => {
-      salary[attributeKey].forEach((attribute) => attributesSet.add(attribute[nestedKey]))
-    })
-    return Array.from(attributesSet)
-  }
-
-  const formatCompositions = (compositions, employeeCompositions) => {
-    return compositions.map((comp) => {
-      const compValue = employeeCompositions.find((c) => Object.keys(c)[0] === comp)
-      return compValue ? compValue[comp] : ''
-    })
-  }
-
-  const formatAttributes = (attributes, employeeAttributes) => {
-    return attributes.map((attr) => {
-      const attrValue = employeeAttributes.find((a) => a.attribute_name === attr)
-      return attrValue ? `${attrValue.amount}` : ''
-    })
-  }
-  const generateCSVData = () => {
-    const addons = getUniqueAttributes(data.employee_data, 'addons', 'attribute_name')
-    const customised = getUniqueAttributes(data.employee_data, 'customised', 'attribute_name')
-    const deductions = getUniqueAttributes(data.employee_data, 'deductions', 'attribute_name')
-
-    const csvdata = [
-      [
-        'Employee Name',
-        ...getUniqueCompositions(data.employee_data),
-        ...addons,
-        ...customised,
-        ...deductions,
-        'Taxable Total',
-        'Non Taxable Total',
-        'Tax Rate',
-        'Tax Amount',
-        'To Be Paid'
-      ],
-      ...data.employee_data.map((salary) => [
-        salary.employee_name,
-        ...formatCompositions(getUniqueCompositions(data.employee_data), salary.compositions),
-        ...formatAttributes(addons, salary.addons),
-        ...formatAttributes(customised, salary.customised),
-        ...formatAttributes(deductions, salary.deductions),
-        salary.taxable_total,
-        salary.non_taxable_total,
-        salary.tax_rate || 'N/A',
-        salary.tax_amount || 0,
-        salary.net_salary
-      ])
-    ]
-    setCsvData(csvdata)
-  }
   
 const handleverify = () => {
   setLoading(true)
@@ -131,6 +75,24 @@ const handleverify = () => {
   formData['payroll_batch'] = location.state.batchData.payroll_batch
   formData['employee_data'] = selectedItems
   Api.jsonPost(`/payroll/accountant/verify/`, formData).then((response) => {
+    if (response.status === 200) {
+      Api.Toast('success', response.message)
+      getData()
+    } else {
+      Api.Toast('error', response.message)
+    }
+  })
+  setTimeout(() => {
+    setLoading(false)
+  }, 1000)
+}
+const handleprocess = () => {
+  setLoading(true)
+  const formData = new FormData()
+  formData['salary_batch'] = location.state.batchData.id
+  formData['payroll_batch'] = location.state.batchData.payroll_batch
+  formData['employee_data'] = selectedItems
+  Api.jsonPost(`/payroll/process/employee/salary/`, formData).then((response) => {
     if (response.status === 200) {
       Api.Toast('success', response.message)
       getData()
@@ -166,6 +128,28 @@ const handletransfer = () => {
     setLoading(false)
   }, 1000)
 }
+const handleGenerateCSV = () => {
+  const hasInvalidTransferStatus = selectedItems.some((itemId) => {
+    const selectedItem = data.employee_data.find((item) => item === itemId)
+    if (selectedItem && selectedItem.transfer_status && selectedItem.is_verified !== undefined) {
+      console.log(selectedItem.is_verified)
+      console.log(selectedItem.transfer_status)
+      return (
+        selectedItem.transfer_status === "transferred" || selectedItem.is_verified === false
+      )
+    }
+  
+    return false
+  })
+  
+
+  if (hasInvalidTransferStatus) {
+    // Show error message
+    Api.Toast("error", "Please select only verified employees's with transfer status 'pending'")
+  } else {
+    toggle()
+  }
+}
   useEffect(() => {
     getData()
   }, [])
@@ -186,18 +170,23 @@ const handletransfer = () => {
       {Object.keys(data).length > 0 && (
         <ButtonGroup className="mr-2 md-2">
           {selectedItems.length > 0 && (
+            <>
             <Button color="success" onClick={handleverify}>
               Verify Selected Employee's <Check />
             </Button>
+             <Button color="success" onClick={handleprocess}>
+             Process Selected Employee's <Check />
+           </Button>
+           </>
           )}
-          <Button className="mr-2 md-2" color="primary" onClick={generateCSVData}>
+          <Button className="mr-2 md-2" color="primary" onClick={() => handleGenerateCSV()}>
             Generate CSV
           </Button>
-          {csvData.length > 0 && (
+          {/* {csvData.length > 0 && (
             <CSVLink data={csvData} filename={'employee_salaries.csv'}>
               <Button color="info">Download CSV</Button>
             </CSVLink>
-          )}
+          )} */}
         </ButtonGroup>
       )}
     </div>
@@ -235,12 +224,12 @@ const handletransfer = () => {
                     </div>
                   </div>
                   
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                                             <Badge color='light-info'>
                                               Gross Salary :  {item.gross_salary}
                                             </Badge>
                                         </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                                             <Badge color='light-info'>
                                              Addons :  {item.total_addons}
                                             </Badge>
@@ -258,6 +247,11 @@ const handletransfer = () => {
                                          <div className="col-md-2">
                                             <Badge color='light-warning'>
                                                {item.is_verified ? 'Verified' : 'Not-Verified' }
+                                            </Badge>
+                                        </div>      
+                                        <div className="col-md-2">
+                                        <Badge color='light-warning'>
+                                               {item.transfer_status}
                                             </Badge>
                                         </div>                     
                  
@@ -327,6 +321,12 @@ const handletransfer = () => {
             <PayView payslipData={selectedData} salaryBatch={data.salary} />
           </OffcanvasBody>
         </Offcanvas>
+        <Modal isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Download CSV</ModalHeader>
+        <ModalBody>
+        <GenerateCSV selectedData={selectedItems}/>
+        </ModalBody>
+      </Modal>
       </Fragment>
     )
 }

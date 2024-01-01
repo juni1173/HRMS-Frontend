@@ -217,7 +217,7 @@ const CallBack = () => {
                                 <div className="col-md-4">
                                 <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
                                 <CardSubtitle>
-                                    <h4><Badge color='light-warning'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</Badge>(<Badge color='light-danger'>{item.month ? Api.getMonthName(item.month) : <Badge color='light-danger'>N/A</Badge>}</Badge>)</h4></CardSubtitle>
+                                    <h4><Badge color='light-warning'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</Badge></h4></CardSubtitle>
                                 </div>
                                 <div className="col-md-4">
                                     <Badge color='light-success'>

@@ -311,7 +311,7 @@ const Leave = ({ status_choices, yearoptions }) => {
                                 <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
                                 <CardSubtitle>
                                 <h4><Badge color='light-success'>{item.staff_classification_title ? item.staff_classification_title : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
-                                    <h4><Badge color='light-warning'>{`${item.end_date ? item.end_date : <Badge color='light-danger'>N/A</Badge>} - ${item.start_date ? item.start_date : <Badge color='light-danger'>N/A</Badge>}`}</Badge></h4></CardSubtitle>
+                                    <h4><Badge color='light-warning'>{`${item.start_date ? item.start_date : <Badge color='light-danger'>N/A</Badge>}-${item.end_date ? item.end_date : <Badge color='light-danger'>N/A</Badge>}`}</Badge></h4></CardSubtitle>
                                 </div>
                                 <div className="col-md-4">
                                     <Badge color='light-success'>

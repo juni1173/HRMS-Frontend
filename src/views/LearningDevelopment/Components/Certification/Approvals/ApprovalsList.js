@@ -179,7 +179,7 @@ const ApprovalsList = ({ data, CallBack, status_choices }) => {
                 </Col>   
             </Row>
         ) : (
-            <div className="text-center">No Certifications Data Found!</div>
+            <div className="text-center text-white">No Certifications Data Found!</div>
         )
       ) : (
         <div className='text-center'><Spinner color='white'/></div>

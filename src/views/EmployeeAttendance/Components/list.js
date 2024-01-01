@@ -196,6 +196,8 @@ const Check_out = async () => {
                 className='react-select mb-1'
                 classNamePrefix='select'
                 placeholder="Select Month"
+                menuPlacement="auto" 
+                menuPosition='fixed'
                 onChange={(selectedOption) => {
                     if (selectedOption !== null) {
                         setmonthvalue(selectedOption.value)

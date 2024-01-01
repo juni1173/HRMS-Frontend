@@ -9,6 +9,8 @@ import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import DatePicker, { DateObject } from "react-multi-date-picker"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
+// import highlightWeekends from 'react-multi-date-picker/plugins/highlight_weekends'
+import weekends from "react-multi-date-picker/plugins/highlight_weekends"
 const format = "YYYY-MM-DD"
 const Leave = ({leavedata, yearoptions}) => {
     const Api = apiHelper()
@@ -21,6 +23,7 @@ const Leave = ({leavedata, yearoptions}) => {
     const yearValueRef = useRef(null)
     const [leave_types] = useState([])
     const [attachment, setAttachment] = useState(null)
+
     const [leaveData, setLeaveData] = useState({
         leave_types: '',
         start_date : '',
@@ -260,18 +263,19 @@ const Leave = ({leavedata, yearoptions}) => {
           multiple
           sort
           format={format}
-          // containerStyle={{
-          //   width: "180px",
-          //   margin: "auto"
-          // }}
           style={{ //input style
             width: "100%",
             height: "40px",
             boxSizing: "border-box"
           }}
           calendarPosition="right"
-          plugins={[<DatePanel />]}
+          plugins={[<DatePanel />, weekends()]}
           placeholder='Leave Dates'
+          mapDays={({ date }) => {
+            return {
+              disabled: date.weekDay.index === 0 || date.weekDay.index === 6 
+            }
+          }}
         />
         {/* </div> */}
             </Col>

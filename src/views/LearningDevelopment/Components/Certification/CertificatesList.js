@@ -120,7 +120,7 @@ const CertificateList = ({ data, CallBack }) => {
                 </Col>   
             </Row>
         ) : (
-            <div className="text-center">No Certifications Data Found!</div>
+            <div className="text-center text-white">No Certifications Data Found!</div>
         )}
           <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} >
         <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>

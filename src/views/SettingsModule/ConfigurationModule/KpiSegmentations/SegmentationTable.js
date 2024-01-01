@@ -292,6 +292,7 @@ const SegmentationTable = ({ kpidata, CallBack }) => {
                                                 <button
                                                  className="btn btn-success btn-sm"
                                                  onClick={() => completeAction(batch.id)}
+                                                 style={{fontSize:'10px'}}
                                                  >
                                                  Mark As Completed
                                                  </button>

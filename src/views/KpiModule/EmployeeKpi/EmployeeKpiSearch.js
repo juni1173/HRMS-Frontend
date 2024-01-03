@@ -3,15 +3,18 @@ import apiHelper from '../../Helpers/ApiHelper'
 import { Card, CardBody, Row, Col, Label, Badge, Button } from 'reactstrap'
 import { Search } from 'react-feather'
 import Select from 'react-select'
+import EvaluatorKpiList from './EvaluatorKpiList'
 import KpiList from './KpiList'
 const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
     const [dropdown_ep_batch] = useState([])
+    const [searchAsEvaluator, setAsEvaluator] = useState(false)
     const [kpiData, setKpiData] = useState({
         ep_batch : '',
-        yearly_segmentation: ''
+        yearly_segmentation: '',
+        employee:''
    })
     const onChangeKpiDetailHandler = (InputName, InputType, e) => {
         
@@ -53,8 +56,15 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
             const formData = new FormData()
             formData['ep_yearly_segmentation'] = kpiData.yearly_segmentation
             formData['ep_batch'] = kpiData.ep_batch
+            if (kpiData.employee !== '' && searchAsEvaluator) formData['employee'] = kpiData.employee
             // return false
-                await Api.jsonPost(`/kpis/employee/pervious/batch/kpis/data/`, formData).then(result => {
+            let url = ''
+            searchAsEvaluator ? (
+                url = '/kpis/team/lead/pervious/batch/kpis/data/'
+            ) : (
+                url = '/kpis/employee/pervious/batch/kpis/data/'
+            )
+                await Api.jsonPost(url, formData).then(result => {
                     if (result) {
                         if (result.status === 200) {
                             setData(result.data)
@@ -72,12 +82,25 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
         }
         
     }
+    const handleSearchSelection = (bool) => {
+        setAsEvaluator(bool)
+        setData([])
+        return false
+    }
   return (
     <Fragment>
         <Card>
             <CardBody>
+                <Row className='mb-2'>
+                    <Col md={4}>
+                        <button className={!searchAsEvaluator ? 'btn btn-success' : 'btn btn-outline-dark'} onClick={() => handleSearchSelection(false)}>Search Your Kpi's</button>
+                        
+                    </Col>
+                    <Col md={4}><button className={searchAsEvaluator ? 'btn btn-success' : 'btn btn-outline-dark'} onClick={() => handleSearchSelection(true)}>Search As Evaluator</button></Col>
+                    <Col md={4}></Col>
+                </Row>
             <Row>
-                    <Col md="4" className="mb-1">
+                    <Col md={searchAsEvaluator ? '3' : '4'} className="mb-1">
                        <Label className="form-label">
                        Yearly Segmentation <Badge color='light-danger'>*</Badge>
                        </Label>
@@ -93,7 +116,7 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
                        />
                    </Col>
                    {kpiData.yearly_segmentation !== '' && (
-                   <Col md="4" className="mb-1">
+                   <Col md={searchAsEvaluator ? '3' : '4'} className="mb-1">
                        <Label className="form-label">
                        Batch <Badge color='light-danger'>*</Badge>
                        </Label>
@@ -109,7 +132,8 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
                        />
                    </Col>
                    )}
-                   {/* <Col md="4" className="mb-1">
+                   {searchAsEvaluator && (
+                   <Col md="3" className="mb-1">
                        <Label className="form-label">
                        Employee <Badge color='light-danger'>*</Badge>
                        </Label>
@@ -121,7 +145,8 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
                            options={dropdownData.employeesDropdown ? dropdownData.employeesDropdown : ''}
                            onChange={ (e) => { onChangeKpiDetailHandler('employee', 'select', e.value) }}
                        />
-                   </Col> */}
+                   </Col>
+                   )}
                    {/* <Col md="4" className="mb-1">
                        <Label className="form-label">
                        Evaluator 
@@ -135,7 +160,7 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
                            onChange={ (e) => { onChangeKpiDetailHandler('evaluator', 'select', e.value) }}
                        />
                    </Col> */}
-                   <Col md={4}>
+                   <Col md={3}>
                    <Button color="dark" className="btn-next mt-2" onClick={submitForm}>
                    
                    <Search
@@ -155,8 +180,12 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
                         
                 //     </div>
                 // ))
-                <KpiList key={1} searchData={data} dropdownData={dropdownData} CallBack={CallBack} type='search'/>
-                
+                (searchAsEvaluator && kpiData.employee !== '') ? (
+                        <EvaluatorKpiList key={1} data={data} dropdownData={dropdownData} CallBack={CallBack} type='search'/>
+                           
+                    ) : (
+                        <KpiList key={1} searchData={data} dropdownData={dropdownData} CallBack={CallBack} type='search'/>
+                    )
             ) : (
                 <Card>
                 <CardBody>

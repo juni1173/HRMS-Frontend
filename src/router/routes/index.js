@@ -273,7 +273,7 @@ const Routes = [
   },
   {
     path: '/accountant/payroll',
-    component: lazy(() => import('../../views/admin-payroll/Components/AccountantView.js/AllEmpSalary'))
+    component: lazy(() => import('../../views/admin-payroll/Components/AccountantView.js/Tabs'))
   },
   {
     path: '/payroll/salarybatch',

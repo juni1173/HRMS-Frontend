@@ -20,22 +20,23 @@ import {
 import { Eye, Edit, Trash2, Check } from "react-feather"
 import { useLocation, useHistory } from 'react-router-dom'
 import apiHelper from "../../../Helpers/ApiHelper"
-import { useState, useEffect, Fragment } from "react"
+import { useState, Fragment, useEffect } from "react"
 import PayView from "./PayView"
 import { CSVLink } from "react-csv"
 import GenerateCSV from "./CSV"
-const AllEmpSalary = () => {
+const AllEmpSalary = ({data, active, batchData}) => {
   const Api = apiHelper()
   const location = useLocation()
   const history = useHistory()
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState([])
+  // const [data, setData] = useState([])
   // const [csvData, setCsvData] = useState([])
   const [canvasViewPlacement, setCanvasViewPlacement] = useState('end')
   const [canvasViewOpen, setCanvasViewOpen] = useState(false)
   const [selectedData, setSelectedData] = useState()
   const [selectedItems, setSelectedItems] = useState([])
   const [modal, setModal] = useState(false)
+  const [dataTodisplay, setDataToDisplay] = useState([])
   const toggle = () => setModal(!modal)
   const handleCheckboxChange = (itemId) => {
     // Step 3
@@ -47,25 +48,6 @@ const AllEmpSalary = () => {
       updatedSelection.push(itemId)
     }
     setSelectedItems(updatedSelection)
-  }
-  // const [salaryBatch, setSalaryBatch] = useState()
-
-  const getData = () => {
-    setLoading(true)
-    const formData = new FormData()
-    formData['salary_batch'] = location.state.batchData.id
-    formData['payroll_batch'] = location.state.batchData.payroll_batch
-    Api.jsonPost(`/payroll/accountant/view/`, formData).then((response) => {
-      if (response.status === 200) {
-      setData(response.data)
-      // setSalaryBatch(response.data.salary)
-      } else {
-        Api.Toast('error', response.message)
-      }
-    })
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
   }
   
 const handleverify = () => {
@@ -107,8 +89,8 @@ const handleprocess = () => {
 const handletransfer = () => {
   setLoading(true)
   const formData = new FormData()
-  formData['salary_batch'] = location.state.batchData.id
-  formData['payroll_batch'] = location.state.batchData.payroll_batch
+  formData['salary_batch'] = batchData.id
+  formData['payroll_batch'] = batchData.payroll_batch
   formData['salary_amount'] = data.overall_totals.net_salary
   formData['tax_amount'] = data.overall_totals.tax_amount
   formData['addons_amount'] = data.overall_totals.total_addons
@@ -150,9 +132,18 @@ const handleGenerateCSV = () => {
     toggle()
   }
 }
-  useEffect(() => {
-    getData()
-  }, [])
+useEffect(() => {
+  if (active === '1') {
+    setDataToDisplay(data.unverified_data)
+  } else if (active === '2') {
+    setDataToDisplay(data.unprocessed_data)
+  } else if (active === '3') {
+    setDataToDisplay(data.processed_data)
+  } else {
+    setDataToDisplay([])
+  }
+}, [data, setDataToDisplay])
+
 
   const toggleViewCanvasEnd = (item) => {
     if (!canvasViewOpen) {
@@ -166,22 +157,23 @@ const handleGenerateCSV = () => {
     {!loading ? (
       <div className="mx-1">
         {Object.keys(data).length > 0 ? <>
-          <div className="d-flex align-items-center justify-content-end">
+          <div className="d-flex align-items-center justify-content-end m-1">
       {Object.keys(data).length > 0 && (
         <ButtonGroup className="mr-2 md-2">
           {selectedItems.length > 0 && (
             <>
-            <Button color="success" onClick={handleverify}>
+            {active === '1' ?  <Button color="success" onClick={handleverify} className="mr-1">
               Verify Selected Employee's <Check />
-            </Button>
-             <Button color="success" onClick={handleprocess}>
+            </Button> : null}
+            {active === '2' ?  <>
+              <Button color="success" onClick={handleprocess} className="mr-1">
              Process Selected Employee's <Check />
-           </Button>
+           </Button> 
+            <Button color="primary" onClick={() => handleGenerateCSV()} className="mr-1">
+            Generate CSV
+          </Button> </> : null}
            </>
           )}
-          <Button className="mr-2 md-2" color="primary" onClick={() => handleGenerateCSV()}>
-            Generate CSV
-          </Button>
           {/* {csvData.length > 0 && (
             <CSVLink data={csvData} filename={'employee_salaries.csv'}>
               <Button color="info">Download CSV</Button>
@@ -190,8 +182,9 @@ const handleGenerateCSV = () => {
         </ButtonGroup>
       )}
     </div>
-          {data.employee_data.map((item, index) => (
-            <Card key={index} className="mb-3">
+    {dataTodisplay.length > 0 ? <>
+     {dataTodisplay.map((item, index) => (
+            <Card key={index} className="mb-3" color="blue">
               <CardBody>
                 <div className="row">
                   <div className="col-md-3">
@@ -200,7 +193,7 @@ const handleGenerateCSV = () => {
                           onChange={() => handleCheckboxChange(item)}
                           checked={selectedItems.includes(item)}
                         />
-                    <CardTitle tag="h1">{item.employee_name}</CardTitle>
+                    <CardTitle tag="h1" className="text-white">{item.employee_name}</CardTitle>
                   </div>
                   <div className="col-md-3">
                                             <Badge color='light-success'>
@@ -258,7 +251,9 @@ const handleGenerateCSV = () => {
                 </div>
               </CardBody>
             </Card>
-          ))}
+          ))} </> : (
+            <div className="text-center">No data found!</div>
+          )}
           <Card className="mb-3" color="light-success">
               <CardBody>
                 <div className="row">
@@ -315,7 +310,7 @@ const handleGenerateCSV = () => {
           </div>
         </div>
       </div>)}
-      <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} >
+      <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} className="largeCanvas">
           <OffcanvasHeader toggle={toggleViewCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             <PayView payslipData={selectedData} salaryBatch={data.salary} />

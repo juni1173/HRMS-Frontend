@@ -151,7 +151,7 @@ import {
             </div>
           </div>
         </div>)}
-        <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} >
+        <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} className="largeCanvas">
           <OffcanvasHeader toggle={toggleViewCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             <PayView payslipData={selectedData} salaryBatch={salaryBatch} />

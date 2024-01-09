@@ -325,13 +325,16 @@ const EmployeeDetail = () => {
                                         <h4 color='white' className="text-center">Office Detail</h4>
                                     </div>
                                     <div className="col-lg-4 col-md-4 col-sm-4">
-                                        <button
+                                        {Api.role === 'admin' && (
+                                            <button
                                             className="border-0 no-background float-right"
                                             title="Edit Employee"
                                             onClick={() => updateModel(2)}
                                             >
                                             <Edit color="white"/>
                                         </button>
+                                        )}
+                                        
                                     </div>
                                 </div>
                     </CardTitle>
@@ -380,13 +383,16 @@ const EmployeeDetail = () => {
                                         <h4 color='white' className="text-center">Project Roles</h4>
                                     </div>
                                     <div className="col-lg-4 col-md-4 col-sm-4">
-                                        <button
-                                            className="border-0 no-background float-right"
-                                            title="Edit Employee"
-                                            onClick={() => createModelfunc(7)}
-                                            >
-                                            <Plus color="white"/>
-                                        </button>
+                                        {Api.role === 'admin' && (
+                                            <button
+                                                className="border-0 no-background float-right"
+                                                title="Edit Employee"
+                                                onClick={() => createModelfunc(7)}
+                                                >
+                                                <Plus color="white"/>
+                                            </button>
+                                        )}
+                                        
                                     </div>
                                 </div>
                     </CardTitle>
@@ -418,12 +424,14 @@ const EmployeeDetail = () => {
                                                 {pRole.is_active ? (
                                                     <div className="d-flex row">
                                                     <div className="col">
-                                                    <button
+                                                    {Api.role === 'admin' && (
+                                                        <button
                                                         className="border-0 btn btn-danger"
-                                                        onClick={() => EmpHelper.DeleteProjectRole(pRole.id).then(() => { getEmployeeData() })}
-                                                    >
-                                                       End Role 
-                                                    </button>
+                                                            onClick={() => EmpHelper.DeleteProjectRole(pRole.id).then(() => { getEmployeeData() })}
+                                                        >
+                                                        End Role 
+                                                        </button>
+                                                    )}
                                                     </div>
                                                 </div>
                                                 ) : (

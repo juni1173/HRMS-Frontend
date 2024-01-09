@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import { handleLogout } from '@store/authentication'
 import defaultAvatar from '@src/assets/images/avatars/user_blank.png'
 const ChangePassword = () => {
+    console.warn(JSON.parse(localStorage.getItem('user')).uuid)
     const Api = apiHelper() 
     const history = useHistory()
     const dispatch = useDispatch()
@@ -276,12 +277,7 @@ const ChangePassword = () => {
                                     name="password"
                                     onChange={ (e) => { onChangePasswordDetailHandler('password', 'input', e) }}
                                     placeholder="Password"  />
-                                    <br></br>
-                                <Badge color={isUppercaseValid ? 'success' : 'danger'} className='mb-1'>1 Capital letter</Badge>
-                                <Badge color={isSpecialCharValid ? 'success' : 'danger'} className='mb-1'>1 special character </Badge>
-                                <Badge color={isCombinedValid ? 'success' : 'danger'}>at least 8 total characters</Badge>
-                                <br></br>
-                                <br></br>
+                                    
                             </Col>
                             <Col md={4}>
                                 <label className='form-label'>
@@ -308,6 +304,11 @@ const ChangePassword = () => {
                             </Button>
                             </Col>
                         </Row>
+                        <Row>
+                            <Col md='4'><Badge color={isUppercaseValid ? 'success' : 'danger'} className='mb-1'>1 Capital letter</Badge></Col>    
+                            <Col md='4'><Badge color={isSpecialCharValid ? 'success' : 'danger'} className='mb-1'>1 special character </Badge></Col>    
+                            <Col md='4'><Badge color={isCombinedValid ? 'success' : 'danger'}>at least 8 total characters</Badge></Col>    
+                        </Row> 
                         </>
                     ) : (
                         <div className="text-center"><Spinner /></div>

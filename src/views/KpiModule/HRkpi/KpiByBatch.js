@@ -54,8 +54,8 @@ const KpiByBatch = ({segmentation, dropdownData, CallBack}) => {
             const formData = new FormData()
             formData['ep_yearly_segmentation'] = kpiData.yearly_segmentation
             formData['ep_batch'] = kpiData.ep_batch
-            formData['employee'] = kpiData.employee
-            if (kpiData.evaluator) formData['evaluator'] = kpiData.evaluator
+            if (kpiData.employee !== '') formData['employee'] = kpiData.employee
+            if (kpiData.evaluator !== '') formData['evaluator'] = kpiData.evaluator
             // return false
                 await Api.jsonPost(`/kpis/hr/pervious/batch/kpis/data/`, formData).then(result => {
                     if (result) {

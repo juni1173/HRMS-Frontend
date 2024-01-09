@@ -29,6 +29,9 @@ const Tabs = () => {
   useEffect(() => {
     getData()
   }, [])
+  const CallBack = () => {
+    getData()
+  }
   const toggle = tab => {
     if (active !== tab) {
       setActive(tab)
@@ -41,8 +44,8 @@ const Tabs = () => {
     <Fragment>
       {!loading ? (
         <>
-        <Card>
-          <CardBody>
+        {/* <Card>
+          <CardBody> */}
             <div className="nav-vertical configuration_panel">
               <Nav tabs>
                <NavItem>
@@ -79,19 +82,19 @@ const Tabs = () => {
               <TabContent activeTab={active}>
                 <Suspense fallback={<div className="text-center"><Spinner color="primary" type="grow" /></div>}>
                   <TabPane tabId="1">
-                 {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={location.state.batchData}/>}
+                 {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={location.state.batchData} CallBack={CallBack}/>}
                   </TabPane>
                   <TabPane tabId="2">
-                    {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={location.state.batchData}/>}
+                    {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={location.state.batchData} CallBack={CallBack}/>}
                   </TabPane>
                   <TabPane tabId="3">
-                   {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={location.state.batch}/>}
+                   {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={location.state.batchData} CallBack={CallBack}/>}
                   </TabPane>
                 </Suspense>
               </TabContent>
             </div>
-          </CardBody>
-        </Card>
+          {/* </CardBody>
+        </Card> */}
         </>
       ) : (
         <div className="text-center">

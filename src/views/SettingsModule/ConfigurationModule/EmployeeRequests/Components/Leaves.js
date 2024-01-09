@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Update from './UpdateLeaves'
 const Leaves = ({ staffdropdown, data, CallBack }) => {
+    const isSuperuser = JSON.parse(localStorage.getItem('is_superuser'))
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
@@ -140,14 +141,16 @@ const [currentLeaves, setCurrentLeaves] = useState()
     useEffect(() => {
         leave_types_dropdown()
     }, [data])
+    console.log(isSuperuser)
   return (
     <Fragment>
         <Row>
             <Col md={12}>
          <div className='content-header' >
-          <h5 className='mb-2'>Add Leaves limit</h5>
+          <h5 className='mb-2'> Leaves limit</h5>
           {/* <small>Add position.</small> */}
         </div>
+        {isSuperuser ? <>
         <Col md="6" className="mb-1">
                 <Label className="form-label">
                 Leave Type <Badge color='light-danger'>*</Badge>
@@ -162,10 +165,12 @@ const [currentLeaves, setCurrentLeaves] = useState()
                     menuPlacement="auto" 
                     menuPosition='fixed'
                 />
-        </Col>
+        </Col> </> :    <div className='text-center mb-2 fw-bold'>Please contact developers team to change the limit</div>
+        }
         {Object.values(staffdropdown).length > 0 ?  (
             // !loading ? (
                 <>
+                {isSuperuser ? <> 
                 <Row>
             {is_sc && (
                 <Col md="4" className="mb-1">
@@ -204,7 +209,7 @@ const [currentLeaves, setCurrentLeaves] = useState()
                 ></Save>
                 </Button>
                 </Col>
-            </Row>
+            </Row> </> : null}
             {Object.values(data.duration).length > 0 ? (
                 <Row>
                 <Col md={12}>
@@ -220,9 +225,9 @@ const [currentLeaves, setCurrentLeaves] = useState()
                                 <th scope="col" className="text-nowrap">
                                 Allowed Leaves
                                 </th>
-                                <th scope="col" className="text-nowrap">
+                                {isSuperuser ? <th scope="col" className="text-nowrap">
                                 Actions
-                                </th>
+                                </th> : null}
                             </tr>
                             </thead>
                             
@@ -234,7 +239,7 @@ const [currentLeaves, setCurrentLeaves] = useState()
                                         <td>{item.staff_classification_title ? item.staff_classification_title : 'N/A' }</td>
                                         <td>{item.leave_types_title ? item.leave_types_title : 'N/A'}</td>
                                         <td>{item.allowed_leaves ? item.allowed_leaves : 'N/A'}</td>
-                                        <td>
+                                        {isSuperuser ?       <td>
                                             <div className="d-flex row">
                                             <div className="col-md-6">
                                                 <button
@@ -258,7 +263,7 @@ const [currentLeaves, setCurrentLeaves] = useState()
                                                 </button>
                                             </div>
                                             </div>
-                                        </td>
+                                        </td> : null}
                                         </tr>
                                 )
                                 )

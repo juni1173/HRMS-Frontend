@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Update from './UpdateGym'
 const Reimbursement = ({ staffdropdown, data, CallBack }) => {
+    const isSuperuser = JSON.parse(localStorage.getItem('is_superuser'))
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
@@ -130,7 +131,7 @@ const [currentGym, setCurrentGym] = useState()
         {Object.values(staffdropdown).length > 0 ?  (
             !loading ? (
                 <>
-                    <Row>
+                {isSuperuser ? <Row>
                     <Col md="4" className="mb-1">
                         <Label className="form-label">
                         Staff Classification <Badge color='light-danger'>*</Badge>
@@ -166,7 +167,7 @@ const [currentGym, setCurrentGym] = useState()
                         ></Save>
                     </Button>
                         </Col>
-                    </Row>
+                    </Row> : <div className='text-center mb-2 fw-bold'>Please contact the developers team to change the limit</div> }
                     {Object.values(data).length > 0 ? (
                         <Row>
                         <Col md={12}>
@@ -179,9 +180,9 @@ const [currentGym, setCurrentGym] = useState()
                                         <th scope="col" className="text-nowrap">
                                         Monthly Limit
                                         </th>
-                                        <th scope="col" className="text-nowrap">
+                                        {isSuperuser ?   <th scope="col" className="text-nowrap">
                                         Actions
-                                        </th>
+                                        </th> : null}
                                     </tr>
                                     </thead>
                                     
@@ -190,7 +191,7 @@ const [currentGym, setCurrentGym] = useState()
                                                 <tr key={key}>
                                                 <td>{item.staff_classification_title}</td>
                                                 <td>{item.monthly_limit}</td>
-                                                <td>
+                                                {isSuperuser ? <td>
                                                     <div className="d-flex row">
                                                     <div className="col">
                                                         <button
@@ -213,7 +214,7 @@ const [currentGym, setCurrentGym] = useState()
                                                         </button>
                                                     </div>
                                                     </div>
-                                                </td>
+                                                </td> : null}
                                                 </tr>
                                         )
                                         )}

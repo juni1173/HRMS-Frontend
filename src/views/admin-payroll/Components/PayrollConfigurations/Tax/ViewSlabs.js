@@ -191,7 +191,6 @@ const [currentSlab, setCurrentSlab] = useState()
   }
     useEffect(() => {
         getData()
-        console.log(isSuperuser)
       }, [setData, isSuperuser])
   return (
     <Fragment>

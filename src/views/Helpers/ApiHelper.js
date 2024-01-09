@@ -8,7 +8,7 @@ import Avatar from '@components/avatar'
   const apiHelper = () => {
     const MySwal = withReactContent(Swal)
     let token = localStorage.getItem('accessToken')
-    const controller = new AbortController()
+    // const controller = new AbortController()
     if (!token) {
       localStorage.clear()
       // window.location.href = "/login"
@@ -76,7 +76,7 @@ import Avatar from '@components/avatar'
             // Accept: "application/json",
             Authorization: token
         }
-        //  const controller = new AbortController() //using  AbortController to cancel ongoing fetch requests
+         const controller = new AbortController() //using  AbortController to cancel ongoing fetch requests
         if (!options.signal) {
           options.signal = controller.signal
         }
@@ -90,7 +90,7 @@ import Avatar from '@components/avatar'
         
         setTimeout(() => { // cancel request if it will take more then 5s 
             controller.abort()
-        }, 5000)
+        }, 10000)
         
         try {
 
@@ -509,7 +509,7 @@ import Avatar from '@components/avatar'
         getMonthName,
         convertUTCtoDate,
         currentTime,
-        controller,
+        // controller,
         org,
         user_id,
         user,

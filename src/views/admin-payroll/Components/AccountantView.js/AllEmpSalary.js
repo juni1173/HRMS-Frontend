@@ -24,7 +24,8 @@ import { useState, Fragment, useEffect } from "react"
 import PayView from "./PayView"
 import { CSVLink } from "react-csv"
 import GenerateCSV from "./CSV"
-const AllEmpSalary = ({data, active, batchData}) => {
+const AllEmpSalary = ({data, active, batchData, CallBack}) => {
+  console.log(batchData)
   const Api = apiHelper()
   const location = useLocation()
   const history = useHistory()
@@ -59,7 +60,7 @@ const handleverify = () => {
   Api.jsonPost(`/payroll/accountant/verify/`, formData).then((response) => {
     if (response.status === 200) {
       Api.Toast('success', response.message)
-      getData()
+      CallBack()
     } else {
       Api.Toast('error', response.message)
     }
@@ -77,7 +78,8 @@ const handleprocess = () => {
   Api.jsonPost(`/payroll/process/employee/salary/`, formData).then((response) => {
     if (response.status === 200) {
       Api.Toast('success', response.message)
-      getData()
+      // getData()
+      CallBack()
     } else {
       Api.Toast('error', response.message)
     }
@@ -184,16 +186,16 @@ useEffect(() => {
     </div>
     {dataTodisplay.length > 0 ? <>
      {dataTodisplay.map((item, index) => (
-            <Card key={index} className="mb-3" color="blue">
+            <Card key={index} className="mb-3">
               <CardBody>
                 <div className="row">
                   <div className="col-md-3">
-                  <Input
+                    {active !== '3' ?   <Input
                           type="checkbox"
                           onChange={() => handleCheckboxChange(item)}
                           checked={selectedItems.includes(item)}
-                        />
-                    <CardTitle tag="h1" className="text-white">{item.employee_name}</CardTitle>
+                        /> : null}
+                    <CardTitle tag="h1">{item.employee_name}</CardTitle>
                   </div>
                   <div className="col-md-3">
                                             <Badge color='light-success'>

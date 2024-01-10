@@ -26,6 +26,7 @@ const Aspects = ({ data }) => {
               <NavItem>
               {data.map((item, index) => (
                 <NavLink
+                    style={{ width: '240px'}}
                     key={index}
                     active={active === item.id}
                     onClick={() => {

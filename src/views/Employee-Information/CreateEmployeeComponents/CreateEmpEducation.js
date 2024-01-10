@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react" 
-import {Label, Row, Col, Input, Form } from "reactstrap" 
+import {Label, Row, Col, Input, Form, Badge } from "reactstrap" 
 import Select from 'react-select'
 import Flatpickr from 'react-flatpickr'
 import apiHelper from "../../Helpers/ApiHelper"
@@ -104,7 +104,7 @@ const CreateEmpEducation = ({uuid, CallBack}) => {
                 <Row>
                     <Col md="4" className="mb-1">
                         <Label className="form-label">
-                        Degree Type
+                        Degree Type <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Select
                             type="text"
@@ -116,7 +116,7 @@ const CreateEmpEducation = ({uuid, CallBack}) => {
                     </Col>
                     <Col md="4" className="mb-1">
                         <Label className="form-label">
-                        Degree Title
+                        Degree Title <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Input
                             type="text"
@@ -127,7 +127,7 @@ const CreateEmpEducation = ({uuid, CallBack}) => {
                     </Col>
                     <Col md="4" className="mb-1">
                         <Label className="form-label">
-                        Institute Name
+                        Institute Name <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Select
                             type="text"
@@ -141,7 +141,7 @@ const CreateEmpEducation = ({uuid, CallBack}) => {
                 <Row>
                     <Col md="4" className="mb-1">
                         <Label className="form-label">
-                        Year of completion
+                        Year of completion <Badge color='light-danger'>*</Badge>
                         </Label>
                         <div className='calendar-container'>
                         <Flatpickr 
@@ -161,7 +161,7 @@ const CreateEmpEducation = ({uuid, CallBack}) => {
                     </Col>
                     <Col md="4"  className="mb-1">
                        <Label className="form-label">
-                          Duration
+                          Duration <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Select options={durationList}
                         name="duration"

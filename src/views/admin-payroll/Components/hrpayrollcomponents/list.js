@@ -211,7 +211,7 @@ const HrProcess = () => {
  <Fragment>
           <Nav tabs className='nav-left'>
             <NavItem>
-              <h3 className='brand-text'>Addons</h3>
+              <h3 className='brand-text'>Add/Ons</h3>
             </NavItem>
             {addondata.length > 0 ? (
               addondata.map((item, index) => (

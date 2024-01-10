@@ -49,7 +49,7 @@ const Configuration = () => {
               toggle('3')
             }}
           >
-            Addons/Deductions
+            Add/Ons - Deductions
           </NavLink>
         </NavItem>
         <NavItem>

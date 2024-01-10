@@ -1,5 +1,5 @@
 import {useState} from "react" 
-import {Label, Row, Col, Input, Form} from "reactstrap" 
+import {Label, Row, Col, Input, Form,   Badge} from "reactstrap" 
 import Flatpickr from 'react-flatpickr'
 import apiHelper from "../../Helpers/ApiHelper"
  
@@ -75,7 +75,7 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
     <Row>
         <Col md="6" className="mb-1">
             <Label className="form-label">
-            Company Name
+            Company Name <Badge color='light-danger'>*</Badge>
             </Label>
             <Input type="text" 
                onChange={ (e) => { onChangeExperienceHandler('companyName', 'input', e) }}
@@ -83,7 +83,7 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
         </Col>
         <Col md="6" className="mb-1">
             <Label className="form-label">
-            Designation
+            Designation <Badge color='light-danger'>*</Badge>
             </Label>
             <Input placeholder="Designation" name="designation" onChange={ (e) => { onChangeExperienceHandler('designation', 'input', e) }}/>
         </Col>
@@ -91,7 +91,7 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
     <Row className="mt-1">
         <Col md="6" className="mb-1">
             <Label className="form-label">
-           Joining Date
+           Joining Date <Badge color='light-danger'>*</Badge>
             </Label>
             <div className='calendar-container'>
                <Flatpickr 
@@ -104,7 +104,7 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
         </Col>
         <Col md="6" className="mb-1">
             <Label className="form-label">
-           Leaving Date
+           Leaving Date <Badge color='light-danger'>*</Badge>
             </Label>
             <div className='calendar-container'>
                <Flatpickr

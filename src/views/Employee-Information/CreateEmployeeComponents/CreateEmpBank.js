@@ -1,5 +1,5 @@
 import { useState, useEffect} from "react" 
-import {Label, Row, Col, Input, Form, Spinner } from "reactstrap" 
+import {Label, Row, Col, Input, Form, Spinner, Badge } from "reactstrap" 
 import Select from 'react-select'
 import apiHelper from "../../Helpers/ApiHelper"
 const CreateEmpBank = ({uuid, CallBack}) => {
@@ -95,7 +95,7 @@ const CreateEmpBank = ({uuid, CallBack}) => {
                         <Row>
                             <Col md="4" className="mb-1">
                                 <Label className="form-label">
-                                Bank Name
+                                Bank Name <Badge color='light-danger'>*</Badge>
                                 </Label>
                                 <Select
                                     type="text"
@@ -107,7 +107,7 @@ const CreateEmpBank = ({uuid, CallBack}) => {
                             </Col>
                             <Col md="4" className="mb-1">
                                 <Label className="form-label">
-                            Account No
+                            Account No <Badge color='light-danger'>*</Badge>
                                 </Label>
                                 <Input
                                     type="text"
@@ -118,7 +118,7 @@ const CreateEmpBank = ({uuid, CallBack}) => {
                             </Col>
                             <Col md="4" className="mb-1">
                                 <Label className="form-label">
-                                Branch Name
+                                Branch Name <Badge color='light-danger'>*</Badge>
                                 </Label>
                                 <Input
                                     type="text"
@@ -131,7 +131,7 @@ const CreateEmpBank = ({uuid, CallBack}) => {
                         <Row>
                             <Col md="4" className="mb-1">
                                 <Label className="form-label">
-                                Account Title
+                                Account Title <Badge color='light-danger'>*</Badge>
                                 </Label>
                                 <Input
                                     type="text"
@@ -142,7 +142,7 @@ const CreateEmpBank = ({uuid, CallBack}) => {
                             </Col>
                             <Col md="6" className="mb-1">
                                 <Label className="form-label">
-                                IBAN No
+                                IBAN No <Badge color='light-danger'>*</Badge>
                                 </Label>
                                 <Input
                                     type="text"

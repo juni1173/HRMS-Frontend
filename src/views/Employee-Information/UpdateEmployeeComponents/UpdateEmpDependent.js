@@ -129,7 +129,7 @@ const UpdateEmpDependent = ({CallBack, empData, uuid}) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                       Date Of Birth
+                       Date Of Birth <Badge color='light-danger'>*</Badge>
                         </Label>
                         <div className='calendar-container'>
                              <Flatpickr 

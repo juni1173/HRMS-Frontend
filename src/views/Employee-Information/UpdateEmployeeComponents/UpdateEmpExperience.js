@@ -1,5 +1,5 @@
 import {useState} from "react" 
-import {Label, Row, Col, Input, Form, Spinner } from "reactstrap" 
+import {Label, Row, Col, Input, Form, Spinner, Badge } from "reactstrap" 
 import Flatpickr from 'react-flatpickr'
 import apiHelper from "../../Helpers/ApiHelper"
 
@@ -82,7 +82,7 @@ const UpdateEmpExperience = ({CallBack, empData, uuid}) => {
                 <Row>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Company Name
+                        Company Name <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Input type="text" 
                         defaultValue={experienceDetail.companyName}
@@ -91,7 +91,7 @@ const UpdateEmpExperience = ({CallBack, empData, uuid}) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Designation
+                        Designation <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Input 
                         placeholder="Designation" 
@@ -103,7 +103,7 @@ const UpdateEmpExperience = ({CallBack, empData, uuid}) => {
                 <Row className="mt-1">
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                       Joining Date
+                       Joining Date <Badge color='light-danger'>*</Badge>
                         </Label>
                         <div className='calendar-container'>
                            <Flatpickr 
@@ -116,7 +116,7 @@ const UpdateEmpExperience = ({CallBack, empData, uuid}) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                       Leaving Date
+                       Leaving Date <Badge color='light-danger'>*</Badge>
                         </Label>
                         <div className='calendar-container'>
                            <Flatpickr

@@ -1,5 +1,5 @@
 import {Fragment, useState, useEffect} from "react" 
-import {Label, Row, Col, Input, Form } from "reactstrap" 
+import {Label, Row, Col, Input, Form, Badge } from "reactstrap" 
 import apiHelper from "../../Helpers/ApiHelper"
 import Select from 'react-select'
 import InputMask from 'react-input-mask'
@@ -84,7 +84,7 @@ const CreateEmpContact = ({uuid, CallBack}) => {
                 <Row>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                        Contact Relation
+                        Contact Relation <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Select
                             isClearable={false}
@@ -98,7 +98,7 @@ const CreateEmpContact = ({uuid, CallBack}) => {
                     </Col>
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                         Name
+                         Name <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Input type="text" 
                         name="name"
@@ -109,7 +109,7 @@ const CreateEmpContact = ({uuid, CallBack}) => {
                 <Row className="mt-1">
                     <Col md="6" className="mb-1">
                         <Label className="form-label">
-                         Email
+                         Email 
                         </Label>
                         <Input type="email"
                          name="email"

@@ -113,7 +113,7 @@ const KpiByBatch = ({segmentation, dropdownData, CallBack}) => {
                    )}
                    <Col md="4" className="mb-1">
                        <Label className="form-label">
-                       Employee <Badge color='light-danger'>*</Badge>
+                       Employee
                        </Label>
                        <Select
                            isClearable={false}

@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react" 
-import {Label, Row, Col, Form, Table, Spinner} from "reactstrap" 
+import {Label, Row, Col, Form, Table, Spinner, Badge} from "reactstrap" 
 import Select from 'react-select'
 import apiHelper from "../../Helpers/ApiHelper"
 
@@ -114,7 +114,7 @@ const UpdateEmpSkill = ({CallBack, empData, uuid}) => {
             <Row>
                 <Col md="6" className="mb-1">
                     <Label className="form-label">
-                   Skill Category
+                   Skill Category <Badge color='light-danger'>*</Badge>
                     </Label>
                     <Select 
                     type="text"
@@ -126,7 +126,7 @@ const UpdateEmpSkill = ({CallBack, empData, uuid}) => {
                 </Col>
                 <Col md="6" className="mb-1">
                     <Label className="form-label">
-                    Skill Name
+                    Skill Name <Badge color='light-danger'>*</Badge>
                     </Label>
                     <Select
                         type="text"
@@ -138,7 +138,7 @@ const UpdateEmpSkill = ({CallBack, empData, uuid}) => {
                 </Col>
                 <Col md="6" className="mb-1">
                     <Label className="form-label">
-                    Proficiency level
+                    Proficiency level <Badge color='light-danger'>*</Badge>
                     </Label>
                     <Select
                     type="text" 

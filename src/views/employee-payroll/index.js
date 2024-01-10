@@ -121,7 +121,7 @@ import {
                                           </div>
                       <div className="col-md-3">
                                               <Badge color='light-info'>
-                                               Addons :  {item.total_addons}
+                                               Add/Ons :  {item.total_addons}
                                               </Badge>
                                           </div>
                        <div className="col-md-3">

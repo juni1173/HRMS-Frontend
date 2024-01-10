@@ -100,7 +100,7 @@ const AddonRequests = ({data, updatepredata}) => {
 
   return (
     <Fragment>
-        <h2 className='text-light'>Addons</h2>
+        <h2 className='text-light'>Add/Ons</h2>
           {!loading ? (
             <>
       <Row>

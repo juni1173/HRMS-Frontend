@@ -114,7 +114,7 @@ await Api.jsonPost(`/payroll/create/salary/batch/`, updatedSalaryBatch).then(res
   </Label>
 </FormGroup>
 
-            <h3 className="brand-text">Addons</h3>
+            <h3 className="brand-text">Add/Ons</h3>
             {addondata.length > 0 ? (
               addondata.map((item, index) => (
                 <FormGroup check key={index}>

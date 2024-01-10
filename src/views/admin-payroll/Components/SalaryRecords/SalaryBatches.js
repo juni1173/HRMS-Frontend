@@ -98,7 +98,7 @@ const Index = () => {
                       </div>
                       <div className='col-lg-2'>
                         <p>
-                          Addons{' '}
+                          Add/Ons{' '}
                           <Badge color='light-warning'>{item.addons_amount}</Badge>
                         </p>
                       </div>

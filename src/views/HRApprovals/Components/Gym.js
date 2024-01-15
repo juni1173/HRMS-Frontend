@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button } from "reactstrap" 
-import { Edit, XCircle } from 'react-feather'
+import { Edit, FileText, XCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
@@ -333,7 +333,13 @@ preDataApi()
                                     <Badge color='light-success'>
                                             Receipt
                                         </Badge><br></br>
-                                        <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.gym_receipt ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.gym_receipt}`}> <img src={`${process.env.REACT_APP_PUBLIC_URL}${item.gym_receipt}`} width={20} height={20}/></a> : <Badge color='light-danger'>N/A</Badge>}</span>
+                                        <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>
+                                            {item.gym_receipt ?  <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.gym_receipt}`}>
+                                                <>
+                                                 {!item.gym_receipt.toLowerCase().endsWith('.pdf') ? <img src={`${process.env.REACT_APP_PUBLIC_URL}${item.gym_receipt}`} width={20} height={20}/> : <FileText width={20} height={20} /> }
+                                                 </>
+                                                 </a> : <Badge color='light-danger'>N/A</Badge>}
+                                            </span>
                                         
                                     </div>
                                    

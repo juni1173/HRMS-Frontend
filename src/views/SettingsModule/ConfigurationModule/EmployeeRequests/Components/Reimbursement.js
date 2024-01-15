@@ -17,7 +17,7 @@ const [currentGym, setCurrentGym] = useState()
         staff_classification: '',
         monthly_limit : ''
    })
-    const onChangeReimbursementDetailHandler = (InputName, InputType, e) => {
+const onChangeReimbursementDetailHandler = (InputName, InputType, e) => {
         
         let InputValue
         if (InputType === 'input') {

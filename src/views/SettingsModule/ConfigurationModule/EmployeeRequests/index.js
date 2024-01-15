@@ -32,7 +32,7 @@ const index = () => {
         const response = await Api.get('/reimbursements/pre/data/')
         
         if (response.status === 200) {
-            setData(response.data)
+           
             setLeaveData(prevState => ({
                 ...prevState,
                 types : response.data.leave_types,
@@ -53,6 +53,7 @@ const index = () => {
             for (let i = 0; i < sc_data.length; i++) {
                     staffdropdown.push({value:sc_data[i].id, label: sc_data[i].title })
             } 
+            setData(response.data)
         } else {
             return Api.Toast('error', 'Pre server data not found')
         }

@@ -39,13 +39,24 @@ const KpiRequests = ({ data, CallBack, dropdownData, index, type }) => {
         
         if (isChecked) {
           // Select all checkboxes in the current table
-          const allIds = tableData.map((i) => i.id.toString())
+          const allIds = []
+          // = tableData.map((i) => i.id.toString())
+         tableData.map((item) => {
+          const allkpis = item.employee_kpis_data 
+          if (allkpis !== null && allkpis !== undefined && allkpis.length > 0) {
+          allkpis.map((nestedItem) => {
+            if (nestedItem.kpis_status_level === 2) {
+allIds.push(nestedItem.id.toString())
+            }
+          })
+        }
+        })
     setCheckedItems(allIds)
           setCheckedItems([...checkedItems, ...allIds])
         } else {
           // Deselect all checkboxes in the current table
-          const tableIds = tableData.map((item) => item.id.toString())// Convert to strings
-          setCheckedItems(checkedItems.filter((item) => !tableIds.includes(item)))
+          // const tableIds = tableData.map((item) => item.id.toString())// Convert to strings
+          setCheckedItems([])
         }
       }
       const multipleKpiSend = async () => {
@@ -219,9 +230,18 @@ const KpiRequests = ({ data, CallBack, dropdownData, index, type }) => {
                                         type="checkbox"
                                         onChange={(event) => handlecheckall(event, dataItem.employee_kpis_data)}
                                         disabled={
+                                         
+                                          // dataItem.employee_kpis_data.every(
+                                          //   (item) => console.log(item.employee_kpis_data)
+                                          //   //  item.employee_kpis_data.kpis_status_level !== 2
+                                          //   // 
+                                          // )
                                           dataItem.employee_kpis_data.every(
-                                            (item) =>  item.kpis_status_level !== 2
+                                            (item) => item.employee_kpis_data.every(
+                                              (nestedItem) => nestedItem.kpis_status_level !== 2
+                                            )
                                           )
+                                          
                                         }
                                       />
                                         {/* Select */}

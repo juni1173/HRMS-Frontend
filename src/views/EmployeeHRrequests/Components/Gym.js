@@ -220,13 +220,19 @@ gymdata()
               </Col>
                 <Col md={6}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>
-                <span className="align-middle d-sm-inline-block">
+                {!isButtonDisabled ? <> <span className="align-middle d-sm-inline-block">
                   Submit
                 </span>
                 <Save
                   size={14}
                   className="align-middle ms-sm-25 ms-0"
-                ></Save>
+                ></Save> </> : <>
+                 {/* <span className="align-middle d-sm-inline-block">
+                  Loading
+                </span> */}
+                <Spinner type='grow' color='primary' size={14}></Spinner>
+                
+                </>}
               </Button>
                 </Col>
                 </Row>

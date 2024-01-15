@@ -85,7 +85,7 @@ const LeavesReport = () => {
         item.duration,
        item.start_date,
        item.end_date,
-       `${process.env.REACT_APP_BACKEND_URL}${item.attachment}`,
+       `${process.env.REACT_APP_PUBLIC_URL}${item.attachment}`,
         item.status
     ])
 ]
@@ -187,7 +187,7 @@ const LeavesReport = () => {
                                                 <td>{item.duration ? item.duration : 'N/A'}</td>
                                                 <td>{item.start_date ? item.start_date : 'N/A'}</td>
                                                 <td>{item.end_date ? item.end_date : 'N/A'}</td>
-                                                <td>{item.attachment ? <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}${item.attachment}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.attachment}`} width={20} height={20}/></a> : 'N/A'}</td>
+                                                <td>{item.attachment ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.attachment}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.attachment}`} width={20} height={20}/></a> : 'N/A'}</td>
                                                 <td>{item.status ? <Badge color='light-success'>{item.status}</Badge> : <Badge color='light-danger'>N/A</Badge>}</td>
                                                 </tr>
                                                 ) 

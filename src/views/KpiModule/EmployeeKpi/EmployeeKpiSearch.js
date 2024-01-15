@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import apiHelper from '../../Helpers/ApiHelper'
-import { Card, CardBody, Row, Col, Label, Badge, Button } from 'reactstrap'
+import { Card, CardBody, Row, Col, Label, Badge, Button, Spinner } from 'reactstrap'
 import { Search } from 'react-feather'
 import Select from 'react-select'
 import EvaluatorKpiList from './EvaluatorKpiList'
@@ -196,8 +196,8 @@ const EmployeeKpiSearch = ({segmentation, dropdownData, CallBack}) => {
             )
         ) : (
             <Card>
-                <CardBody>
-                    No data found
+                <CardBody className='d-flex align-items-center justify-content-center'>
+                    <Spinner type='grow' color='primary'/>
                 </CardBody>
             </Card>
         )}

@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import apiHelper from '../../Helpers/ApiHelper'
-import { Card, CardBody, Row, Col, Label, Badge, Button } from 'reactstrap'
+import { Card, CardBody, Row, Col, Label, Badge, Button, Spinner } from 'reactstrap'
 import { Search } from 'react-feather'
 import Select from 'react-select'
 import KpiList from './KpiList'
@@ -49,6 +49,7 @@ const KpiByBatch = ({segmentation, dropdownData, CallBack}) => {
 
    }
     const submitForm = async () => {
+        
         if (kpiData.yearly_segmentation !== '' && kpiData.ep_batch !== '') {
             setLoading(true)
             const formData = new FormData()
@@ -116,12 +117,17 @@ const KpiByBatch = ({segmentation, dropdownData, CallBack}) => {
                        Employee
                        </Label>
                        <Select
-                           isClearable={false}
+                           isClearable={true}
                            className='react-select'
                            classNamePrefix='select'
                            name="project"
                            options={dropdownData.employeesDropdown ? dropdownData.employeesDropdown : ''}
-                           onChange={ (e) => { onChangeKpiDetailHandler('employee', 'select', e.value) }}
+                        //    onChange={ (e) => { onChangeKpiDetailHandler('employee', 'select', e.value) }}
+                        onChange={(selectedOption) => {
+                            // Check if the selected option is null, indicating clearing
+                            const selectedValue = selectedOption ? selectedOption.value : null
+                            onChangeKpiDetailHandler('employee', 'select', selectedValue)
+                        }}
                        />
                    </Col>
                    <Col md="3" className="mb-1">
@@ -129,12 +135,17 @@ const KpiByBatch = ({segmentation, dropdownData, CallBack}) => {
                        Evaluator 
                        </Label>
                        <Select
-                           isClearable={false}
+                           isClearable={true}
                            className='react-select'
                            classNamePrefix='select'
                            name="project"
                            options={dropdownData.employeesDropdown ? dropdownData.employeesDropdown : ''}
-                           onChange={ (e) => { onChangeKpiDetailHandler('evaluator', 'select', e.value) }}
+                        //    onChange={ (e) => { onChangeKpiDetailHandler('evaluator', 'select', e.value) }}
+                        onChange={(selectedOption) => {
+                            // Check if the selected option is null, indicating clearing
+                            const selectedValue = selectedOption ? selectedOption.value : null
+                            onChangeKpiDetailHandler('evaluator', 'select', selectedValue)
+                        }}
                        />
                    </Col>
                    <Col md={2}>
@@ -168,10 +179,11 @@ const KpiByBatch = ({segmentation, dropdownData, CallBack}) => {
             )
         ) : (
             <Card>
-                <CardBody>
-                    No data found
-                </CardBody>
-            </Card>
+            <CardBody className='d-flex align-items-center justify-content-center'>
+               <div><Spinner type='grow' color='primary' /></div>
+                {/* <p className='text-muted ml-2'>Please wait while data is loading...</p> */}
+            </CardBody>
+        </Card>
         )}
     </Fragment>
   )

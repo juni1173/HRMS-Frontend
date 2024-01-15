@@ -63,13 +63,13 @@ const Comments = ({ data }) => {
             <Col md={12} className="mb-2">
                 <h3>{data.title && data.title}</h3>
             </Col>
-            <Col md={3}>
+            <Col md={4}>
                 <b>Evaluator</b><br></br> <Badge>{data.evaluator_name && data.evaluator_name}</Badge>
             </Col>
-            <Col md={3}>
+            <Col md={4}>
                 <b>Type</b><br></br> <Badge>{data.ep_type_title && data.ep_type_title}</Badge>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
                 <b>Status</b> <br></br><Badge>{data.kpis_status_title && data.kpis_status_title}</Badge>
             </Col>
             

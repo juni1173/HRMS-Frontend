@@ -3,6 +3,7 @@ import {TabContent, TabPane, Nav, NavItem, NavLink, Badge} from "reactstrap"
 import apiHelper from '../../../Helpers/ApiHelper'
 import ProjectBasedTrainings from './Components/ProjectBasedTrainings'
 import TrainingList from './Components/TrainingList'
+import EvaluateTrainings from './Components/EvaluateTrainings'
 const index = () => {
   const Api = apiHelper()
   const [active, setActive] = useState('1')
@@ -86,6 +87,14 @@ const index = () => {
                                     >
                                         Projects Trainings 
                                     </NavLink>
+                                    <NavLink
+                                        active={active === '5'}
+                                        onClick={() => {
+                                        toggle('5')
+                                        }}
+                                    >
+                                        Evaluate Trainings 
+                                    </NavLink>
                                     </NavItem>
                                 
                                 {/* </div> */}
@@ -103,6 +112,11 @@ const index = () => {
                         <TabPane tabId={'4'} className='tab-pane-blue'>
                           {active === '4' ? (
                             <ProjectBasedTrainings/>
+                          ) : null}  
+                        </TabPane>
+                        <TabPane tabId={'5'} className='tab-pane-blue'>
+                          {active === '5' ? (
+                            <EvaluateTrainings/>
                           ) : null}  
                         </TabPane>
             </TabContent>

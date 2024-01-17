@@ -5,7 +5,8 @@ import SearchHelper from '../../../../Helpers/SearchHelper/SearchByObject'
 import apiHelper from '../../../../Helpers/ApiHelper'
 // import Swal from 'sweetalert2'
 // import withReactContent from 'sweetalert2-react-content'
-const Assignments = ({ data, CallBack, is_project_base }) => {
+const Assignments = ({ data, CallBack, is_project_base, is_evaluate }) => {
+    console.warn(data)
     const Api = apiHelper()
     const searchHelper = SearchHelper()
     // const MySwal = withReactContent(Swal)
@@ -16,7 +17,8 @@ const Assignments = ({ data, CallBack, is_project_base }) => {
     const [assignment_id, setAssignmentId] = useState('')
     const [uploadedAssignmentList, setUploadedAssignmentList] = useState([])
     const [active, setActive] = useState('1')
-
+    const [evaluationmarks, setEvaluationMarks] = useState('')
+    const [marksLoading, setMarksLoading] = useState(false)
     const toggle = tab => {
       if (active !== tab) {
         setActive(tab)
@@ -77,15 +79,18 @@ const Assignments = ({ data, CallBack, is_project_base }) => {
     setBasicModal(!basicModal)
    }
    const uploadedAssignments = async () => {
-    const response = await Api.get(`/training/assignment/upload/by/employee/${data.training}/`)
-      if (response.status === 200) {
-        console.warn(response.data)
-        const responseData = response.data
-        setUploadedAssignmentList(responseData)
-         
-      } else {
-          return Api.Toast('error', 'Data not found')
-      }
+    if (data.training) {
+        const response = await Api.get(`/training/assignment/upload/by/employee/${data.training}/`)
+        if (response.status === 200) {
+          console.warn(response.data)
+          const responseData = response.data
+          setUploadedAssignmentList(responseData)
+           
+        } else {
+            return Api.Toast('error', 'Data not found')
+        }
+    }
+   
    }
 //    const deleteAssignmentEmployee = (id) => {
 //     MySwal.fire({
@@ -131,6 +136,26 @@ const Assignments = ({ data, CallBack, is_project_base }) => {
 //         } 
 //     })
 // }
+const marksSubmission = async () => {
+    setMarksLoading(true)
+    console.warn(evaluationmarks)
+    console.warn(data)
+    setMarksLoading(false)
+    return false
+    const formData = new FormData()
+    if (evaluationmarks === '') {
+        Api.Toast('error', 'Please fill marks field!')
+        return false
+    }
+    formData['obtained_marks'] = evaluationmarks
+    const response = await Api.jsonPatch(`/training/assignment/upload/by/employee/${data.id}/`, formData)
+      if (response.status === 200) {
+        CallBack()
+      } else {
+          return Api.Toast('error', 'Data not found')
+      }
+      setMarksLoading(false)
+   }
    useEffect(() => {
     uploadedAssignments()
     }, [setUploadedAssignmentList])
@@ -245,6 +270,23 @@ const Assignments = ({ data, CallBack, is_project_base }) => {
                                                     >
                                                     <a href={`${process.env.REACT_APP_PUBLIC_URL}${assignment.submitted_assignment}`} target="_blank" rel="noopener noreferrer" download><Download color="orange"/></a>
                                                 </button>
+                                                {is_evaluate && (
+                                                    !marksLoading ? (
+                                                        <>
+                                                    <Label className="form-label">
+                                                    Marks <Badge color='light-danger'>*</Badge>
+                                                    </Label>
+                                                    <Input
+                                                        type="number"
+                                                        id="marks"
+                                                        name="marks"
+                                                        onChange={(e) => setEvaluationMarks(e.target.value)}
+                                                        />
+                                                        <Button className='btn btn-success' onClick={marksSubmission}>Submit</Button>
+                                                    </>
+                                                    ) : <Spinner className='text-center'></Spinner>
+                                                    
+                                                )}
                                                 {/* <button
                                                     className="border-0 no-background"
                                                     title="delete"

@@ -86,7 +86,7 @@ const UpdateEmpEducation = ({CallBack, empData, uuid}) => {
             formData.append('institutes', educationDetail.instituteName.value) 
             formData.append('duration', educationDetail.duration.value) 
             formData.append('year_of_completion', educationDetail.degreeCompletionDate) 
-            formData.append('experience_letter', educationDetail.educationAttachement)
+            formData.append('degree_certificate', educationDetail.educationAttachement)
          await  Api.jsonPatch(`/emp/${uuid}/institutes/${empData.id}/`, formData, false).then(result => {
                 if (result) {
                     if (result.status === 200) {

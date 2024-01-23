@@ -47,7 +47,6 @@ const AddTax = ({callBack}) => {
         } else if (InputType === 'date') {
               
               const formatDate = Api.formatDate(e)
-              console.warn(formatDate)
             InputValue = formatDate
         } else if (InputType === 'file') {
             InputValue = e.target.files[0].name

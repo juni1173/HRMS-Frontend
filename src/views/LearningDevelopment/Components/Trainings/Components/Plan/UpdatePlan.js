@@ -4,7 +4,6 @@ import Select from 'react-select'
 import apiHelper from "../../../../../Helpers/ApiHelper"
 import EmployeeHelper from "../../../../../Helpers/EmployeeHelper"
 const UpdatePlan = ({ data, CallBack }) => {
-    console.warn(data)
   const Api = apiHelper()
   const employeeHelper = EmployeeHelper()
     const [loading, setLoading] = useState(false)

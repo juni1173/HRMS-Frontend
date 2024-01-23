@@ -116,7 +116,6 @@ const RolePermissions = ({ role_id, CallBack, DiscardModal }) => {
           })
         })
       
-        console.warn(result)
         // const arr = []  
         // result.forEach((result_data) => {
         //     const key = Object.keys(result_data)
@@ -125,7 +124,6 @@ const RolePermissions = ({ role_id, CallBack, DiscardModal }) => {
         //      arr.push(formData)
         // })
         
-        // console.warn(formData)
         
         Api.jsonPost(`/navigations/roles/data/`, result).then(response => {
             if (response) {
@@ -174,7 +172,6 @@ const RolePermissions = ({ role_id, CallBack, DiscardModal }) => {
                                   ...watchValues,
                                   [role.title]: e.target.checked
                                 })
-                                console.warn(watchValues)
                               }}/>
                             )}
                         />

@@ -67,9 +67,7 @@ const EmailSetup = ({ uuid, stage_id }) => {
             await Api.jsonPost(`/email/templates/candidate/job/${uuid}/`, formData).then(result => {
                 if (result) {
                     if (result.status === 200) {
-                        console.warn(uuid)
                        const final = result.data
-                       console.warn(`Data ${final}`)
                         setCandidateEmail(final)
                         getEmailData(final.id)
                     } else {
@@ -90,9 +88,9 @@ const EmailSetup = ({ uuid, stage_id }) => {
     // const onChangeEmailTemplate = (value) => {
     //     setEmail(value)
     // }
-    const sendCallBack = () => {
-        console.warn('save and sent')
-    }
+    // const sendCallBack = () => {
+    //     console.warn('save and sent')
+    // }
     useEffect(() => {
         getPreData()
     }, [])
@@ -115,10 +113,10 @@ const EmailSetup = ({ uuid, stage_id }) => {
                         </Badge><br></br>
                         <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{emailTemplateData.candidate_email.email_template_title && emailTemplateData.candidate_email.email_template_title}</span>
                     </div>
-                     <EmailForm EmailData={emailTemplateData} CallBack={sendCallBack}/>
+                     <EmailForm EmailData={emailTemplateData}/>
                         </>
                     ) : (
-                        <CustomEmailForm CallBack={sendCallBack} />
+                        <CustomEmailForm />
                     )
                     // <>
                     

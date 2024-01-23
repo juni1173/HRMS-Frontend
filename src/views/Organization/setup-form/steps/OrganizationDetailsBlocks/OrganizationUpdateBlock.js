@@ -8,7 +8,7 @@ import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
 const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
     const [updatedImage, setUpdatedImage] = useState(null)
-    const [updatedCreatedBy, setUpdatedCreatedBy] = useState('')
+    // const [updatedCreatedBy, setUpdatedCreatedBy] = useState('')
     const [imgPath, setImgPath] = useState(detail.logo !== null ? process.env.REACT_APP_PUBLIC_URL + detail.logo : null)
     let token = localStorage.getItem('accessToken')
     token = token.replaceAll('"', '')
@@ -80,7 +80,7 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
           if (updatedImage !== null) {
             setImgPath(process.env.REACT_APP_BACKEND_URL + updatedImage)
           }
-         console.warn(updatedCreatedBy)
+        //  console.warn(updatedCreatedBy)
          if (data.updatedName !== undefined) {
           formData.append('name', data.updatedName)
         }
@@ -323,7 +323,7 @@ const OrganizationUpdateBlock = ({detail, stepperStatus}) => {
             {errors.updatedMission && <FormFeedback>{errors.updatedMission.message}</FormFeedback>}
           </Col>
         </Row>
-        <input type='hidden' value='1' id='updatedCreatedBy' name='updatedCreatedBy' onChange={e => setUpdatedCreatedBy(e.target.value)}/> 
+        {/* <input type='hidden' value='1' id='updatedCreatedBy' name='updatedCreatedBy' onChange={e => setUpdatedCreatedBy(e.target.value)}/>  */}
         {stepperStatus ? (
         <div className="d-flex justify-content-between">
             <Button color="secondary" className="btn-prev" outline disabled>

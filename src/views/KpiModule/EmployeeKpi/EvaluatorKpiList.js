@@ -37,7 +37,6 @@ const EvaluatorKpiList = ({ data, CallBack, index, type }) => {
           .filter((item) => item.employee_kpis_data && (
           item.employee_kpis_data.filter(kpi => kpi.kpis_status_level === 11))
           .map((final) => final.id.toString()))
-          console.warn(allIds)
           setCheckedItems(allIds)
           setCheckedItems([...checkedItems, ...allIds])
         } else {

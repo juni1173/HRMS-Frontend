@@ -71,7 +71,6 @@ const ScheduleForm = ({ uuid, stage_id, CallBack }) => {
     const getPreData = async () => {
         setLoading(true)
         await Api.get(`/candidates/pre/data/`).then(result => {
-            console.warn(result)
             if (result) {
                 if (result.status === 200) {
                     const final = result.data

@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button} from "reactstrap" 
-import { Edit, XCircle } from 'react-feather'
+import { Edit, XCircle, FileText } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"

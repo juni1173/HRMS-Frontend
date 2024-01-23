@@ -11,7 +11,6 @@ import ReactPaginate from 'react-paginate'
 import HR_Reimbursement from './HR_Reimbursement'
 
 const ApprovalsList = ({ data, CallBack, status_choices }) => {
-    console.warn(data)
     const Api = apiHelper()
     const searchHelper = SearchHelper()
     const MySwal = withReactContent(Swal)

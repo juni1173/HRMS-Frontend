@@ -2,7 +2,6 @@ import React, { Fragment, useState } from 'react'
 import { Card, CardBody, Row, Col, Modal, ModalHeader, ModalBody, Input, Badge, Button, Spinner, CardHeader } from 'reactstrap'
 import apiHelper from '../../../../Helpers/ApiHelper'
 const EvaluateAssignments = ({ data }) => {
-    console.warn(data)
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [assignmentData, setAssignmentData] = useState([])

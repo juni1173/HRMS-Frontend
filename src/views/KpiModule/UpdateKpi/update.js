@@ -3,8 +3,7 @@ import { Row, Input, Button, Badge, Col, Label, Spinner } from 'reactstrap'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 const UpdateKpi = ({ data, CallBack, dropdownData, type }) => {
-    console.warn(data)
-    console.warn(dropdownData)
+
     // return false
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)

@@ -87,8 +87,6 @@ const GroupHeadAdd = ({ stepper, fetchGroupHeads, stepperStatus, GroupHeadCallBa
             }
           })
           .catch((error) => {
-            
-            console.log(error)
             toast.error(
               <ToastContent type='error' message={error} />,
               { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }

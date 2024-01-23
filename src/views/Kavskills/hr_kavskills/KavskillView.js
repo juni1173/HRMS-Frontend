@@ -1,9 +1,7 @@
 import React, { Fragment } from 'react'
 import { Row, Col, Badge } from 'reactstrap'
 import { File } from 'react-feather'
-const KavskillView = ({data}) => {
-  console.warn(data)
-  
+const KavskillView = ({data}) => {  
   return (
     <Fragment>
         <Row>

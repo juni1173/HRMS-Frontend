@@ -4,7 +4,6 @@ import apiHelper from '../../Helpers/ApiHelper'
 import Select from 'react-select'
 
 const EvaluationForm = ({ data, CallBack }) => {
-    console.warn(data)
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [ratingsData, setRatingsData] = useState([])
@@ -67,7 +66,6 @@ const EvaluationForm = ({ data, CallBack }) => {
                     ))
             ]
               }
-              console.warn(updated)
               setUpdateData(updated)
               return updated
         }

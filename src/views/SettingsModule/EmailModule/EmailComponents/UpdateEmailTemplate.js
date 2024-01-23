@@ -7,7 +7,6 @@ import draftToHtml from 'draftjs-to-html'
 import EmailTemplateHelper from '../../../Helpers/EmailTemplateHelper'
 import apiHelper from '../../../Helpers/ApiHelper'
 const UpdateEmailTemplate = ({updateCallBack, editEmailData}) => {
-  console.warn(editEmailData)
   const Helper = EmailTemplateHelper()
   const Api = apiHelper()
   const [loading, setLoading] = useState(false)
@@ -48,7 +47,6 @@ const UpdateEmailTemplate = ({updateCallBack, editEmailData}) => {
               Variables.splice(0, Variables.length)
             }
             await Helper.fetchEmailVariables().then(data => {
-              console.warn(data)
                 if (data) {
                     if (Object.values(data).length > 0) {
                       setVariables(data)

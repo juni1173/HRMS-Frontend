@@ -6,7 +6,7 @@ import apiHelper from "../../Helpers/ApiHelper"
 const UpdateEmpExperience = ({CallBack, empData, uuid}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
-    const [employeeExperienceArray] = useState([])
+    // const [employeeExperienceArray] = useState([])
     const [experienceDetail, setExperienceDetail] = useState({
          companyName : empData.choosen_company_name ? empData.choosen_company_name  : (empData.company_name ? empData.company_name : ''),
          designation : empData.designation ? empData.designation : '',
@@ -25,7 +25,6 @@ const UpdateEmpExperience = ({CallBack, empData, uuid}) => {
            
            InputValue = e
         } else if (InputType === 'date') {
-            console.warn(e)
             const dateFormat = Api.formatDate(e)
                
             InputValue = dateFormat
@@ -70,7 +69,7 @@ const UpdateEmpExperience = ({CallBack, empData, uuid}) => {
         setTimeout(() => {
             setLoading(false)
         }, 1000)
-        console.warn(employeeExperienceArray)
+        // console.warn(employeeExperienceArray)
      } else {
         Api.Toast('error', 'Please fill all required fields')
      }

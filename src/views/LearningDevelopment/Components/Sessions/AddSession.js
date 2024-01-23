@@ -49,7 +49,6 @@ const AddSession = ({ CallBack }) => {
             const newEndDate = new Date(timeEnd)
             const one_day = 1000 * 60 * 60 * 24
             const result = Math.ceil((newEndDate.getTime() - newStartDate.getTime()) / (one_day))
-            console.warn('date Converter result', result)
             if (result < 0) { return 0 }
             setsessionDetail(prevState => ({
                 ...prevState,

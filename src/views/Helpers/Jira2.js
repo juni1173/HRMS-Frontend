@@ -13,7 +13,6 @@ const JiraHelper = () => {
     
       const getProjects = async () => {
        const response = await auth.projects.getAllProjects()
-       console.warn(response)
         return response
       }
       return {

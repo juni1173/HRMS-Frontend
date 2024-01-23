@@ -4,7 +4,6 @@ import { ArrowLeft, ArrowRight, XCircle } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../../../../Helpers/ApiHelper'
 const Job_Specification = ({ stepper, CallBack, Dimensions }) => {
-  console.log(Dimensions)
     const Api = apiHelper()
     const [loading, setLoading] = useState(true)
     const [jd_dimension, setDimension] = useState(null)

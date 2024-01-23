@@ -2,7 +2,6 @@ import {Fragment} from 'react'
 import { Row, Col, Badge } from 'reactstrap'
 import ReasonsTable from './Approvals/ReasonsTable'
 const CertificateDetails = ({ data }) => {
-    console.warn(data)
   return (
     <Fragment>
         <Row>

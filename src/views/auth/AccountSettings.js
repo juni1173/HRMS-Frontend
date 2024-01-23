@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux'
 import { handleLogout } from '@store/authentication'
 import defaultAvatar from '@src/assets/images/avatars/user_blank.png'
 const ChangePassword = () => {
-    console.warn(JSON.parse(localStorage.getItem('user')).uuid)
     const Api = apiHelper() 
     const history = useHistory()
     const dispatch = useDispatch()
@@ -45,7 +44,6 @@ const ChangePassword = () => {
     Api.jsonPatch(`/hrms_user/profile/image/update/`, formData, false).then(result => {
         if (result) {
             if (result.status === 200) {
-                console.warn(result)
                 const reader = new FileReader(),
                 files = e.target.files
                 reader.onload = function () {

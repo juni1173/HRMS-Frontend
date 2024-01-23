@@ -141,7 +141,6 @@ const [currentLeaves, setCurrentLeaves] = useState()
     useEffect(() => {
         leave_types_dropdown()
     }, [data])
-    console.log(isSuperuser)
   return (
     <Fragment>
         <Row>

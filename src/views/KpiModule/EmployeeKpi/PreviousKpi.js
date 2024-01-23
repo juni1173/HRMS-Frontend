@@ -38,7 +38,6 @@ const PreviousKpi = ({ CallBack, dropdownData }) => {
         }
       }
       const multipleKpiSend = async () => {
-        console.warn(checkedItems)
         // return false
         if (checkedItems.length > 0) {  
                 await Api.jsonPost(`/kpis/employees/approval/list/`, {kpis_array: checkedItems})

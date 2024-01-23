@@ -6,7 +6,6 @@ import apiHelper from '../../../../Helpers/ApiHelper'
 // import Swal from 'sweetalert2'
 // import withReactContent from 'sweetalert2-react-content'
 const Assignments = ({ data, CallBack, is_project_base, is_evaluate }) => {
-    console.warn(data)
     const Api = apiHelper()
     const searchHelper = SearchHelper()
     // const MySwal = withReactContent(Swal)
@@ -82,7 +81,6 @@ const Assignments = ({ data, CallBack, is_project_base, is_evaluate }) => {
     if (data.training) {
         const response = await Api.get(`/training/assignment/upload/by/employee/${data.training}/`)
         if (response.status === 200) {
-          console.warn(response.data)
           const responseData = response.data
           setUploadedAssignmentList(responseData)
            
@@ -138,8 +136,6 @@ const Assignments = ({ data, CallBack, is_project_base, is_evaluate }) => {
 // }
 const marksSubmission = async () => {
     setMarksLoading(true)
-    console.warn(evaluationmarks)
-    console.warn(data)
     setMarksLoading(false)
     return false
     const formData = new FormData()

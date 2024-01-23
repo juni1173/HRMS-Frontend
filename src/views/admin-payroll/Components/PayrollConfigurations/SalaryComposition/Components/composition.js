@@ -104,10 +104,8 @@ const Composition = () => {
             sum_composition = sum_composition + percentage_val
             // console.warn(sum_composition)
             if (sum_composition <= 100) {
-                console.warn('true')
                 return true
             } else {
-                console.warn('false')
                 return false
             }
         } else {
@@ -120,12 +118,9 @@ const Composition = () => {
         for (let i = 0; i < compositionData.length; i++) {
             sum_composition = sum_composition + Math.round(compositionData[i].attribute_percentage)
         }
-        console.warn(sum_composition)
         if (sum_composition === 100) {
-            console.warn('true')
             return true
         } else {
-            console.warn('false')
             return false
         }
     } else {

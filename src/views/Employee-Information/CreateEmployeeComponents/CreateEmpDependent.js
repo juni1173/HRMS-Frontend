@@ -74,8 +74,8 @@ const CreateEmpDependent = ({uuid, CallBack}) => {
             .then(result => {
                 if (result) {
                     if (result.status === 200) { 
-                        const finalResult = result.data
-                        console.warn(finalResult)
+                        // const finalResult = result.data
+                        // console.warn(finalResult)
                         CallBack()
                         Api.Toast('success', result.message)
                     } else {

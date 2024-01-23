@@ -7,7 +7,7 @@ import draftToHtml from 'draftjs-to-html'
 // import EmailTemplateHelper from '../../../Helpers/EmailTemplateHelper'
 import apiHelper from '../../../Helpers/ApiHelper'
 import '@styles/react/libs/editor/editor.scss'
-const CustomEmailForm = ({CallBack}) => {
+const CustomEmailForm = () => {
 //   const Helper = EmailTemplateHelper()
   const Api = apiHelper()
   const [loading, setLoading] = useState(false)
@@ -91,7 +91,7 @@ const CustomEmailForm = ({CallBack}) => {
               if (result.status === 200) {
                  Api.get(`/email/templates/candidate/job/email/send/${EmailData.candidate_email.candidate_job_uuid}/${EmailData.candidate_email.id}/`)
                 .then(data => {
-                    CallBack()
+                    // CallBack()
                     setSentEmailMsg(data.message)
                     Api.Toast('success', data.message)
                 })

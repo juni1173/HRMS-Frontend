@@ -8,7 +8,6 @@ import JobHelper from "../../../Helpers/JobHelper"
 import apiHelper from "../../../Helpers/ApiHelper"
 
 const UpdateJobList = ({ CallBack, data }) => {
-  console.warn(data)
   const Job_Helper = JobHelper()
   const Api = apiHelper()
 

@@ -7,7 +7,7 @@ import draftToHtml from 'draftjs-to-html'
 import EmailTemplateHelper from '../../../Helpers/EmailTemplateHelper'
 import apiHelper from '../../../Helpers/ApiHelper'
 import '@styles/react/libs/editor/editor.scss'
-const EmailForm = ({CallBack, EmailData}) => {
+const EmailForm = ({EmailData}) => {
   const Helper = EmailTemplateHelper()
   const Api = apiHelper()
   const [loading, setLoading] = useState(false)
@@ -50,7 +50,6 @@ const EmailForm = ({CallBack, EmailData}) => {
               Variables.splice(0, Variables.length)
             }
             await Helper.fetchEmailVariables().then(data => {
-              console.warn(data)
                 if (data) {
                     if (Object.values(data).length > 0) {
                       setVariables(data)
@@ -91,7 +90,7 @@ const EmailForm = ({CallBack, EmailData}) => {
               if (result.status === 200) {
                  Api.get(`/email/templates/candidate/job/email/send/${EmailData.candidate_email.candidate_job_uuid}/${EmailData.candidate_email.id}/`)
                 .then(data => {
-                    CallBack()
+                    // CallBack()
                     setSentEmailMsg(data.message)
                     Api.Toast('success', data.message)
                 })

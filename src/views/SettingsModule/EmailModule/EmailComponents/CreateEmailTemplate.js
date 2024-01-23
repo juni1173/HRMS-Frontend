@@ -73,7 +73,6 @@ const getVariables = async () => {
           Variables.splice(0, Variables.length)
         }
         await Helper.fetchEmailVariables().then(data => {
-          console.warn(data)
             if (data) {
                 if (Object.values(data).length > 0) {
                   setVariables(data)

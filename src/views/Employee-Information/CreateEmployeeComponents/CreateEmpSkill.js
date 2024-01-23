@@ -34,7 +34,6 @@ const CreateEmpSkill = ({uuid, CallBack}) => {
   
     const  onCategoryChange = cat_id => {
         if (cat_id) {
-            console.warn(Object.values(skillsList))
                 const newArray = skillsList.filter(function (el) { return el.category === cat_id })
                 filterSkills.splice(0, filterSkills.length)
                 for (let i = 0; i < newArray.length; i++) {
@@ -55,8 +54,7 @@ const CreateEmpSkill = ({uuid, CallBack}) => {
             .then(result => {
                 if (result) {
                     if (result.status === 200) { 
-                        const finalResult = result.data
-                        console.warn(finalResult)
+                        // const finalResult = result.data
                         CallBack()
                         Api.Toast('success', result.message)
                     } else {
@@ -77,7 +75,6 @@ const CreateEmpSkill = ({uuid, CallBack}) => {
         setLoading(true)
         Api.get(`/employee/pre/skills/data/details/`, { headers: {Authorization: Api.token} }).then(result => {
         if (result) {
-            console.warn(result)
             proficencyList.splice(0, proficencyList.length)
             skillCategoryList.splice(0, skillCategoryList.length)
             skillsList.splice(0, skillsList.length)

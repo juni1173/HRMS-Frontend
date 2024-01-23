@@ -99,7 +99,6 @@ const EducationDetail = ({emp_state}) => {
     const Submit = async (e) => {
         e.preventDefault()
         const uuid = emp_state['emp_data'].uuid
-        console.warn(emp_state)
         // const uuid = '38e1aa09-1b3e-4f4f-a4e3-8909907bd3da'
         // const id = 1
         if (educationDetail.degreeType !== '' && educationDetail.degreeTitle !== '' && educationDetail.institutes !== ''

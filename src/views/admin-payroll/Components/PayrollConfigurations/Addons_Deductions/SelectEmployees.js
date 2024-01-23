@@ -25,7 +25,6 @@ const SelectEmployees = ({content}) => {
             setLoading(false)
         } else {
             // Api.Toast('error', response.message)
-            console.warn(response.message)
             setLoading(false)
         } 
         
@@ -33,10 +32,11 @@ const SelectEmployees = ({content}) => {
              setData(checkedresponse.data)
              const employeeIds = checkedresponse.data.map((item) => item.employee)
              setCheckedEmployees(employeeIds)
-        } else {
-          console.warn(checkedresponse.message)
-            // Api.Toast('error', checkedresponse.message)
         }
+        //  else {
+        //   // console.warn(checkedresponse.message)
+        //     // Api.Toast('error', checkedresponse.message)
+        // }
       }
         }
         const updateemplist = async() => {

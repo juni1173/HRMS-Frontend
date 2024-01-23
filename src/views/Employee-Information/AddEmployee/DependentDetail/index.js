@@ -66,9 +66,7 @@ const DependentDetail = ({emp_state}) => {
     const GetPreData = async () => {
         setLoading(true)
        await Api.get(`/employees/pre/dependent/data/`, { headers: {Authorization: Api.token} }).then(result => {
-        if (result) {
-            console.warn(result)
-           
+        if (result) {           
             relationshipsArr.splice(0, relationshipsArr.length)
             if (result.status === 200) {
                 const relation_result = result.data.dependent
@@ -103,7 +101,6 @@ const DependentDetail = ({emp_state}) => {
                 if (result) {
                     if (result.status === 200) { 
                         const finalResult = result.data
-                        console.warn(finalResult)
                         // for (let i = 0; i < finalResult.length; i++) {
                             employeeDependentArray.push(finalResult)
                         // }  

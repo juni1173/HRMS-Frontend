@@ -101,7 +101,6 @@ const list = () => {
             if (check_in_time) formData['check_in'] = `${check_in_time}:00`
             if (date) formData['date'] = Api.formatDate(date)
             if (type) formData['attendance_type'] = type
-            console.warn(formData)
             // return false
             await Api.jsonPost(`/attendance/check_in/`, formData)
             .then((result) => {

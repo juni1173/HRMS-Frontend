@@ -199,7 +199,7 @@ const UpdateEmpEducation = ({CallBack, empData, uuid}) => {
                        <button className="btn-next float-right btn btn-success" onClick={(e) => addmoreSubmit(e)}><span className="align-middle d-sm-inline-block d-none">Add </span></button>
                 </Col> */}
                 <Col md="12" className="mb-1">
-                       <button className="btn-next float-right btn btn-update" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Update</span></button>
+                       <button className="btn-next float-right btn btn-warning" onClick={(e) => Submit(e)}><span className="align-middle d-sm-inline-block d-none">Update</span></button>
                     </Col>
             </Row>
                 </Form>

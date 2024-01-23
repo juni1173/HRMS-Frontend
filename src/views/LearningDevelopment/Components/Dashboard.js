@@ -16,7 +16,6 @@ const Dashboard = () => {
     await Api.get(`/learning-and-development/dashboards/`).then(result => {
       if (result) {
         if (result.status === 200) {
-          console.warn(result.data)
           setData(result.data)
           applicantChart.splice(0, applicantChart.length)
           sessionChart.splice(0, sessionChart.length)

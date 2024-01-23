@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
 import { Row, Col, Badge } from 'reactstrap'
 const ViewEmailTemplate = ({data}) => {
-  console.warn(data)
   return (
     <Fragment>
         <Row>

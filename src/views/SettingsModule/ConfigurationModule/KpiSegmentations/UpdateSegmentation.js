@@ -4,7 +4,6 @@ import Select from 'react-select'
 import apiHelper from '../../../Helpers/ApiHelper'
 import { Save } from 'react-feather'
 const UpdateSegmentation = ({ data, CallBack }) => {
-    console.warn(data)
     const Api = apiHelper()
     const [segmentationData, setSegmentationData] = useState({
         duration: data.duration ? data.duration : '',

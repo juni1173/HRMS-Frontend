@@ -52,7 +52,6 @@ const AddLecture = ({ sessionData, CallBack }) => {
             formData['total_hours'] = lectureDetail.total_hours
         await Api.jsonPost(`/courses/details/${sessionData.slug_title}/${sessionData.uuid}/modules/`, formData)
         .then(result => {
-            console.warn(result.status)
                     if (result.status === 200) { 
                         Api.Toast('success', result.message)
                         CallBack()

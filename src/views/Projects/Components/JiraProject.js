@@ -28,7 +28,6 @@ const JiraProject = ({ data }) => {
             if (result) {
                 if (result.status === 200) {
                     setIssues(result.data.issues)
-                    console.warn(result)
                 } else {
                     setIssues([])
                 }

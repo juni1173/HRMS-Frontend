@@ -24,7 +24,6 @@ const UpdateJobSpecifiction = ({ stepper, preData, CallBack, Dimensions }) => {
       return size
     }
   const addmoreSubmit = () => {
-    console.warn(Specifications)
       setLoading(true)
         if (Object.values(Specifications).length > 0) {
           if (dimensionExist()) {
@@ -54,7 +53,6 @@ const UpdateJobSpecifiction = ({ stepper, preData, CallBack, Dimensions }) => {
         
       }
   const removeAction = value => {
-    console.warn(value)
     setLoading(true)
     Specifications.splice(value, 1)
     setTimeout(() => {

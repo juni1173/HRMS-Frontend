@@ -90,7 +90,6 @@ const Position = ({ stepper, stepperStatus, list, createForm, fetchPositions, co
       }) 
       
     } else {
-      console.warn(formData)
       api.Toast('error', "Something Went Wrong. Try Again!")
     }
   } 

@@ -42,11 +42,8 @@ const DashboardChart = ({ dashboardId }) => {
           setDashboardData(contentElement)
           
             // const xml = new ReactXmlParser().parseFromString(data)
-            // console.warn(xml)
             // let content = xml.children[8].children[0].value
             //  content = content.replace('<![CDATA[', '').replace(']]>', '')
-           
-            // console.warn(content)
             // setDashboardData(content)
         })
         

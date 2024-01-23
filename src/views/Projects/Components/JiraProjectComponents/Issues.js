@@ -34,7 +34,6 @@ const JiraIssues = ({ data }) => {
             if (result) {
                 if (result.status === 200) {
                     setIssues(result.data.issues)
-                    console.warn(result)
                 } else {
                     setIssues([])
                 }
@@ -93,7 +92,6 @@ const JiraIssues = ({ data }) => {
       name,
       issueCount: count
     }))
-    console.warn(assigneesWithCount)
     return assigneesWithCount
 }
     // const getStatusChart = () => {

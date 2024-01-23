@@ -5,7 +5,6 @@ import Chart from 'react-apexcharts'
 import { Card, CardBody, Row, Col } from 'reactstrap'
 
 const ApplicantsChart = ({ data, applicants }) => {
-  console.warn(data)
   const options = {
     chart: {
       toolbar: {

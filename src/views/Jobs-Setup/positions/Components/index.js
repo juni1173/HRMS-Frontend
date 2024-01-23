@@ -14,7 +14,6 @@ const PositionIndexComp = () => {
       const CallBack = () => {
         setCanvasOpen(false)
             setCount(current => current + 1)
-            console.warn(count)
       }
       
       const toggleCanvasEnd = () => {

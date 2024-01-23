@@ -214,6 +214,7 @@ allIds.push(nestedItem.id.toString())
     (data && Object.values(data).length > 0) ? (
     <>
     {Object.values(data).map((dataItem, dataKey) => (
+      console.log(dataItem),
        dataItem.employee_kpis_data && Object.values(dataItem.employee_kpis_data).length > 0 && ( 
         <Card key={dataKey}>
             <CardBody>
@@ -237,7 +238,8 @@ allIds.push(nestedItem.id.toString())
                                           //   // 
                                           // )
                                           dataItem.employee_kpis_data.every(
-                                            (item) => item.employee_kpis_data.every(
+                                          
+                                            (item) => item.employee_kpis_data && item.employee_kpis_data.every(
                                               (nestedItem) => nestedItem.kpis_status_level !== 2
                                             )
                                           )

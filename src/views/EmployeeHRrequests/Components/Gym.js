@@ -47,7 +47,14 @@ const Gym = ({yearoptions}) => {
     }
     const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
+//           const fileSize = e.target.files[0].size
+//           // console.log(fileSize)
+//           console.log(process.env.REACT_APP_maxSize)
+//           if (fileSize > process.env.maxSize) {
+// console.log(fileSize)
+//           } else {
           setGym_Receipt(e.target.files[0]) 
+          // }
         }
       } 
     const remove_gym_receipt = () => {

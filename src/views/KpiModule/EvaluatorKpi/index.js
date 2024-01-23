@@ -203,7 +203,7 @@ const index = ({ type, countData }) => {
           <ModalHeader toggle={() => setBasicModal(!basicModal)}>Add Kpi</ModalHeader>
           <ModalBody>
           {!loading ? (
-                <AddEmployeeKpi preData={preData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, projectsData: projects, batchData: batchDropdownArr}} type='evaluation' CallBack={CallBack}/>
+                <AddEmployeeKpi preData={preData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, projectsData: projects, batchData: batchDropdownArr}} type='evaluator' CallBack={CallBack}/>
             ) : (
                 <div className='text-center'><Spinner color="white"/></div>
             )}

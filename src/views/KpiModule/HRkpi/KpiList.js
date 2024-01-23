@@ -36,17 +36,24 @@ const KpiList = ({ data, CallBack, index, type }) => {
       // console.warn(tableData)
         if (isChecked) {
           // Select all checkboxes in the current table
-          const allIds = tableData
-          .filter((item) => item.employee_kpis_data && (
-          item.employee_kpis_data.filter(kpi => kpi.kpis_status_level === 11))
-          .map((final) => final.id.toString()))
-          console.warn(allIds)
-          setCheckedItems(allIds)
-          setCheckedItems([...checkedItems, ...allIds])
+          const allIds = []
+          tableData.map((item) => {
+            const allkpis = item.employee_kpis_data 
+            if (allkpis !== null && allkpis !== undefined && allkpis.length > 0) {
+            allkpis.map((nestedItem) => {
+              if (nestedItem.kpis_status_level === 3 || item.kpis_status_level === 11) {
+  allIds.push(nestedItem.id.toString())
+              }
+            })
+          }
+          })
+      setCheckedItems(allIds)
+            setCheckedItems([...checkedItems, ...allIds])
         } else {
-          // Deselect all checkboxes in the current table
-          const tableIds = tableData.map((item) => item.id.toString())// Convert to strings
-          setCheckedItems(checkedItems.filter((item) => !tableIds.includes(item)))
+          // // Deselect all checkboxes in the current table
+          // const tableIds = tableData.map((item) => item.id.toString())// Convert to strings
+          // setCheckedItems(checkedItems.filter((item) => !tableIds.includes(item)))
+          setCheckedItems([])
         }
       }
     

@@ -10,7 +10,6 @@ const SessionHelper = () => {
             if (response) {
                 if (response.status === 200) {
                     const List = response.data 
-                    console.warn(response.data)
                     // if (List.length > 0) {
                         // for (let i = 0; i < List.length; i++) {
                         //         SessionList.push(List[i])

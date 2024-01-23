@@ -186,7 +186,6 @@ const CandidateList = () => {
         getQualifiedCandidate(event.selected + 1)
         }
     const handleDisqualifiedPageClick = (event) => {
-        console.warn(event.selected)
         getDisqualifiedCandidate(event.selected + 1)
         }
     useEffect(() => {

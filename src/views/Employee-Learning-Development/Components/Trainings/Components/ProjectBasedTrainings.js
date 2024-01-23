@@ -10,7 +10,6 @@ const ProjectBasedTrainings = () => {
         setLoading(true)
         const response = await Api.get('/training/project/employee/data/')
         if (response.status === 200) {
-          console.warn(response.data)
           const responseData = response.data
          setData(responseData)
         } else {

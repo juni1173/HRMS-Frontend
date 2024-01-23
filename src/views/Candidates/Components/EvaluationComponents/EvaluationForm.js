@@ -71,7 +71,6 @@ const EvaluationForm = ({uuid, stage_id}) => {
             if (result) {
                 if (result.status === 200) {
                     setEvaluationStatus(result.data)
-                    console.warn(result.data)
                 } else {
                     Api.Toast('error', result.message)
                 }
@@ -128,7 +127,6 @@ const EvaluationForm = ({uuid, stage_id}) => {
         return answers
     }
     const OnSubmitEvaluation = async (id) => {
-        console.warn(remarks)
         if (Object.values(answers).length > 0 && recommendation !== ''
         && comment !== '' && remarks !== '') {
             const formData = new FormData()

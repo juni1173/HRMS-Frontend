@@ -60,7 +60,6 @@ const AddCourse = ({ CallBack }) => {
         setLoading(true)
        await Api.get(`/courses/pre/course/data/view/`, { headers: {Authorization: Api.token} }).then(result => {
         if (result) {
-            console.warn(result)
             programArr.splice(0, programArr.length)
             if (result.status === 200) {
                 const finalData = result.data

@@ -93,7 +93,6 @@ const ExperienceDetail = ({emp_state}) => {
             setTimeout(() => {
                 setLoading(false)
             }, 1000)
-            console.warn(employeeExperienceArray)
          } else {
             Api.Toast('error', 'Please fill all required fields')
          }

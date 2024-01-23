@@ -72,7 +72,6 @@ const Manual = () => {
             formData.append('document', manualForm.document)
             await Api.jsonPost(`/manuals/`, formData, false).then(result => {
                 if (result) {
-                  console.warn(result)
                     if (result.status === 200) {
                         Api.Toast('success', result.message)
                         preDataApi()

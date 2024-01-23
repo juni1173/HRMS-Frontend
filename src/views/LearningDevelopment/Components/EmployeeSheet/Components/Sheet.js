@@ -37,7 +37,6 @@ const Sheet = () => {
             await Api.get(`/learning-and-development/worksheets/`).then(result => {
                 if (result) {
                     if (result.status === 200) {
-                        console.warn(result.data)
                         setSheetData(result.data)
                         setSearchResults(result.data)
                     } else {

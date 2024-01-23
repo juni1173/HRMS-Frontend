@@ -3,7 +3,6 @@ import { Bar, Pie } from 'react-chartjs-2'
 import { useSkin } from '@hooks/useSkin'
 // import DashboardChart from './JiraDashoardCharts'
 const StatusChart = ({ data, project, assignee }) => {
-  console.warn(data)
 const labels = data.map((d) => d.name)
 const values = data.map((d) => d["Number of Issues"])
 

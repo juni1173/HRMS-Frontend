@@ -4,7 +4,6 @@ import {Input, Button, Label, Row, Col, Badge, Spinner} from 'reactstrap'
 import apiHelper from '../../Helpers/ApiHelper'
 
 const UpdateNote = ({ data, CallBack }) => {
-    console.warn(data)
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [employeeName, setEmployeeName] = useState(data.reciever ? data.reciever : '')

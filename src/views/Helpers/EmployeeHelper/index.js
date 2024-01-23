@@ -13,7 +13,6 @@ const EmployeeHelper = () => {
     const employeeDropdown = useState([])
     const fetchFormPreData = async () => {
         const response = await Api.get(`/employees/pre/data/${Api.org.id}/`)
-        console.warn(response)
         if (response.status === 200) {
             const data = response.data 
             if (Object.values(data).length > 0) {

@@ -25,7 +25,6 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
            
            InputValue = e
         } else if (InputType === 'date') {
-            console.warn(e)
             const dateFormat = Api.formatDate(e)
                
             InputValue = dateFormat

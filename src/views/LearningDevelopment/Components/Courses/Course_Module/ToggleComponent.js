@@ -7,7 +7,7 @@ import Module_Topics from "./Course_Topics/index"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const ToggleComponent = ({ data, id, CallBack, courseData }) => {
-    console.warn(courseData)
+    // console.warn(courseData)
     const Api = apiHelper()
     const [toggleThisElement, setToggleThisElement] = useState(false)
     const [updateCanvasPlacement, setupdateCanvasPlacement] = useState('end')

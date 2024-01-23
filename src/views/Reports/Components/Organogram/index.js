@@ -12,7 +12,6 @@ const index = () => {
             if (result) {
                 if (result.status === 200) {
                     setData(result.data)
-                    console.warn(result.data)
                 } else {
                     Api.Toast('error', result.message)
                 }

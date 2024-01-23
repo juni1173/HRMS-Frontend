@@ -12,7 +12,6 @@ const index = () => {
         if (result) {
           if (result.status === 200) {
               const item = result.data
-              console.warn(item)
               for (let i = 0; i < item.length; i++) {
                 events.push({id: item[i].id, title: item[i].course_title ? item[i].course_title : null, start: item[i].start_date ? new Date(item[i].start_date) : '', end: item[i].end_date ? new Date(item[i].end_date) : '', session_status: item[i].session_status ? item[i].session_status : 'N/A'})
               }

@@ -7,7 +7,6 @@ import apiHelper from '../../../../../Helpers/ApiHelper'
 import EmployeeAssignments from './EmployeeAssignments'
 import ReimbursementDetails from './ReimbursementDetails'
 const EmployeeAssigned = ({ data, CallBack }) => {
-    console.warn(data)
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [canvasPlacement, setCanvasPlacement] = useState('end')

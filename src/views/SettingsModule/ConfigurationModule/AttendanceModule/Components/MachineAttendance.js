@@ -98,7 +98,6 @@ const MachineAttendance = () => {
             formData.append('attendance_file', Form.attendance_file)
             await Api.jsonPost(`/attendance/machine/data/`, formData, false).then(result => {
                 if (result) {
-                  console.warn(result)
                     if (result.status === 200) {
                         Api.Toast('success', result.message)
                         preDataApi()

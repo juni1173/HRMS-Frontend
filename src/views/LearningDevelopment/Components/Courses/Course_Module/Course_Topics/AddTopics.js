@@ -49,7 +49,6 @@ const AddTopics = ({ CallBack, module_id }) => {
             if (topicDetail.credit_hours !== '') formData['credit_hours'] = topicDetail.credit_hours
         await Api.jsonPost(`/courses/details/module/${module_id}/topics/`, formData)
         .then(result => {
-            console.warn(result.status)
                     if (result.status === 200) { 
                         Api.Toast('success', result.message)
                         CallBack()

@@ -14,7 +14,6 @@ const CourseDetail = () => {
       }
       const getCourseData = async () => {
         setLoading(true)
-        console.warn(url_params.uuid)
         if (!url_params.uuid) {
             return false   
         }

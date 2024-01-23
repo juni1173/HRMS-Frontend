@@ -71,7 +71,6 @@ const JobWizard = ({CallBackList}) => {
             let JDSpec = []
             JDSpec = [...JD_data.JD_Specification, ...JD_data.JD_AdditionalInfo]
             final_data = Object.assign(JD_data.JD_Profile, {main_responsibilities: JD_data.JD_Description}, {jd_specifications: JDSpec})
-            console.warn(final_data)
             submitJD(final_data)
         }
     }

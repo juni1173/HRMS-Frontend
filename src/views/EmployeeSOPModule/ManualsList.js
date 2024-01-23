@@ -3,7 +3,6 @@ import { Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink, Col, CardHe
 import Manualpdfreader from './Manualpdfreader'
 
 const ManualsList = ({data, typeId}) => {
-    console.warn(typeId)
     const [active, setActive] = useState('1')
     const [filePath, setFilePath] = useState('')
     const toggle = (tab, document) => {

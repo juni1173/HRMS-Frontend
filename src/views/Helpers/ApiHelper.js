@@ -225,9 +225,7 @@ import Avatar from '@components/avatar'
               const json = await response.json()
           
               if (Object.values(json).length > 0) {
-                console.warn(`Oauth api response : ${JSON.stringify(json)}`)
                 const post_local_tokens = await postJiraTokens(json)
-                console.warn(`new tokens data : ${JSON.stringify(post_local_tokens.data)}`)
                 return post_local_tokens.data
               }
             }

@@ -46,10 +46,20 @@ const Medical = ({yearoptions}) => {
 
     }
     const imageChange = (e) => {
-        if (e.target.files && e.target.files.length > 0) {
-          setMedical_Receipt(e.target.files[0]) 
+      if (e.target.files && e.target.files.length > 0) {
+        const fileSize = e.target.files[0].size
+        const allowedsize = parseFloat(process.env.REACT_APP_maxSize)
+        if (fileSize > allowedsize) {
+Api.Toast('error', 'File size should be smaller than 5mb')
+const fileInput = document.getElementById('medical_receipt')
+if (fileInput) {
+fileInput.value = null
+}
+        } else {
+        setMedical_Receipt(e.target.files[0]) 
         }
-      } 
+      }
+    } 
     const remove_medical_receipt = () => {
         setMedical_Receipt(null) 
       } 

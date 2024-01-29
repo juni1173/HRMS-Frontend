@@ -6,6 +6,7 @@ import TrainingList from './Components/TrainingList'
 import EvaluateTrainings from './Components/EvaluateTrainings'
 const index = () => {
   const Api = apiHelper()
+  const [countData, setCountData] = useState()
   const [active, setActive] = useState('1')
     const [data, setData] = useState([
         {
@@ -36,6 +37,12 @@ const index = () => {
          
       } else {
           return Api.Toast('error', 'Data not found')
+      }
+      const countresponse = await Api.get('/training/counts/employee/')
+      if (countresponse.status === 200) {
+setCountData(countresponse.data)
+      } else {
+        return Api.Toast('error', 'Error fetching data')
       }
   }
   useEffect(() => {
@@ -84,7 +91,7 @@ const index = () => {
                                         toggle('4')
                                         }}
                                     >
-                                        Projects Trainings 
+                                        Projects Trainings <Badge className="bg-danger ml-5"> {countData && countData.project_training_count ? countData.project_training_count : 0}</Badge>
                                     </NavLink>
                                     <NavLink
                                         active={active === '5'}
@@ -92,7 +99,7 @@ const index = () => {
                                         toggle('5')
                                         }}
                                     >
-                                        Evaluate Trainings 
+                                        Evaluate Trainings <Badge className="bg-danger ml-5"> {countData && countData.evaluator_training_count ? countData.evaluator_training_count : 0}</Badge>
                                     </NavLink>
                                     </NavItem>
                                 

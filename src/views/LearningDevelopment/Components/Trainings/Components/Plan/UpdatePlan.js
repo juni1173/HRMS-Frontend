@@ -49,12 +49,13 @@ const UpdatePlan = ({ data, CallBack }) => {
         if (plan.title !== '' && plan.duration !== '' && plan.mode_of_training !== '' && data.evaluator !== '') {
             setLoading(true)
             const formData = new FormData()
-            if (plan.mode_of_training.value === 1 && plan.cost === '') {
+            if (plan.mode_of_training === 1 && plan.cost === '') {
+                setLoading(false)
                 return Api.Toast('error', 'Paid cost is required!') 
               } else {
                 formData['cost'] = plan.cost
               }
-            if (plan.mode_of_training.value !== 1 || plan.mode_of_training !== 1) {
+            if (plan.mode_of_training !== 1) {
                 formData['cost'] = ''
             }
             formData['title'] = plan.title

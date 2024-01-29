@@ -27,7 +27,10 @@ const ViewPlan = ({ data }) => {
                 <b>Status</b>: <Badge>{data.status_title ? data.status_title : 'N/A'}</Badge> 
             </Col>
             <Col md={4} className='my-2'>
-                <b>Cost</b>: <Badge>{data.cost ? data.cost : 'N/A'}</Badge>
+                <b>Training Cost</b>: <Badge>{data.cost ? data.cost : 'N/A'}</Badge>
+            </Col>
+            <Col md={4} className='my-2'>
+                <b>Reimbursed Cost</b>: <Badge>{data.reimbursed_cost ? data.reimbursed_cost : 'N/A'}</Badge>
             </Col>
         </Row>
         

@@ -239,7 +239,7 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
                                     <td>{item.kpis_status_title ? (
                                         <>
                                     <Badge color="light-success">{item.kpis_status_title}</Badge>
-                                    {item.kpis_status_level && item.kpis_status_level > 5 && <Button className='btn btn-sm btn-primary' onClick={() => getEvaluationDetails(item.employee, item.id)}>View Ratings</Button>}
+                                    {item.kpis_status_level && item.kpis_status_level > 5 && item.kpis_status_level !== 11 && <Button className='btn btn-sm btn-primary' onClick={() => getEvaluationDetails(item.employee, item.id)}>View Ratings</Button>}
                                     </>
                                     ) : <Badge color="light-danger">N/A</Badge>}</td>
                                     <td>{item.mode_of_kpis_title ? item.mode_of_kpis_title : 'N/A'}</td>

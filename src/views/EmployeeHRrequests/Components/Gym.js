@@ -43,18 +43,23 @@ const Gym = ({yearoptions}) => {
         [InputName] : InputValue
         
         }))
+        console.log(reimbursementData)
 
     }
     const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
-//           const fileSize = e.target.files[0].size
-//           // console.log(fileSize)
-//           console.log(process.env.REACT_APP_maxSize)
-//           if (fileSize > process.env.maxSize) {
-// console.log(fileSize)
-//           } else {
+          const fileSize = e.target.files[0].size
+          const allowedsize = parseFloat(process.env.REACT_APP_maxSize)
+          if (fileSize > allowedsize) {
+Api.Toast('error', 'File size should be smaller than 5mb')
+// setGym_Receipt(null)
+const fileInput = document.getElementById('gym_receipt')
+if (fileInput) {
+  fileInput.value = null
+}
+          } else {
           setGym_Receipt(e.target.files[0]) 
-          // }
+          }
         }
       } 
     const remove_gym_receipt = () => {

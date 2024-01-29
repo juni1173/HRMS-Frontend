@@ -41,16 +41,30 @@ const KpiRequests = ({ data, CallBack, dropdownData, index, type }) => {
           // Select all checkboxes in the current table
           const allIds = []
           // = tableData.map((i) => i.id.toString())
-         tableData.map((item) => {
-          const allkpis = item.employee_kpis_data 
-          if (allkpis !== null && allkpis !== undefined && allkpis.length > 0) {
-          allkpis.map((nestedItem) => {
-            if (nestedItem.kpis_status_level === 2) {
-allIds.push(nestedItem.id.toString())
+          if (type === 'cancel') {
+            tableData.map((item) => {
+              const allkpis = item.employee_kpis_data 
+              if (allkpis !== null && allkpis !== undefined && allkpis.length > 0) {
+              allkpis.map((nestedItem) => {
+                if (nestedItem.kpis_status_level === 11) {
+    allIds.push(nestedItem.id.toString())
+                }
+              })
             }
-          })
-        }
-        })
+            })
+          } else {
+            tableData.map((item) => {
+              const allkpis = item.employee_kpis_data 
+              if (allkpis !== null && allkpis !== undefined && allkpis.length > 0) {
+              allkpis.map((nestedItem) => {
+                if (nestedItem.kpis_status_level === 2) {
+    allIds.push(nestedItem.id.toString())
+                }
+              })
+            }
+            })
+          }
+         
     setCheckedItems(allIds)
           setCheckedItems([...checkedItems, ...allIds])
         } else {
@@ -214,7 +228,6 @@ allIds.push(nestedItem.id.toString())
     (data && Object.values(data).length > 0) ? (
     <>
     {Object.values(data).map((dataItem, dataKey) => (
-      console.log(dataItem),
        dataItem.employee_kpis_data && Object.values(dataItem.employee_kpis_data).length > 0 && ( 
         <Card key={dataKey}>
             <CardBody>
@@ -230,6 +243,7 @@ allIds.push(nestedItem.id.toString())
                                     <input
                                         type="checkbox"
                                         onChange={(event) => handlecheckall(event, dataItem.employee_kpis_data)}
+                                        
                                         disabled={
                                          
                                           // dataItem.employee_kpis_data.every(
@@ -237,10 +251,15 @@ allIds.push(nestedItem.id.toString())
                                           //   //  item.employee_kpis_data.kpis_status_level !== 2
                                           //   // 
                                           // )
-                                          dataItem.employee_kpis_data.every(
+                                          type !== 'cancel' ? dataItem.employee_kpis_data.every(
                                           
                                             (item) => item.employee_kpis_data && item.employee_kpis_data.every(
                                               (nestedItem) => nestedItem.kpis_status_level !== 2
+                                            )
+                                          ) : dataItem.employee_kpis_data.every(
+                                          
+                                            (item) => item.employee_kpis_data && item.employee_kpis_data.every(
+                                              (nestedItem) => nestedItem.kpis_status_level !== 11
                                             )
                                           )
                                           
@@ -283,13 +302,20 @@ allIds.push(nestedItem.id.toString())
                                                 {item.employee_kpis_data.map((kpi, kpiIndex) => (
                                                   <Fragment key={kpiIndex}>
                                                             <tr key={key}>
-                                                    <td>{kpi.kpis_status_level === 2 ? <input
+                                                              { type === 'cancel' ? <td>{kpi.kpis_status_level === 11 ? <input
                                                           className='form-check-primary'
                                                           type="checkbox"
                                                           id={kpi.id}
                                                           onChange={handleCheck}
                                                           checked={checkedItems.includes(kpi.id.toString())}
-                                                        />  : <input className='form-check-primary' type="checkbox" disabled/>}</td>
+                                                        />  : <input className='form-check-primary' type="checkbox" disabled/>}</td> : <td>{kpi.kpis_status_level === 2 ? <input
+                                                          className='form-check-primary'
+                                                          type="checkbox"
+                                                          id={kpi.id}
+                                                          onChange={handleCheck}
+                                                          checked={checkedItems.includes(kpi.id.toString())}
+                                                        />  : <input className='form-check-primary' type="checkbox" disabled/>}</td>}
+                                                    
                                                     <td>{item.title ? item.title : 'N/A'}</td>
                                                     <td>{kpi.title ? kpi.title : 'N/A'}</td>
                                                     <td>{kpi.ep_complexity_title ? kpi.ep_complexity_title : 'N/A'}</td>

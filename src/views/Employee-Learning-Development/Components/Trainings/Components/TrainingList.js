@@ -126,7 +126,7 @@ const TrainingList = ({ data, CallBack, is_project_base, is_evaluate }) => {
             <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
             <OffcanvasBody className=''>
             {toggleType === 'view' && (
-                <TrainingDetails data={detailData} CallBack={runCallback} is_project_base={is_project_base}/>
+                <TrainingDetails data={detailData} CallBack={runCallback} is_project_base={is_project_base} is_evaluate={is_evaluate}/>
             )}
             {toggleType === 'assignments' && (
                 <Assignments data={detailData} CallBack={runCallback} is_project_base={is_project_base}/>

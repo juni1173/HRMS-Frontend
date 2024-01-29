@@ -50,6 +50,7 @@ const AddPlan = ({ CallBack }) => {
             setLoading(true)
             const formData = new FormData()
             if (plan.mode_of_training.value === 1 && plan.cost === '') {
+              setLoading(false)
               return Api.Toast('error', 'Paid cost is required!') 
             } else {
               formData['cost'] = plan.cost
@@ -67,17 +68,21 @@ const AddPlan = ({ CallBack }) => {
                 if (result) {
                     if (result.status === 200) { 
                         Api.Toast('success', result.message)
+                        setLoading(false)
                         CallBack()
+                        
                     } else {
+                      setLoading(false)
                         Api.Toast('error', result.message)
                     }
                 } else {
+                  setLoading(false)
                     Api.Toast('error', 'Server Not Responding')
                 }
             })
-            setTimeout(() => {
-                setLoading(false)
-            }, 1000)
+            // setTimeout(() => {
+            //     setLoading(false)
+            // }, 1000)
          } else {
             Api.Toast('error', 'Please fill all required fields')
          }

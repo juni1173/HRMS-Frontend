@@ -16,11 +16,11 @@ const ReimbursementDetails = ({ data }) => {
                                             <Badge>From</Badge> {data.start_date ? data.start_date : 'N/A'} - <Badge>To</Badge> {data.end_date ? data.end_date : 'N/A'}
                                             
                                             {data.training_cost && (
-                                                <p className='mt-1'>Cost: <Badge>{data.training_cost ? data.training_cost : 'N/A'}</Badge></p>
+                                                <p className='mt-1'>Funding Request: <Badge>{data.training_cost ? data.training_cost : 'N/A'}</Badge></p>
                                             )}
-                                            {/* {data.reimbursed_cost && (
-                                                <p className='mt-1'>Reimbursement Cost: <Badge>{data.reimbursed_cost ? data.reimbursed_cost : 'N/A'}</Badge></p>
-                                            )} */}
+                                            {data.reimbursed_cost && (
+                                                <p className='mt-1'>Allocated Fund: <Badge>{data.reimbursed_cost ? data.reimbursed_cost : 'N/A'}</Badge></p>
+                                            )}
                                             
                                         </div>
                                         <div className="col-md-6">

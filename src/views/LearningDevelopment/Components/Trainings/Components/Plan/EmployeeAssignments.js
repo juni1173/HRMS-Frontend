@@ -11,12 +11,13 @@ const EmployeeAssignments = ({ data }) => {
                                 <Card key={key} className="dark-shadow">
                                     <CardBody>
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-9">
                                             <h4>{assignment.training_assignment_title ? assignment.training_assignment_title : 'No title found'}</h4>
                                             <Badge>{assignment.updated_at ? Api.formatDate(assignment.updated_at) : 'N/A'}</Badge>
-                                            <Badge className='m-1'>{assignment.obtained_marks ? assignment.obtained_marks : 'N/A'}</Badge>
+                                           Total Marks: <Badge className='m-1' color='success'>{assignment.total_marks ? assignment.total_marks : 'N/A'}</Badge>
+                                            Obtained Marks: <Badge className='m-1' color='danger'>{assignment.obtained_marks ? assignment.obtained_marks : 'N/A'}</Badge>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-3">
                                             <div className="float-right">
                                                 <button
                                                     className="border-0 no-background"

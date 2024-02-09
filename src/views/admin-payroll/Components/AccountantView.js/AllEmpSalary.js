@@ -69,6 +69,10 @@ const handleverify = () => {
     setLoading(false)
   }, 1000)
 }
+const closeModal = () => {
+  setModal(false)
+}
+
 const handleprocess = () => {
   setLoading(true)
   const formData = new FormData()
@@ -184,6 +188,49 @@ useEffect(() => {
         </ButtonGroup>
       )}
     </div>
+    {active === '3' ? <Card className="mb-3" color="light-success">
+              <CardBody>
+                <div className="row">
+                  <div className="col-md-3">
+                    <CardTitle tag="h1">{data.salary.batch_no}</CardTitle>
+                  </div>
+                  <div className="col-md-3">
+                                            <Badge color='light-success'>
+                                              Total Amount : {data.overall_totals.batch_total}
+                                            </Badge>
+                                        </div>
+                  <div className="col-md-3">
+                                            <Badge color='light-warning'>
+                                              Tax Amount : {data.overall_totals.tax_amount}
+                                            </Badge>
+                                        </div>
+                                        <div className='col-lg-3'>
+                        <Button
+                          className='btn btn-success'
+                          onClick={() => handletransfer()}
+                        >
+                          Complete Batch <Check />
+                        </Button>
+                      </div>
+                    <div className="col-md-3">
+                                            <Badge color='light-info'>
+                                             Add/Ons :  {data.overall_totals.total_addons}
+                                            </Badge>
+                                        </div>
+                     <div className="col-md-3">
+                                            <Badge color='light-info'>
+                                             Deductions :  {data.overall_totals.total_deductions}
+                                            </Badge>
+                                        </div> 
+                    <div className="col-md-3">
+                                            <Badge color='light-info'>
+                                             ESS :  {data.overall_totals.total_customized}
+                                            </Badge>
+                                        </div>                       
+                 
+                </div>
+              </CardBody>
+            </Card> : null}
     {dataTodisplay.length > 0 ? <>
      {dataTodisplay.map((item, index) => (
             <Card key={index} className="mb-3">
@@ -256,49 +303,7 @@ useEffect(() => {
           ))} </> : (
             <div className="text-center">No data found!</div>
           )}
-          <Card className="mb-3" color="light-success">
-              <CardBody>
-                <div className="row">
-                  <div className="col-md-3">
-                    <CardTitle tag="h1">{data.salary.batch_no}</CardTitle>
-                  </div>
-                  <div className="col-md-3">
-                                            <Badge color='light-success'>
-                                              Total Amount : {data.overall_totals.batch_total}
-                                            </Badge>
-                                        </div>
-                  <div className="col-md-3">
-                                            <Badge color='light-warning'>
-                                              Tax Amount : {data.overall_totals.tax_amount}
-                                            </Badge>
-                                        </div>
-                                        <div className='col-lg-3'>
-                        <Button
-                          className='btn btn-success'
-                          onClick={() => handletransfer()}
-                        >
-                          Complete Batch <Check />
-                        </Button>
-                      </div>
-                    <div className="col-md-3">
-                                            <Badge color='light-info'>
-                                             Add/Ons :  {data.overall_totals.total_addons}
-                                            </Badge>
-                                        </div>
-                     <div className="col-md-3">
-                                            <Badge color='light-info'>
-                                             Deductions :  {data.overall_totals.total_deductions}
-                                            </Badge>
-                                        </div> 
-                    <div className="col-md-3">
-                                            <Badge color='light-info'>
-                                             ESS :  {data.overall_totals.total_customized}
-                                            </Badge>
-                                        </div>                       
-                 
-                </div>
-              </CardBody>
-            </Card>
+         
             
         </> : (
           <div className="text-center">No data found!</div>
@@ -321,7 +326,7 @@ useEffect(() => {
         <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Download CSV</ModalHeader>
         <ModalBody>
-        <GenerateCSV selectedData={selectedItems}/>
+        <GenerateCSV selectedData={selectedItems} onclose={closeModal}/>
         </ModalBody>
       </Modal>
       </Fragment>

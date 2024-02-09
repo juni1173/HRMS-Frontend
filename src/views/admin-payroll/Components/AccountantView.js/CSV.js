@@ -7,7 +7,7 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
 import Select from 'react-select'
 import { CSVLink } from 'react-csv'
 
-const GenerateCSV = ({ selectedData }) => {
+const GenerateCSV = ({ selectedData, onclose }) => {
   const Api = apiHelper()
 
   // const [csvData, setCsvData] = useState([])
@@ -47,6 +47,8 @@ const GenerateCSV = ({ selectedData }) => {
 
   const onReset = () => {
     reset({ date: '', organizationaccount: '' })
+    onclose()
+  
   }
 
   const onSubmit = async (data) => {

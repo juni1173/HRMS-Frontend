@@ -199,17 +199,17 @@ const PayView = ({ payslipData, salaryBatch }) => {
   ) : null}
         {payslipData.customised.length > 0 ? (
                 <div className="mt-1">
-                  {payslipData.customised.map((custom, index) => (
+                  {payslipData.customised.filter(custom => custom.is_Taxable).map((custom, index) => (
                     <div key={index}>
-                       <Row>
-                        <Col md={3}>
+                       <Row className='text-nowrap'>
+                        <Col md={6}>
                       {custom.attribute_name}
                       </Col>
                       <Col md={6} className='d-flex justify-content-end'>
                        {custom.amount}
                        </Col>
                       </Row>
-                      {custom.attribute_name}: {custom.amount}
+                      {/* {custom.attribute_name}: {custom.amount} */}
                     </div>
                   ))}
                 </div>
@@ -233,7 +233,7 @@ const PayView = ({ payslipData, salaryBatch }) => {
                 <div className="mt-1">
                   {payslipData.deductions.map((deduction, index) => (
                     <div key={index}>
-                       <Row>
+                       <Row className='text-nowrap'>
                         <Col md={6}>
                       {deduction.attribute_name}
                       </Col>
@@ -285,6 +285,23 @@ const PayView = ({ payslipData, salaryBatch }) => {
             </Row>
           </div>
         ))}
+         {payslipData.customised.length > 0 ? (
+                <div className="mt-1">
+                  {payslipData.customised.filter(custom => !custom.is_Taxable).map((custom, index) => (
+                    <div key={index}>
+                       <Row className='text-nowrap'>
+                        <Col md={6}>
+                      {custom.attribute_name}
+                      </Col>
+                      <Col md={6} className='d-flex justify-content-end'>
+                       {custom.amount}
+                       </Col>
+                      </Row>
+                      {/* {custom.attribute_name}: {custom.amount} */}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
     </div>
   ) : null}
               <hr className="border-top border-dark bg-dark" />

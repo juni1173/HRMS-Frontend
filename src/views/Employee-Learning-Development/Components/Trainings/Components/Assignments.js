@@ -154,6 +154,7 @@ const marksSubmission = async () => {
    }
    useEffect(() => {
     uploadedAssignments()
+
     }, [setUploadedAssignmentList])
   return (
     <Fragment>
@@ -202,6 +203,7 @@ const marksSubmission = async () => {
                                             <h4>{assignment.title ? assignment.title : 'No title found'}</h4>
                                             <Badge>{assignment.updated_at ? Api.formatDate(assignment.updated_at) : 'N/A'}</Badge>
                                             <Badge className='m-1'>{assignment.marks ? assignment.marks : 'N/A'}</Badge>
+
                                         </div>
                                         <div className="col-md-6">
                                             <div className="float-right">

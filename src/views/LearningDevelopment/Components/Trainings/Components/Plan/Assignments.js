@@ -6,6 +6,7 @@ import apiHelper from '../../../../../Helpers/ApiHelper'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const Assignments = ({ data, training_id, CallBack, type }) => {
+    console.log(data)
     const Api = apiHelper()
     const searchHelper = SearchHelper()
     const MySwal = withReactContent(Swal)
@@ -135,7 +136,8 @@ const Assignments = ({ data, training_id, CallBack, type }) => {
                                     <div className="row">
                                         <div className="col-md-6">
                                             <h4>{assignment.title ? assignment.title : 'No title found'}</h4>
-                                            <Badge>{assignment.updated_at ? Api.formatDate(assignment.updated_at) : 'N/A'}</Badge>{assignment.marks && (<Badge color='light-danger'>{assignment.marks}</Badge>)}
+                                            <Badge>{assignment.updated_at ? Api.formatDate(assignment.updated_at) : 'N/A'}</Badge>
+                                            {assignment.marks && (<Badge color='light-danger'>{assignment.marks}</Badge>)}
                                         </div>
                                         <div className="col-md-6">
                                             <div className="float-right">

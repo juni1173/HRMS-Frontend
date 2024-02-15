@@ -371,7 +371,7 @@ const Leave = ({leavedata, yearoptions}) => {
                               {record.attachment ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${record.attachment}`}> <FileText /> </a> : <Badge color='light-danger'>N/A</Badge>}
                             </td>
                             <td>
-                              <Badge>{record.status ? record.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
+                              <Badge color={(record.status && record.status === 'approved') && 'light-success'}>{record.status ? record.status : <Badge color='light-danger'>N/A</Badge>}</Badge> 
                               {record.decision_reason && (
                                 <>
                                   <HelpCircle id={`UnControlledLeave${recordKey}`} />

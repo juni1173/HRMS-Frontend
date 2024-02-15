@@ -7,7 +7,8 @@ const EvaluationForm = ({ data, CallBack }) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [ratingsData, setRatingsData] = useState([])
-    const [updatedData, setUpdateData] = useState(data.evaluationData)
+    // const [updatedData, setUpdateData] = useState(data.evaluationData)
+    const [kpiAspectsData, setKpiAspects] = useState([])
     const [evaluation_status, setEvaluation_status] = useState(data.evaluationData.evaluation_status ? data.evaluationData.evaluation_status : '')
     const Evaluation_Status = [
       {value: 1, label: 'completed'},
@@ -33,49 +34,65 @@ const EvaluationForm = ({ data, CallBack }) => {
             }
         })
     }
-    const updateRating = (value, i) => {
+    const getKpiAspects = async () => {
         
+        await Api.get(`/kpis/get/scale/group/data/${data.evaluationData.id}/`).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    setLoading(true)
+                    const resultData = result.data
+                    console.warn(resultData)
+                        setKpiAspects(resultData)
+                        console.warn(resultData)
+                    setTimeout(() => {
+                        setLoading(false)
+                    }, 500)
+                }
+            } else {
+                Api.Toast('error', 'No Aspect data found!')
+            }
+        })
+    }
+    const updateRating = (value, i) => {
         if (value && i) {
-            const newValue = value 
-            const updated = {...updatedData,
-                scale_groups_data: [
-                    ...updatedData.scale_groups_data.map((scale, scaleIndex) => (
-                        scaleIndex === i.index ? (
-                        {
-                            ...scale,
-                            kpi_aspects: [
-                                ...scale.kpi_aspects.map((aspect, aspectIndex) => (
-                                    aspectIndex === i.aspectIndex ? (
-                                        {
-                                            ...aspect,
-                                            parameters: [
-                                              ...aspect.parameters.map((parameter, paraIndex) => (
-                                                paraIndex === i.paraIndex ? (
-                                                    { ...parameter, scale_rating: newValue }
-                                                    ) : parameter
-                                              )
-                                              )
-                                            ]
-                                          }
-                                      ) : aspect
-                                )
-                              )
-                            ]
+            const newValue = value
+            const updated = kpiAspectsData.map((scale, scaleIndex) => {
+                if (scaleIndex !== 0) {
+                    return scale // If index is not 0, return the original scale without modification
+                }
+                return {
+                    ...scale,
+                    kpi_aspects: scale.kpi_aspects.map((aspect, aspectIndex) => {
+                        return {
+                            ...aspect,
+                            parameters: aspect.parameters.map((parameter, paraIndex) => {
+                                if (
+                                    aspectIndex === i.aspectIndex &&
+                                    paraIndex === i.paraIndex
+                                ) {
+                                    return {
+                                        ...parameter,
+                                        scale_rating: newValue
+                                    }
+                                }
+                                return parameter
+                            })
                         }
-                         ) : scale
-                    ))
-            ]
-              }
-              setUpdateData(updated)
-              return updated
+                    })
+                }
+            })
+            setKpiAspects(updated)
+            console.warn(updated)
+            return updated
         }
     }
+    
    const saveEvaluation = async () => {
         if (evaluation_status !== '') {
-            updatedData['evaluation_status'] = evaluation_status
+            kpiAspectsData[0]['evaluation_status'] = evaluation_status
         }
         // const formData = new FormData(updatedData)
-        await Api.jsonPost(`/evaluation/kpi/${data.evaluationData.id}/`, updatedData).then(result => {
+        await Api.jsonPost(`/evaluation/kpi/${data.evaluationData.id}/`, kpiAspectsData[0]).then(result => {
             if (result) {
                 
                 if (result.status === 200) {
@@ -91,11 +108,12 @@ const EvaluationForm = ({ data, CallBack }) => {
    const submitEvaluation = async () => {
     
         // const formData = new FormData(updatedData)
-        updatedData['action'] = "submit"
+        const payloadData = kpiAspectsData[0]
+        payloadData['action'] = "submit"
         if (evaluation_status !== '') {
-            updatedData['evaluation_status'] = evaluation_status
+            payloadData['evaluation_status'] = evaluation_status
         }
-        await Api.jsonPost(`/evaluation/kpi/${data.evaluationData.id}/`, updatedData).then(result => {
+        await Api.jsonPost(`/evaluation/kpi/${data.evaluationData.id}/`, payloadData).then(result => {
             if (result) {
                 
                 if (result.status === 200) {
@@ -111,8 +129,9 @@ const EvaluationForm = ({ data, CallBack }) => {
     
     useEffect(() => {
         getRatingsData()
+        getKpiAspects()
         return false
-    }, [setRatingsData])
+    }, [setRatingsData, setKpiAspects])
   return (
     <Fragment>
         <Card className='dark-shadow'>
@@ -127,8 +146,8 @@ const EvaluationForm = ({ data, CallBack }) => {
                     </Row>
             
         {!loading ? (
-            updatedData.scale_groups_data && updatedData.scale_groups_data.length > 0 ? (
-                updatedData.scale_groups_data.map((item, index) => (
+            Object.values(kpiAspectsData) && Object.values(kpiAspectsData).length > 0 ? (
+                Object.values(kpiAspectsData).map((item, index) => (
                     <Fragment key={index}>
                         
                             <h3 className='text-center mb-2'>{`${item.scale_group_title} Evaluation`}</h3>
@@ -209,14 +228,14 @@ const EvaluationForm = ({ data, CallBack }) => {
                                 
                                 </>
                             ) : (
-                                <p className='text-white'>No data found</p>
+                                <p>No kpi aspects found</p>
                             )}
                     </Fragment>
                 ))
             ) : (
                 <Card>
                     <CardBody>
-                    <p className='text-white'>No data found</p>
+                    <p>No Evaluation Data Found</p>
                         </CardBody>
                     </Card>
             )

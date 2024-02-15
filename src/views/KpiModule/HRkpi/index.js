@@ -3,13 +3,14 @@ import { Spinner, TabContent, TabPane, Nav, NavItem, NavLink, Badge} from "react
 import apiHelper from "../../Helpers/ApiHelper"
 import KpiByBatch from "./KpiByBatch"
 import KpiList from "./KpiList"
+import EmployeeListHR from "./EmployeeListHR"
  
 const index = () => {
     
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
-    const [preData, setPreData] = useState([])
-    const [reCheckData, setRecheckData] = useState([])
+    const [requestData, setRequestData] = useState([])
+    const [recheckData, setRecheckData] = useState([])
     const [cancelData, setCancelData] = useState([])
     const [typesDropdownArr] = useState([])
     const [complexityDropdownArr] = useState([])
@@ -36,77 +37,47 @@ const index = () => {
         await Api.get(`/kpis/requests/to/hr/`).then(result => {
             if (result) {
                 if (result.status === 200) {
-                    setPreData(result.data)
-                    let evaluationTotal = 0
-                    result.data.forEach(element => {
-                        element.employee_kpis_data.forEach(kpiData => {
-                            kpiData.forEach(kpi => {
-                                kpi.employee_kpis_data.forEach(data => {
-                                    if (data.employee_kpis_data) {
-                                        evaluationTotal += data.employee_kpis_data.length
-                                    }
-                                })
-                                
-                            })
-                        })
-                    })
-                    getCount('evaluation', evaluationTotal)
+                    setRequestData(result.data)
+                    if (result.data) {
+                        getCount('evaluation', result.data.length)
+                    }
                 } else {
                     // Api.Toast('error', result.message)
+                    return false
                 }
-            } else (
-             Api.Toast('error', 'Server not responding!')   
-            )
-        })  
+            } else {
+             Api.Toast('error', 'Server not responding!') 
+            }
+        }) 
         await Api.get(`/kpis/recheck/requests/to/hr/`).then(result => {
             if (result) {
                 if (result.status === 200) {
                     setRecheckData(result.data)
-                    let recheckTotal = 0
-                    result.data.forEach(element => {
-                        element.employee_kpis_data.forEach(kpiData => {
-                            kpiData.forEach(kpi => {
-                                kpi.employee_kpis_data.forEach(data => {
-                                    if (data.employee_kpis_data) {
-                                        recheckTotal += data.employee_kpis_data.length
-                                    }
-                                })
-                                
-                            })
-                        })
-                    })
-                    getCount('recheck', recheckTotal)
+                    if (result.data) {
+                        getCount('recheck', result.data.length)
+                    }
                 } else {
                     // Api.Toast('error', result.message)
+                    return false
                 }
-            } else (
-             Api.Toast('error', 'Server not responding!')   
-            )
-        })  
+            } else {
+             Api.Toast('error', 'Server not responding!') 
+            }
+        }) 
         await Api.get(`/kpis/cancle/requests/to/hr/`).then(result => {
             if (result) {
                 if (result.status === 200) {
                     setCancelData(result.data)
-                    let cancelTotal = 0
-                        result.data.forEach(element => {
-                            element.employee_kpis_data.forEach(kpiData => {
-                                kpiData.forEach(kpi => {
-                                    kpi.employee_kpis_data.forEach(data => {
-                                        if (data.employee_kpis_data) {
-                                            cancelTotal += data.employee_kpis_data.length
-                                        }
-                                    })
-                                    
-                                })
-                            })
-                        })
-                    getCount('cancel', cancelTotal)
+                    if (result.data) {
+                        getCount('cancel', result.data.length)
+                    }
                 } else {
                     // Api.Toast('error', result.message)
+                    return false
                 }
-            } else (
-             Api.Toast('error', 'Server not responding!')   
-            )
+            } else {
+             Api.Toast('error', 'Server not responding!') 
+            }
         })  
         await Api.get(`/kpis/pre/data/`).then(result => {
             if (result) {
@@ -152,7 +123,7 @@ const index = () => {
 
         const CallBack = useCallback(() => {
             getPreData()
-          }, [preData])
+          }, [requestData])
    return (
     <Fragment>
         <h2>HR KPI's PANEL</h2>
@@ -202,17 +173,7 @@ const index = () => {
             <TabContent className='py-50' activeTab={active}>
                         <TabPane tabId={'1'} className='tab-pane-blue'>
                         {!loading ? (
-                            preData && Object.values(preData).length > 0 ? (
-                                preData.map((item, index) => (
-                                    <div key={index}>
-                                        <KpiList key={index} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='approvals'/>
-                                    </div>
-                                ))
-                                
-                            ) : (
-                                <div className='text-center text-white'>No Data Found!</div>
-                            )
-                            
+                            <EmployeeListHR data={requestData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='approvals'/>
                         ) : (
                             <div className='text-center'><Spinner color="white"/></div>
                         )
@@ -220,16 +181,7 @@ const index = () => {
                         </TabPane>
                         <TabPane tabId={'2'} className='tab-pane-blue'>
                         {!loading ? (
-                            reCheckData && Object.values(reCheckData).length > 0 ? (
-                                reCheckData.map((item, index) => (
-                                    <div key={index}>
-                                        <KpiList key={index} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='recheck'/>
-                                    </div>
-                                ))
-                                
-                            ) : (
-                                <div className='text-center text-white'>No Data Found!</div>
-                            )
+                            <EmployeeListHR data={recheckData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='recheck'/>
                             
                         ) : (
                             <div className='text-center'><Spinner color="white"/></div>
@@ -238,16 +190,7 @@ const index = () => {
                         </TabPane>
                         <TabPane tabId={'3'} className='tab-pane-blue'>
                         {!loading ? (
-                            cancelData && Object.values(cancelData).length > 0 ? (
-                                cancelData.map((item, index) => (
-                                    <div key={index}>
-                                        <KpiList key={index} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='cancel'/>
-                                    </div>
-                                ))
-                                
-                            ) : (
-                                <div className='text-center text-white'>No Data Found!</div>
-                            )
+                           <EmployeeListHR data={cancelData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='cancel'/>
                             
                         ) : (
                             <div className='text-center'><Spinner color="white"/></div>

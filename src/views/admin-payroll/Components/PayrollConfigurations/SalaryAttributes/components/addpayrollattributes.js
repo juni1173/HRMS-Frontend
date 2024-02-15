@@ -51,6 +51,7 @@ const AddAttribute = ({callBack}) => {
                 is_employee_base: false
               }))
             } else if (InputValue.value === 'Employee Base') {
+              // console.log('here')
               // Set 'is_organization_base' to false and 'is_employee_base' to true
               setAttributePayrollDetail(prevState => ({
                 ...prevState,
@@ -85,8 +86,8 @@ const AddAttribute = ({callBack}) => {
             payroll_type: attributePayrollDetail.payroll_type.value,
             valueType: attributePayrollDetail.valueType.value,
             // is_Taxable: attributePayrollDetail.is_Taxable.value,
-            is_employee_base: attributePayrollDetail.is_employee_base.value,
-            is_organization_base: attributePayrollDetail.is_organization_base.value
+            is_employee_base: attributePayrollDetail.is_employee_base,
+            is_organization_base: attributePayrollDetail.is_organization_base
           }
         
         Api.jsonPost(`/payroll/addons/attributes/`, formData).then(result => {

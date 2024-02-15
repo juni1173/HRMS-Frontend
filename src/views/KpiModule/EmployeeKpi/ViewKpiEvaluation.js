@@ -7,7 +7,21 @@ const ViewKpiEvaluation = ({ data }) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [details, setDetails] = useState([])
-    
+    const [kpiAspectsData, setKpiAspects] = useState([])
+    const getKpiAspects = async (id) => {
+        
+        await Api.get(`/kpis/get/scale/group/data/${id}/`).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    const resultData = result.data
+                    console.warn(resultData)
+                        setKpiAspects(resultData)
+                }
+            } else {
+                Api.Toast('error', 'No Aspect data found!')
+            }
+        })
+    }
     const getData = async () => {
         const formData = new FormData()
         formData['kpi_id'] = data.kpi_id
@@ -17,7 +31,11 @@ const ViewKpiEvaluation = ({ data }) => {
                 if (result.status === 200) {
                     setLoading(true)
                     const resultData = result.data[0]
+                    console.warn(resultData)
                     setDetails(resultData)
+                    if (resultData && resultData.id) {
+                        getKpiAspects(resultData.id)
+                    }
                     setTimeout(() => {
                         setLoading(false)
                     }, 500)
@@ -26,8 +44,10 @@ const ViewKpiEvaluation = ({ data }) => {
                 Api.Toast('error', 'No ratings data found!')
             }
         })
+       
     }
-    
+   
+    console.warn(kpiAspectsData)
     
     useEffect(() => {
         getData()
@@ -42,17 +62,19 @@ const ViewKpiEvaluation = ({ data }) => {
                 <>
                     <Card className='dark-shadow'>
                         <CardHeader>
-                        <Badge color="light-primary">Employee </Badge> <h3>{details.employee_name && details.employee_name}</h3>
-                        <Badge color='light-warning'>Status</Badge> <h5>{details.kpis_status_title && details.kpis_status_title}</h5>
+                            <Badge color="light-primary">Employee </Badge> <h3>{details.employee_name && details.employee_name}</h3>
                         </CardHeader>
                         <CardBody>
                             <Row>
-                                <Col md={12}><h5>Kpi Details</h5>
-                                <p>{details.title && details.title}</p>
+                                <Col md={12}><Badge color='light-warning'>Status</Badge> <h5 className='p-1'>{details.kpis_status_title && details.kpis_status_title}</h5></Col>
+                                <hr></hr>
+                                <Col md={12}><Badge color='light-secondary'>Kpi Details</Badge>
+                                    <h4 className='p-1'>{details.title && details.title}</h4>
                                 </Col>
+                                <hr></hr>
                             </Row>
-                            {details.scale_groups_data && details.scale_groups_data.length > 0 ? (
-                                details.scale_groups_data.map((item, index) => (
+                            {kpiAspectsData && kpiAspectsData.length > 0 ? (
+                                kpiAspectsData.map((item, index) => (
                                     <Fragment key={index}>
                                         
                                             <h3 className='text-center mb-2'>{`${item.scale_group_title} Evaluation`}</h3>

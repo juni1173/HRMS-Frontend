@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Row, Col, Table, Modal, ModalHeader, ModalBody, Spinner, Button, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody, Card, CardBody } from 'reactstrap'
+import { Row, Col, Table, Modal, ModalHeader, ModalBody, Spinner, Button, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody, Card, CardBody, CardTitle, CardText, CardColumns } from 'reactstrap'
 import { Edit2, Trash2, Eye } from 'react-feather'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -15,7 +15,7 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
     const [UpdateModal, setUpdateModal] = useState(false)
     const [checkedItems, setCheckedItems] = useState([])
     const [UpdateData, setUpdateData] = useState([])
-    const [selectAll, setSelectAll] = useState(false)
+    // const [selectAll, setSelectAll] = useState(false)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
     const [canvasEvaluationPlacement, setCanvasEvaluationPlacement] = useState('end')
@@ -26,25 +26,25 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
         const isChecked = event.target.checked
     
         if (isChecked) {
-          setCheckedItems([...checkedItems, id])
-        } else {
-          setCheckedItems(checkedItems.filter((item) => item !== id))
+            setCheckedItems([...checkedItems, id])
+            } else {
+            setCheckedItems(checkedItems.filter((item) => item !== id))
+            }
         }
-      }
-      const handlecheckall = (event) => {
-        const isChecked = event.target.checked
-        setSelectAll(isChecked)
+    //   const handlecheckall = (event) => {
+    //     const isChecked = event.target.checked
+    //     setSelectAll(isChecked)
     
-        if (isChecked) {
-          // Select all items
-          const allItemIds = data.map((item) => item.id.toString())
-          setCheckedItems(allItemIds)
-        } else {
-          // Deselect all items
-          setCheckedItems([])
-        }
-      }
-      const multipleKpiSend = async () => {
+    //     if (isChecked) {
+    //       // Select all items
+    //       const allItemIds = data.map((item) => item.id.toString())
+    //       setCheckedItems(allItemIds)
+    //     } else {
+    //       // Deselect all items
+    //       setCheckedItems([])
+    //     }
+    //   }
+    const multipleKpiSend = async () => {
         // return false
         if (checkedItems.length > 0) {  
                 await Api.jsonPost(`/kpis/employees/approval/list/`, {kpis_array: checkedItems})
@@ -165,133 +165,106 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
         
   return (
     <Fragment>
-    {Object.values(data).length > 0 ? (
-        !loading ? (
-            <Card>
-                <CardBody>
-                <Row>
-            
-            <Col md={12}>
-                {checkedItems.length > 0 && (
-                    <Button className='btn btn-primary mb-1' onClick={multipleKpiSend}>
-                        Send Kpi's to Evaluator
-                    </Button>
-                )}
-                <Table bordered striped responsive className='my-1'>
-                        <thead className='table-dark text-center'>
-                        <tr>
-                            {(type !== 'search') && (
-                                <th scope="col" className="text-nowrap">
-                                <input
-                                type="checkbox"
-                                onChange={handlecheckall} // Attach the handler to the "Select All" checkbox
-                                checked={selectAll} // Bind the checked state to the "Select All" checkbox
-                                disabled={
-                                    data.every((item) => item.kpis_status_level !== 1)
-                                  }
-                              />
-                                    {/* Select */}
-                                </th>
+        {Object.values(data).length > 0 ? (
+            !loading ? (
+                // <Card>
+                //     <CardBody>
+                    <Row className='w-100'>
+                
+                        <Col md={12}>
+                            {checkedItems.length > 0 && (
+                                <Button className='btn btn-primary mb-1' onClick={multipleKpiSend}>
+                                    Send Kpi's to Evaluator
+                                </Button>
                             )}
-                            <th scope="col" className="text-nowrap">
-                            Detail
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Evaluator
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Type
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Complexity
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Status
-                            </th>
-                            <th scope='col' className='text-nowrap'>
-                                Employment Type
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            View
-                            </th>
-                            <th scope="col" className="text-nowrap">
-                            Actions
-                            </th>
-                        </tr>
-                        </thead>
-                        
-                        <tbody className='text-center'>
+                            
                             {Object.values(data).reverse().map((item, key) => (
-                                    <tr key={key}>
-                                {(type !== 'search') && (
-                                    <td>{item.kpis_status_level === 1 ?  <input
-                                        className='form-check-primary'
-                                        type="checkbox"
-                                        id={item.id}
-                                        onChange={handleCheck}
-                                        checked={checkedItems.includes(item.id.toString())} // Bind the checked state to individual checkboxes
-                                    /> : <input className='form-check-primary' type="checkbox" disabled/>}</td>
-                                )}
-                                    <td>{item.title ? (item.title).substring(0, 20) : 'N/A'}</td>
-                                    <td>{item.evaluator_name ? item.evaluator_name : 'N/A'}</td>
-                                    <td>{item.ep_type_title ? item.ep_type_title : 'N/A'}</td>
-                                    <td>{item.ep_complexity_title ? item.ep_complexity_title : 'N/A'}</td>
-                                    <td>{item.kpis_status_title ? (
-                                        <>
-                                    <Badge color="light-success">{item.kpis_status_title}</Badge>
-                                    {item.kpis_status_level && item.kpis_status_level > 5 && item.kpis_status_level !== 11 && <Button className='btn btn-sm btn-primary' onClick={() => getEvaluationDetails(item.employee, item.id)}>View Ratings</Button>}
-                                    </>
-                                    ) : <Badge color="light-danger">N/A</Badge>}</td>
-                                    <td>{item.mode_of_kpis_title ? item.mode_of_kpis_title : 'N/A'}</td>
-                                    <td><Eye onClick={() => CommentToggle(item)}/></td>
-                                    <td>
-                                        <div className="row">
-                                        {item.kpis_status_level === 1 ? (
+                                <div className="row" key={key}>
+                                    <Col md={1} className="d-flex align-items-center">
+                                        {(type !== 'search') && (
                                             <>
-                                            <div className="col-lg-6">
-                                            <button
-                                            className="border-0"
-                                            onClick={() => UpdateKpiFunc(item)}
-                                            
-                                            >
-                                            <Edit2 color="orange" />
-                                            </button>
-                                            </div>
-                                            <div className="col-lg-6">
-                                                <button
-                                                className="border-0"
-                                                onClick={() => removeAction(item.id)}
-                                                >
-                                                <Trash2 color="red" />
-                                                </button>
-                                            </div>
+                                                {item.kpis_status_level === 1 ?  <input
+                                                    className='form-check-primary'
+                                                    type="checkbox"
+                                                    id={item.id}
+                                                    style={{ width: '-webkit-fill-available' }}
+                                                    onChange={handleCheck}
+                                                    checked={checkedItems.includes(item.id.toString())} // Bind the checked state to individual checkboxes
+                                                /> : <input className='form-check-primary' style={{ width: '-webkit-fill-available' }} type="checkbox" disabled/>}
                                             </>
-                                        ) : (
-                                            <Badge color='light-danger'>No Action Available</Badge>
-                                        ) }
+                                        )}
+                                    </Col>
+                                    <Col md={11} className='p-0'>
+                                        <Card bg="light" style={{ backgroundColor: '#F2F3F4' }} className='text-nowrap'>    
+                                            <CardBody>
+                                                <Row>
+                                                    <Col md={9}><CardTitle>{item.title ? (item.title).substring(0, 20) : 'N/A'}</CardTitle></Col>
+                                                    <Col md={3} className='d-flex justify-content-end'>
+                                                        {item.kpis_status_level === 1 ? (
+                                                            <button
+                                                            className="border-0"
+                                                            onClick={() => UpdateKpiFunc(item)}
+                                                            >
+                                                            <Edit2 color="orange" />
+                                                            </button>
+                                                        ) : null}
+                                                    </Col>
+                                                    <Col md={5}>
+                                                        <Badge color="light-success">{item.kpis_status_title ? item.kpis_status_title : 'N/A'}</Badge>
+                                                    </Col>
+                                                    <Col md={3}>
+                                                        <Badge color='light-warning'>{item.ep_type_title ? item.ep_type_title : 'N/A'}</Badge>
+                                                    </Col>
+                                                    <Col md={2}>
+                                                        <Badge color='light-success'>{item.mode_of_kpis_title ? item.mode_of_kpis_title : 'N/A'}</Badge>
+                                                    </Col>
+                                                    <Col md={2} className='d-flex justify-content-end'>
+                                                        <Eye onClick={() => CommentToggle(item)}/>
+                                                    </Col>
+                                                    <Col md={5}>
+                                                        {item.evaluator_name ? item.evaluator_name : 'N/A'}
+                                                    </Col>
+                                                    <Col md={3}>
+                                                        <Badge color='light-danger'>
+                                                            {item.ep_complexity_title ? item.ep_complexity_title : 'N/A'}
+                                                        </Badge>
+                                                    </Col>
+                                                    <Col md={2}>
+                                                        {/* <Badge color='light-info'> */}
+                                                        {item.kpis_status_level && item.kpis_status_level > 5 && item.kpis_status_level !== 11 && <Button className='btn btn-sm btn-primary' onClick={() => getEvaluationDetails(item.employee, item.id)}>View Ratings</Button>}
+                                                                                        
+                                                        {/* </Badge> */}
+                                                    </Col>
+                                                    <Col md={2} className='d-flex justify-content-end'>
+                                                        {item.kpis_status_level === 1 ? (                
+                                                            <button
+                                                            className="border-0"
+                                                            onClick={() => removeAction(item.id)}
+                                                            >
+                                                            <Trash2 color="red" />
+                                                            </button>
+                                                        ) : null }
+                                                    </Col>
+                                                </Row>
                                         
-                                        </div>
-                                    </td>
-                                    </tr>
-                            )
-                            )}
-                        
-                        </tbody>
-                        
-                </Table>
-            </Col>
-            </Row>
-                </CardBody>
-            </Card>
-        
-        ) : (
-            <div className='text-center'><Spinner color='white'/></div>
-        )
-        ) : (
-            <div className="text-center text-black">No Kpi Data Found!</div>
-        )
-    }
-    <div className='vertically-centered-modal'>
+                                            </CardBody>
+                                        </Card>
+                                    </Col>
+                                </div>
+                            ))}
+                        </Col>
+                    </Row>
+                //     </CardBody>
+                // </Card> 
+            
+            ) : (
+                <div className='text-center'><Spinner color='white'/></div>
+            )
+            ) : (
+                <div className="text-center text-white">No Kpi Data Found!</div>
+            )
+        }
+        <div className='vertically-centered-modal'>
         <Modal isOpen={UpdateModal} toggle={() => setUpdateModal(!UpdateModal)} className='modal-dialog-Update modal-lg'>
           <ModalHeader toggle={() => setUpdateModal(!UpdateModal)}>Update Kpi</ModalHeader>
           <ModalBody>
@@ -300,8 +273,8 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
             )}
           </ModalBody>
         </Modal>
-      </div>
-      <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} >
+        </div>
+        <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} >
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             {UpdateData && Object.values(UpdateData).length > 0 && (

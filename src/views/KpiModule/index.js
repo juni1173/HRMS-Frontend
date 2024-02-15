@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState, useCallback } from "react"
 import { Spinner, TabContent, TabPane, Nav, NavItem, NavLink, Badge} from "reactstrap"
 import EmployeeKpi from "./EmployeeKpi/index"
-import EvaluationRequests from "./EvaluatorKpi/index"
+import EvaluationRequests from "./EvaluatorKpi/index2"
 import EmployeeKpiSearch from "./EmployeeKpi/EmployeeKpiSearch"
  import apiHelper from "../Helpers/ApiHelper"
 const KpiModule = () => {

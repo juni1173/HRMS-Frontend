@@ -315,13 +315,20 @@ const KpiList = ({ data, CallBack, index, type }) => {
                                                     </Col>
                                                     <Col md={2}>
                                                         <Badge color='light-success'>{kpi.mode_of_kpis_title ? kpi.mode_of_kpis_title : 'N/A'}</Badge>
+                                                        {kpi.kpis_status_level && kpi.kpis_status_level === 6 && (
+                                                            <>
+                                                            <br></br><Button className='btn btn-primary btn-sm mb-1'
+                                                            onClick={() => recheckAction(kpi.id)}
+                                                            >Re-Evaluate</Button>
+                                                            </>
+                                                        )}
                                                     </Col>
                                                     <Col md={2} className='d-flex justify-content-end'>
-                                                        {kpi.kpis_status_level && kpi.kpis_status_level === 6 && (
+                                                        {/* {kpi.kpis_status_level && kpi.kpis_status_level === 6 && (
                                                             <Button className='btn btn-primary btn-sm'
                                                             onClick={() => recheckAction(kpi.id)}
                                                             >Re-Evaluate</Button>
-                                                        )}
+                                                        )} */}
                                                     </Col>
                                                     <Col md={5}>
                                                         {kpi.evaluator_name ? kpi.evaluator_name : 'N/A'}

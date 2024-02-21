@@ -244,7 +244,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
             // <Card>
             //     <CardBody>
                     // <Row>
-                        <KpiList preData={preData} CallBack={CallBack} dropdownData={dropdownData}/>
+                        <KpiList preData={preData} CallBack={CallBack} dropdownData={dropdownData} type={type}/>
                     // </Row>
             //     </CardBody>
             // </Card>  

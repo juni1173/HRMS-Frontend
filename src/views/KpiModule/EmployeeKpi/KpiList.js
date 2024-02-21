@@ -117,6 +117,7 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
             await Api.get(`/kpis/employees/`).then(result => {
                 if (result) {
                     if (result.status === 200) {
+                        console.warn(result.data)
                        setData(result.data)
                     } else {
                         Api.Toast('error', result.message)
@@ -173,12 +174,12 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
                 
                         <Col md={12}>
                             {checkedItems.length > 0 && (
-                                <Button className='btn btn-primary mb-1' onClick={multipleKpiSend}>
+                                <Button className='btn btn-warning mb-1' onClick={multipleKpiSend}>
                                     Send Kpi's to Evaluator
                                 </Button>
                             )}
                             
-                            {Object.values(data).reverse().map((item, key) => (
+                            {Object.values(data).map((item, key) => (
                                 <div className="row" key={key}>
                                     <Col md={1} className="d-flex align-items-center">
                                         {(type !== 'search') && (

@@ -74,7 +74,7 @@ const EmployeeListHR = ({ data, dropdownData, CallBack, type }) => {
         <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} >
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
-            <KpiListHR data={employee} dropdownData={dropdownData} EmployeeCallBack={CallBack} type={type}/>
+            <KpiListHR data={employee} dropdownData={dropdownData} CallBack={CallBack} type={type}/>
             
           </OffcanvasBody>
         </Offcanvas>

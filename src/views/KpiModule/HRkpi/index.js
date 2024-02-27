@@ -4,6 +4,7 @@ import apiHelper from "../../Helpers/ApiHelper"
 import KpiByBatch from "./KpiByBatch"
 import KpiList from "./KpiList"
 import EmployeeListHR from "./EmployeeListHR"
+import KpiReports from "./KpiReports/index"
  
 const index = () => {
     
@@ -166,6 +167,14 @@ const index = () => {
                                     >
                                         Search Kpi
                                     </NavLink>
+                                    <NavLink
+                                        active={active === '5'}
+                                        onClick={() => {
+                                        toggle('5')
+                                        }}
+                                    >
+                                        Reports
+                                    </NavLink>
                                     </NavItem>
                                 
                                 {/* </div> */}
@@ -204,6 +213,17 @@ const index = () => {
                             <div className='text-center'><Spinner color="white"/></div>
                         )
                         }
+                        </TabPane>
+                        <TabPane tabId={'5'} className='tab-pane-blue'>
+                            {!loading ? (
+                                
+                                    <KpiReports segmentation={segmentationData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, yearlySegmentation}}/>
+                                
+                                ) : (
+                                    <div className='text-center'><Spinner color="white"/></div>
+                                )
+                            
+                            }
                         </TabPane>
             </TabContent>
         </div>

@@ -410,7 +410,7 @@ const KpiRequests = ({ data, EmployeeCallBack, dropdownData, type }) => {
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             {UpdateData && Object.values(UpdateData).length > 0 && (
-                <Comments data={UpdateData} />
+                <Comments data={UpdateData} by='tl' callBack={EmployeeCallBack}/>
                 )}
             
           </OffcanvasBody>

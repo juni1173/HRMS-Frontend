@@ -381,7 +381,7 @@ const KpiList = ({ data, CallBack, index, type }) => {
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
             {UpdateData && Object.values(UpdateData).length > 0 && (
-                <Comments data={UpdateData} />
+                <Comments data={UpdateData} by='hr' callBack={CallBack}/>
                 )}
             
           </OffcanvasBody>

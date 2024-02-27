@@ -3,7 +3,8 @@ import apiHelper from '../Helpers/ApiHelper'
 import defaultAvatar from '@src/assets/images/avatars/user_blank.png'
 import { Input, Button, Row, Spinner, Col, Badge } from 'reactstrap'
 import { Save } from 'react-feather'
-const Comments = ({ data }) => {
+const Comments = ({ data, by, callBack }) => {
+    console.warn(data.kpis_status_level)
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [comment, setComment] = useState('')
@@ -50,7 +51,49 @@ const Comments = ({ data }) => {
             Api.Toast('error', 'Comment cannot be empty!')
         }
     }
-
+    const KpiHRApprove = async (id) => {
+        // return false
+        if (id) {  
+            setLoading(true)
+                await Api.jsonPost(`/kpis/hr/approval/list/`, {kpis_array: [id]})
+                .then(result => {
+                    if (result) {
+                        if (result.status === 200) {
+                        Api.Toast('success', result.message)
+                        callBack()
+                        } else {
+                            Api.Toast('error', result.message)
+                        }
+                    } else {
+                        Api.Toast('error', 'Server not responding!')
+                    }
+                })
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
+        } 
+    }
+    const KpiTLApprove = async () => {
+        // return false
+        if (id) {  
+            setLoading(true)
+                await Api.jsonPost(`/kpis/team/lead/approval/list/`, {kpis_array: [id]})
+                .then(result => {
+                    if (result) {
+                        if (result.status === 200) {
+                        Api.Toast('success', result.message)
+                        } else {
+                            Api.Toast('error', result.message)
+                        }
+                    } else {
+                        Api.Toast('error', 'Server not responding!')
+                    }
+                })
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
+        }
+    }
     useEffect(() => {
         getCommentData()
        return false
@@ -69,6 +112,25 @@ const Comments = ({ data }) => {
             <Col md={4}>
                 <b>Type</b><br></br> <Badge>{data.ep_type_title && data.ep_type_title}</Badge>
             </Col>
+            
+            {(by && by === 'tl') && (
+                (data.kpis_status_level === 2) && (
+                    <Col md={4}>
+                        <Button className='btn btn-warning mb-1' onClick={() => KpiTLApprove(data.id)}>
+                            Team Lead Approval
+                        </Button>
+                    </Col>
+                )
+            )}
+            {(by && by === 'hr') && (
+                (data.kpis_status_level === 3 || data.kpis_status_level === 11) && (
+                <Col md={4}>
+                    <Button className='btn btn-warning mb-1' onClick={() => KpiHRApprove(data.id)}>
+                        HR Approval
+                    </Button>
+                </Col>
+                )
+            )}
             <Col md={4}>
                 <b>Status</b> <br></br><Badge>{data.kpis_status_title && data.kpis_status_title}</Badge>
             </Col>

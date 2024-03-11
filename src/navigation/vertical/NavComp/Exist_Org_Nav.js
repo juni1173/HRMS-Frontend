@@ -1,4 +1,4 @@
-import { Circle, Home, Briefcase, User, Settings, CheckSquare, BookOpen, Bookmark, Trello, Book } from 'react-feather'
+import { Circle, Home, Briefcase, User, Settings, CheckSquare, BookOpen, Bookmark, Trello, Book, Clock } from 'react-feather'
 // const checkVisibility = (list, apiList) => {
   
 //   for (let i = 0; i < apiList.length; i++) {
@@ -34,7 +34,7 @@ let nav = []
   {
     id: 'nav-attendance',
     title: 'Attendance',
-    icon: <User size={30} />,
+    icon: <Clock size={30} />,
     navLink:'/admin/attendance'
     
   },
@@ -245,6 +245,12 @@ let nav = []
       icon: <Settings size={12} />,
       navLink: '/hr/kavskills'
   },
+  {
+    id: 'nav-tickets',
+    title: 'Tickets',
+    icon: <CheckSquare size={12} />,
+    navLink: '/hr/tickets'
+},
   {
     id: 'nav-reports',
     title: 'Reports',

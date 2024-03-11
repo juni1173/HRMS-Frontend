@@ -1,4 +1,4 @@
-import { Home, CheckSquare, Bookmark, HelpCircle, Book, Clock } from 'react-feather'
+import { Home, CheckSquare, Bookmark, HelpCircle, Book, Clock, Paperclip } from 'react-feather'
 // const checkVisibility = (list, apiList) => {
   
 //   for (let i = 0; i < apiList.length; i++) {
@@ -136,6 +136,12 @@ let nav = []
     title: 'Payroll',
     icon: <Book size={30} />,
     navLink: '/employee/payroll'
+  },
+  {
+    id: 'nav-ticket',
+    title: 'Tickets',
+    icon: <Paperclip size={30} />,
+    navLink: '/employee/tickets'
   }
 //   {
 //     id: 'nav-roles-permissions',

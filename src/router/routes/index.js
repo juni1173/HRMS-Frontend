@@ -64,6 +64,14 @@ const Routes = [
     }
   },
   {
+    path: '/careers',
+    component: lazy(() => import('../../views/website/careers')),
+    layout: 'BlankLayout',
+    meta: {
+      publicRoute: true
+    }
+  },
+  {
     path: '/kavskill',
     component: lazy(() => import('../../views/Kavskills/index')),
     layout: 'BlankLayout',
@@ -306,6 +314,16 @@ const Routes = [
   {
     path: '/employee/payroll',
     component: lazy(() => import('../../views/employee-payroll/'))
+  },
+  //Tickets routes
+
+  {
+    path: '/employee/tickets',
+    component: lazy(() => import('../../views/TicketsModule/index'))
+  },
+  {
+    path: '/hr/tickets',
+    component: lazy(() => import('../../views/TicketsModule/HRModule/index'))
   },
   {
     path: '/error',

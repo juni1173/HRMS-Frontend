@@ -434,7 +434,34 @@ import Avatar from '@components/avatar'
          
       return [day, month, year].join('-')
     }
-
+    const formatDateDifference = (date) => {
+      const currentDate = new Date()
+      const givenDate = new Date(date)
+      
+      const differenceInMilliseconds = currentDate - givenDate
+      const differenceInSeconds = differenceInMilliseconds / 1000
+      const differenceInMinutes = differenceInSeconds / 60
+      const differenceInHours = differenceInMinutes / 60
+      const differenceInDays = differenceInHours / 24
+    
+      if (differenceInDays < 1) {
+        // Less than a day, show time
+        const options = { hour: 'numeric', minute: 'numeric' }
+        const formattedTime = givenDate.toLocaleTimeString([], options)
+        return `Today at ${formattedTime}`
+      } else if (differenceInDays >= 1 && differenceInDays < 30) {
+        // Less than a month, show days
+        return `${Math.floor(differenceInDays)} day${Math.floor(differenceInDays) > 1 ? 's' : ''} ago`
+      } else if (differenceInDays >= 30 && differenceInDays < 365) {
+        // Less than a year, show months
+        const differenceInMonths = differenceInDays / 30
+        return `${Math.floor(differenceInMonths)} month${Math.floor(differenceInMonths) > 1 ? 's' : ''} ago`
+      } else {
+        // More than a year, show years
+        const differenceInYears = differenceInDays / 365
+        return `${Math.floor(differenceInYears)} year${Math.floor(differenceInYears) > 1 ? 's' : ''} ago`
+      }
+    }
     //format time function
 
     const formatTime = (date) => {
@@ -503,6 +530,7 @@ import Avatar from '@components/avatar'
         formatDate,
         dmyformat,
         formatTime,
+        formatDateDifference,
         getMonth,
         getMonthName,
         convertUTCtoDate,

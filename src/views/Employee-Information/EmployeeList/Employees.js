@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react"
 import {  UserMinus, Eye, Search, UserCheck} from "react-feather"
-import {Container, Row, Card, CardBody, CardTitle, Badge, InputGroup, Input, InputGroupText, Col, Spinner, Button} from "reactstrap"
+import {Container, Row, Card, CardBody, CardTitle, Badge, InputGroup, Input, InputGroupText, Col, Spinner, Button, Offcanvas, OffcanvasHeader, OffcanvasBody} from "reactstrap"
 import user_blank  from "../../../assets/images/avatars/user_blank.png"
 import apiHelper from "../../Helpers/ApiHelper"
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
@@ -9,6 +9,7 @@ import ReactPaginate from 'react-paginate'
 import Select from "react-select"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import ESS from '../ESS-Scripts/index'
  
 const Employees = ({ employeeList, CallBack, type }) => {
     
@@ -22,6 +23,9 @@ const Employees = ({ employeeList, CallBack, type }) => {
     const [pageCount, setPageCount] = useState(0)
     const [itemOffset, setItemOffset] = useState(0)
     const [itemsPerPage, setItemsPerPage] = useState(50)
+    const [canvasPlacement, setCanvasPlacement] = useState('end')
+    const [canvasOpen, setCanvasOpen] = useState(false)
+    const [empID, setEmpID] = useState('')
     const itemsCount = [
         {value: 50, label: '50'},
         {value: 100, label: '100'},
@@ -63,7 +67,17 @@ const Employees = ({ employeeList, CallBack, type }) => {
         }
         
     }
-
+    const toggleCanvasEnd = () => {
+        setCanvasPlacement('end')
+        setCanvasOpen(!canvasOpen)
+      }
+    const ESSToggle = (id) => {
+        if (id !== null) {
+            setEmpID(id)
+        }
+        setCanvasPlacement('end')
+        setCanvasOpen(!canvasOpen)
+      }
     useEffect(() => {
         getEmployeeData()
         }, [setSearchResults])
@@ -253,6 +267,14 @@ const Employees = ({ employeeList, CallBack, type }) => {
                                         >
                                         <UserMinus color="red"/>
                                     </button>
+                                    <button
+                                        className="btn btn-primary btn-sm"
+                                        style={{marginTop:'15px', padding:'10px'}}
+                                        title="ESS Setup"
+                                        onClick={() => ESSToggle(item.id)}
+                                        >
+                                        ESS Setup
+                                    </button>
                                     </>
                                 ) : (
                                     <button
@@ -299,6 +321,12 @@ const Employees = ({ employeeList, CallBack, type }) => {
           activeLinkClassName='active'
         />
         </Container>
+        <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} >
+          <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
+          <OffcanvasBody className=''>
+            <ESS id={empID}/>
+          </OffcanvasBody>
+        </Offcanvas>
     </Fragment>
    )
 }

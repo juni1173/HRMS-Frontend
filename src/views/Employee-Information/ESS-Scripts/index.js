@@ -131,7 +131,7 @@ const index = ({id}) => {
            <hr></hr>
                 <Row>
                     <Col md='6'>
-                            <h3>Execution History</h3>
+                            <h3>Setup Execution History</h3>
                         </Col>
                         <Col md='6'>
                             <RefreshCw onClick={scriptsLog} className='float-right'/>

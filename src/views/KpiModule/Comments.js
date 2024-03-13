@@ -4,7 +4,7 @@ import defaultAvatar from '@src/assets/images/avatars/user_blank.png'
 import { Input, Button, Row, Spinner, Col, Badge } from 'reactstrap'
 import { Save } from 'react-feather'
 const Comments = ({ data, by, callBack }) => {
-    console.warn(data.kpis_status_level)
+    console.warn(data)
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [comment, setComment] = useState('')
@@ -133,6 +133,10 @@ const Comments = ({ data, by, callBack }) => {
             )}
             <Col md={4}>
                 <b>Status</b> <br></br><Badge>{data.kpis_status_title && data.kpis_status_title}</Badge>
+            </Col>
+            <Col md={4}>
+            <br></br>
+                <b>Scale Group</b> <br></br><Badge>{data.scale_group_title && data.scale_group_title}</Badge>
             </Col>
             
         </Row>

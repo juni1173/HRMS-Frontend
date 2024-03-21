@@ -1,14 +1,21 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import apiHelper from '../Helpers/ApiHelper'
 import defaultAvatar from '@src/assets/images/avatars/user_blank.png'
-import { Input, Button, Row, Spinner, Col, Badge } from 'reactstrap'
+import { Input, Button, Row, Spinner, Col, Badge, Offcanvas, OffcanvasHeader, OffcanvasBody, Card, CardBody } from 'reactstrap'
 import { Save } from 'react-feather'
+import ViewKpiEvaluation from './EmployeeKpi/ViewKpiEvaluation'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 const Comments = ({ data, by, callBack }) => {
     console.warn(data)
     const Api = apiHelper()
+    const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
     const [comment, setComment] = useState('')
     const [commentData, setCommentData] = useState([])
+    const [canvasEvaluationPlacement, setCanvasEvaluationPlacement] = useState('end')
+    const [canvasEvaluationOpen, setCanvasEvaluationOpen] = useState(false)
+    const [evaluationDetailspreData, setEvaluationDetailspreData] = useState([])
     const getCommentData = async () => {
         setLoading(true)
         await Api.get(`/kpis/get/comments/${data.id}/`).then(result => {
@@ -94,6 +101,62 @@ const Comments = ({ data, by, callBack }) => {
         }, 500)
         }
     }
+    const toggleCanvasEvaluationEnd = () => {
+        setCanvasEvaluationPlacement('end')
+        setCanvasEvaluationOpen(!canvasEvaluationOpen)
+      }
+    const getEvaluationDetails = (employee, kpi_id) => {
+        if (employee !== null && kpi_id !== null) {
+            setEvaluationDetailspreData({employee, kpi_id})
+        }
+        setCanvasEvaluationPlacement('end')
+        setCanvasEvaluationOpen(!canvasEvaluationOpen)
+        
+      }
+      const recheckApproval = (id) => {
+        MySwal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to approve Kpi!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, proceed!',
+            customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-danger ms-1'
+            },
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.value) {
+                Api.jsonPost(`/kpis/hr/recheck/approval/list/`, {kpis_array: [id]})
+                .then((deleteResult) => {
+                    if (deleteResult.status === 200) {
+                        MySwal.fire({
+                            icon: 'success',
+                            title: 'Recheck Approval Kpi!',
+                            text: 'Rechecked Kpi status changed to approved successfully.',
+                            customClass: {
+                            confirmButton: 'btn btn-success'
+                            }
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                CallBack()
+                            }
+                        }) 
+                    } else {
+                        MySwal.fire({
+                            icon: 'error',
+                            title: 'Kpi can not be approved!',
+                            text: deleteResult.message ? deleteResult.message : 'Kpi is not in recheck approval process.',
+                            customClass: {
+                            confirmButton: 'btn btn-danger'
+                            }
+                        })
+                    }
+                            
+                    })
+            } 
+        })
+        }
     useEffect(() => {
         getCommentData()
        return false
@@ -135,10 +198,25 @@ const Comments = ({ data, by, callBack }) => {
                 <b>Status</b> <br></br><Badge>{data.kpis_status_title && data.kpis_status_title}</Badge>
             </Col>
             <Col md={4}>
-            <br></br>
                 <b>Scale Group</b> <br></br><Badge>{data.scale_group_title && data.scale_group_title}</Badge>
             </Col>
-            
+            {(by && by === 'hr') && (
+                
+                <Col md={4}>
+                    <br></br>
+                    {(data.kpis_status_level && data.kpis_status_level > 5 && data.kpis_status_level < 11) && (
+                        <>                                                        
+                            <Button className='btn btn-sm btn-primary' onClick={() => getEvaluationDetails(data.employee, data.id)}>Ratings</Button>
+                            <br></br>
+                        </>
+                    )}
+                    {data.kpis_status_level && data.kpis_status_level === 9 && (
+                            <Button className='btn btn-primary btn-sm mt-1'
+                            onClick={() => recheckApproval(data.id)}
+                            >Re-Evaluation Approval</Button>
+                        )}
+                </Col>
+            )}
         </Row>
         <Input 
         className='mt-2'
@@ -186,7 +264,21 @@ const Comments = ({ data, by, callBack }) => {
         )}
         </>
         )}
-        
+        <Offcanvas direction={canvasEvaluationPlacement} isOpen={canvasEvaluationOpen} toggle={toggleCanvasEvaluationEnd} >
+          <OffcanvasHeader toggle={toggleCanvasEvaluationEnd}></OffcanvasHeader>
+          <OffcanvasBody className=''>
+            {evaluationDetailspreData && Object.values(evaluationDetailspreData).length > 0 ? (
+                <ViewKpiEvaluation data={evaluationDetailspreData} />
+                ) : (
+                    <Card>
+                        <CardBody>
+                            No data found!
+                        </CardBody>
+                    </Card>
+                )}
+            
+          </OffcanvasBody>
+        </Offcanvas>
     </Fragment>
   )
 }

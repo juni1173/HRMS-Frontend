@@ -318,7 +318,7 @@ const RoleCards = () => {
                                     </div>
                                     <div className='row pt-2'>
                                         <div className='col-md-8'>
-                                            {item.role_type !== 13 && (
+                                            {item.role_type !== 23 && (
                                                 <div className='role-heading'>
                                                 <Link
                                                 to='/'
@@ -330,7 +330,7 @@ const RoleCards = () => {
                                                     setShow(true)
                                                 }}
                                                 >
-                                                {/* <small className='fw-bolder'>Permissions</small> */}
+                                               <small className='fw-bolder'>Permissions</small>
                                                 </Link>
                                             </div>
                                             )}

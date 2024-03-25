@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react'
-import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button} from "reactstrap" 
-import { Edit, XCircle, FileText } from 'react-feather'
+import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button, InputGroup, InputGroupText} from "reactstrap" 
+import { Edit, XCircle, FileText, Search } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
@@ -25,6 +25,7 @@ const Medical = ({ status_choices, yearoptions }) => {
     const [itemOffset, setItemOffset] = useState(0)
     const [itemsPerPage, setItemsPerPage] = useState(50)
     const searchHelper = SearchHelper()
+    const [selectedItems, setSelectedItems] = useState([])
     const preDataApi = async () => {
         const formData = new FormData()
         formData['year'] = yearvalue
@@ -136,6 +137,21 @@ const Medical = ({ status_choices, yearoptions }) => {
             } 
         })
     }
+    const handleCheckboxChange = (itemId) => {
+        if (selectedItems.length < 5) {
+        // Step 3
+        const updatedSelection = [...selectedItems]
+    
+        if (updatedSelection.includes(itemId)) {
+          updatedSelection.splice(updatedSelection.indexOf(itemId), 1)
+        } else {
+          updatedSelection.push(itemId)
+        }
+        setSelectedItems(updatedSelection)
+    } else {
+        Api.Toast('error', 'You can select only 5 records ')
+    }
+      }
     const StatusComponent = ({ item, index }) => {
         const [toggleThisElement, setToggleThisElement] = useState(false)
         const [comment, setComment] = useState('')
@@ -295,6 +311,64 @@ const Medical = ({ status_choices, yearoptions }) => {
                 }}
             />
         </Col>
+        <Col md={6}>
+<Label>Serach Employee</Label>
+                    <InputGroup className='input-group-merge mb-2'>
+                        <InputGroupText>
+                            <Search size={14} />
+                        </InputGroupText>
+                        <Input placeholder='search employee name...'  onChange={e => { getSearch({list: data, key: 'employee_name', value: e.target.value }) } }/>
+                    </InputGroup>
+                </Col>
+                <Col md={6}>
+                {selectedItems.length > 0 ?  <div>
+                <Label>Select Status</Label>
+                <Select
+                 isClearable={true}
+                 options={status_choices}
+                 className='react-select mb-1'
+                 classNamePrefix='select'
+                 placeholder="Select Status"
+                 onChange={(selectedOption) => {
+                     if (selectedOption !== null) {
+                        const formData = new FormData()
+                        formData['medical_array'] = selectedItems
+                        formData['status'] = selectedOption.value
+                        Api.jsonPatch(`/reimbursements/update/multi/medical/allowance/status/`, formData)
+                        .then((result) => {
+                            if (result.status === 200) {
+                                MySwal.fire({
+                                    icon: 'success',
+                                    title: 'Status Updated!',
+                                    text: 'Status is updated.',
+                                    customClass: {
+                                    confirmButton: 'btn btn-success'
+                                    }
+                                }).then(async function (result) {
+                                    if (result.isConfirmed) {
+                                        setLoading(true)
+                                        await CallBack()
+                                        setTimeout(() => {
+                                            setLoading(false)
+                                        }, 1000)
+                                    }
+                                })
+                                } else {
+                                    MySwal.fire({
+                                        title: 'Error',
+                                        text: result.message ? result.message : 'Something went wrong',
+                                        icon: 'error',
+                                        customClass: {
+                                          confirmButton: 'btn btn-success'
+                                        }
+                                      })
+                                }
+                        })   
+                     } 
+             
+               }}
+             /></div>  : null}
+             </Col>
             <Col md={12}>
         {!loading ? (
                 <>
@@ -306,7 +380,13 @@ const Medical = ({ status_choices, yearoptions }) => {
                             <CardBody>
                                 <div className="row">
                                    
-                                    <div className="col-md-4">
+                                    <div className="col-md-3">
+                                    <Input
+                           
+                           type="checkbox"
+                           onChange={() => handleCheckboxChange(item.id)}
+                           checked={selectedItems.includes(item.id)}
+                         /> 
                                     <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
                                     <CardSubtitle>
                                     <h4><Badge color='light-danger'>{item.month ? Api.getMonthName(item.month) : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>

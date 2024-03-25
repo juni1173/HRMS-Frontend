@@ -10,7 +10,7 @@ import Select from "react-select"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import ESS from '../ESS-Scripts/index'
- 
+import Preview from "../../emp_resume/Preview"
 const Employees = ({ employeeList, CallBack, type }) => {
     
     const Api = apiHelper()
@@ -25,7 +25,17 @@ const Employees = ({ employeeList, CallBack, type }) => {
     const [itemsPerPage, setItemsPerPage] = useState(50)
     const [canvasPlacement, setCanvasPlacement] = useState('end')
     const [canvasOpen, setCanvasOpen] = useState(false)
+    const [canvas, setcanvas] = useState('')
     const [empID, setEmpID] = useState('')
+    //Resume
+  const [name, setName] = useState('')
+  const [location, setLocation] = useState('')
+  const [mobile, setMobile] = useState('')
+  const [email, setEmail] = useState('')
+  const [summary, setSummary] = useState('')
+  const [accomplishments, setAccomplishments] = useState([{ company: '', accomplishment: '' }])
+  const [experiences, setExperiences] = useState([{ company: '', title: '', startDate: '', endDate: '', points: [''] }])
+  const [educations, setEducations] = useState([{ university: '', degree: '', startDate: '', endDate: '' }])
     const itemsCount = [
         {value: 50, label: '50'},
         {value: 100, label: '100'},
@@ -71,12 +81,35 @@ const Employees = ({ employeeList, CallBack, type }) => {
         setCanvasPlacement('end')
         setCanvasOpen(!canvasOpen)
       }
-    const ESSToggle = (id) => {
+    const ESSToggle = (id, canvasvalue) => {
+        console.log(canvas)
+        if (canvasvalue === 'ESS') {
         if (id !== null) {
             setEmpID(id)
         }
+    } else if (canvasvalue === 'Resume') {
+        const formdata = new FormData()
+        formdata['employee_id'] = id
+         Api.jsonPost(`/employees/view/resume/`, formdata).then((response) => {
+            // debugger
+                if (response.status === 200) {
+                    const resumeData = JSON.parse(response.data[0].resume_data)
+                    setName(resumeData.name)
+                    setLocation(resumeData.location)
+                    setMobile(resumeData.mobile)
+                    setEmail(resumeData.email)
+                    setSummary(resumeData.summary)
+                    setAccomplishments(resumeData.accomplishments)
+                    setExperiences(resumeData.experiences)
+                    setEducations(resumeData.educations)
+                } else {
+                //   Api.Toast('error', response.message)
+                }
+              })
+    }
         setCanvasPlacement('end')
         setCanvasOpen(!canvasOpen)
+
       }
     useEffect(() => {
         getEmployeeData()
@@ -267,14 +300,30 @@ const Employees = ({ employeeList, CallBack, type }) => {
                                         >
                                         <UserMinus color="red"/>
                                     </button>
+                                    {/* <Row> */}
                                     <button
                                         className="btn btn-primary btn-sm"
                                         style={{marginTop:'15px', padding:'10px'}}
                                         title="ESS Setup"
-                                        onClick={() => ESSToggle(item.id)}
+                                        onClick={() => {
+                                            setcanvas('ESS')
+                                            ESSToggle(item.id, 'ESS')
+                                        }}
                                         >
                                         ESS Setup
                                     </button>
+                                    <button
+                                        className="btn btn-primary btn-sm"
+                                        style={{marginTop:'15px', padding:'10px'}}
+                                        title="ESS Setup"
+                                        onClick={() => {
+                                            setcanvas('Resume')
+                                            ESSToggle(item.id, 'Resume')
+                                        }}
+                                        >
+                                       Preview Resume
+                                    </button>
+                                    {/* </Row> */}
                                     </>
                                 ) : (
                                     <button
@@ -324,7 +373,8 @@ const Employees = ({ employeeList, CallBack, type }) => {
         <Offcanvas direction={canvasPlacement} isOpen={canvasOpen} toggle={toggleCanvasEnd} >
           <OffcanvasHeader toggle={toggleCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
-            <ESS id={empID}/>
+            {canvas === 'ESS' ? <ESS id={empID}/> : null}
+            {canvas === 'Resume' ? <Preview name={name} location={location} mobile={mobile} email={email} summary={summary} accomplishments={accomplishments} experiences={experiences} educations={educations}/>  : null}
           </OffcanvasBody>
         </Offcanvas>
     </Fragment>

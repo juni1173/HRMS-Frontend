@@ -1,8 +1,9 @@
 import { Fragment, useState, useEffect} from 'react'
-import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button } from "reactstrap" 
-import { Edit, XCircle } from 'react-feather'
+import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button, InputGroup, InputGroupText } from "reactstrap" 
+import { Edit, XCircle, Search } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
+import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const Loan = ({ status_choices, yearoptions }) => {
@@ -16,6 +17,10 @@ const Loan = ({ status_choices, yearoptions }) => {
     const [data, setData] = useState([])
     const [yearvalue, setyearvalue] = useState()
     const [monthvalue, setmonthvalue] = useState()
+    const [searchResults, setSearchResults] = useState([])
+    const [searchQuery] = useState([])
+    const [currentItems, setCurrentItems] = useState([])
+    const searchHelper = SearchHelper()
     const monthNames = [
         {value: 0, label: 'Select Month'},
         {value: 1, label: "January"},
@@ -48,7 +53,39 @@ const Loan = ({ status_choices, yearoptions }) => {
 useEffect(() => {
 preDataApi()
 }, [setData, monthvalue, yearvalue])
-
+const getSearch = options => {
+    // console.warn(options)
+    if (options.value === '' || options.value === null || options.value === undefined || options.value === 0) {
+        if (options.key in searchQuery) {
+            delete searchQuery[options.key]
+        } 
+        if (Object.values(searchQuery).length > 0) {
+            options.value = {query: searchQuery}
+        } else {
+            options.value = {}
+        }
+        
+        // setItemOffset(0)
+        setSearchResults(searchHelper.searchObj(options))
+        setCurrentItems(searchHelper.searchObj(options))
+        
+    } else {
+        
+        searchQuery[options.key] = options.value
+        options.value = {query: searchQuery}
+        // setItemOffset(0)
+        setSearchResults(searchHelper.searchObj(options))
+        setCurrentItems(searchHelper.searchObj(options))
+    }
+    return false
+}
+useEffect(() => {
+    if (searchResults && Object.values(searchResults).length > 0) {
+        // const endOffset = itemOffset === 0 ? itemsPerPage : itemOffset + itemsPerPage            
+        setCurrentItems(searchResults)
+        // setPageCount(Math.ceil(searchResults.length / itemsPerPage))
+    }
+    }, [searchResults])
     const onStatusUpdate = async (id, status_value, comment) => {
         MySwal.fire({
             title: 'Are you sure?',
@@ -205,12 +242,21 @@ preDataApi()
               }}
             />
         </Col>
+        <Col md={6}>
+<Label>Serach Employee</Label>
+                    <InputGroup className='input-group-merge mb-2'>
+                        <InputGroupText>
+                            <Search size={14} />
+                        </InputGroupText>
+                        <Input placeholder='search employee name...'  onChange={e => { getSearch({list: data, key: 'employee_name', value: e.target.value }) } }/>
+                    </InputGroup>
+                </Col>
         {!loading ? (
                 <>
             {(data && Object.values(data).length > 0) ? (
                 <Row>
                  <Col md={12}>
-                 {Object.values(data).map((item, index) => (
+                 {Object.values(currentItems).map((item, index) => (
                             <Card key={index}>
                             <CardBody>
                                 <div className="row">

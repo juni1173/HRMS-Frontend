@@ -42,7 +42,32 @@ const EvaluationForm = ({ data, CallBack }) => {
                     setLoading(true)
                     const resultData = result.data
                     console.warn(resultData)
-                        setKpiAspects(resultData)
+                    const updated = resultData.map((scale, scaleIndex) => {
+                        if (scaleIndex !== 0) {
+                            return scale // If index is not 0, return the original scale without modification
+                        }
+                        return {
+                            ...scale,
+                            kpi_aspects: scale.kpi_aspects.map((aspect) => {
+                                return {
+                                    ...aspect,
+                                    parameters: aspect.parameters.map((parameter) => {
+                                        if (
+                                           parameter.scale_rating !== null
+                                        ) {
+                                            return {
+                                                ...parameter,
+                                                // scale_rating: newValue,
+                                                has_checked: true
+                                            }
+                                        }
+                                        return parameter
+                                    })
+                                }
+                            })
+                        }
+                    })
+                        setKpiAspects(updated)
                         console.warn(resultData)
                     setTimeout(() => {
                         setLoading(false)
@@ -54,8 +79,12 @@ const EvaluationForm = ({ data, CallBack }) => {
         })
     }
     const updateRating = (value, i) => {
-        if (value && i) {
-            const newValue = value
+        // debugger
+        if (i) {
+            let newValue = null 
+            if (value !== null) {
+            newValue = value.value
+            }
             const updated = kpiAspectsData.map((scale, scaleIndex) => {
                 if (scaleIndex !== 0) {
                     return scale // If index is not 0, return the original scale without modification
@@ -70,10 +99,19 @@ const EvaluationForm = ({ data, CallBack }) => {
                                     aspectIndex === i.aspectIndex &&
                                     paraIndex === i.paraIndex
                                 ) {
+                                    if (value !== null) {
                                     return {
                                         ...parameter,
-                                        scale_rating: newValue
+                                        scale_rating: newValue,
+                                        has_checked: true
                                     }
+                                } else {
+                                    return {
+                                        ...parameter,
+                                        scale_rating: newValue,
+                                        has_checked: false
+                                    }
+                                }
                                 }
                                 return parameter
                             })
@@ -157,7 +195,8 @@ const EvaluationForm = ({ data, CallBack }) => {
                                     <Fragment key={aspectIndex}>
                                     <Card>
                                         <CardBody>
-                                        <Badge color="light-danger">Aspect </Badge><b>{aspect.aspect_group_title}</b>                                        
+                                            {item.have_aspects === false ?  null : <>
+                                        <Badge color="light-danger">Aspect </Badge><b>{aspect.aspect_group_title}</b> </> }                                      
                                         <Table bordered striped responsive className='my-1'>
                                             <thead className='table-dark text-center'>
                                                 <tr>
@@ -170,19 +209,21 @@ const EvaluationForm = ({ data, CallBack }) => {
                                                 <>
                                                 {aspect.parameters.map((parameter, paraIndex) => (
                                                     <tr key={paraIndex}>
-                                                        <td>{parameter.parameter_group_title}</td>
+                                                   <td>
+  {parameter.parameter_group_title}{' '}
+  {parameter.required_parameter ? <Badge color='light-danger'>*</Badge> : null}</td>
                                                         <td>
                                                         <div className="row min-width-300">
                                                             <div className="col-lg-12">
                                                             <Select
-                                                                isClearable={false}
+                                                                isClearable={true}
                                                                 options={ratingsData}
                                                                 className='react-select mb-1'
                                                                 classNamePrefix='select'
                                                                 menuPortalTarget={document.body} 
                                                                 styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                                                                 defaultValue={ratingsData.find((pre) => pre.value === parameter.scale_rating) ? ratingsData.find((pre) => pre.value === parameter.scale_rating) : ''}
-                                                                onChange={(statusData) => updateRating(statusData.value, {paraIndex, aspectIndex, index})}
+                                                                onChange={(statusData) => updateRating(statusData, {paraIndex, aspectIndex, index})}
                                                                 />
                                                             </div>
                                                         </div>

@@ -329,6 +329,10 @@ const Routes = [
     path: '/error',
     component: lazy(() => import('../../views/Error')),
     layout: 'BlankLayout'
+  },
+  {
+    path: '/Resume',
+    component: lazy(() => import('../../views/emp_resume'))
   }
 ]
 

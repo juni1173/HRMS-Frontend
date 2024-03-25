@@ -285,7 +285,10 @@ const PayView = ({ payslipData, salaryBatch }) => {
             </Row>
           </div>
         ))}
-         {payslipData.customised.length > 0 ? (
+       
+    </div>
+  ) : null}
+  {payslipData.customised.length > 0 ? (
                 <div className="mt-1">
                   {payslipData.customised.filter(custom => !custom.is_Taxable).map((custom, index) => (
                     <div key={index}>
@@ -302,8 +305,6 @@ const PayView = ({ payslipData, salaryBatch }) => {
                   ))}
                 </div>
               ) : null}
-    </div>
-  ) : null}
               <hr className="border-top border-dark bg-dark" />
               </div>
               <Row className='fs-4 fw-bolder'>

@@ -3,15 +3,16 @@ import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Labe
 import { Edit, FileText, XCircle, Search } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
-import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
+import SearchHelper from '../../Helpers/SearchHelper/SearchByObject'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import ReactPaginate from 'react-paginate'
-const Gym = ({ status_choices, yearoptions }) => {
-    const currentDate = new Date()
-    // Get the current month and year
-    const currentMonth = currentDate.getMonth() + 1 // Month is zero-based, so add 1
-    const currentYear = currentDate.getFullYear() 
+const Approval = () => {
+    const status_choices = [
+            {value: 'pending by hr', label: 'pending by hr'},
+            {value: 'approved by hr', label: 'approved by hr'},
+            {value: 'rejected by hr', label: 'rejected by hr'}
+]
     const Api = apiHelper() 
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
@@ -19,42 +20,26 @@ const Gym = ({ status_choices, yearoptions }) => {
     const [searchQuery] = useState([])
     const [currentItems, setCurrentItems] = useState([])
     const [data, setData] = useState([])
-    const [yearvalue, setyearvalue] = useState()
-    const [monthvalue, setmonthvalue] = useState()
     const [pageCount, setPageCount] = useState(0)
     const [itemOffset, setItemOffset] = useState(0)
     const [itemsPerPage, setItemsPerPage] = useState(50)
     const searchHelper = SearchHelper()
-    const [selectedItems, setSelectedItems] = useState([])
+    // const [selectedItems, setSelectedItems] = useState([])
     const preDataApi = async () => {
-        const formData = new FormData()
-        formData['year'] = yearvalue
-        formData['month'] = monthvalue
-        const response = await Api.jsonPost('/reimbursements/employee/requests/gym/data/', formData)
+        // const formData = new FormData()
+        // formData['year'] = yearvalue
+        // formData['month'] = monthvalue
+        const response = await Api.get('/reimbursements/hr/compensatory/list/')
         if (response.status === 200) {
             setData(response.data)
         } else {
-            return Api.Toast('error', 'Gym data not found')
+            return Api.Toast('error', 'Data not found')
         }
     }
     const CallBack = () => {
         preDataApi()
     }
-    const monthNames = [
-        {value: 0, label: 'Select Month'},
-        {value: 1, label: "January"},
-        {value: 2, label: "February"},
-        {value: 3, label: "March"},
-        {value: 4, label: "April"},
-        {value: 5, label: "May"},
-        {value: 6, label: "June"},
-        {value: 7, label: "July"},
-        {value: 8, label: "August"},
-        {value: 9, label: "September"},
-        {value: 10, label: "October"},
-        {value: 11, label: "November"},
-        {value: 12, label: "December"}
-      ]
+   
       const itemsCount = [
         {value: 50, label: '50'},
         {value: 100, label: '100'},
@@ -87,7 +72,7 @@ const Gym = ({ status_choices, yearoptions }) => {
             console.log(searchHelper.searchObj(options))
         }
     }
-    const onStatusUpdate = async (id, status_value, comment) => {
+    const onStatusUpdate = async (id, status_value) => {
             MySwal.fire({
                 title: 'Are you sure?',
                 text: "Do you want to update the Status!",
@@ -102,9 +87,9 @@ const Gym = ({ status_choices, yearoptions }) => {
             }).then(function (result) {
                 if (result.value) {
                     const formData = new FormData()
-                    formData['status'] = status_value
-                    if (comment !== '') formData['decision_reason'] = comment
-                     Api.jsonPatch(`/reimbursements/update/gym/allowance/status/${id}/`, formData)
+                    formData['hr_approval'] = status_value
+                    // if (comment !== '') formData['decision_reason'] = comment
+                     Api.jsonPatch(`/reimbursements/hr/update/compensatory/${id}/`, formData)
                         .then((result) => {
                             if (result.status === 200) {
                                 MySwal.fire({
@@ -139,7 +124,7 @@ const Gym = ({ status_choices, yearoptions }) => {
         }
     const StatusComponent = ({ item, index }) => {
         const [toggleThisElement, setToggleThisElement] = useState(false)
-        const [comment, setComment] = useState('')
+        // const [comment, setComment] = useState('')
         const [statusValue, setStatusValue] = useState('')
         return (
             <div className="single-history" key={index}>
@@ -152,10 +137,10 @@ const Gym = ({ status_choices, yearoptions }) => {
                     options={status_choices}
                     className='react-select mb-1'
                     classNamePrefix='select'
-                    defaultValue={status_choices.find(({value}) => value === item.status) ? status_choices.find(({value}) => value === item.status) : status_choices[0] }
+                    defaultValue={status_choices.find(({value}) => value === item.hr_approval) ? status_choices.find(({value}) => value === item.hr_approval) : status_choices[0] }
                     onChange={(statusData) => setStatusValue(statusData.value)}
                     />
-                    {((statusValue === 'not-approved') || (statusValue === 'approved')) && (
+                    {/* {((statusValue === 'not-approved') || (statusValue === 'approved')) && (
                         <>
                         <Label>
                         Comment
@@ -169,10 +154,10 @@ const Gym = ({ status_choices, yearoptions }) => {
                     />
                     </>
                     ) 
-                    }
+                    } */}
                     
                     <Button className="btn btn-primary" onClick={ async () => {
-                        await onStatusUpdate(item.id, statusValue, comment).then(() => {
+                        await onStatusUpdate(item.id, statusValue).then(() => {
                             setToggleThisElement((prev) => !prev)
                         })
                     }}>
@@ -186,7 +171,7 @@ const Gym = ({ status_choices, yearoptions }) => {
             ) : (
                 <div className="row min-width-225">
                     <div className="col-lg-8">
-                    <h3><Badge color='light-secondary'>{status_choices.find(({value}) => value === item.status) ? status_choices.find(({value}) => value === item.status).label : status_choices[0].label }</Badge></h3>
+                    <h3><Badge color='light-secondary'>{status_choices.find(({value}) => value === item.hr_approval) ? status_choices.find(({value}) => value === item.hr_approval).label : status_choices[0].label }</Badge></h3>
                     </div>
                     
                     <div className="col-lg-4 float-right">
@@ -210,7 +195,7 @@ const Gym = ({ status_choices, yearoptions }) => {
         }, [data])
 useEffect(() => {
 preDataApi()
-}, [setData, yearvalue, monthvalue])
+}, [setData])
         useEffect(() => {
             if (searchResults && Object.values(searchResults).length > 0) {
                 const endOffset = itemOffset === 0 ? itemsPerPage : itemOffset + itemsPerPage            
@@ -223,65 +208,30 @@ preDataApi()
             const newOffset = (event.selected * itemsPerPage) % searchResults.length
             setItemOffset(newOffset)
             }
-            const handleCheckboxChange = (itemId) => {
-                if (selectedItems.length < 5) {
-                // Step 3
-                const updatedSelection = [...selectedItems]
+            // const handleCheckboxChange = (itemId) => {
+            //     if (selectedItems.length < 5) {
+            //     // Step 3
+            //     const updatedSelection = [...selectedItems]
             
-                if (updatedSelection.includes(itemId)) {
-                  updatedSelection.splice(updatedSelection.indexOf(itemId), 1)
-                } else {
-                  updatedSelection.push(itemId)
-                }
-                setSelectedItems(updatedSelection)
-            } else {
-                Api.Toast('error', 'You can select only 5 records ')
-            }
-              }
+            //     if (updatedSelection.includes(itemId)) {
+            //       updatedSelection.splice(updatedSelection.indexOf(itemId), 1)
+            //     } else {
+            //       updatedSelection.push(itemId)
+            //     }
+            //     setSelectedItems(updatedSelection)
+            // } else {
+            //     Api.Toast('error', 'You can select only 5 records ')
+            // }
+            //   }
   return (
     <Fragment>
         <Row>
         <Col md={12}>
         <div className='content-header' >
-          <h5 className='mb-2'>Gym Allowance Requests</h5>
+          <h5 className='mb-2'>Compensatory Leaves</h5>
           </div>
         </Col>
-        <Col md={3}>
-            <Label>Select Year</Label>
-            <Select
-                isClearable={true}
-                options={yearoptions}
-                className='react-select mb-1'
-                classNamePrefix='select'
-                placeholder="Select Year"
-                onChange={(selectedOption) => {
-                    if (selectedOption !== null) {
-                        setyearvalue(selectedOption.value)
-                    } else {  
-                        setyearvalue(currentYear)
-                    }
-            
-              }}
-            />
-</Col>
-        <Col md={3}>
-            <Label>Search Month</Label>
-            <Select
-                isClearable={true}
-                options={monthNames}
-                className='react-select mb-1'
-                classNamePrefix='select'
-                // defaultValue={monthNames[0]}
-                onChange={(selectedOption) => {
-                    if (selectedOption !== null) {
-                        setmonthvalue(selectedOption.value)
-                    } else {  
-                        setmonthvalue(currentMonth)
-                    }
-            
-              }}
-            />
-        </Col>
+        
         <Col md={3}>
             <Label>
                 Search Status
@@ -293,9 +243,9 @@ preDataApi()
                 classNamePrefix='select'
                 onChange={e => {
                             if (e) {
-                            getSearch({list: data, key: 'status', value: e.value, type: 'equal' }) 
+                            getSearch({list: data, key: 'hr_approval', value: e.value, type: 'equal' }) 
                             } else {
-                                getSearch({list: data, key: 'status', value: '' }) 
+                                getSearch({list: data, key: 'hr_approval', value: '' }) 
                             }
                         } 
                     }
@@ -323,7 +273,7 @@ preDataApi()
                     </InputGroup>
                 </Col>
                 <Col md={6}>
-                {selectedItems.length > 0 ?  <div>
+                {/* {selectedItems.length > 0 ?  <div>
                 <Label>Select Status</Label>
                 <Select
                  isClearable={true}
@@ -369,7 +319,7 @@ preDataApi()
                      } 
              
                }}
-             /></div>  : null}
+             /></div>  : null} */}
              </Col>
             <Col md={12}>
         
@@ -386,44 +336,31 @@ preDataApi()
                        
                                     <div className="col-md-3">
                                       
-                                <Input
+                                {/* <Input
                                
                           type="checkbox"
                           onChange={() => handleCheckboxChange(item.id)}
                           checked={selectedItems.includes(item.id)}
-                        /> 
+                        />  */}
                         
                                     <CardTitle tag='h1'>{item.employee_name ? item.employee_name : <Badge color='light-danger'>N/A</Badge>}</CardTitle>
-                                    <CardSubtitle>
-                                    <h4><Badge color='light-danger'>{item.month ? Api.getMonthName(item.month) : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
-                                        <h4><Badge color='light-warning'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</Badge></h4></CardSubtitle>
+                                    <CardSubtitle>  
+                                        <h4><Badge color='light-warning'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</Badge></h4>
+                                    </CardSubtitle>
                                     </div>
-                                    <div className="col-md-4">
-                                        <Badge color='light-success'>
-                                                Claimed Amount
-                                        </Badge><br></br>
-                                        <span className="jd_position" style={{color: "black", fontWeight:"20px", padding:"0.3rem 0.5rem"}}>{item.amount && item.amount}</span>
-                                        
-                                        <br></br><Badge color='light-danger'>
-                                            Monthly Limit
-                                        </Badge><br></br>
-                                        <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>{item.gym_monthly_limit && item.gym_monthly_limit}</span>
-                                    </div>
-                                    <div className="col-md-4">
+                                    <div className="col-md-8">
                                     <div className="mb-1">
                                         <StatusComponent item={item} key={index}/>
-                                        </div>
-                                    <Badge color='light-success'>
-                                            Receipt
-                                        </Badge><br></br>
-                                        <span style={{color: "black", fontWeight:"10px", padding:"0.3rem 0.5rem"}}>
-                                            {item.gym_receipt ?  <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.gym_receipt}`}>
-                                                <>
-                                                 {!item.gym_receipt.toLowerCase().endsWith('.pdf') ? <img src={`${process.env.REACT_APP_PUBLIC_URL}${item.gym_receipt}`} width={20} height={20}/> : <FileText width={20} height={20} /> }
-                                                 </>
-                                                 </a> : <Badge color='light-danger'>N/A</Badge>}
-                                            </span>
-                                        
+                                        </div>     
+                                    </div>
+                                    <div className='col-md-12'>
+                                        Team Lead Approval : <Badge color='light-warning'>{item.team_lead_approval ? item.team_lead_approval : <Badge color='light-danger'>N/A</Badge>}</Badge>
+                                    </div>
+                                    <div className='col-md-12'>
+                                        Jira Ticket : <Badge color='light-warning'>{item.jira_ticket ? item.jira_ticket : <Badge color='light-danger'>N/A</Badge>}</Badge>
+                                    </div>
+                                    <div className='col-md-12'>
+                                        Reason : <Badge color='light-warning'>{item.reason ? item.reason : <Badge color='light-danger'>N/A</Badge>}</Badge>
                                     </div>
                                    
                                 </div>
@@ -434,7 +371,7 @@ preDataApi()
                     </Col>   
             </Row>
             ) : (
-                <div className="text-center">No Gym Allowance Request Data Found!</div>
+                <div className="text-center">No Compensatory Leave Request Data Found!</div>
             )
             
             }
@@ -466,4 +403,4 @@ preDataApi()
   )
 }
 
-export default Gym
+export default Approval

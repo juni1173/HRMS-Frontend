@@ -12,7 +12,9 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel"
 // import highlightWeekends from 'react-multi-date-picker/plugins/highlight_weekends'
 import weekends from "react-multi-date-picker/plugins/highlight_weekends"
 const format = "YYYY-MM-DD"
+import EmployeeHelper from '../../Helpers/EmployeeHelper'
 const Leave = ({leavedata, yearoptions}) => {
+  const employeeHelper = EmployeeHelper()
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(true)
@@ -20,6 +22,7 @@ const Leave = ({leavedata, yearoptions}) => {
     const [showform, setshowform] = useState(false)
     const [data, setData] = useState()
     const [yearvalue, setYearValue] = useState(null)
+    const [employees, setEmployeeDropdown] = useState([])
     const yearValueRef = useRef(null)
     const [leave_types] = useState([])
     const [attachment, setAttachment] = useState(null)
@@ -28,7 +31,8 @@ const Leave = ({leavedata, yearoptions}) => {
         leave_types: '',
         start_date : '',
         end_date: '',
-        duration: ''
+        duration: '',
+        team_lead: ''
    })
    const [dates, setDates] = useState([])
     // new DateObject().set({ day: 4, format }),
@@ -66,6 +70,15 @@ const Leave = ({leavedata, yearoptions}) => {
         } 
 }
 }
+const getEmployeeData = async () => {
+  await employeeHelper.fetchEmployeeDropdown().then(result => {
+    setEmployeeDropdown(result)
+   })
+}
+useEffect(() => {
+  getEmployeeData()
+  return false
+}, [setEmployeeDropdown])
   const leaves = async () => {
       setLoading(true)
       const formData = new FormData()
@@ -111,6 +124,7 @@ const Leave = ({leavedata, yearoptions}) => {
             formData.append('end_date', leaveData.end_date)
             formData.append('duration', leaveData.duration)
             formData.append('leave_dates', leaveDates)
+            formData.append('team_lead', leaveData.team_lead.value)
             if (attachment !== null) formData.append('attachment', attachment)
             await Api.jsonPost(`/reimbursements/employees/leaves/`, formData, false).then(result => {
                 if (result) {
@@ -123,7 +137,8 @@ const Leave = ({leavedata, yearoptions}) => {
                             leave_types: '',
                             start_date : '',
                             end_date: '',
-                            duration: ''
+                            duration: '',
+                            team_lead: ''
                        })
                         )
                         setDates([])
@@ -278,6 +293,17 @@ const Leave = ({leavedata, yearoptions}) => {
           }}
         />
         {/* </div> */}
+            </Col>
+                 <Col md="6" className="mb-1">
+                <Label className="form-label">
+               Team Lead
+                </Label>
+                <Select
+                    type="text"
+                    name="evaluator"
+                    options={employees}
+                    onChange={ (e) => { onChangeLeavesDetailHandler('team_lead', 'select', e) }}
+                    />
             </Col>
         <Col md={6}>
                 <Button color="primary" className="btn-next mt-2" onClick={submitForm} disabled={isButtonDisabled}>

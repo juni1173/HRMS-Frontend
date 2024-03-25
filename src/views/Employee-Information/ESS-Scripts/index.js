@@ -83,7 +83,7 @@ const index = ({id}) => {
                         <b>Staff Classification</b>
                     </Col>
                     <Col md="6" className='float-right'>
-                        {preData.staff_classification ? <CheckCircle color='green'/> : <XOctagon color='red'/>}
+                        {preData.staff_classification ? <><CheckCircle color='green'/> {preData.staff_classification_title}</> : <XOctagon color='red'/>}
                     </Col>
                     <hr></hr>
                     <Col md="6">

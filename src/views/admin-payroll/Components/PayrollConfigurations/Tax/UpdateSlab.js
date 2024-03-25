@@ -33,7 +33,9 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
             income_ceiling: Slab.income_ceiling, 
             country: Slab.country,
             tax_rate: Slab.tax_rate,
-            year: Slab.year
+            year: Slab.year,
+            exemption_amount: Slab.exemption_amount,
+            fixed_amount: Slab.fixed_amount
           }
         })
         const onSubmit = async (data) => {
@@ -44,6 +46,8 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
               formData['country'] = data.country
               formData['tax_rate'] = data.tax_rate
               formData['year'] = data.year.value
+              formData['exemption_amount'] = data.exemption_amount
+              formData['fixed_amount'] = data.fixed_amount
               await Api.jsonPatch(`/payroll/patch/tax/slab/${Slab.id}/`, formData).then(result => {
                 if (result) {
                     if (result.status === 200) {
@@ -91,6 +95,30 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
         control={control}
         render={({ field }) => (
           <Input {...field} type='number' id='income_ceiling' placeholder='Ceiling Income' />
+        )}
+      />
+    </Col>
+    <Col xs={6}>
+      <Label className='form-label' for='exemption_amount'>
+        Exemption Amount
+      </Label>
+      <Controller
+        name='exemption_amount'
+        control={control}
+        render={({ field }) => (
+          <Input {...field} type='number' id='exemption_amount' placeholder='Exemption Amount' />
+        )}
+      />
+    </Col>
+    <Col xs={6}>
+      <Label className='form-label' for='fixed_amount'>
+        Fixed Amount
+      </Label>
+      <Controller
+        name='fixed_amount'
+        control={control}
+        render={({ field }) => (
+          <Input {...field} type='number' id='fixed_amount' placeholder='Fixed Amount' />
         )}
       />
     </Col>

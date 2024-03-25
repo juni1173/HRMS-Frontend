@@ -85,7 +85,8 @@ const ViewKpiEvaluation = ({ data }) => {
                                                     <Fragment key={aspectIndex}>
                                                     <Card>
                                                         <CardBody>
-                                                        <Badge color="light-danger">Aspect </Badge><b>{aspect.aspect_group_title}</b> <Badge>{aspect.result}%</Badge>                                       
+                                                            {item.have_aspects === false ? null : <>
+                                                        <Badge color="light-danger">Aspect </Badge><b>{aspect.aspect_group_title}</b> <Badge>{aspect.result}%</Badge> </>}                                      
                                                         <Table bordered striped responsive className='my-1'>
                                                             <thead className='table-dark text-center'>
                                                                 <tr>

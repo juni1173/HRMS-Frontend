@@ -1,13 +1,14 @@
 import "@styles/react/apps/app-users.scss"
-import { Card, CardBody, Spinner, Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap"
+import { Card, CardBody, Spinner, Nav, NavItem, NavLink, TabContent, TabPane, InputGroup, InputGroupText, Input } from "reactstrap"
 import CandidateListTable from "./CandidateListTable"
 // import {CandidateListNavBar, CandidateListNavBarButton} from "./CandidateListNavBar"
 import apiHelper from "../../Helpers/ApiHelper"
 import { useState, useEffect  } from "react"  
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
 import CandidateFilters from "./CandidateFilters"
-import { Filter } from "react-feather"
+import { Filter, Search } from "react-feather"
 import ReactPaginate from 'react-paginate'
+import Select from 'react-select'
 const CandidateList = () => {
     const [loading, setLoading] = useState(false)
     const [filter, setFilters] = useState(false)
@@ -20,6 +21,15 @@ const CandidateList = () => {
     const [searchQuery] = useState([])
     const [totalqualifiedPageCount, setqualifiedTotalPageCount] = useState(1)
     const [totaldisqualifiedPageCount, setdisqualifiedTotalPageCount] = useState(1)
+    const [departmentsdropdown] = useState([])
+      const [staff_classificationdropdown] = useState([])
+      const [positiondropdown] = useState([])
+      const [jobdropdown] = useState([])
+      const [position, setPosition] = useState('')
+      const [department, setdepartment] = useState('')
+      const [job, setjob] = useState('')
+      const [sc, setsc] = useState('')
+      const [score, setscore] = useState('')
     const Api = apiHelper() 
     const searchHelper = SearchHelper()
     const getStages = async () => {
@@ -44,7 +54,9 @@ const CandidateList = () => {
     const getCandidate = async () => {
         setLoading(true)
        getStages()
-       await Api.get(`/candidates/?page=1`)
+       const formdata = new FormData()
+       formdata['page'] = 1
+       await Api.post(`/candidates/`, formdata)
             .then((result) => {
                 if (result) {
                     if (result.status === 200) {
@@ -78,9 +90,32 @@ const CandidateList = () => {
         }, 500)
             
     }
+    
     const getQualifiedCandidate = async (page) => {
         setLoading(true)
-       await Api.get(`/candidates/?page=${page}`)
+        const formdata = new FormData()
+        if (position !== null && position !== undefined && position !== '') {
+            formdata['position'] = position 
+        }
+        if (job !== null && job !== undefined && job !== '') {
+            formdata['job'] = job 
+        }
+        if (department !== null && department !== undefined && department !== '') {
+            formdata['department'] = department
+        }
+        if (sc !== null && sc !== undefined && sc !== '') {
+            formdata['staff_classification'] = sc
+        }
+        if (score !== null && score !== undefined && score !== '') {
+            formdata['evaluation_score'] = score
+        }
+        
+        // formdata['job'] = job ?? formdata['job']
+        // formdata['department'] = department ?? formdata['department']
+        // formdata['staff_classification'] = sc ?? formdata['staff_classification']
+        
+        formdata['page'] = page
+       await Api.jsonPost(`/candidates/`, formdata)
             .then((result) => {
                 if (result) {
                     if (result.status === 200) {
@@ -109,7 +144,21 @@ const CandidateList = () => {
     }
     const getDisqualifiedCandidate = async (page) => {
         setLoading(true)
-       await Api.get(`/candidates/?page=${page}`)
+        const formdata = new FormData()
+        if (position !== null && position !== undefined && position !== '') {
+            formdata['position'] = position 
+        }
+        if (job !== null && job !== undefined && job !== '') {
+            formdata['job'] = job 
+        }
+        if (department !== null && department !== undefined && department !== '') {
+            formdata['department'] = department
+        }
+        if (sc !== null && sc !== undefined && sc !== '') {
+            formdata['staff_classification'] = sc
+        }
+        formdata['page'] = page
+       await Api.jsonPost(`/candidates/`, formdata)
             .then((result) => {
                 if (result) {
                     if (result.status === 200) {
@@ -137,6 +186,18 @@ const CandidateList = () => {
         }, 500)
             
     }
+    const handleScoreChange = (e) => {
+        if (e.key === 'Enter') {
+active === '2' ? getQualifiedCandidate(1) : getDisqualifiedCandidate(1)
+        }
+      }
+    useEffect(() => {
+        if (active === '2') {
+getQualifiedCandidate(1)
+        } else if (active === '3') {
+            getDisqualifiedCandidate(1)
+        }
+    }, [position, department, job, sc, active])
     const getSearch = options => {
         // setLoading(true)
         if (options.value === '' || options.value === null || options.value === undefined) {
@@ -188,9 +249,46 @@ const CandidateList = () => {
     const handleDisqualifiedPageClick = (event) => {
         getDisqualifiedCandidate(event.selected + 1)
         }
+        
     useEffect(() => {
         getCandidate()
       }, [setCandidateList])
+      
+      const preDataApi = async () => {
+        const response = await Api.get('/candidates/filter/pre/data/')
+        if (response.status === 200) {
+            if (Object.values(response.data.department).length > 0) {
+              departmentsdropdown.splice(0, response.data.department.length)
+             response.data.department.forEach(element => {
+              departmentsdropdown.push({value: element.id, label: element.title})
+             })
+        } 
+        if (Object.values(response.data.staff_classification).length > 0) {
+          staff_classificationdropdown.splice(0, response.data.staff_classification.length)
+         response.data.staff_classification.forEach(element => {
+          staff_classificationdropdown.push({value: element.id, label: element.title})
+         })
+    } 
+    if (Object.values(response.data.position).length > 0) {
+      positiondropdown.splice(0, response.data.position.length)
+     response.data.position.forEach(element => {
+      positiondropdown.push({value: element.id, label: element.title})
+     })
+    } 
+    if (Object.values(response.data.job).length > 0) {
+      jobdropdown.splice(0, response.data.job.length)
+     response.data.job.forEach(element => {
+      jobdropdown.push({value: element.id, label: element.title})
+     })
+    } 
+      } else {
+            return Api.Toast('error', 'Data not found')
+        }
+    }
+    useEffect(() => {
+        preDataApi()
+        // console.log(position)
+        }, [])
     return (
         <>
         <button className="btn btn-outline-primary my-1" onClick={callFilters}><Filter/>Filters</button>
@@ -198,7 +296,89 @@ const CandidateList = () => {
 
             {Object.values(candidateList).length > 0 ? (
                     <>
-                        {filter && <CandidateFilters getSearch={getSearch} candidateList={getSearchList()}/>}
+                        {filter && <>
+                        <CandidateFilters getSearch={getSearch} candidateList={getSearchList()}/>
+                         <div className='col-lg-6'>
+                         <Select
+                                  isClearable={true}
+                                  options={departmentsdropdown}
+                                  className='react-select mb-1'
+                                  classNamePrefix='select'
+                                  placeholder="Search by department"
+                                  onChange={(selectedOption) => {
+                                    if (selectedOption !== null) {
+                                        setdepartment(selectedOption.value)
+                                    } else {
+                                        setdepartment('')
+                                    } 
+                              
+                                }}
+                              />
+                         </div>
+                         <div className='col-lg-6'>
+                         <Select
+                                  isClearable={true}
+                                  options={staff_classificationdropdown}
+                                  className='react-select mb-1'
+                                  classNamePrefix='select'
+                                  placeholder="Search by staff classification"
+                                  onChange={(selectedOption) => {
+                                    if (selectedOption !== null) {
+                                        setsc(selectedOption.value)
+                                    } else {
+                                        setsc('')
+                                    }
+                              
+                                }}
+                              />
+                         </div>
+                         <div className='col-lg-6'>
+                         <Select
+                                  isClearable={true}
+                                  options={positiondropdown}
+                                  className='react-select mb-1'
+                                  classNamePrefix='select'
+                                  placeholder="Search by position"
+                                  onChange={(selectedOption) => {
+                                     if (selectedOption !== null) {
+                                       setPosition(selectedOption.value)
+                                   } else {
+                                    setPosition('')
+
+                                   }
+                              
+                                }}
+                              />
+                         </div>
+                         <div className='col-lg-6'>
+                         <Select
+                                  isClearable={true}
+                                  options={jobdropdown}
+                                  className='react-select mb-1'
+                                  classNamePrefix='select'
+                                  placeholder="Search by job"
+                                  onChange={(selectedOption) => {
+                                     // console.log(selectedOption)
+                                     if (selectedOption !== null) {
+                                        setjob(selectedOption.value)
+                                    } else {
+                                        setjob('')
+                                    }
+                                     
+                                }}
+                              />
+                         </div>
+                         <div className='col-lg-6'>
+                <InputGroup className='input-group-merge mb-2'>
+                    <InputGroupText>
+                       <Search size={14} />
+                    </InputGroupText>
+                    <Input type='number' placeholder='search by score...' onChange={e => { setscore(e.target.value) }} onKeyDown={handleScoreChange}/>
+                </InputGroup>
+        </div>
+        <div className='col-lg-6'></div>
+                         </>
+                        }
                         <div className="col-lg-6">
                             <Nav tabs>
                                 {/* <div className='col-md-1'>

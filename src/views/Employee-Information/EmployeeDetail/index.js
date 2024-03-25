@@ -257,6 +257,7 @@ const EmployeeDetail = () => {
     useEffect(() => {
         getEmployeeData()
     }, [])
+    
     return (
             <Fragment>
                 <Card className="emplyee_personal_detail">

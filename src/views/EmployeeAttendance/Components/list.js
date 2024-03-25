@@ -1,11 +1,13 @@
 import {Fragment, useState, useEffect} from 'react'
-import { Button, Card, CardBody, Spinner, Row, Col, Table, Modal, ModalHeader, ModalBody, ModalFooter, Label, Badge } from 'reactstrap'
+import { Button, Card, CardBody, Spinner, Row, Col, Table, Modal, ModalHeader, ModalBody, ModalFooter, Label, Badge, Input } from 'reactstrap'
 import apiHelper from '../../Helpers/ApiHelper'
 import Select from 'react-select'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import { Clock } from 'react-feather'
+import EmployeeHelper from '../../Helpers/EmployeeHelper'
 const list = () => {
+    const EmpHelper = EmployeeHelper()
     const getCurrentTime = () => {
         const today = new Date()
         const currentTime = `${today.getHours()}:${today.getMinutes()}`
@@ -20,6 +22,9 @@ const list = () => {
     const [loading, setLoading] = useState(false)
     const [atndceData, setAtndceData] = useState([])
     const [centeredModal, setCenteredModal] = useState(false)
+    const [notifyActive, setNotifyActive] = useState(false)
+    const [notify, setNotify] = useState(false)
+    const [teamLead, setTeamLead] = useState('')
     const [check_in_time, setCheckInTime] = useState(getCurrentTime)
     const [check_out_time, setCheckOutTime] = useState(getCurrentTime)
     const [date, setDate] = useState(new Date())
@@ -50,6 +55,32 @@ const list = () => {
         {value:'office', label: 'Office'},
         {value: 'WFH', label: 'WFH'}
     ]
+    const typeChange = (e) => {
+        if (e) {
+            setType(e)
+            if (e === 'WFH') {
+                setNotifyActive(true)
+            } else setNotifyActive(false)
+        }
+    }
+    const handleCheck = (event) => {
+        // const { id } = event.target
+        const isChecked = event.target.checked
+        setNotify(isChecked)
+    }
+    const notifyTL = async () => {
+        if (notifyActive && notify) {
+            if (teamLead !== '') {
+                const formData = new FormData()
+                formData['team_lead'] = teamLead
+              await  Api.jsonPost(`/attendance/notify/`, formData).then(result => {
+                    if (result.status === 200) {
+
+                    } else Api.Toast('error', result.message)
+                })
+            } else Api.Toast('error', 'Please select team lead to notify!')
+        }
+    }
     // const getAttendanceData = async () => {
     //         setLoading(true)
     //         await Api.get(`/attendance/list/all/`)
@@ -107,6 +138,7 @@ const list = () => {
                 if (result) {
                     if (result.status === 200) {
                             setCenteredModal(false)
+                            notifyTL()
                             getAttendanceData()
                             Api.Toast('success', result.message)
                             setDate(new Date)
@@ -156,6 +188,25 @@ const Check_out = async () => {
             setLoading(false)
           }, 1000)
     
+}
+const EmployeeList = () => {
+    const [employees, setEmployees] = useState([])
+    useEffect(() => {
+        if (Object.values(employees).length === 0) {
+            EmpHelper.fetchEmployeeDropdown().then(result => {
+                setEmployees(result)
+            })
+        }
+    }, [setEmployees])
+    return (
+        <>
+            <Label>Select Team Lead</Label>
+            <Select
+            options={employees}
+            onChange={(e) => setTeamLead(e.value)}
+            />
+        </>
+    )
 }
 
     useEffect(() => {
@@ -290,7 +341,7 @@ const Check_out = async () => {
                        </Label><br></br>
                            <input className="form-control" type="time" onChange={e => setCheckInTime(e.target.value)} defaultValue={check_in_time}></input>
                        </Col>
-                       <Col md="3">
+                       <Col md={notifyActive ? "2" : "3"}>
                        <Label className='form-label' for='default-picker'>
                            Date
                            </Label>
@@ -299,17 +350,17 @@ const Check_out = async () => {
                            id='default-picker' 
                            placeholder='Date'
                            options={{
-                             defaultDate: date
-                            //    disable: [
-                            //    function(date) {
-                            //        // Weekend disable
-                            //        return (date.getDay() === 0 || date.getDay() === 6) 
-                            //    }
-                            //    ]
+                               defaultDate: date
+                               // disable: [
+                               // function(date) {
+                               //     // Weekend disable
+                               //     return (date.getDay() === 0 || date.getDay() === 6) 
+                               // }
+                               // ]
                            } }
                            />
                        </Col>
-                       <Col md="3">
+                       <Col md={notifyActive ? "2" : "3"}>
                            <Label>
                                Type <Badge color="light-danger">*</Badge>
                            </Label>
@@ -320,11 +371,30 @@ const Check_out = async () => {
                                name="type"
                                options={types_choices}
                                defaultValue={types_choices.find(pre => pre.value === type)}
-                               onChange={ (e) => setType(e.value) }
+                               onChange={ (e) => typeChange(e.value) }
                            />
                        </Col>
+                       {notifyActive && (
+                           <Col md="2" className='mb-1'>
+                               <Label>
+                                   Notify Team Lead
+                               </Label><br></br>
+                               <Input type='checkbox' 
+                               onChange={handleCheck}
+                               />
+                           </Col>
+                       )}
+                       {notify && (
+                           <>
+                           <Col md="3" className='mb-1'>
+                               <EmployeeList />
+                           </Col>
+                           <Col md="9"></Col>
+                           </>
+                       )}
+                           
                            <Col md="3" className="mb-1">
-                               <Button className='btn btn-primary mt-2' onClick={Check_in}>
+                               <Button className='btn btn-primary mt-2 float-right' onClick={Check_in}>
                                <Clock/>
                            </Button>
                            </Col>

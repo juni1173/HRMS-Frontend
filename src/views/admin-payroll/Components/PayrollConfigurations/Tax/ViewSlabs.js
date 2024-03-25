@@ -216,6 +216,8 @@ const [currentSlab, setCurrentSlab] = useState()
                             <th>Initial Amount</th>
                             <th>Ceiling Amount</th>
                             <th>Tax Rate</th>
+                            <th>Exemption Amount</th>
+                            <th>Fixed Amount</th>
                             <th>Year</th>
                             {isSuperuser ? <>
                             <th>Actions</th>
@@ -229,6 +231,8 @@ const [currentSlab, setCurrentSlab] = useState()
                                     <td>{item.initial_income_threshold ? item.initial_income_threshold : 'N/A'}</td>
                                     <td>{item.income_ceiling ? item.income_ceiling : 'N/A'}</td>
                                     <td>{item.tax_rate ? item.tax_rate : 'N/A'}</td>
+                                    <td>{item.exemption_amount ? item.exemption_amount : 'N/A'}</td>
+                                    <td>{item.fixed_amount ? item.fixed_amount : 'N/A'}</td>
                                     <td>{item.year ? item.year : 'N/A'}</td>
                                     {isSuperuser ? <>
                                     {!item.is_lock ? <td>

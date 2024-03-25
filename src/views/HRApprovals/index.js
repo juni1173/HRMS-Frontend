@@ -8,7 +8,7 @@ const Medical = lazy(() => import('./Components/Medical'))
 const Leave = lazy(() => import('./Components/Leave'))
 const PF = lazy(() => import('./Components/PF'))
 const Loan = lazy(() => import('./Components/Loan'))
-
+const Compensatory = lazy(() => import('./Components/compensatory'))
 const Index = () => {
   const yearoptions = []
 
@@ -51,6 +51,8 @@ const Index = () => {
         return <PF status_choices={status_choices} yearoptions={yearoptions} />
       case '5':
         return <Loan status_choices={status_choices} yearoptions={yearoptions} />
+      case '6':
+        return <Compensatory />
       default:
         return null
     }
@@ -68,10 +70,10 @@ const Index = () => {
                   <HelpCircle /> ESS
                 </h3>
               </NavItem>
-              {[1, 2, 3, 4, 5].map((tabId) => (
+              {[1, 2, 3, 4, 5, 6].map((tabId) => (
                 <NavItem key={tabId}>
                   <NavLink active={active === tabId.toString()} onClick={() => toggle(tabId.toString())}>
-                    {tabId === 1 ? 'Gym' : tabId === 2 ? 'Medical' : tabId === 3 ? 'Leaves' : tabId === 4 ? 'Provident Fund' : 'Loan'}
+                    {tabId === 1 ? 'Gym' : tabId === 2 ? 'Medical' : tabId === 3 ? 'Leaves' : tabId === 4 ? 'Provident Fund' : tabId === 5 ? 'Loan' : 'Compensatory'}
                   </NavLink>
                 </NavItem>
               ))}

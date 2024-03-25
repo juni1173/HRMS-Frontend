@@ -245,18 +245,24 @@ let nav = []
       icon: <Settings size={12} />,
       navLink: '/hr/kavskills'
   },
-  {
-    id: 'nav-tickets',
-    title: 'Tickets',
-    icon: <CheckSquare size={12} />,
-    navLink: '/hr/tickets'
-},
+//   {
+//     id: 'nav-tickets',
+//     title: 'Tickets',
+//     icon: <CheckSquare size={12} />,
+//     navLink: '/hr/tickets'
+// },
   {
     id: 'nav-reports',
     title: 'Reports',
     icon: <Trello size={12} />,
     navLink: '/reports'
 }
+// {
+//   id: 'nav-dashboard',
+//   title: 'Dashboards',
+//   icon: <Trello size={12} />,
+//   navLink: '/dashboard'
+// }
 ]
 
 export default nav

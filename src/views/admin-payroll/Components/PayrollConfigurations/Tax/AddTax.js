@@ -22,6 +22,8 @@ const AddTax = ({callBack}) => {
         income_ceiling: '',
         country: '',
         tax_rate: '',
+        exemption_amount: '',
+        fixed_amount: '',
         year:''
       })
       
@@ -69,7 +71,9 @@ const AddTax = ({callBack}) => {
             income_ceiling: taxDetail.income_ceiling,
             tax_rate: taxDetail.tax_rate,
             country: taxDetail.country.value,
-            year: taxDetail.year.value
+            year: taxDetail.year.value,
+            exemption_amount: taxDetail.exemption_amount,
+            fixed_amount: taxDetail.fixed_amount
           }
         
         Api.jsonPost(`/payroll/add/tax/slab/`, formData).then(result => {
@@ -115,6 +119,20 @@ const AddTax = ({callBack}) => {
                                             </Label>
                                             <Input type='number' placeholder='Ceiling Amount' 
                                             onChange={ (e) => { onChangeTaxDetailHandler('income_ceiling', 'input', e) }}/>
+                                            </Col>
+                                            <Col md={6} className='mb-md-0 mb-1'>
+                                            <Label className='form-label'>
+                                                Exemption Amount
+                                            </Label>
+                                            <Input type='number' placeholder='Exemption Amount' 
+                                            onChange={ (e) => { onChangeTaxDetailHandler('exemption_amount', 'input', e) }}/>
+                                            </Col>
+                                            <Col md={6} className='mb-md-0 mb-1'>
+                                            <Label className='form-label'>
+                                                Fixed Amount
+                                            </Label>
+                                            <Input type='number' placeholder='Fixed Amount' 
+                                            onChange={ (e) => { onChangeTaxDetailHandler('fixed_amount', 'input', e) }}/>
                                             </Col>
                                             <Col md={6} className='mb-md-0 mb-1'>
                                             <Label className='form-label'>

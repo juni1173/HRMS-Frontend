@@ -2,13 +2,13 @@ import { Fragment, useContext, useState } from 'react'
 import Select from 'react-select'
 // ** Custom Components
 // import Breadcrumbs from '@components/breadcrumbs'
-import { Search } from 'react-feather'
+import {writeFile, utils} from 'xlsx'
 // ** Reactstrap Imports
 import {
     Row, Col, 
     Card,
     CardBody,
-    Spinner, Label, Badge, Button
+    Spinner, Label, Badge, Button, CardTitle
   } from 'reactstrap'
 import apiHelper from '../../../Helpers/ApiHelper'
 // ** Deom Charts
@@ -121,6 +121,37 @@ const index = ({segmentation, dropdownData}) => {
         // const CallBack = useCallback(() => {
         //     getData()
         //   }, [requestData])
+        const handleExport = () => {
+          const csvjson = data.flatMap(item => item.employees_data.map(employee => ({
+            id: employee.emp_id,
+            name: employee.name,
+            designation: employee.designation,
+            kpi_count: employee.total_kpis_count,
+            projects: employee.projects ? employee.projects.join(', ') : '',
+            score: employee.total_result,
+            quarter: employee.batch,
+            year: employee.year
+            // Add other properties as needed
+          })))
+              const headings = [
+                  [
+                  'Emp ID',
+                  'Name',
+                  'Designation',
+                  'Total Kpi',
+                  'Project',
+                  'Average Kpi Score',
+                  'Quarter',
+                  'Year'
+                  ]
+              ]
+              const wb = utils.book_new()
+              const ws = utils.json_to_sheet([])
+              utils.sheet_add_aoa(ws, headings)
+              utils.sheet_add_json(ws, csvjson, { origin: 'A2', skipHeader: true })
+              utils.book_append_sheet(wb, ws, 'Report')
+              writeFile(wb, 'Kpi Report.xlsx')
+          }
     const onChangeDepartmentHandler = (e) => {
         const filteredData = data.filter(item => item.title === e)
         
@@ -270,25 +301,36 @@ const index = ({segmentation, dropdownData}) => {
         {!loading ? (
             <>
            { Object.values(departmentDropdown).length > 0 && (
-            <Col md='12'>
-            <Card>
-                <CardBody>
-                <Label className="form-label">
-                Select Department <Badge color='light-danger'>*</Badge>
-                </Label>
-                <Select
-                    isClearable={false}
-                    className='react-select'
-                    classNamePrefix='select'
-                    name="scale_group"
-                    options={departmentDropdown ? departmentDropdown : ''}
-                    onChange={ (e) => { onChangeDepartmentHandler(e.value) }}
-                    menuPlacement="auto" 
-                    menuPosition='fixed'
-                />
-                </CardBody>
-            </Card>
-            </Col>
+              <>
+                
+                
+                <Col md='12'>
+                <Card>
+                    <CardBody>
+                      <Row>
+                      <Col md='9'>
+                          <Label className="form-label">
+                            Select Department <Badge color='light-danger'>*</Badge>
+                            </Label>
+                            <Select
+                                isClearable={false}
+                                className='react-select'
+                                classNamePrefix='select'
+                                name="scale_group"
+                                options={departmentDropdown ? departmentDropdown : ''}
+                                onChange={ (e) => { onChangeDepartmentHandler(e.value) }}
+                                menuPlacement="auto" 
+                                menuPosition='fixed'
+                            />
+                      </Col>
+                      <Col md='3'>
+                      <Button className='btn btn-success float-right' onClick={handleExport}>Export Report</Button>
+                      </Col>
+                      </Row>
+                    </CardBody>
+                </Card>
+                </Col>
+              </>
             )}
            {Object.values(graphArr).length > 0 && (
                 <Col lg='12' sm='12'>

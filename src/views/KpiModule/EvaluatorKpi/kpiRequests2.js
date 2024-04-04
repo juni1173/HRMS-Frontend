@@ -296,7 +296,7 @@ const KpiRequests = ({ data, EmployeeCallBack, dropdownData, type }) => {
             <div className="row" key={key}>
                     <Col md={1} className="d-flex align-items-center">
                         {type === 'cancel' ? (
-                            kpi.kpis_status_level === 11 ? <input
+                            (kpi.kpis_status_level !== 11 && kpi.kpis_status_level !== 12) ? <input
                             className='form-check-primary'
                             type="checkbox"
                             id={kpi.id}

@@ -1,7 +1,5 @@
 // ** Third Party Components
 import { Bar } from 'react-chartjs-2'
-import Flatpickr from 'react-flatpickr'
-import { Calendar } from 'react-feather'
 
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
@@ -22,13 +20,13 @@ const EmployeeResultChart = ({ gridLineColor, labelColor, data, title }) => {
       },
       y: {
         min: 0,
-        max: 400,
+        max: 100,
         grid: {
           color: gridLineColor,
           borderColor: gridLineColor
         },
         ticks: {
-          stepSize: 100,
+          stepSize: 20,
           color: labelColor
         }
       }

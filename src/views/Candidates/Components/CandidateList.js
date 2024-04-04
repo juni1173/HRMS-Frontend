@@ -298,7 +298,7 @@ getQualifiedCandidate(1)
                     <>
                         {filter && <>
                         <CandidateFilters getSearch={getSearch} candidateList={getSearchList()}/>
-                         <div className='col-lg-6'>
+                         <div className='col-lg-4'>
                          <Select
                                   isClearable={true}
                                   options={departmentsdropdown}
@@ -315,7 +315,7 @@ getQualifiedCandidate(1)
                                 }}
                               />
                          </div>
-                         <div className='col-lg-6'>
+                         <div className='col-lg-4'>
                          <Select
                                   isClearable={true}
                                   options={staff_classificationdropdown}
@@ -332,7 +332,7 @@ getQualifiedCandidate(1)
                                 }}
                               />
                          </div>
-                         <div className='col-lg-6'>
+                         <div className='col-lg-4'>
                          <Select
                                   isClearable={true}
                                   options={positiondropdown}
@@ -350,7 +350,7 @@ getQualifiedCandidate(1)
                                 }}
                               />
                          </div>
-                         <div className='col-lg-6'>
+                         <div className='col-lg-4'>
                          <Select
                                   isClearable={true}
                                   options={jobdropdown}
@@ -368,7 +368,7 @@ getQualifiedCandidate(1)
                                 }}
                               />
                          </div>
-                         <div className='col-lg-6'>
+                         <div className='col-lg-4'>
                 <InputGroup className='input-group-merge mb-2'>
                     <InputGroupText>
                        <Search size={14} />
@@ -376,7 +376,7 @@ getQualifiedCandidate(1)
                     <Input type='number' placeholder='search by score...' onChange={e => { setscore(e.target.value) }} onKeyDown={handleScoreChange}/>
                 </InputGroup>
         </div>
-        <div className='col-lg-6'></div>
+        <div className='col-lg-4'></div>
                          </>
                         }
                         <div className="col-lg-6">

@@ -7,6 +7,7 @@ import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import ESSReports from './Components/ESSReport/index'
 import AttendanceReport from './Components/AttendanceReport'
 import Organogram from './Components/Organogram/index'
+import EmployeeReport from './Components/EmployeeReport/index'
 
 const index = () => {
   // ** State
@@ -54,6 +55,16 @@ const index = () => {
             Organogram
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink
+            active={active === '4'}
+            onClick={() => {
+              toggle('4')
+            }}
+          >
+            Employee Report
+          </NavLink>
+        </NavItem>
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId='1' className='tab-pane'>
@@ -64,6 +75,9 @@ const index = () => {
         </TabPane>
         <TabPane tabId='3' className='tab-pane'>
           <Organogram />
+        </TabPane>
+        <TabPane tabId='4' className='tab-pane'>
+         {active === '4' ? <EmployeeReport /> : null} 
         </TabPane>
       </TabContent>
     </div>

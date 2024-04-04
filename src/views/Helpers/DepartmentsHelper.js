@@ -14,7 +14,7 @@ const DepartmentsHelper = () => {
   const fetchDepartments = async () => {
     
     const response = await Api.get('/organization/department/', { headers: {Authorization: Api.token} })
-    // console.warn(response)
+    console.warn(response)
     if (response.status === 200) {
     
         // emptying the array
@@ -29,10 +29,10 @@ const DepartmentsHelper = () => {
             for (let i = 0; i < dep.length; i++) {
                 if (dep[i].is_active) {
                     
-                  depActive.push({value: dep[i].id, label: dep[i].department_title})
+                  depActive.push({value: dep[i].id, label: dep[i].title})
                 } else {
                   
-                   depNotActive.push({value: dep[i].id, label: dep[i].department_title})
+                   depNotActive.push({value: dep[i].id, label: dep[i].title})
                     
                 }
               }  

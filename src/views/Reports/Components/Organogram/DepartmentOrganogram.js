@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { CardBody, Card, Badge, Modal, ModalHeader, ModalBody, Button } from 'reactstrap'
 import user_blank  from "../../../../assets/images/avatars/user_blank.png"
+// import SearchHelper from '../../../Helpers/SearchHelper/SearchByObject'
 // const TreeNode = ({ node }) => {
 //   if (!node.employees) {
 //     return null
@@ -79,6 +80,7 @@ const TreeComponent = ({ treeData }) => {
   })
   return (
     <div className=''>
+      
       <Button className='mb-2' color='primary' outline onClick={() => setCenteredModal(!centeredModal)}>
           Full Screen
         </Button>
@@ -97,17 +99,19 @@ const TreeComponent = ({ treeData }) => {
   <tr key={rowIndex}>
     <td>{`${rowIndex + 1}`}</td>
     {departmentNames.map((departmentName) => {
-      const employee = treeData[departmentName][`${rowIndex + 1}`]
+      const employees = treeData[departmentName][`${rowIndex + 1}`]
       return (
         <td key={departmentName}>
-          {employee && (
+          {employees && (
+            <>
+            {employees.map((employee) => (
             <div key={employee.id}>
               <Card className='m-1' key={employee.id} style={{ width: "22rem" }}>
                 <CardBody className='p-0'>
                   <div className="row">
                     <div className="col-md-3">
                       <Badge color='light-warning'>
-                        {employee.profile_image ? <img src={employee.profile_image} style={{ height: '50px', width: "50px" }} alt="logo" /> : <img src={user_blank} style={{ height: "50px", width: "50px" }} alt="logo" />}
+                        {employee.profile_image ? <img src={`${process.env.REACT_APP_SPACE_URL}${employee.profile_image}`}  style={{ height: '50px', width: "50px" }} alt="logo" /> : <img src={user_blank} style={{ height: "50px", width: "50px" }} alt="logo" />}
                       </Badge>
                     </div>
                     <div className="col-md-9">
@@ -121,6 +125,8 @@ const TreeComponent = ({ treeData }) => {
                 </CardBody>
               </Card>
             </div>
+            ))}
+            </>
           )}
         </td>
       )
@@ -149,11 +155,13 @@ const TreeComponent = ({ treeData }) => {
   <tr key={rowIndex}>
     <td>{`${rowIndex + 1}`}</td>
     {departmentNames.map((departmentName) => {
-      const employee = treeData[departmentName][`${rowIndex + 1}`]
+      const employees = treeData[departmentName][`${rowIndex + 1}`]
 
       return (
         <td key={departmentName}>
-          {employee && (
+          {employees && (
+            <>
+            {employees.map((employee) => (
             <div key={employee.id}>
               <Card className='m-1' key={employee.id} style={{ width: "22rem" }}>
                 <CardBody className='p-0'>
@@ -174,6 +182,8 @@ const TreeComponent = ({ treeData }) => {
                 </CardBody>
               </Card>
             </div>
+            ))}
+            </>
           )}
         </td>
       )

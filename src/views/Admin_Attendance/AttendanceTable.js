@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react"
-import { Search,  Download, File } from "react-feather"
+import { Search,  Download } from "react-feather"
 import { Spinner, Table, Row, Col, Container, Input, InputGroup, InputGroupText, Button, Label} from "reactstrap"
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate'
@@ -276,7 +276,8 @@ const AttendanceTable = () => {
                                   statusItem ? statusItem.attendance_status === "P" ? "text-success" : statusItem.attendance_status === "A" ? "text-danger" : statusItem.attendance_status === "WFH" ? "text-warning" : statusItem.attendance_status === "L" ? "text-primary" : "" : ""
                                 }
                               >
-                                { statusItem ? statusItem.attendance_status !== null ? statusItem.attendance_status : "N/A" : "N/A"}
+                            {statusItem ?  statusItem.attendance_status !== null ?   statusItem.attendance_status === 'L' ?   statusItem.comments.split(' ').map(word => word.charAt(0)).join('') :   statusItem.attendance_status : "N/A" :  "N/A"}
+
                               </td>
                               
                             )

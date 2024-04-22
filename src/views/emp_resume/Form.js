@@ -17,6 +17,10 @@ import {
 import apiHelper from '../Helpers/ApiHelper'
 import Preview from './Preview'
 import { Eye } from 'react-feather'
+import { EditorState, convertFromHTML, convertToRaw, ContentState } from 'draft-js'
+import { Editor } from 'react-draft-wysiwyg'
+import draftToHtml from 'draftjs-to-html'
+import '@styles/react/libs/editor/editor.scss'
 const ResumeForm = () => {
     const Api = apiHelper()
   const [canvasViewPlacement, setCanvasViewPlacement] = useState('end')
@@ -26,8 +30,9 @@ const ResumeForm = () => {
   const [mobile, setMobile] = useState('')
   const [email, setEmail] = useState('')
   const [summary, setSummary] = useState('')
+  // const [keypoints, setkeypoints] = useState(EditorState.createEmpty())
   const [accomplishments, setAccomplishments] = useState([{ company: '', accomplishment: '' }])
-  const [experiences, setExperiences] = useState([{ company: '', title: '', startDate: '', endDate: '', points: [''] }])
+  const [experiences, setExperiences] = useState([{ company: '', title: '', startDate: '', endDate: '', points: EditorState.createEmpty() }])
   const [educations, setEducations] = useState([{ university: '', degree: '', startDate: '', endDate: '' }])
 //   const [isSubmitted, setIsSubmitted] = useState(false)
 //   const [resume_data, setresume_data] = useState()
@@ -38,49 +43,41 @@ const ResumeForm = () => {
   const addExperience = () => {
     setExperiences([
       ...experiences,
-      { company: '', title: '', startDate: '', endDate: '', points: [''] }
+      { company: '', title: '', startDate: '', endDate: '', points: EditorState.createEmpty() }
     ])
   }
 
-  const addPoint = (experienceIndex) => {
-    const updatedExperiences = [...experiences]
-    updatedExperiences[experienceIndex].points.push('')
-    setExperiences(updatedExperiences)
-  }
-
-  const removePoint = (experienceIndex, pointIndex) => {
-    const updatedExperiences = [...experiences]
-    updatedExperiences[experienceIndex].points.splice(pointIndex, 1)
-    setExperiences(updatedExperiences)
-  }
 
   const addEducation = () => {
     setEducations([...educations, { university: '', degree: '', startDate: '', endDate: '' }])
   }
 
 const formatDataToJSON = () => {
-    const data = {
-      name,
-      location,
-      mobile,
-      email,
-      summary,
-      accomplishments,
-      experiences,
-      educations
-    }
-    const jsonData = JSON.stringify(data, null, 2)
-    // console.log(jsonData)
-    const formdata = new FormData()
-    formdata['resume_data'] = jsonData
-    Api.jsonPost(`/employees/add/resume/`, formdata).then((response) => {
-        if (response.status === 200) {
-          Api.Toast('success', response.message)
-        } else {
-          Api.Toast('error', response.message)
-        }
-      })
+  const data = {
+    name,
+    location,
+    mobile,
+    email,
+    summary,
+    accomplishments,
+    experiences: experiences.map(experience => ({
+      ...experience,
+      points: draftToHtml(convertToRaw(experience.points.getCurrentContent()))
+    })),
+    educations
   }
+  const jsonData = JSON.stringify(data, null, 2)
+  const formdata = new FormData()
+  formdata['resume_data'] = jsonData
+
+  Api.jsonPost(`/employees/add/resume/`, formdata).then((response) => {
+    if (response.status === 200) {
+      Api.Toast('success', response.message)
+    } else {
+      Api.Toast('error', response.message)
+    }
+  })
+}
 const handleSubmit = (e) => {
     e.preventDefault()
     // setIsSubmitted(true)
@@ -97,7 +94,21 @@ const fetchpredata = async() => {
             setEmail(resumeData.email)
             setSummary(resumeData.summary)
             setAccomplishments(resumeData.accomplishments)
-            setExperiences(resumeData.experiences)
+            // setExperiences(resumeData.experiences)
+            // Inside the fetchpredata function
+const updatedExperiences = resumeData.experiences.map((experience) => ({
+  ...experience,
+  // Convert HTML string to EditorState
+  // setBody(EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(editEmailData.body))))
+  points: EditorState.createWithContent(
+    ContentState.createFromBlockArray(
+      convertFromHTML(experience.points) // Convert HTML to ContentState
+    )
+  )
+}))
+setExperiences(updatedExperiences)
+      
+            setEducations(resumeData.educations)
             setEducations(resumeData.educations)
         } else {
         //   Api.Toast('error', response.message)
@@ -182,7 +193,7 @@ const toggleViewCanvasEnd = () => {
           </Col>
         </Row>
 
-      
+
         <Row>
           <Col>
             <h5>PROFESSIONAL EXPERIENCE</h5>
@@ -235,32 +246,17 @@ const toggleViewCanvasEnd = () => {
                     setExperiences(updatedExperiences)
                   }}
                 />
-
                 <Label>key Points</Label>
-                {experience.points.map((point, pointIndex) => (
-                  <div key={pointIndex} className="d-flex">
-                    <Input
-                      type="text"
-                      value={point}
-                      onChange={(e) => {
-                        const updatedExperiences = [...experiences]
-                        updatedExperiences[experienceIndex].points[pointIndex] = e.target.value
-                        setExperiences(updatedExperiences)
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      color="danger"
-                      className="ml-2"
-                      onClick={() => removePoint(experienceIndex, pointIndex)}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                ))}
-                <Button type="button" color="secondary" onClick={() => addPoint(experienceIndex)}>
-                  Add Point
-                </Button>
+ <Editor
+                  editorState={experience.points}
+                  wrapperStyle={{ backgroundColor: 'white' }} 
+                  onEditorStateChange={(editorState) => {
+                    const updatedExperiences = [...experiences]
+                    updatedExperiences[experienceIndex].points = editorState
+                    setExperiences(updatedExperiences)
+                  }}
+                />
+                
               </FormGroup>
             ))}
             <Button type="button" color="secondary" onClick={addExperience}>
@@ -341,7 +337,10 @@ const toggleViewCanvasEnd = () => {
       <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} className="largeCanvas">
           <OffcanvasHeader toggle={toggleViewCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
-          <Preview name={name} location={location} mobile={mobile} email={email} summary={summary} accomplishments={accomplishments} experiences={experiences} educations={educations}/>
+          <Preview name={name} location={location} mobile={mobile} email={email} summary={summary} accomplishments={accomplishments} experiences={experiences.map(experience => ({
+    ...experience,
+    points: draftToHtml(convertToRaw(experience.points.getCurrentContent()))
+  }))} educations={educations}/>
           </OffcanvasBody>
         </Offcanvas>
       

@@ -12,6 +12,7 @@ import {
   CardBody
 } from 'reactstrap'
 import html2pdf from 'html2pdf.js'
+// import { EditorState, convertFromHTML, ContentState } from 'draft-js'
 const Preview = ({name, location, mobile, email, summary, accomplishments, experiences, educations}) => {
     const generatePdf = () => {
         const element = document.getElementById('resume')
@@ -64,11 +65,18 @@ const Preview = ({name, location, mobile, email, summary, accomplishments, exper
         </div>
         
         <div>
-          <ul>
+        {experience.points && (
+  <div>
+    {console.log('points', experience.points)}
+    <div dangerouslySetInnerHTML={{ __html: experience.points }} />
+  </div>
+)}
+
+          {/* <ul>
             {experience.points.map((point, pointIndex) => (
               <li key={pointIndex}>{point}</li>
             ))}
-          </ul>
+          </ul> */}
         </div>
       </div>
     ))}

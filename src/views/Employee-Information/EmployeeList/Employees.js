@@ -260,25 +260,19 @@ const Employees = ({ employeeList, CallBack, type }) => {
                     <CardBody>
                         <div className="row">
                             <div className="col-md-3">
-                            <CardTitle tag='h1'> </CardTitle>
+                            {/* <CardTitle tag='h1'> </CardTitle> */}
                                 <Badge color='light-warning'>
                                 {item.profile_image ?  <img src={`${Api.BaseUrl}${item.profile_image}`} style={{height: '50px', width: "50px"}} alt="logo" /> : <img src={user_blank} style={{height: '50px', width: "50px"}} alt="logo" />}   
                                 </Badge> 
                             </div>
-                            <div className="col-md-3">
+                            <div className="col-md-6">
                                 <Badge color='light-info p-0'>
                                     Name
                                 </Badge>
                                 <br></br>
                                 <strong>{item.name ? item.name : <Badge color="light-danger">N/A</Badge>}</strong>
                             </div>
-                            <div className="col-md-3">
-                                <Badge color='light-success p-0'>
-                                    Employee Code
-                                </Badge><br></br>
-                                <strong>{item.emp_code ? item.emp_code : <Badge color="light-danger">N/A</Badge>}</strong>
-                                
-                            </div>
+                           
                             <div className="col-lg-3 float-right">
                                 
                                 <div className="float-right">
@@ -301,28 +295,7 @@ const Employees = ({ employeeList, CallBack, type }) => {
                                         <UserMinus color="red"/>
                                     </button>
                                     {/* <Row> */}
-                                    <button
-                                        className="btn btn-primary btn-sm"
-                                        style={{marginTop:'15px', padding:'10px'}}
-                                        title="ESS Setup"
-                                        onClick={() => {
-                                            setcanvas('ESS')
-                                            ESSToggle(item.id, 'ESS')
-                                        }}
-                                        >
-                                        ESS Setup
-                                    </button>
-                                    <button
-                                        className="btn btn-primary btn-sm"
-                                        style={{marginTop:'15px', padding:'10px'}}
-                                        title="ESS Setup"
-                                        onClick={() => {
-                                            setcanvas('Resume')
-                                            ESSToggle(item.id, 'Resume')
-                                        }}
-                                        >
-                                       Preview Resume
-                                    </button>
+                               
                                     {/* </Row> */}
                                     </>
                                 ) : (
@@ -338,6 +311,45 @@ const Employees = ({ employeeList, CallBack, type }) => {
                                     
                                 </div>
                             </div>
+                            <div className="col-md-3">
+                            {/* <CardTitle tag='h1'> </CardTitle>
+                                <Badge color='light-warning'>
+                                {item.profile_image ?  <img src={`${Api.BaseUrl}${item.profile_image}`} style={{height: '50px', width: "50px"}} alt="logo" /> : <img src={user_blank} style={{height: '50px', width: "50px"}} alt="logo" />}   
+                                </Badge>  */}
+                            </div>
+                            <div className="col-md-3">
+                                <Badge color='light-success p-0'>
+                                    Employee Code
+                                </Badge><br></br>
+                                <strong>{item.emp_code ? item.emp_code : <Badge color="light-danger">N/A</Badge>}</strong>
+                                
+                            </div>
+                          <div className="col-md-3">
+                          <button
+                                        className="btn btn-primary btn-sm text-nowrap"
+                                        style={{marginTop:'15px', padding:'10px'}}
+                                        title="ESS Setup"
+                                        onClick={() => {
+                                            setcanvas('ESS')
+                                            ESSToggle(item.id, 'ESS')
+                                        }}
+                                        >
+                                        ESS Setup
+                                    </button>
+                                    </div>
+                                    <div className="col-md-3">
+                                    <button
+                                        className="btn btn-primary btn-sm"
+                                        style={{marginTop:'15px', padding:'10px'}}
+                                        title="Resume"
+                                        onClick={() => {
+                                            setcanvas('Resume')
+                                            ESSToggle(item.id, 'Resume')
+                                        }}
+                                        >
+                                        Resume
+                                    </button>
+                          </div>
                         </div>
                     </CardBody>
                 </Card> 

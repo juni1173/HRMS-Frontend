@@ -6,7 +6,7 @@ import { Spinner } from 'reactstrap'
 
 const CareersPage = () => {
     const Api = apiHelper()
-    // const baseUrl = 'http://kavtech.net/staging/'
+    // const baseUrl = 'http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/'
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
     const getJobs = async () => {
@@ -44,7 +44,7 @@ const CareersPage = () => {
           document.body.appendChild(bootstrapScript)
     
           const templateScript = document.createElement('script')
-          templateScript.src = 'http://kavtech.net/staging/assets/js/template.js'
+          templateScript.src = 'http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/assets/js/template.js'
           document.body.appendChild(templateScript)
         }
     
@@ -64,10 +64,10 @@ const CareersPage = () => {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="http://kavtech.net/staging/style.css" />
+        <link rel="stylesheet" href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/style.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        {/* <link rel="stylesheet" href="http://kavtech.net/staging/assets/font-awesome-4.7.0/css/font-awesome.min.css" /> */}
-        <link href="http://kavtech.net/staging/assets/css/template.css" rel="stylesheet" type="text/css" />
+        {/* <link rel="stylesheet" href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/assets/font-awesome-4.7.0/css/font-awesome.min.css" /> */}
+        <link href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/assets/css/template.css" rel="stylesheet" type="text/css" />
         <title>Careers</title>
       </Helmet>
       <div className="container-fluid" style={{ height: '65px' }}>
@@ -75,12 +75,12 @@ const CareersPage = () => {
                  <div className="nav-animation"></div>
                  <div data-collapse="medium" data-animation="default" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" className="navbar w-nav">
                     <div className="container nav-container" style={{backgroundColor: 'transparent'}}>
-                       <a href="http://kavtech.net/staging/index.html" className="brand w-nav-brand"><img src="http://kavtech.net/staging/images/logo-white.png" width="200" loading="lazy" alt="Kavtech logo"/></a>
+                       <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/index.html" className="brand w-nav-brand"><img src="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/images/logo-white.png" width="200" loading="lazy" alt="Kavtech logo"/></a>
                        <nav role="navigation" className="nav-menu w-nav-menu">
-                          <a href="http://kavtech.net/staging/about.html" className="nav-link w-nav-link">About</a><a href="http://kavtech.net/staging/our-people.html" className="nav-link w-nav-link">Team</a><a href="http://kavtech.net/staging/careers.html" className="nav-link w-nav-link">Careers</a><a href="http://kavtech.net/staging/case-studies.html" className="nav-link w-nav-link">Case Studies</a>
+                          <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/about.html" className="nav-link w-nav-link">About</a><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/our-people.html" className="nav-link w-nav-link">Team</a><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/careers.html" className="nav-link w-nav-link">Careers</a><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/case-studies.html" className="nav-link w-nav-link">Case Studies</a>
                           <div className="nav-button-wrapper">
                              <div className="button-wrapper">
-                                <a href="http://kavtech.net/staging/contact.html" className="button w-button">Give us a call</a>
+                                <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/contact.html" className="button w-button">Give us a call</a>
                                 <div className="button-background"></div>
                              </div>
                           </div>
@@ -102,7 +102,7 @@ const CareersPage = () => {
                   <p style={{textAlign:'inherit'}}>Where Passion Meets Purpose </p>
               </div>
               <div className="col-md-5 float-right">
-                  <img src="http://kavtech.net/staging/images/Careers-Image.png" className="w-100" />
+                  <img src="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/images/Careers-Image.png" className="w-100" />
               </div>
           </div>
 
@@ -177,17 +177,17 @@ const CareersPage = () => {
       <div className="container footer">
             <div className="row">
               <div className="col-md-4">
-                <a href="index.html"><img src="http://kavtech.net/staging/images/logo-white.png" width="200" style={{paddingBottom:'10px', paddingTop: '10px'}}/></a>
+                <a href="index.html"><img src="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/images/logo-white.png" width="200" style={{paddingBottom:'10px', paddingTop: '10px'}}/></a>
                 <p>Facing challenges in boosting your business performance? Or struggling with data? At Kavtech, we re-invent the data, using some of the most sophisticated, leading-edge tools in the industry.</p>
               </div>
               <div className="col-md-4" style={{paddingTop: '50px', paddingLeft: '50px'}}>
                 <ul style={{listStyleType: 'none'}}>
-                  <li><a href="http://kavtech.net/staging/">Services</a></li>
-                  <li><a href="http://kavtech.net/staging/about.html">Who we are</a></li>
-                  <li><a href="http://kavtech.net/staging/pricing.html">Pricing</a></li>
-                  <li><a href="http://kavtech.net/staging/careers.html">Careers</a></li>
-                  <li><a href="http://kavtech.net/staging/our-values.html">Our Values</a></li>
-                  <li><a href="http://kavtech.net/staging/contact.html">Contact</a></li>
+                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/">Services</a></li>
+                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/about.html">Who we are</a></li>
+                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/pricing.html">Pricing</a></li>
+                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/careers.html">Careers</a></li>
+                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/our-values.html">Our Values</a></li>
+                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/contact.html">Contact</a></li>
                 </ul>
               </div>
               <div className="col-md-4 socials">

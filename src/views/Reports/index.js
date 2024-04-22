@@ -5,9 +5,10 @@ import { Trello } from 'react-feather'
 // ** Reactstrap Imports
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import ESSReports from './Components/ESSReport/index'
-import AttendanceReport from './Components/AttendanceReport'
+import Attendance from './Components/Attendance/index'
 import Organogram from './Components/Organogram/index'
 import EmployeeReport from './Components/EmployeeReport/index'
+
 
 const index = () => {
   // ** State
@@ -68,13 +69,14 @@ const index = () => {
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId='1' className='tab-pane'>
-          <ESSReports />
+        {active === '1' ?  <ESSReports /> : null}
         </TabPane>
         <TabPane tabId='2' className='tab-pane-blue'>
-          <AttendanceReport />
+        {active === '2' ? <Attendance /> : null} 
+          
         </TabPane>
         <TabPane tabId='3' className='tab-pane'>
-          <Organogram />
+        {active === '3' ? <Organogram /> : null}
         </TabPane>
         <TabPane tabId='4' className='tab-pane'>
          {active === '4' ? <EmployeeReport /> : null} 

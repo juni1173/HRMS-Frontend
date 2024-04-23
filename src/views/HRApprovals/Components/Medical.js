@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button, InputGroup, InputGroupText} from "reactstrap" 
-import { Edit, XCircle, FileText, Search } from 'react-feather'
+import { Edit, XCircle, FileText, Search, Filter } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
@@ -26,6 +26,7 @@ const Medical = ({ status_choices, yearoptions }) => {
     const [itemsPerPage, setItemsPerPage] = useState(50)
     const searchHelper = SearchHelper()
     const [selectedItems, setSelectedItems] = useState([])
+    const [filters, setFilters] = useState(false)
     const preDataApi = async () => {
         const formData = new FormData()
         formData['year'] = yearvalue
@@ -241,11 +242,24 @@ const Medical = ({ status_choices, yearoptions }) => {
     <Fragment>
         <Row>
         <Col md={12}>
-            <div className='content-header' >
-            <h5 className='mb-2'>Medical Allowance Requests</h5>
-            </div>
+        <Card>
+                <CardBody style={{padding: '0.5rem 1.5rem'}}>
+                    <Row>
+                    <Col md='6'>
+                    <div className='content-header' >
+                        <h4 className='' style={{paddingTop:'0.5rem'}}>Medical Allowance Requests</h4>
+                    </div>
+                    </Col>
+                    <Col md='6'>
+                        <Filter className='float-right' color='gray' onClick={() => setFilters(!filters)}/>
+                    </Col>
+                    </Row>
+                </CardBody>
+            </Card>
         </Col>
-        <Col md={3}>
+        {filters && (
+            <>
+            <Col md={3}>
             <Label>Select Year</Label>
             <Select
                 isClearable={true}
@@ -262,7 +276,7 @@ const Medical = ({ status_choices, yearoptions }) => {
             
               }}
             />
-</Col>
+        </Col>
         <Col md={3}>
             <Label>Search Month</Label>
             <Select
@@ -300,6 +314,9 @@ const Medical = ({ status_choices, yearoptions }) => {
             />
                 
         </Col>
+            </>
+        )}
+        
         <Col md={3}>
             <span>Showing {currentItems && Object.values(currentItems).length > 0 ? itemsPerPage : 0} results</span>
             <Select 

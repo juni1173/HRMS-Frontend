@@ -1,51 +1,51 @@
 // ** Custom Components
 import Avatar from '@components/avatar'
-
+import SwiperCore, {
+    Grid,
+    Lazy,
+    Virtual,
+    Autoplay,
+    Navigation,
+    Pagination,
+    EffectFade,
+    EffectCube,
+    EffectCoverflow
+  } from 'swiper'
+import {Swiper, SwiperSlide} from 'swiper/react/swiper-react'
 // ** Icons Imports
 import * as Icon from 'react-feather'
 
 // ** Reactstrap Imports
-import { Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
+import { Card, CardHeader, CardTitle, CardBody, Badge } from 'reactstrap'
+import '@styles/react/libs/swiper/swiper.scss'
 
-const MedicalApprovals = () => {
-  const transactionsArr = [
-    {
-      title: 'Wallet',
-      color: 'light-primary',
-      subtitle: 'Starbucks',
-      amount: '- $74',
-      Icon: Icon['Pocket'],
-      down: true
-    },
-    {
-      title: 'Bank Transfer',
-      color: 'light-success',
-      subtitle: 'Add Money',
-      amount: '+ $480',
-      Icon: Icon['Check']
-    },
-    {
-      title: 'Transfer',
-      color: 'light-info',
-      subtitle: 'Refund',
-      amount: '+ $98',
-      Icon: Icon['TrendingUp']
-    }
-  ]
+// ** Init Swiper Functions
+SwiperCore.use([Navigation, Grid, Pagination, EffectFade, EffectCube, EffectCoverflow, Autoplay, Lazy, Virtual])
+const MedicalApprovals = ({ data }) => {
+
+    const params = {
+        className: ' p-1',
+        slidesPerView: 'auto',
+        spaceBetween: 50,
+        centeredSlides: true,
+        navigation: true,
+        slideToClickedSlide: true
+      }
 
   const renderPendingLeavesApprovals = () => {
-    return transactionsArr.map(item => {
+    return data.map(item => {
       return (
-        <div key={item.title} className='transaction-item'>
-          <div className='d-flex'>
-            <Avatar className='rounded' color={item.color} icon={<item.Icon size={18} />} />
-            <div>
-              <h6 className='transaction-title'>{item.title}</h6>
-              <small>{item.subtitle}</small>
+        <SwiperSlide className='rounded swiper-shadow'>
+            <div key={item.id} className=''>
+            <div className='text-center'>
+            <a href='../statusrequests/'><Avatar className='rounded mb-2' color='light-primary' icon={<Icon.Calendar/>} /></a>
+                <div>
+                <h6 className='transaction-title'>{item.employee_name.toUpperCase()}</h6>
+                <small> {`Rs ${item.amount}`}</small>
+                </div>
             </div>
-          </div>
-          <div className={`fw-bolder ${item.down ? 'text-danger' : 'text-success'}`}>{item.amount}</div>
-        </div>
+            </div>
+        </SwiperSlide>
       )
     })
   }
@@ -53,10 +53,28 @@ const MedicalApprovals = () => {
   return (
     <Card className='card-transaction' style={{height:'250px'}}>
       <CardHeader>
+      <Badge pill color='primary' className='badge-up'>
+          {data.length}
+        </Badge>
         <CardTitle tag='h4'>Medical Approvals</CardTitle>
-        <Icon.MoreHorizontal size={18} className='cursor-pointer' />
+        <a href='../statusrequests/'><Icon.ArrowRight size={18} className='cursor-pointer' /></a>
       </CardHeader>
-      <CardBody>{renderPendingLeavesApprovals()}</CardBody>
+        <CardBody>
+        <Swiper {...params}>
+                {data && data.length > 0 ? (
+                    renderPendingLeavesApprovals()
+                ) : (
+                    <SwiperSlide className='rounded swiper-shadow'>
+                        <div className='text-center'>
+                            <Avatar className='rounded mb-2' color='light-secondary' icon={<Icon.Calendar/>} />
+                            <div>
+                            <h6 className='transaction-title'>No Medical Request Found!</h6>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                )}
+            </Swiper>
+        </CardBody>
     </Card>
   )
 }

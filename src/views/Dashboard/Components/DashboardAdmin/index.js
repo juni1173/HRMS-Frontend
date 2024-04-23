@@ -1,14 +1,36 @@
 // ** Reactstrap Imports
-import { Fragment } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Row, Col, Card, CardBody, CardText } from 'reactstrap'
 // import welcomeImage from '@src/assets/images/illustration/dashboard_image.svg'
 import welcomeImage from '@src/assets/images/illustration/email.svg'
 // ** Images
-import UpcomingInterview from './UpcomingInterview'
+import UpcomingHolidays from './UpcomingHolidays'
 import UpcomingLeaves from './UpcomingLeaves'
 import MedicalApprovals from './MedicalApprovals'
+import apiHelper from '../../../Helpers/ApiHelper'
+import GymApprovals from './GymApprovals'
 const index = () => {
-    
+    const Api = apiHelper()
+    const [loading, setLoading] = useState(false)
+    const [data, setData] = useState([])
+    const getData = async () => {
+        setLoading(true)
+        try {
+            const result = await Api.get(`/get/pending/allowance/`)
+            if (result && result.status === 200) {
+                
+                const resultData = result.data
+                setData(resultData)
+            }
+        } catch (error) {
+            Api.Toast('error', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+    useEffect(() => {
+        getData()
+    }, []) // Empty dependency array to ensure getData() only runs once on component mount
   return (
     <Fragment>
         <Row>
@@ -16,23 +38,28 @@ const index = () => {
                 <Card className='card-congratulations-medal card-congratulations' style={{height:'250px'}}>
                 <CardBody>
                     <h5 className='text-white'>Welcome to HRMS!</h5>
-                    <CardText className='font-small-3'>Your Record & information at one centralised and secure place,<br></br> Want to Edit your Information?</CardText>
-                    <img className='congratulation-medal' src={welcomeImage} alt='Pic' width={200}/>
+                    <CardText className='font-small-3'>Your Record & information at one centralised and secure place,<br></br> With our HRMS dashboard, you'll have access to a comprehensive<br></br> suite of tools and features to simplify your daily HR tasks,<br></br> empower your decision-making, and foster a more connected<br></br> workplace environment.</CardText>
+                    <img className='congratulation-medal' src={welcomeImage} alt='Pic'/>
                 </CardBody>
                 </Card>
-                <Row>
-                <Col md='6'>
-                        <UpcomingLeaves/>
-                    </Col>
-                    <Col md='6'>
-                        <MedicalApprovals/>
-                    </Col>
-                </Row>
-            </Col>
-            <Col md='4'>
-                <UpcomingInterview />
             </Col>
             
+            {(!loading) && (
+                        <>
+                        <Col md='4'>
+                            <UpcomingHolidays data={data.upcoming_holiday ? data.upcoming_holiday : []}/>
+                        </Col>
+                            <Col md='4'>
+                                <UpcomingLeaves data={data.pending_leaves ? data.pending_leaves : []}/>
+                            </Col>
+                            <Col md='4'>
+                                <MedicalApprovals data={data.pending_medical ? data.pending_medical : []}/>
+                            </Col>
+                            <Col md='4'>
+                                <GymApprovals data={data.pending_gym ? data.pending_gym : []}/>
+                            </Col>
+                        </>
+                    )}
         </Row>
     </Fragment>
   )

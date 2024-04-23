@@ -41,8 +41,7 @@ const MedicalApprovals = ({ data }) => {
             <a href='../statusrequests/'><Avatar className='rounded mb-2' color='light-primary' icon={<Icon.Calendar/>} /></a>
                 <div>
                 <h6 className='transaction-title'>{item.employee_name.toUpperCase()}</h6>
-                <small>{`${item.leave_types_title}`}</small><br></br>
-                <small>{`${item.start_date} to ${item.end_date}`}</small>
+                <small> {`Rs ${item.amount}`}</small>
                 </div>
             </div>
             </div>
@@ -54,14 +53,14 @@ const MedicalApprovals = ({ data }) => {
   return (
     <Card className='card-transaction' style={{height:'250px'}}>
       <CardHeader>
-        <Badge pill color='primary' className='badge-up'>
+      <Badge pill color='primary' className='badge-up'>
           {data.length}
         </Badge>
-        <CardTitle tag='h4'>Leaves Approvals</CardTitle>
+        <CardTitle tag='h4'>Gym Approvals</CardTitle>
         <a href='../statusrequests/'><Icon.ArrowRight size={18} className='cursor-pointer' /></a>
       </CardHeader>
         <CardBody>
-            <Swiper {...params}>
+        <Swiper {...params}>
                 {data && data.length > 0 ? (
                     renderPendingLeavesApprovals()
                 ) : (
@@ -69,7 +68,7 @@ const MedicalApprovals = ({ data }) => {
                         <div className='text-center'>
                             <Avatar className='rounded mb-2' color='light-secondary' icon={<Icon.Calendar/>} />
                             <div>
-                            <h6 className='transaction-title'>No Leave Request Found!</h6>
+                            <h6 className='transaction-title'>No Gym Request Found!</h6>
                             </div>
                         </div>
                     </SwiperSlide>

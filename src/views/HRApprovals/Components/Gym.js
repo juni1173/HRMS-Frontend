@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Spinner, Input, Label, Badge, Button, InputGroup, InputGroupText } from "reactstrap" 
-import { Edit, FileText, XCircle, Search } from 'react-feather'
+import { Edit, FileText, XCircle, Search, Filter } from 'react-feather'
 import Select from 'react-select'
 import apiHelper from '../../Helpers/ApiHelper'
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
@@ -26,6 +26,7 @@ const Gym = ({ status_choices, yearoptions }) => {
     const [itemsPerPage, setItemsPerPage] = useState(50)
     const searchHelper = SearchHelper()
     const [selectedItems, setSelectedItems] = useState([])
+    const [filters, setFilters] = useState(false)
     const preDataApi = async () => {
         const formData = new FormData()
         formData['year'] = yearvalue
@@ -241,29 +242,44 @@ preDataApi()
   return (
     <Fragment>
         <Row>
+
         <Col md={12}>
-        <div className='content-header' >
-          <h5 className='mb-2'>Gym Allowance Requests</h5>
-          </div>
-        </Col>
-        <Col md={3}>
-            <Label>Select Year</Label>
-            <Select
-                isClearable={true}
-                options={yearoptions}
-                className='react-select mb-1'
-                classNamePrefix='select'
-                placeholder="Select Year"
-                onChange={(selectedOption) => {
-                    if (selectedOption !== null) {
-                        setyearvalue(selectedOption.value)
-                    } else {  
-                        setyearvalue(currentYear)
-                    }
+            <Card>
+                <CardBody style={{padding: '0.5rem 1.5rem'}}>
+                    <Row>
+                    <Col md='6'>
+                    <div className='content-header' >
+                        <h4 className='' style={{paddingTop:'0.5rem'}}>Gym Allowance Requests</h4>
+                    </div>
+                    </Col>
+                    <Col md='6'>
+                        <Filter className='float-right' color='gray' onClick={() => setFilters(!filters)}/>
+                    </Col>
+                    </Row>
+                </CardBody>
+            </Card>
             
-              }}
-            />
-</Col>
+        </Col>
+        {filters && (
+            <>
+             <Col md={3}>
+            <Label>Select Year</Label>
+                    <Select
+                        isClearable={true}
+                        options={yearoptions}
+                        className='react-select mb-1'
+                        classNamePrefix='select'
+                        placeholder="Select Year"
+                        onChange={(selectedOption) => {
+                            if (selectedOption !== null) {
+                                setyearvalue(selectedOption.value)
+                            } else {  
+                                setyearvalue(currentYear)
+                            }
+                    
+                    }}
+                    />
+        </Col>
         <Col md={3}>
             <Label>Search Month</Label>
             <Select
@@ -302,6 +318,9 @@ preDataApi()
             />
                 
         </Col>
+        </>
+        )}
+       
         <Col md={3}>
             <span>Showing {currentItems && Object.values(currentItems).length > 0 ? itemsPerPage : 0} results</span>
             <Select 
@@ -314,14 +333,14 @@ preDataApi()
             />
         </Col>
         <Col md={6}>
-<Label>Serach Employee</Label>
+                    <Label>Serach Employee</Label>
                     <InputGroup className='input-group-merge mb-2'>
                         <InputGroupText>
                             <Search size={14} />
                         </InputGroupText>
                         <Input placeholder='search employee name...'  onChange={e => { getSearch({list: data, key: 'employee_name', value: e.target.value }) } }/>
                     </InputGroup>
-                </Col>
+        </Col>
                 <Col md={6}>
                 {selectedItems.length > 0 ?  <div>
                 <Label>Select Status</Label>

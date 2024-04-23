@@ -1,5 +1,5 @@
 import { useEffect, useState, Fragment } from "react"
-import { Label, Button, Table, Spinner } from "reactstrap"
+import { Label, Button, Table, Col, Input, Spinner } from "reactstrap"
 import Select from 'react-select'
 import apiHelper from "../../../../../Helpers/ApiHelper"
 import Swal from 'sweetalert2'
@@ -12,6 +12,7 @@ const Projects = ({ data, CallBack, training_id }) => {
     const [assignedProjects] = useState(data.training_projects ? data.training_projects : [])
     const [projectsArr] = useState([])
     const [project_id, setProjectsID] = useState([])
+    const [notify, setNotify] = useState(false)
     const getPreData = async () => {
         setLoading(true)
         await Api.get(`/training/pre/data/`).then(result => {
@@ -38,6 +39,7 @@ const Projects = ({ data, CallBack, training_id }) => {
             const formData = new FormData()
             formData['training'] = training_id
             formData['project_array'] = project_id
+            formData['notify'] = notify
             setLoading(true)
               
                 await Api.jsonPost(`/training/add/project/in/training/`, formData)
@@ -112,6 +114,11 @@ const Projects = ({ data, CallBack, training_id }) => {
                 } 
             })
         }
+        const handleCheck = (event) => {
+            // const { id } = event.target
+            const isChecked = event.target.checked
+            setNotify(isChecked)
+        }
   return (
     <Fragment>
         {!loading ? (
@@ -128,6 +135,14 @@ const Projects = ({ data, CallBack, training_id }) => {
                     isMulti
                 />
             </div>
+            <Col md="2" className='mb-1'>
+                               <Label>
+                                   Notify Team
+                               </Label><br></br>
+                               <Input type='checkbox' 
+                               onChange={handleCheck}
+                               />
+                           </Col>
             <div className='col-md-4 pt-2'>
                 <Button className='btn btn-success' onClick={AddProjects}>
                         Assign Projects

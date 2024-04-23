@@ -21,137 +21,166 @@ import Flatpickr from 'react-flatpickr'
 
 // ** Styles
 import '@styles/react/libs/flatpickr/flatpickr.scss'
+import PercentageChart from './Components/PercentageChart'
+import BarChart from './Components/BarChart'
 
 const index = () => {
+  const Api = apiHelper()
     const [data, setData] = useState([])
-    // const [tableData, settableData] = useState([])
-    // const [empChartData, setEmpChartData] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [reportParameters, setReportParameters] = useState({
-        start_date: '',
-        end_date : ''
+    const [total_working_days, setTotalWorkingDays] = useState(1)
+    const [currDep, setCurrDep] = useState('')
+    const [ChartData, setChartData] = useState({
+      categories: '',
+      percentage: ''
     })
-    // const [departmentDropdown, setdepDropdown] = useState([])
-    // const [countData, setCountData] = useState({
-    //     head_count: 0,
-    //     avg_employee_age: 0,
-    //     avg_tenure: 0
-    // })
+    const [loading, setLoading] = useState(false)
+    const currentDate = new Date()
+    const [reportParameters, setReportParameters] = useState({
+        start_date: Api.formatDate(currentDate),
+        end_date : Api.formatDate(currentDate)
+    })
+    
+    const [departmentDropdown, setdepDropdown] = useState([])
+    const [countData, setCountData] = useState({
+        Annual: 0,
+        Casual: 0,
+        Presents: 0,
+        WFH: 0,
+        Employees:0,
+        totalPresentDays: 0
+    })
     // const [highestTotalEmployeeCount, sethighestTotalEmployeeCount] = useState(0)
-    const Api = apiHelper()
+    
   // ** Context, Hooks & Vars
 //   const { colors } = useContext(ThemeColors),
 //     { skin } = useSkin(),
 //     labelColor = skin === 'dark' ? '#b4b7bd' : '#6e6b7b',
 //     successColorShade = '#28dac6',
 //     gridLineColor = 'rgba(200, 200, 200, 0.2)'
-const onChangeParametersDetailHandler = (InputName, InputType, e) => {
-        
-    let InputValue
-    if (InputType === 'input') {
-    
-    InputValue = e.target.value
-    } else if (InputType === 'select') {
-    
-    InputValue = e
-    } else if (InputType === 'date') {  
-        InputValue = Api.formatDate(e)
-    } else if (InputType === 'file') {
-        InputValue = e.target.files[0].name
-    }
 
-    setReportParameters(prevState => ({
-    ...prevState,
-    [InputName] : InputValue
-    
-    }))
-  }
     const calculateCount = (arr) => {
-        settableData(arr.flatMap(item => item.employees_data))
-        let totalEmployee = 0
-        let ageSum = 0
-        let ageCount = 0
-        let tenureSum = 0 
-        let tenureCount = 0
-    
+        // settableData(arr.flatMap(item => item.employees_data))
+        let totalAnnualLeaves = 0
+        let totalCasualLeaves = 0
+        let totalPresents = 0
+        let totalWFH = 0 
+        let totalEmployees = 0
+
         arr.forEach(item => { 
-            totalEmployee += item.total_employee_count
-            if (item.average_employee_age && item.average_employee_age > 0) { 
-                ageSum += item.average_employee_age
-                ageCount += 1
-            }
-            if (item.tenure && item.tenure > 0) { 
-                tenureSum += item.tenure
-                tenureCount += 1
-            }
+            totalAnnualLeaves += item.total_annual_leaves
+            totalCasualLeaves += item.total_casual_leaves
+            totalPresents += item.total_presents
+            totalWFH += item.total_wfh
+            totalEmployees += item.employees_data.length
         })
-    
         setCountData(prevState => ({
             ...prevState,
-            head_count: totalEmployee,
-            avg_employee_age: ageSum / ageCount, // corrected calculation
-            avg_tenure: tenureSum / tenureCount // corrected calculation
+            Annual: totalAnnualLeaves,
+            Casual: totalCasualLeaves, // corrected calculation
+            Presents: totalPresents, // corrected calculation
+            WFH: totalWFH,
+            Employees: totalEmployees,
+            totalPresentDays: (totalPresents + totalWFH)
         }))
-
         // Graph data
-        const labels = arr.map(item => item.title)
-        const values = arr.map(item => item.total_employee_count)
-       
-        const EmpResultChart = {
-            labels,
-            datasets: [
-              {
-                maxBarThickness: 15,
-                backgroundColor: successColorShade,
-                borderColor: colors.primary.main,
-                borderRadius: { topRight: 15, topLeft: 15 },
-                data: values
-              }
-            ]
-          }
-          sethighestTotalEmployeeCount(arr.reduce((max, item) => {
-                    return item.total_employee_count > max ? item.total_employee_count : max
-                }, 0))
-        
-          setEmpChartData(EmpResultChart)
+        const categories = arr.map(item => item.title)
+        const percentage = arr.map(item => (((item.total_presents + item.total_wfh) / total_working_days) * 100).toFixed(2))
+        setChartData(prevState => ({
+          ...prevState,
+          categories,
+          percentage
+      }))
     }
     
     const getData = async () => {
         const formData = new FormData()
         if (reportParameters.start_date !== '') formData['start_date'] = reportParameters.start_date
         if (reportParameters.end_date !== '') formData['end_date'] = reportParameters.end_date
-        await Api.jsonPost(`/organization/${Api.org.id}/attendance/report/`, formData).then(result => {
-            
-            if (result) {
-                setLoading(true)
-                if (result.status === 200) {
-                    const resultData = result.data
-                    console.warn(resultData)
-                    console.warn(data)
-                    return false
-                    setData(resultData)
-                    const departments = resultData.map(item => ({
-                        label: item.title, 
-                        value: item.title
-                    }))
-                    setdepDropdown(departments)
-                    calculateCount(resultData)
-                } else {
-                    // Api.Toast('error', result.message)
-                }
-                setTimeout(() => {
-                    setLoading(false)
-                }, 1000)
-            } else (
-             Api.Toast('error', 'Server not responding!')   
-            )
-        })  
+        if (reportParameters.start_date !== '' && reportParameters.end_date !== '') {
+            await Api.jsonPost(`/organization/${Api.org.id}/attendance/report/`, formData).then(result => {
+              
+              if (result) {
+                  setLoading(true)
+                  if (result.status === 200) {
+                      const resultData = result.data.query_data
+                      setTimeout(() => {
+                        setTotalWorkingDays(result.data.total_working_days)
+                        setData(resultData)
+                      }, 1000)
+                      const departments = resultData.map(item => ({
+                          label: item.title, 
+                          value: item.title
+                      }))
+                      setdepDropdown(departments)
+                      if (currDep !== '') {
+                        const filteredData = resultData.filter(item => item.title === currDep)
+                        calculateCount(filteredData)
+                      } else calculateCount(resultData)
+                      
+                  } else {
+                      // Api.Toast('error', result.message)
+                  }
+                  setTimeout(() => {
+                      setLoading(false)
+                  }, 500)
+              } else (
+              Api.Toast('error', 'Server not responding!')   
+              )
+          })  
+        }
+       
       }
+      const onChangeParametersDetailHandler = (InputName, InputType, e) => {
+        
+        let InputValue
+        if (InputType === 'input') {
+        
+        InputValue = e.target.value
+        } else if (InputType === 'select') {
+        
+        InputValue = e
+        } else if (InputType === 'date') {  
+            InputValue = Api.formatDate(e)
+        } else if (InputType === 'file') {
+            InputValue = e.target.files[0].name
+        }
     
+        setReportParameters(prevState => ({
+        ...prevState,
+        [InputName] : InputValue
+        
+        }))
+        
+      }
+      const onChangeDepartmentHandler = (e) => {
+        if (e) {
+            const filteredData = data.filter(item => item.title === e)
+            if (typeof e !== 'undefined') { 
+              setCurrDep(e) 
+              calculateCount(filteredData)
+            } else { 
+              setCurrDep('') 
+              console.warn('here')
+              calculateCount(data)
+            }
+            
+        } else getData()
+    }
       useEffect(() => {
         getData()
         }, [setData])
-    
+
+        useEffect(() => {
+          // This will run whenever `data` or `totalWorkingDays` change
+          if (data.length > 0 && total_working_days > 0) {
+              if (currDep !== '') {
+                  const filteredData = data.filter(item => item.title === currDep)
+                  calculateCount(filteredData)
+              } else {
+                  calculateCount(data)
+              }
+          }
+      }, [data, total_working_days, currDep])
         // const CallBack = useCallback(() => {
         //     getData()
         //   }, [requestData])
@@ -207,36 +236,104 @@ const onChangeParametersDetailHandler = (InputName, InputType, e) => {
         <Card>
       <CardBody>
       <Row className='mb-2'>
-      <Col md={3}>
-        <Label className='form-label' for='default-picker'>
-          From
-        </Label>
-        <Flatpickr className='form-control'  
-          onChange={ (e) => { onChangeParametersDetailHandler('start_date', 'date', e) }} 
-          id='default-picker' 
-          placeholder='Start Date'
-        />
-      </Col>
-      <Col md={3}>
-        <Label className='form-label' for='default-picker'>
-          To
-        </Label>
-        <Flatpickr className='form-control'  
-          onChange={ (e) => { onChangeParametersDetailHandler('end_date', 'date', e) }} 
-          id='default-picker' 
-          placeholder='End Date'
-        />
-      </Col>
-     
-     
-      <Col md="3" className="mt-2">
-        <button className="btn-lg float-right btn btn-success"  onClick={() => getData()}><span className="align-middle d-sm-inline-block d-none">Generate</span></button>
-      </Col>
+        <Col md={3}>
+          <Label className='form-label' for='default-picker'>
+            From
+          </Label>
+          <Flatpickr className='form-control'  
+            onChange={ (e) => { onChangeParametersDetailHandler('start_date', 'date', e) }} 
+            id='default-picker' 
+            placeholder='Start Date'
+            defaultValue={reportParameters.start_date && reportParameters.start_date}
+          />
+        </Col>
+        <Col md={3}>
+          <Label className='form-label' for='default-picker'>
+            To
+          </Label>
+          <Flatpickr className='form-control'  
+            onChange={ (e) => { onChangeParametersDetailHandler('end_date', 'date', e) }} 
+            id='default-picker' 
+            placeholder='End Date'
+            defaultValue={reportParameters.end_date && reportParameters.end_date}
+          />
+        </Col>
+        <Col md="4">
+                <Label className="form-label">
+                  Select Department <Badge color='light-danger'>*</Badge>
+                </Label>
+                <Select
+                    isClearable={false}
+                    className='react-select'
+                    classNamePrefix='select'
+                    name="scale_group"
+                    options={departmentDropdown ? departmentDropdown : ''}
+                    onChange={ (e) => { onChangeDepartmentHandler(e ? e.value : onChangeDepartmentHandler()) }}
+                    menuPlacement="auto" 
+                    menuPosition='fixed'
+                />
+        </Col>
+        <Col md="2">
+          <Button className='btn btn-md btn-primary mt-2' onClick={() => getData()}>Go</Button>
+        </Col>
     </Row>
       </CardBody>
     </Card>
       <Row className='match-height'>
-      {!loading ? <p>test</p> : <div className='text-center'><Spinner/></div>}
+        <Col md='6'>
+            <Card className='mb-2'>
+            {!loading && (
+                (data && Object.values(data).length > 0) ? (
+                  <>
+                    <CardBody className='pb-0'>
+                        <h3 className='text-center'><b>Annual vs. Casual</b></h3>
+                        <h2 className='text-center'>{countData.Annual ? countData.Annual : '0'} | {countData.Casual ? countData.Casual : '0'}</h2>
+                        
+                    </CardBody>
+                  </>
+                ) : (
+                    <CardBody className='pb-0'>
+                        <h3 className='text-center'>Annual / Casual</h3>
+                        <h3 className='text-center'>N/A</h3>
+                    </CardBody>
+                )
+                
+            )}
+            </Card>
+        </Col>
+        <Col md='6'>
+            <Card className='mb-2'>
+            {!loading && (
+                (data && Object.values(data).length > 0) ? (
+                    <CardBody className='pb-0'>
+                        <h3 className='text-center'><b>Total Employees</b></h3>
+                        <h2 className='text-center'>{countData.Employees ? countData.Employees : 'N/A'}</h2>
+                        
+                    </CardBody>
+                ) : (
+                    <CardBody className='pb-0'>
+                        <h3 className='text-center'>Total Employees</h3>
+                        <h2 className='text-center'>0</h2>
+                    </CardBody>
+                )
+                
+            )}
+            </Card>
+        </Col>
+        
+          {countData.Presents > 0 && (
+            <Col md='6'>
+              <PercentageChart data={countData.Presents} workDays={total_working_days} total={(countData.Presents / total_working_days) * 100} label='WFO Rate'/>
+            </Col>
+          )}
+          {countData.WFH > 0 && (
+            <Col md='6'>
+              <PercentageChart data={countData.WFH} workDays={total_working_days} total={(countData.WFH / total_working_days) * 100} label='WFH Rate'/>
+            </Col>
+          )}
+          {(ChartData.categories !== '' && ChartData.percentage !== '') && (
+              <BarChart categories={ChartData.categories} percentage={ChartData.percentage} />
+          )}
         {/* <Col md='4'>
             <Card className='mb-2'>
             {!loading && (

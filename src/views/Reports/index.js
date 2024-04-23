@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { Trello } from 'react-feather'
 
 // ** Reactstrap Imports
@@ -21,11 +21,9 @@ const index = () => {
   }
 
   return (
-    <div className='nav-vertical configuration_panel'>
-      <Nav tabs className='nav-left border-right px-1'>
-        <NavItem>
-           <h3 className='brand-text'> <Trello/> Reports</h3>
-        </NavItem>
+   <Fragment>
+    <Nav className='justify-content-center' tabs>
+        
         <NavItem>
           <NavLink
             active={active === '1'}
@@ -82,7 +80,7 @@ const index = () => {
          {active === '4' ? <EmployeeReport /> : null} 
         </TabPane>
       </TabContent>
-    </div>
+   </Fragment>
   )
 }
 export default index

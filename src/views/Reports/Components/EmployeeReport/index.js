@@ -210,7 +210,7 @@ const index = () => {
             )}
            
             </>
-        ) : <div className='text-center'><Spinner/></div>}
+        ) : <div className='text-center'><Spinner color='white'/></div>}
         <Col md='4'>
             <Card className='mb-2'>
             {!loading && (

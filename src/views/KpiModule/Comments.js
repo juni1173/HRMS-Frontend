@@ -169,10 +169,13 @@ const Comments = ({ data, by, callBack }) => {
             <Col md={12} className="mb-2">
                 <h3>{data.title && data.title}</h3>
             </Col>
+            <Col md={12}>
+            <b>Objective</b> <br></br><span className='mt-1 text-dark'>{data.kpis_objective_title && data.kpis_objective_title}</span>
+            </Col>
             <Col md={4}>
                 <b>Evaluator</b><br></br> <Badge>{data.evaluator_name && data.evaluator_name}</Badge>
             </Col>
-            <Col md={4}>
+            <Col md={2}>
                 <b>Type</b><br></br> <Badge>{data.ep_type_title && data.ep_type_title}</Badge>
             </Col>
             
@@ -197,8 +200,11 @@ const Comments = ({ data, by, callBack }) => {
             <Col md={4}>
                 <b>Status</b> <br></br><Badge>{data.kpis_status_title && data.kpis_status_title}</Badge>
             </Col>
-            <Col md={4}>
+            {/* <Col md={4}>
                 <b>Scale Group</b> <br></br><Badge>{data.scale_group_title && data.scale_group_title}</Badge>
+            </Col> */}
+            <Col md={12}>
+            <b>Description</b> <br></br><div dangerouslySetInnerHTML={{ __html: data.description }} />
             </Col>
             {(by && by === 'hr') && (
                 

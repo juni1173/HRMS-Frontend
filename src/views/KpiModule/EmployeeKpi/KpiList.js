@@ -111,9 +111,12 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
     }
     const getKpiData = async () => {
         setLoading(true)
-        searchData && searchData.length > 0 ? (
-            setData(searchData)
-            ) : (
+    if (searchData && Object.values(searchData).length > 0) {
+        const valuesArray = Object.values(searchData.employee_kpis_data.employee_kpis_data)
+        const arrays = valuesArray.map(item => item.employee_kpis_data).filter(Boolean)
+        const combinedArray = [].concat(...arrays)
+        setData(combinedArray)
+     } else {
             await Api.get(`/kpis/employees/`).then(result => {
                 if (result) {
                     if (result.status === 200) {
@@ -126,7 +129,7 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
                  Api.Toast('error', 'Server not responding!')   
                 )
             })
-            )
+        }
         setTimeout(() => {
             setLoading(false)
         }, 500)

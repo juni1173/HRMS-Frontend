@@ -4,7 +4,8 @@ const PermissionsHelper = () => {
     const userData = JSON.parse(localStorage.getItem('userData'))
     const user_role = userData.user_role
     if (user_role === 'admin') {
-      window.location.href = "/admin/dashboard"
+      // window.location.href = "/admin/dashboard"
+      history.push('/organizationHome')
     } else {
         window.location.href = "/employee/dashboard"
     

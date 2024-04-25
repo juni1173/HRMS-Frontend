@@ -11,6 +11,7 @@ const index = ({ type, countData }) => {
     const [recheckData, setRecheckData] = useState([])
     const [cancelData, setCancelData] = useState([])
     const [typesDropdownArr] = useState([])
+    const [objectiveDropdownArr] = useState([])
     const [complexityDropdownArr] = useState([])
     const [employeesDropdownArr] = useState([]) 
     const [batchDropdownArr] = useState([])
@@ -133,6 +134,21 @@ const index = ({ type, countData }) => {
              Api.Toast('error', 'Server not responding!') 
             )
         })  
+        await Api.get(`/kpis/objectives/`).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    objectiveDropdownArr.splice(0, objectiveDropdownArr.length)
+                    const objectiveLength = result.data.length
+                    for (let i = 0; i < objectiveLength; i++) {
+                        objectiveDropdownArr.push({value: result.data[i].id, label: result.data[i].title})
+                    }    
+                } else {
+                    // Api.Toast('error', result.message)
+                }
+            } else (
+             Api.Toast('error', 'Server not responding!')   
+            )
+        })
         
         setTimeout(() => {
             setLoading(false)
@@ -203,7 +219,7 @@ const index = ({ type, countData }) => {
           <ModalHeader toggle={() => setBasicModal(!basicModal)}>Add Kpi</ModalHeader>
           <ModalBody>
           {!loading ? (
-                <AddEmployeeKpi preData={preData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, projectsData: projects, batchData: batchDropdownArr}} type='evaluator' CallBack={CallBack}/>
+                <AddEmployeeKpi preData={preData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, projectsData: projects, batchData: batchDropdownArr, objectiveData: objectiveDropdownArr}} type='evaluator' CallBack={CallBack}/>
             ) : (
                 <div className='text-center'><Spinner color="white"/></div>
             )}

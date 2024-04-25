@@ -67,7 +67,6 @@ const Preview = ({name, location, mobile, email, summary, accomplishments, exper
         <div>
         {experience.points && (
   <div>
-    {console.log('points', experience.points)}
     <div dangerouslySetInnerHTML={{ __html: experience.points }} />
   </div>
 )}

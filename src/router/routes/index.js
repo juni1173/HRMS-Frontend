@@ -333,6 +333,15 @@ const Routes = [
   {
     path: '/Resume',
     component: lazy(() => import('../../views/emp_resume'))
+  },
+  {
+    path: '/zoom',
+    component: lazy(() => import('../../views/Zoom/index'))
+  },
+  {
+    path: '/zoommeeting/:id/:pass/:token/:role',
+    component: lazy(() => import('../../views/Zoom/Components/JoinMeeting')),
+    layout:'BlankLayout'
   }
 ]
 

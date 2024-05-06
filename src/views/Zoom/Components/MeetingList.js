@@ -100,12 +100,32 @@ const participantsDetails = async (id) => {
     setEmployees(Employees.fetchEmployeeDropdown())
     fetchMeetings()
   }, [])
+  const formatDatetime = (meetingDatetime) => {
+    // Create a Date object from the meetingDatetime string
+    const datetime = new Date(meetingDatetime)
+  
+    // Get the date components
+    const year = datetime.getFullYear()
+    const month = String(datetime.getMonth() + 1).padStart(2, '0')
+    const day = String(datetime.getDate()).padStart(2, '0')
+  
+    // Get the time components
+    const hours = String(datetime.getHours()).padStart(2, '0')
+    const minutes = String(datetime.getMinutes()).padStart(2, '0')
+    const seconds = String(datetime.getSeconds()).padStart(2, '0')
+    // const milliseconds = String(datetime.getMilliseconds()).padStart(2, '0')
+  
+    // Assemble the datetime string in the desired format
+    const formattedDatetime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`
+  
+    return formattedDatetime
+  }
   const createMeeting = async () => {
     
     if (meetingTitle !== '' && meetingDateTime !== '') {
       const formData = new FormData()
       formData['topic'] = meetingTitle
-      formData['start_time'] = meetingDateTime
+      formData['start_time'] = formatDatetime(meetingDateTime)
       formData["hrms_user_list"] = systemParticipants
       formData["other_user_list"] = othersParticipants
         await Api.jsonPost(`/meetings/create/new/`, formData).then(result => {

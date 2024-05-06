@@ -14,7 +14,7 @@ const index = () => {
         userName: 'Muhammad Junaid',
         userEmail: '',
         leaveUrl: 'http://localhost:3000/zoom',
-        Token: role === 0 !== '' ? token : ''
+        Token: role === 1 ? token : ''
     }
   return (
     <div> {/* Set the container's height to 100% */}

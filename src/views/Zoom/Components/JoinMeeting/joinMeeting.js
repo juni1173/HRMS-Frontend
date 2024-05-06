@@ -1,6 +1,6 @@
 import React from 'react'
 import jwt from 'jsonwebtoken'
-import { Button } from 'reactstrap'
+import { Button, Card, CardBody, Label, Row, Col } from 'reactstrap'
 
 const generateJoinUrl = (meetingId, userName, userEmail, pass) => {
   // Define JWT payload with user information
@@ -11,10 +11,9 @@ const generateJoinUrl = (meetingId, userName, userEmail, pass) => {
     email: userEmail,
     password: pass
   }
-console.warn(userName)
-console.warn(payload.name)
+
   // Generate JWT token
-  const token = jwt.sign(payload, '74EmdEf1g9Rbj2Q3pR28LK7C8SjCPrVf')  // Your Zoom API secret
+  const token = jwt.sign(payload, '74EmdEf1g9Rbj2Q3pR28LK7C8SjCPrVf', { algorithm: 'HS256' })  // Your Zoom API secret
 
   // Construct join URL with JWT token and meeting ID
   return `https://us05web.zoom.us/j/${meetingId}?jwt=${token}&pwd=${pass}`
@@ -36,12 +35,27 @@ const JoinMeeting = ({meetingId, userName, userEmail, pass, host, startUrl}) => 
 
   return (
     <div>
-      <h2>Meeting</h2>
-      {host === userEmail ? (
-        <Button onClick={handleStartMeeting} className='btn btn-success'>Start Zoom Meeting</Button>
-      ) : (
-        <Button onClick={handleJoinMeeting} className='btn btn-success'>Join Zoom Meeting</Button>
-      )}
+        <Row>
+            <Col md='6'>
+                <Label>Meeting#: </Label>
+                <b>{meetingId}</b>
+            </Col>
+            <Col md='6'>
+                <Label>Password: </Label>
+                <b>{pass}</b>
+            </Col>
+        </Row>
+        <Card>
+            <CardBody className='text-center'>
+            
+            {host === userEmail ? (
+                <Button onClick={handleStartMeeting} className='btn btn-success text-center'>Start Zoom Meeting</Button>
+            ) : (
+                <Button onClick={handleJoinMeeting} className='btn btn-success text-center'>Join Zoom Meeting</Button>
+            )}
+            </CardBody>
+        </Card>
+      
       
     </div>
   )

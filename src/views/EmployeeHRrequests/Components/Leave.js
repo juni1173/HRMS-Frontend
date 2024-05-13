@@ -124,7 +124,7 @@ useEffect(() => {
             formData.append('end_date', leaveData.end_date)
             formData.append('duration', leaveData.duration)
             formData.append('leave_dates', leaveDates)
-            formData.append('team_lead', leaveData.team_lead.value)
+            if (leaveData.team_lead.value) formData.append('team_lead', leaveData.team_lead.value)
             if (attachment !== null) formData.append('attachment', attachment)
             await Api.jsonPost(`/reimbursements/employees/leaves/`, formData, false).then(result => {
                 if (result) {

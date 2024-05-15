@@ -7,8 +7,8 @@
 // 	Author URL: http://www.themeforest.net/user/pixinvent
 // ================================================================================================
 
-@import '../bootstrap-extended/include'; // Bootstrap includes
-@import '../components/include'; // Components includes
+@import '@styles/scss/bootstrap-extended/include'; // Bootstrap includes
+@import '@styles/scss/components/include'; // Components includes
 
 $email_read: $body-bg;
 $email_selected_border: #e4e1e8;
@@ -501,12 +501,4 @@ html[data-textdirection='rtl'] {
       }
     }
   }
-}
-.pagination .active {
-  background-color: transparent;
-}
-.modal-compose{
-  margin-top: 6rem;
-  margin-left:17rem;
-  height: 550px;
 }

@@ -334,6 +334,7 @@ const Routes = [
     path: '/Resume',
     component: lazy(() => import('../../views/emp_resume'))
   },
+  // Zoom routes
   {
     path: '/zoom',
     component: lazy(() => import('../../views/Zoom/index'))
@@ -342,6 +343,18 @@ const Routes = [
     path: '/zoommeeting/:id/:pass/:token/:role',
     component: lazy(() => import('../../views/Zoom/Components/JoinMeeting')),
     layout:'BlankLayout'
+  },
+  // Email Routes
+  {
+    path: '/email/connect',
+    component: lazy(() => import('../../views/EmailIntegrations/index'))
+  },
+  {
+    path: '/email/panel',
+    exact: true,
+    appLayout: true,
+    className: 'email-application',
+    component: lazy(() => import('../../views/EmailIntegrations/EmailComponents/Panel'))
   }
 ]
 

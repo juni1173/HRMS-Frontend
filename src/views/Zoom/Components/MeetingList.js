@@ -318,7 +318,7 @@ const participantsDetails = async (id) => {
           </ModalBody>
         </Modal> 
         <Modal isOpen={othersModal} toggle={() => setOthersModal(!othersModal)} className='modal-lg'>
-          <ModalHeader toggle={() => setOthersModal(!othersModal)}>Add Zoom Meeting Participants</ModalHeader>
+          <ModalHeader toggle={() => setOthersModal(!othersModal)}>Add Zoom Meeting Participants <br></br><span>Email containing meeting info will be sent... </span></ModalHeader>
           <ModalBody>
             {othersModal ? (
                 <OtherParticipants CallBack={(otherParticipants) => othersCallback(otherParticipants)} data={othersParticipants}/>

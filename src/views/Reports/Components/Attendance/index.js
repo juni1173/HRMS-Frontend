@@ -29,7 +29,7 @@ const index = () => {
     const [data, setData] = useState([])
     const [total_working_days, setTotalWorkingDays] = useState(1)
     const [currDep, setCurrDep] = useState('')
-    const [departmentLength, setDepartmentLength] = useState()
+    const [departmentLength, setDepartmentLength] = useState(0)
     const [ChartData, setChartData] = useState({
       categories: '',
       percentage: ''
@@ -86,7 +86,8 @@ const index = () => {
         }))
         // Graph data
         const categories = arr.map(item => item.title)
-        const percentage = arr.map(item => (((item.total_presents + item.total_wfh) / total_working_days) * 100).toFixed(2))
+        
+        const percentage = arr.map(item => ((((item.total_presents + item.total_wfh) / total_working_days) / item.total_employee_count) * 100).toFixed(2))
         setChartData(prevState => ({
           ...prevState,
           categories,
@@ -114,15 +115,18 @@ const index = () => {
                           value: item.title
                       }))
                       setdepDropdown(departments)
-                      setDepartmentLength(resultData.length)
                       if (currDep !== '') {
                         const filteredData = resultData.filter(item => item.title === currDep)
                         calculateCount(filteredData)
-                      } else calculateCount(resultData)
+                      } else {
+                        calculateCount(resultData)
+                        setDepartmentLength(resultData.length)
+                      }
                       
                   } else {
                       // Api.Toast('error', result.message)
                   }
+                  console.warn(departmentLength)
                   setTimeout(() => {
                       setLoading(false)
                   }, 500)
@@ -158,6 +162,7 @@ const index = () => {
       const onChangeDepartmentHandler = (e) => {
         if (e) {
             const filteredData = data.filter(item => item.title === e)
+            console.warn(e)
             if (typeof e !== 'undefined') { 
               setDepartmentLength(1)
               setCurrDep(e) 
@@ -165,7 +170,6 @@ const index = () => {
             } else { 
               setDepartmentLength(departmentDropdown.length)
               setCurrDep('') 
-              console.warn('here')
               calculateCount(data)
             }
             
@@ -236,6 +240,7 @@ const index = () => {
     //         calculateCount(filteredData)
     //     } else getData()
     // }
+  
   return (
     <Fragment>
         <Card>
@@ -328,12 +333,12 @@ const index = () => {
         
           {countData.Presents > 0 && (
             <Col md='6'>
-              <PercentageChart data={countData.Presents} workDays={total_working_days} total={(countData.Presents / (total_working_days * departmentLength)) * 100} label='WFO Rate'/>
+              <PercentageChart data={countData.Presents} total={(countData.Presents / (countData.Employees * total_working_days)) * 100} employeeTotal={(countData.Employees * total_working_days)} label='WFO Rate'/>
             </Col>
           )}
           {countData.WFH > 0 && (
             <Col md='6'>
-              <PercentageChart data={countData.WFH} workDays={total_working_days} total={(countData.WFH / (total_working_days * departmentLength)) * 100} label='WFH Rate'/>
+              <PercentageChart data={countData.WFH} total={(countData.WFH / (countData.Employees * total_working_days)) * 100} employeeTotal={(countData.Employees * total_working_days)} label='WFH Rate'/>
             </Col>
           )}
           {(ChartData.categories !== '' && ChartData.percentage !== '') && (

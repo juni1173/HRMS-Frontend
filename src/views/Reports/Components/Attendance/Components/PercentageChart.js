@@ -73,7 +73,7 @@ const PercentageChart = props => {
       <CardBody>
         <Row>
           <Col sm='12' className='d-flex flex-column flex-wrap text-center'>
-            <h3 className=' fw-bolder mt-2 mb-0'>{props.data} <span>out of</span> {props.workDays}</h3>
+            {/* <h3 className=' fw-bolder mt-2 mb-0'>Presents {props.data} <span>out of</span> expected {props.employeeTotal}</h3> */}
             <CardText>{props.label}</CardText>
           </Col>
           <Col sm='12' className='d-flex justify-content-center'>

@@ -234,7 +234,7 @@ const index = () => {
             {!loading && (
                 (data && Object.values(data).length > 0) ? (
                     <CardBody className='pb-0'>
-                        <h3>{countData.avg_employee_age ? countData.avg_employee_age : 'N/A'}</h3>
+                        <h3>{countData.avg_employee_age ? (countData.avg_employee_age.toFixed(2)) : 'N/A'}</h3>
                        <p><b>Average Employee Age</b></p>
                     </CardBody>
                 ) :  (

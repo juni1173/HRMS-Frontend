@@ -1,6 +1,6 @@
 import {React, useEffect, useState} from 'react'
 import { Helmet } from 'react-helmet'
-import { Facebook } from 'react-feather'
+import { Facebook, Instagram, Linkedin, MapPin, Phone } from 'react-feather'
 import apiHelper from '../Helpers/ApiHelper'
 import { Spinner } from 'reactstrap'
 
@@ -176,33 +176,78 @@ const CareersPage = () => {
       {/* Footer section */}
       <div className="container footer">
             <div className="row">
-              <div className="col-md-4">
-                <a href="index.html"><img src="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/images/logo-white.png" width="200" style={{paddingBottom:'10px', paddingTop: '10px'}}/></a>
-                <p>Facing challenges in boosting your business performance? Or struggling with data? At Kavtech, we re-invent the data, using some of the most sophisticated, leading-edge tools in the industry.</p>
-              </div>
-              <div className="col-md-4" style={{paddingTop: '50px', paddingLeft: '50px'}}>
-                <ul style={{listStyleType: 'none'}}>
-                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/">Services</a></li>
-                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/about.html">Who we are</a></li>
-                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/pricing.html">Pricing</a></li>
-                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/careers.html">Careers</a></li>
-                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/our-values.html">Our Values</a></li>
-                  <li><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/contact.html">Contact</a></li>
-                </ul>
-              </div>
-              <div className="col-md-4 socials">
-                <div className="row float-right">
-                  <div className="p-2">
-                    <a href="https://www.facebook.com/KavTechSolutions/" target="_blank"><Facebook color='white' /></a>
+                  <div class="col-md-4">
+                      <h5 className='text-white'>Corporate Lahore</h5>
+                      <div class="row">
+                        <div class="col-lg-1"><MapPin color='white'/></div>
+                        <div class="col-lg-10"><p>Office 910, Floor 9, Haly Tower, Sector R, DHA Phase 2, Lahore</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-1"><Phone color='white'/>
+                        </div>
+                        <div class="col-lg-10">
+                          <p><a href="tel:04232291104">(042) 32291104</a></p>
+                        </div>
+                      </div>
                   </div>
-                  <div className="p-2">
-                    <a href="https://www.instagram.com/kavtechsolutionspvtltd/" target="_blank"><i className="fa fa-instagram float-right fa-2x" aria-hidden="true" style={{paddingTop: '50px'}}></i></a>
+                  <div class="col-md-4">
+                      <h5 className='text-white'>Los Angeles, USA</h5>
+                      <div class="row">
+                        <div class="col-lg-1"><MapPin color='white'/></div>
+                        <div class="col-lg-10"><p>1001 Wilshire Boulevard #1164, Los Angeles, California, Zip 90017</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-1"><Phone color='white'/></div>
+                        <div class="col-lg-10"><p><a href="tel:+13159617073">+13159617073</a></p>
+                        </div>
+                      </div>
                   </div>
-                  <div className="p-2">
-                    <a href="https://pk.linkedin.com/company/kavtech-solutions-pvt.-ltd." target="_blank"><i className="fa fa-linkedin-square float-right fa-2x" aria-hidden="true" style={{paddingTop: '50px'}}></i></a>
+                  <div class="col-md-4">
+                      <h5 className='text-white'>Dev Lahore</h5>
+                      <div class="row">
+                        <div class="col-lg-1"><MapPin color='white'/></div>
+                        <div class="col-lg-10"><p>P.M Bhatti Building, Major Mustafa Sabir Shaheed Rd, Block D Divine Gardens, Lahore</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-1"><Phone color='white'/></div>
+                        <div class="col-lg-10"><p><a href="tel:04232291104">(042) 32291104</a></p>
+                        </div>
+                      </div>
+                  </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                  <div class="d-flex justify-content-start">
+                    <div class="p-2">
+                      <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/services.html">Services</a>
+                    </div>
+                    <div class="p-2">
+                      <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/pricing.html">Pricing</a>
+                    </div>
+                    <div class="p-2">
+                      <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/our-values.html">Our Values</a>
+                    </div>
+                      <div class="p-2">
+                      <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/contact.html">Contact</a>
+                    </div>
                   </div>
                 </div>
+                <div class="col-md-6">
+                  <div class="d-flex justify-content-end">
+                <div class="p-2">
+                  <a href="https://www.facebook.com/KavTechSolutions/" target="_blank"><Facebook color='white' /></a>
+                </div>
+                <div class="p-2">
+                  <a href="https://www.instagram.com/kavtechsolutionspvtltd/" target="_blank"><Instagram color='white'/></a>
+                </div>
+                <div class="p-2">
+                  <a href="https://pk.linkedin.com/company/kavtech-solutions-pvt.-ltd." target="_blank"><Linkedin color='white'/></a>
+                </div>
               </div>
+                </div>
             </div>
      </div>
       

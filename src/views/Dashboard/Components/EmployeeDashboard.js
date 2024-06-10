@@ -12,15 +12,16 @@ import JiraIssues from "./EmployeeComponents/JiraIssues/Issues"
 import LeavesCount from "./EmployeeComponents/LeavesCount"
 import MedicalLimit from "./EmployeeComponents/MedicalLimit"
 import GymLimit from "./EmployeeComponents/GymLimit"
+import TaskModule from "../../TasksModule/index"
 const EmployeeDashboard = () => {
   const Api = apiHelper()
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState(0)
+  // const [activeTab, setActiveTab] = useState(0)
 
-  const toggleTab = (tabIndex) => {
-    setActiveTab(tabIndex)
-  }
+  // const toggleTab = (tabIndex) => {
+  //   setActiveTab(tabIndex)
+  // }
 
 
 //   const [kindNotes, setKindNotes] = useState({
@@ -60,7 +61,8 @@ const EmployeeDashboard = () => {
       {/* {process.env.REACT_APP_API_URL === 'http://3.249.98.208/api' && ( */}
         <Row>
         <Col md={12}>
-        {data.employee_project_roles && Object.values(data.employee_project_roles).length > 0 && (
+        <TaskModule />
+        {/* {data.employee_project_roles && Object.values(data.employee_project_roles).length > 0 && (
           <Card>
              
             <CardBody>
@@ -93,7 +95,7 @@ const EmployeeDashboard = () => {
               
             </CardBody>
           </Card>
-        )}
+        )} */}
         </Col>
       </Row>
       {/* )} */}

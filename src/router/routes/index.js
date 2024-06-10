@@ -334,6 +334,10 @@ const Routes = [
     path: '/Resume',
     component: lazy(() => import('../../views/emp_resume'))
   },
+  {
+    path: '/tasks',
+    component: lazy(() => import('../../views/TasksModule/index'))
+  },
   // Zoom routes
   {
     path: '/zoom',

@@ -2,6 +2,46 @@
 @import '../components/include'; // Components includes
 
 // Todo Application css starts
+.sidebar {
+  .todo-sidebar {
+    // Sidebar Menu
+    .todo-app-menu {
+     
+      .add-task {
+        padding: 0 1.5rem;
+      }
+
+      // Sidebar menu list items
+      
+      .list-group .list-group-item {
+        background-color: #315180;
+        color: white;
+        padding: 0.58rem 1.5rem;
+        border: 0;
+        font-weight: $font-weight-bold;
+        letter-spacing: 0.4px;
+        border-left: 2px solid transparent;
+        border-bottom: 1px solid lightgray;
+        border-radius: 0;
+        + .list-group-item.active {
+          margin-top: 0;
+        }
+        &:hover,
+        &:focus,
+        &.active {
+          background: transparent;
+          color: #315180;
+          background-color: white;
+        }
+        &.active {
+          border-color: #315180;
+          border-bottom: 1px solid lightgray;
+          background-color: white;
+        }
+      }
+    }
+  }
+}
 .todo-application {
   // Content area wrapper border
   .content-area-wrapper {

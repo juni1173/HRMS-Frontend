@@ -1,19 +1,29 @@
-import React, { Fragment } from 'react'
-// import PermissionsHelper from '../../Helpers/PermissionsHelper'
+import React, { Fragment, useEffect } from 'react'
+import PermissionsHelper from '../../Helpers/PermissionsHelper'
+import { useHistory } from 'react-router-dom'
 import { Card, Row, Col, CardBody, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 // import Charts from './Charts/index'
 // import EventsCalender from './Calender/index'
 import DashboardAdmin from './DashboardAdmin/index'
 const AdminDashboard = () => {
-    // const Permissions = PermissionsHelper()
+    const Permissions = PermissionsHelper()
+    const history = useHistory()
+    const checkPermission = () => {
+      if (Permissions === 'employee') history.push('/employee/dashboard')
+      if (Permissions === 'admin') history.push('/admin/dashboard')
+    }
+    
     // const [active, setActive] = useState('1')
     // const toggle = tab => {
     //   if (active !== tab) {
     //     setActive(tab)
     //   }
     // }
+     useEffect(() => {
+      checkPermission()
+    }, [Permissions])
   return (
-    // Permissions.admin ? (
+    (Permissions === 'admin') ? (
         <Fragment>
           <DashboardAdmin />
             {/* <Card>
@@ -117,9 +127,9 @@ const AdminDashboard = () => {
               </TabContent> */} 
             
         </Fragment>
-    // ) : (
-    //     <div>You do not have access...</div>
-    // )
+    ) : (
+        <div>You do not have access...</div>
+    )
     
   )
 }

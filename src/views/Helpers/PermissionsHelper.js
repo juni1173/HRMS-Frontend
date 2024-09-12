@@ -2,17 +2,12 @@ import React from 'react'
 
 const PermissionsHelper = () => {
     const userData = JSON.parse(localStorage.getItem('userData'))
+    if (userData) {
     const user_role = userData.user_role
-    if (user_role === 'admin') {
-      // window.location.href = "/admin/dashboard"
-      history.push('/admin/dashboard')
-    } else {
-        window.location.href = "/employee/dashboard"
-    
-    }
   return (
         user_role
   )
+} return null
 }
 
 export default PermissionsHelper

@@ -1,9 +1,10 @@
-import React, { Fragment, useState } from 'react'
-// import PermissionsHelper from '../../Helpers/PermissionsHelper'
+import React, { Fragment, useState, useEffect } from 'react'
+import PermissionsHelper from '../../Helpers/PermissionsHelper'
 import { Card, Row, Col, CardBody, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import Charts from './Charts/EmployeeChart'
 import EventsCalender from './Calender/index'
 import EmployeeDash from './EmployeeComponents'
+import { useHistory } from 'react-router-dom'
 import Attendance from "./EmployeeComponents/Attendance"
 import Allowances from "./EmployeeComponents/Allowances"
 import Leaves from "./EmployeeComponents/Leaves"
@@ -15,15 +16,23 @@ import MedicalLimit from "./EmployeeComponents/MedicalLimit"
 import GymLimit from "./EmployeeComponents/GymLimit"
 import Calendar from "./EmployeeComponents/AttendanceCalendar"
 const EmployeeDashboard = () => {
-    // const Permissions = PermissionsHelper()
+    const Permissions = PermissionsHelper()
     const [active, setActive] = useState('1')
+    const history = useHistory()
     const toggle = tab => {
       if (active !== tab) {
         setActive(tab)
       }
     }
+    const checkPermission = () => {
+      if (Permissions === 'employee') history.push('/employee/dashboard')
+      if (Permissions === 'admin') history.push('/admin/dashboard')
+    }
+    useEffect(() => {
+      checkPermission()
+    }, [Permissions])
   return (
-    // Permissions.admin ? (
+    (Permissions === 'employee') ? (
         <Fragment>
             <Card>
               <CardBody style={{padding:'0.5rem 1.5rem'}}>
@@ -126,9 +135,9 @@ const EmployeeDashboard = () => {
               </TabContent>
             
         </Fragment>
-    // ) : (
-    //     <div>You do not have access...</div>
-    // )
+    ) : (
+        <div>You do not have access...</div>
+    )
     
   )
 }

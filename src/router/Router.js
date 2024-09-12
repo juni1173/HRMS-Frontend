@@ -19,12 +19,13 @@ import { DefaultRoute, Routes } from './routes'
 import BlankLayout from '@layouts/BlankLayout'
 import VerticalLayout from '@src/layouts/VerticalLayout'
 import HorizontalLayout from '@src/layouts/HorizontalLayout'
+import PermissionsHelper from '../views/Helpers/PermissionsHelper'
 
 const Router = () => {
   // ** Hooks
   const { layout, setLayout, setLastLayout } = useLayout()
   const { transition, setTransition } = useRouterTransition()
-
+  const Permissions  = PermissionsHelper()
   // ** Default Layout
   const DefaultLayout = layout === 'horizontal' ? 'HorizontalLayout' : 'VerticalLayout'
 
@@ -86,7 +87,9 @@ const Router = () => {
     } else if (route.meta && route.meta.authRoute && isUserLoggedIn()) {
       // ** If route has meta and authRole and user is Logged in then redirect user to home page (DefaultRoute)
       // console.warn(route.meta.authRoute)
-      return <Redirect to='/admin/dashboard' />
+      if (Permissions === 'admin') return <Redirect to='/admin/dashboard' />
+      if (Permissions === 'employee') return <Redirect to='/employee/dashboard' />
+      
       // }  else if (isUserLoggedIn() && !ability.can(action || 'read', resource)) {
       // // ** If user is Logged in and doesn't have ability to visit the page redirect the user to Not Authorized
       // return <Redirect to='/misc/not-authorized' />

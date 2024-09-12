@@ -1,10 +1,10 @@
 import React, { Fragment, useState, Suspense, useEffect } from 'react'
 import { Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink, Spinner, Badge } from 'reactstrap'
 import apiHelper from '../../../Helpers/ApiHelper'
-import { useLocation } from 'react-router-dom'
-const Tabs = () => {
+// import { useLocation } from 'react-router-dom'
+const Tabs = ({batchData}) => {
     const Api = apiHelper()
-  const location = useLocation()
+  // const location = useLocation()
 //   const history = useHistory()
   const [active, setActive] = useState('1')
   const [loading, setLoading] = useState(true)
@@ -12,8 +12,8 @@ const Tabs = () => {
   const getData = () => {
     setLoading(true)
     const formData = new FormData()
-    formData['salary_batch'] = location.state.batchData.id
-    formData['payroll_batch'] = location.state.batchData.payroll_batch
+    formData['salary_batch'] = batchData.id
+    formData['payroll_batch'] = batchData.payroll_batch
     Api.jsonPost(`/payroll/accountant/view/`, formData).then((response) => {
       if (response.status === 200) {
       setData(response.data)
@@ -82,13 +82,13 @@ const Tabs = () => {
               <TabContent activeTab={active}>
                 <Suspense fallback={<div className="text-center"><Spinner color="primary" type="grow" /></div>}>
                   <TabPane tabId="1">
-                 {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={location.state.batchData} CallBack={CallBack}/>}
+                 {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={batchData} CallBack={CallBack}/>}
                   </TabPane>
                   <TabPane tabId="2">
-                    {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={location.state.batchData} CallBack={CallBack}/>}
+                    {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={batchData} CallBack={CallBack}/>}
                   </TabPane>
                   <TabPane tabId="3">
-                   {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={location.state.batchData} CallBack={CallBack}/>}
+                   {AllEmpSalary && <AllEmpSalary data={data} active={active} batchData={batchData} CallBack={CallBack}/>}
                   </TabPane>
                 </Suspense>
               </TabContent>

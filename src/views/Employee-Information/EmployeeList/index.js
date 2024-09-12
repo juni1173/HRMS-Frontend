@@ -3,6 +3,7 @@ import {TabContent, TabPane, Nav, NavItem, NavLink, Spinner, ToastHeader, Badge}
 import apiHelper from "../../Helpers/ApiHelper"
 import Employees from "./Employees"
  import CountHelper from "../../Helpers/CountHelper/counthelper"
+ import { HiStatusOnline, HiStatusOffline  } from "react-icons/hi"
 const viewEmployee = () => {
     
     const Api = apiHelper()
@@ -54,7 +55,7 @@ const viewEmployee = () => {
                                         toggle('1')
                                         }}
                                     >
-                                     <span style={{ marginRight: '8px' }}>Active Employees</span>
+                                     <span style={{ marginRight: '8px' }}><HiStatusOnline color={active === '1' && '#315180'} size={'18px'}/> Active Employees</span>
                                      <Badge color="success">{totalactiveemp}</Badge>
                                     </NavLink>
                                     </NavItem>
@@ -67,7 +68,7 @@ const viewEmployee = () => {
                                         toggle('2')
                                         }}
                                     >
-                                        <span style={{ marginRight: '8px' }}>InActive Employees</span>
+                                        <span style={{ marginRight: '8px' }}><HiStatusOffline color={active === '2' && '#315180'} size={'18px'}/> InActive Employees</span>
                                         <Badge color="danger">{totalinactiveemp}</Badge>
                                     </NavLink>
                                     </NavItem>

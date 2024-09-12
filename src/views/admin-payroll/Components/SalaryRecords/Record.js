@@ -15,15 +15,15 @@ import {
     ButtonGroup
   } from "reactstrap"
   import { Eye, Edit, Trash2, Check } from "react-feather"
-  import { useLocation } from 'react-router-dom'
+  // import { useLocation } from 'react-router-dom'
   import apiHelper from "../../../Helpers/ApiHelper"
   import { useState, useEffect, Fragment } from "react"
   import PayView from "../AccountantView.js/PayView"
   import { CSVLink, CSVDownload } from "react-csv"
   
-  const Record = () => {
+  const Record = ({batchData}) => {
     const Api = apiHelper()
-    const location = useLocation()
+    // const location = useLocation()
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
     const [csvData, setCsvData] = useState([])
@@ -35,8 +35,8 @@ import {
     const getData = () => {
       setLoading(true)
       const formData = new FormData()
-      formData['salary_batch'] = location.state.batchData.id
-      formData['payroll_batch'] = location.state.batchData.payroll_batch
+      formData['salary_batch'] = batchData.id
+      formData['payroll_batch'] = batchData.payroll_batch
       Api.jsonPost(`/payroll/salary/record/`, formData).then((response) => {
         if (response.status === 200) {
         setData(response.data)
@@ -207,7 +207,7 @@ import {
         <Offcanvas direction={canvasViewPlacement} isOpen={canvasViewOpen} toggle={toggleViewCanvasEnd} className="largeCanvas" >
           <OffcanvasHeader toggle={toggleViewCanvasEnd}></OffcanvasHeader>
           <OffcanvasBody className=''>
-            <PayView payslipData={selectedData} salaryBatch={location.state.batchData} />
+            <PayView payslipData={selectedData} salaryBatch={batchData} />
           </OffcanvasBody>
         </Offcanvas>
         </Fragment>

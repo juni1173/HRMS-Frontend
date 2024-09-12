@@ -20,8 +20,10 @@ const applyForm = () => {
     const [trackCnicError, setTrackCnicError] = useState('')
     const [nameError, setNameError] = useState('')
     const [phoneError, setPhoneError] = useState('')
+    const [referenceConnection, setReferenceConnection] = useState('')
 
     const [name, setName] = useState("")
+    const [referenceName, setReferenceName] = useState("")
     const [cnic, setCnic] = useState('')
     const [trackCnic, setTrackCnic] = useState('')
     const [email, setEmail] = useState('')
@@ -96,6 +98,14 @@ const applyForm = () => {
         setNameError("")
 
     }
+
+    const onChangeReferenceName = (event) => {
+        setReferenceName(event.target.value)
+    }
+    const onChangeReferenceConnection = (event) => {
+        setReferenceConnection(event.target.value)
+    }
+
 
     const checkCnic = (cnic, track = false) => {
     const getCnicNumberCount = cnic.replace(/[^0-9]/g, '')
@@ -184,6 +194,8 @@ const applyForm = () => {
             if (linkedin !== '') formData.append("linkedin_profile", linkedin)
             formData.append("resume", selectedImage)
             if (time_interval !== '') formData.append("time_interval", time_interval)
+            if (referenceName !== '') formData.append('reference_name', referenceName)
+            if (referenceConnection !== '') formData.append('reference_connection', referenceConnection)
             
                 Api.jsonPost(`/candidates/apply/form/${job_uuid}/`, formData, false)
                 .then((result) => {
@@ -454,6 +466,32 @@ const applyForm = () => {
                             </Card>
                             </>
                         )}
+                        </Col>
+                        <Col md='12' className='mb-1'>
+                        <label className='form-label'>
+                            Reference Name
+                        </label>
+                            <Input
+                            id="Reference name"
+                            value={referenceName}
+                            name="Reference name"
+                            className="Reference name"
+                            placeholder="Reference name"
+                            onChange={onChangeReferenceName}
+                            />   
+                        </Col>
+                        <Col md='12' className='mb-1'>
+                        <label className='form-label'>
+                        Reference's Connection to Company
+                        </label>
+                            <Input
+                            id="Reference connection"
+                            value={referenceConnection}
+                            name="Reference connection"
+                            className="Reference connection"
+                            placeholder="Reference connection"
+                            onChange={onChangeReferenceConnection}
+                            />   
                         </Col>
                     </Row>
                 </Form>

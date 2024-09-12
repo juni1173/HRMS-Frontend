@@ -81,8 +81,8 @@ const Login = () => {
             localStorage.setItem('user_id', data.user_id)
             localStorage.setItem('is_superuser', result.is_privileged)
             if (result.admin) {
-              // history.push('/admin/dashboard')              
-              history.push('/organizationHome')
+              history.push('/admin/dashboard')              
+              // history.push('/organizationHome')
               toast.success(
                 <ToastContent name={data.fullName || data.username || 'HR Manager'} role={data.role || 'admin'} />,
                 { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }

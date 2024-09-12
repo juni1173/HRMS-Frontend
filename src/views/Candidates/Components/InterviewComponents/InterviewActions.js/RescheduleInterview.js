@@ -1,22 +1,29 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import Select from 'react-select'
-import { Button, Form, Label, Spinner, Badge } from 'reactstrap'
+import { Button, Form, Label, Spinner, Badge, Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import apiHelper from '../../../../Helpers/ApiHelper'
-
-const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
+// import ApiCalendar from 'react-google-calendar-api'
+import CreateInterviewMeeting from '../CreateInterviewMeeting'
+const RescheduleInterview = ({ cand_name, cand_email, mediums, uuid, interviewID, stage_id, CallBack}) => {
     const Api = apiHelper()
+    const [isUrlDisabled, setisUrlDisabled] = useState(false)
     const [loading, setLoading] = useState(false)
     const [time_slots] = useState([])
     const [interviewers] = useState([])
     const [interviewModes] = useState([])
+    // const [autoLink, setautoLink] = useState(false)
+    const [modalMeetingOpen, setmodalMeetingOpen] = useState(false)
     const [InterviewDetail, setInterviewDetail] = useState({
         interviewer: '',
         interview_date: '',
         interview_mode: '',
         interview_time_slot: '',
-        stage: stage_id
+        stage: stage_id,
+        interview_link: '',
+        comments: '',
+        interview_medium: ''
     })
     const onChangeInterviewDetailHandler = (InputName, InputType, e) => {
         let InputValue
@@ -55,7 +62,7 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
                     if (interviewerList.length > 0) {
                         interviewers.splice(0, interviewers.length)
                         for (let i = 0; i < interviewerList.length; i++) {
-                            interviewers.push({value: interviewerList[i].hrmsuser, label: interviewerList[i].name})
+                            interviewers.push({value: interviewerList[i].hrmsuser, label: interviewerList[i].name, email: interviewerList[i].official_email})
                         }
                     }
                     if (interviewModesList.length > 0) {
@@ -78,6 +85,21 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
             setLoading(false)
         }, 1000)
     }
+    // const handleCheckboxChange = () => {
+    //     setautoLink(!autoLink)
+    //   }   
+    //   const apiCalendar = new ApiCalendar(config)
+    //   const formatDateTime = (date, time) => {
+    //     if (!date || !time) return null
+    //     console.log(time)
+    //     const [start, end] = time.split(' - ')
+    //     console.warn(start)
+    //     const [hours, minutes] = end.split(':')
+    //     const formattedDate = new Date(date)
+    //     formattedDate.setHours(parseInt(hours, 10))
+    //     formattedDate.setMinutes(parseInt(minutes, 10))
+    //     return formattedDate.toISOString()
+    //   }
     const onSubmitHandler = async (e) => {
         setLoading(true)
         e.preventDefault()
@@ -85,12 +107,57 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
         && InterviewDetail.interview_time_slot !== ''
         && InterviewDetail.interview_mode !== '') {
             const formData = new FormData()
+            // if (autoLink) {
+            //     const attendees = []
+            //     attendees.push({ email })
+            //     attendees.push({ email: InterviewDetail.interviewer.email })
+            // await apiCalendar.handleAuthClick()
+            // const formattedStart = formatDateTime(InterviewDetail.interview_date, InterviewDetail.interview_time_slot.label)
+            // const endDateTime = new Date(formattedStart)
+            // endDateTime.setMinutes(endDateTime.getMinutes() + 30)
+            // const formattedEnd = endDateTime.toISOString()
+            //   const conferenceData = {
+            //     createRequest: {
+            //       requestId: Math.random().toString(36).substring(7)
+            //     },
+            //     sendNotifications: true
+            //   }
+            //   const event = {
+            //     summary: 'Interview',
+            //     description: 'Interview',
+            //     start: {
+            //       dateTime: formattedStart
+            //     },
+            //     end: {
+            //       dateTime: formattedEnd
+            //     },
+            //      attendees,
+            //      conferenceData
+            //   }
+            
+            //  await apiCalendar.createEvent(event)
+            //     .then((result) => {
+            //       console.log(result)
+            //       // Handle success
+            //       InterviewDetail.interview_link = result.result.hangoutLink
+            //       formData['interview_url'] = result.result.hangoutLink
+            //     })
+            //     .catch((error) => {
+            //       console.error(error)
+            //       if (error.message) {
+            //       }
+            //     })
+            // }
+           
             formData['interviewer'] = InterviewDetail.interviewer.value
             formData['interview_date'] =  InterviewDetail.interview_date
             formData['interview_time_slot'] = InterviewDetail.interview_time_slot.value
             formData['interview_mode'] = InterviewDetail.interview_mode.value
+            formData['interview_medium'] = InterviewDetail.interview_medium.value
             formData['stage'] = InterviewDetail.stage
-            console.log(formData)
+            formData['comments'] = InterviewDetail.comments
+            formData['interview_url'] = InterviewDetail.interview_link
+            // console.log(formData)
            await Api.jsonPost(`/interviews/candidate/job/reschedule/${uuid}/${interviewID}/`, formData).then(result => {
                 if (result) {
                     if (result.status === 200) {
@@ -114,6 +181,26 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
     useEffect(() => {
         getPreData()
     }, [])
+    const toggleMeetingModal = () => {
+        if (InterviewDetail.interview_medium !== '') {
+        if (InterviewDetail.interviewer !== '' && InterviewDetail.interview_date !== '' && InterviewDetail.interview_time_slot !==  '') {
+        // setmodalMeetingPlacement('end')
+        setmodalMeetingOpen(!modalMeetingOpen)
+        } else {
+            Api.Toast('error', 'Please fill all required fields to schedule the meeting')
+        } 
+    } else {
+            Api.Toast('error', 'Medium is required for meeting schedule')
+        }
+        // CallBack()
+      }
+      const meetingcallback = (url) => {
+        if (url !== undefined && url !== null && url !== '') {
+            setisUrlDisabled(true)
+        }
+        InterviewDetail.interview_link = url
+        toggleMeetingModal()
+    }
   return (
     <Fragment>
         {!loading ? (
@@ -167,7 +254,49 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
                             onChange={ (e) => { onChangeInterviewDetailHandler('interview_mode', 'select', e) }}
                         />
                     </div>
-                    <div className='col-lg-12 mb-1'>
+                    <div className='col-lg-6 mb-1'>
+                            <Label>
+                                Interview Medium
+                            </Label>
+                            <Select
+                                type="text"
+                                name="medium"
+                                options={mediums}
+                                onChange={ (e) => { onChangeInterviewDetailHandler('interview_medium', 'select', e) }}
+                            />
+                        </div>
+                    {InterviewDetail.interview_mode.label === 'Online interview' ? <>
+                        {/* <div className='col-lg-6 mb-1'>
+                            <Label>
+                                Auto Link
+                            </Label><Badge color='light-success'>Checking auto link will schedule a meeting</Badge><br></br>
+                               <Input type='checkbox' 
+                               onChange={handleCheckboxChange}
+                               />
+                        </div> */}
+      <div className='col-lg-6 mb-1'>
+                            <Label>
+                               Interview Link
+                            </Label><br></br>
+                               <Input type='text' 
+                               disabled={isUrlDisabled}
+                            value={InterviewDetail.interview_link}
+                               onChange={ (e) => { onChangeInterviewDetailHandler('interview_link', 'input', e) }}
+                               />
+                        </div> </>  : null}
+                        <div className='col-lg-12 mb-1'>
+                            <Label>Comments</Label>
+                        <Input type='text' 
+                               onChange={ (e) => { onChangeInterviewDetailHandler('comments', 'input', e) }}
+                               />
+                        </div>
+                        <div className='col-lg-6 mb-1'>
+                        {InterviewDetail.interview_mode.label === 'Online interview' ? <>
+                        <Button className='btn btn-primary float-right' onClick={toggleMeetingModal}>
+                            Schedule Meeting
+                        </Button> </> : null }
+                    </div>
+                    <div className='col-lg-6 mb-1'>
                         <Button className='btn btn-primary float-right' onClick={onSubmitHandler}>
                             Set Interview
                         </Button>
@@ -177,7 +306,12 @@ const RescheduleInterview = ({ uuid, interviewID, stage_id, CallBack}) => {
         ) : (
             <div className="text-center"><Spinner/></div>
         )}
-        
+    <Modal isOpen={modalMeetingOpen} toggle={modalMeetingOpen} className="Interview-Form-Modal">
+  <ModalHeader toggle={toggleMeetingModal}></ModalHeader>
+  <ModalBody className=''>
+  <CreateInterviewMeeting cand_name={cand_name} cand_email={cand_email} interviewer={InterviewDetail.interviewer} category="Recruitment" date={InterviewDetail.interview_date} time={InterviewDetail.interview_time_slot} CallBack={meetingcallback} selectedmedium={InterviewDetail.interview_medium}/>
+    </ModalBody>
+    </Modal>
     </Fragment>
   )
 }

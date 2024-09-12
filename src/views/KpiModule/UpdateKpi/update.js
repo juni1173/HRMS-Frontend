@@ -64,7 +64,7 @@ const UpdateKpi = ({ data, CallBack, dropdownData, type }) => {
             formData['ep_batch'] = employeeKpiData.ep_batch
             formData['evaluator'] = employeeKpiData.evaluator
             formData['ep_complexity'] = employeeKpiData.ep_complexity
-            formData['scale_group'] = 23
+            // formData['scale_group'] = 23
             let url = ''
             if (data.kpis_status_level === 1) {
                 url = `/kpis/employees/${data.id}/`

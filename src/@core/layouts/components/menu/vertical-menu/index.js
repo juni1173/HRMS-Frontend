@@ -8,8 +8,9 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 // ** Vertical Menu Components
 import VerticalMenuHeader from './VerticalMenuHeader'
 import VerticalNavMenuItems from './VerticalNavMenuItems'
-
 const Sidebar = props => {
+  // const org = JSON.parse(localStorage.getItem('organization'))
+  // console.log(org)
   // ** Props
   const { menuCollapsed, routerProps, menu, currentActiveItem, skin, menuData } = props
 
@@ -55,7 +56,9 @@ const Sidebar = props => {
         onMouseLeave={() => setMenuHover(false)}
       >
         {menu ? (
-          menu
+          <>
+          {menu}
+          </>
         ) : (
           <Fragment>
             {/* Vertical Menu Header */}
@@ -68,6 +71,12 @@ const Sidebar = props => {
               options={{ wheelPropagation: false }}
               onScrollY={container => scrollMenu(container)}
             >
+               {/* <img 
+  src={JSON.parse(localStorage.getItem('userData')).org.logo} 
+  alt="Organization" 
+  className='mr-2' 
+  style={{ width: '100px', height: '80px' }} 
+/> */}
               <ul className='navigation navigation-main mb-4'>
                 <VerticalNavMenuItems
                   items={menuData}

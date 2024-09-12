@@ -153,7 +153,6 @@ const VerticalLayout = props => {
           currentActiveItem={currentActiveItem}
         />
       ) : null}
-
       <Navbar
         expand='lg'
         container={false}
@@ -178,7 +177,6 @@ const VerticalLayout = props => {
         onClick={() => setMenuVisibility(false)}
       ></div>
       {/* Vertical Nav Menu Overlay */}
-
       {themeConfig.layout.customizer === true ? (
         <Customizer
           skin={skin}
@@ -222,6 +220,7 @@ const VerticalLayout = props => {
           </ScrollToTop>
         </div>
       ) : null}
+  
     </div>
   )
 }

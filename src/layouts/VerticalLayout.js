@@ -34,17 +34,18 @@ if (JSON.parse(localStorage.getItem('userData'))) {
   return (
     !loading ? (
       org ? (
-       
           userRole === 'employee' ? (
+            <>
             <Layout menuData={emp_nav} {...props}>
             {props.children}
           </Layout>
+          </>
           ) : (
             <Layout menuData={navigation} {...props}>
             {props.children}
           </Layout>
           )
-      ) : (
+      ) : (      
         <Layout menuData={No_Org_Nav} {...props}>
           {props.children}
         </Layout>

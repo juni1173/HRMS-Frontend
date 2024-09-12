@@ -11,6 +11,8 @@ const EmployeeHelper = () => {
         
     })
     const employeeDropdown = useState([])
+    const replacementdropdown = useState([])
+    const positionDropdown = useState([])
     const fetchFormPreData = async () => {
         const response = await Api.get(`/employees/pre/data/${Api.org.id}/`)
         if (response.status === 200) {
@@ -41,6 +43,41 @@ const EmployeeHelper = () => {
             Api.Toast('error', response.message)
         }
     } 
+    const fetchReplacementFor = async () => {
+        const response = await Api.get(`/requisition/replacement/`)
+        if (response) {
+            const data = response
+            if (Object.values(data).length > 0) {
+                replacementdropdown.splice(0, data.length)
+               data.forEach(element => {
+                replacementdropdown.push({value: element.id, label: element.title})
+               })
+                return replacementdropdown
+            } else {
+                Api.Toast('error', 'No data Found!')
+            }
+        } else {
+            Api.Toast('error', response.message)
+        }
+    } 
+    const fetchPositionDropdown = async () => {
+        const response = await Api.get(`/organization/positions/`)
+        if (response.status === 200) {
+            const data = response.data
+            if (Object.values(data).length > 0) {
+                positionDropdown.splice(0, data.length)
+               data.forEach(element => {
+                positionDropdown.push({value: element.id, label: element.title})
+               })
+               
+                return positionDropdown
+            } else {
+                Api.Toast('error', 'No position Found!')
+            }
+        } else {
+            Api.Toast('error', response.message)
+        }
+    }
     const fetchEmployeeDropdown = async () => {
         const response = await Api.get(`/employees/`)
         if (response.status === 200) {
@@ -182,6 +219,8 @@ const EmployeeHelper = () => {
         fetchFormPreData,
         fetchEmployeeDropdown,
         fetchEmployeeDropdownImage,
+        fetchReplacementFor,
+        fetchPositionDropdown,
         DeleteEmpContact,
         DeleteEmpEducation,
         DeleteEmpExperience,

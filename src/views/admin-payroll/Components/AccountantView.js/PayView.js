@@ -14,7 +14,6 @@ import {
 import html2pdf from 'html2pdf.js'
 
 const PayView = ({ payslipData, salaryBatch }) => {
-    
     const [monthname, setmonthName] = useState()
     const organizationString = localStorage.getItem('organization')
   const organization = organizationString ? JSON.parse(organizationString) : null

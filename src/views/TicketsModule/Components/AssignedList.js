@@ -1,25 +1,27 @@
 // ** React Imports
-import { useState } from 'react'
-import { Settings } from 'react-feather'
+// import { useState } from 'react'
+// import { Settings } from 'react-feather'
 
 // ** Reactstrap Imports
-import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
-import GeneralTickets from './Admin/GeneralTickets'
-import ProcurementTickets from './Admin/ProcurementTickets'
+// import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
+import AssignedTickets from './Admin/AssignedTickets'
+// import GeneralTickets from './Admin/GeneralTickets'
+// import ProcurementTickets from './Admin/ProcurementTickets'
 
 const AssignedList = () => {
   // ** State
-  const [active, setActive] = useState('1')
+  // const [active, setActive] = useState('1')
 
-  const toggle = tab => {
-    if (active !== tab) {
-      setActive(tab)
-    }
-  }
+  // const toggle = tab => {
+  //   if (active !== tab) {
+  //     setActive(tab)
+  //   }
+  // }
 
   return (
     <div className='nav-vertical configuration_panel'>
-      <Nav tabs className='nav-left'>
+      <AssignedTickets />
+      {/* <Nav tabs className='nav-left'>
         <NavItem>
            <h3 className='brand-text'> <Settings/> Tickets</h3>
         </NavItem>
@@ -54,7 +56,7 @@ const AssignedList = () => {
         {active === '2' ? <ProcurementTickets type='assign'/> : null }
         </TabPane>
         
-      </TabContent>
+      </TabContent> */}
     </div>
   )
 }

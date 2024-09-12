@@ -9,6 +9,7 @@ const EmployeeBarChart = ({ gridLineColor, labelColor, data, highestTotalEmploye
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    indexAxis: 'y', // This makes the bar chart horizontal
     animation: { duration: 500 },
     scales: {
       x: {
@@ -26,13 +27,18 @@ const EmployeeBarChart = ({ gridLineColor, labelColor, data, highestTotalEmploye
           borderColor: gridLineColor
         },
         ticks: {
-          stepSize: (highestTotalEmployeeCount / 5),
+          stepSize: highestTotalEmployeeCount / 5,
           color: labelColor
         }
       }
     },
     plugins: {
-      legend: { display: false }
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#000',
+        titleColor: '#fff',
+        bodyColor: '#fff'
+      }
     }
   }
 

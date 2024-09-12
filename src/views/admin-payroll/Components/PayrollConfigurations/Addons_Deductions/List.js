@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, lazy, Suspense } from 'react'
-import { useLocation } from 'react-router-dom'
+// import { useLocation } from 'react-router-dom'
 import {
   Nav,
   NavItem,
@@ -14,9 +14,9 @@ import apiHelper from '../../../../Helpers/ApiHelper'
 const LazyListNav = lazy(() => import('./ListNav'))
 import { Save, PlusCircle, CheckCircle } from 'react-feather'
 
-const HrProcess = () => {
+const HrProcess = ({batchData}) => {
   const Api = apiHelper()
-  const location = useLocation()
+  // const location = useLocation()
   const [batchdata, setBatchData] = useState([])
   const [addondata, setAddonData] = useState([])
   const [deductiondata, setDeductionData] = useState([])
@@ -32,7 +32,7 @@ const HrProcess = () => {
     setLoading(true)
     try {
       const formData = new FormData()
-      formData['payroll_batch'] = location.state.batchData.id
+      formData['payroll_batch'] = batchData.id
       const hrviewResponse = await Api.jsonPost(
         `/payroll/batch/attributes/hrview/`,
         formData

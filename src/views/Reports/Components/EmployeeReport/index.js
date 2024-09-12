@@ -12,6 +12,9 @@ import apiHelper from '../../../Helpers/ApiHelper'
 import EmployeeBarChart from './EmployeeBarChart'
 import EmployeeDataTable from './EmployeeDataTable'
 
+import { FaUsers } from "react-icons/fa"
+import { RiNumbersFill } from "react-icons/ri"
+import { GrLineChart } from "react-icons/gr"
 // ** Custom Hooks
 import { useSkin } from '@hooks/useSkin'
 
@@ -21,7 +24,7 @@ import { ThemeColors } from '@src/utility/context/ThemeColors'
 // ** Styles
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 
-const index = () => {
+const index = ({ type }) => {
     const [data, setData] = useState([])
     const [tableData, settableData] = useState([])
     const [empChartData, setEmpChartData] = useState([])
@@ -38,7 +41,7 @@ const index = () => {
   const { colors } = useContext(ThemeColors),
     { skin } = useSkin(),
     labelColor = skin === 'dark' ? '#b4b7bd' : '#6e6b7b',
-    successColorShade = '#28dac6',
+    successColorShade = '#315180',
     gridLineColor = 'rgba(200, 200, 200, 0.2)'
 
     const calculateCount = (arr) => {
@@ -76,10 +79,10 @@ const index = () => {
             labels,
             datasets: [
               {
-                maxBarThickness: 15,
+                maxBarThickness: 10,
                 backgroundColor: successColorShade,
                 borderColor: colors.primary.main,
-                borderRadius: { topRight: 15, topLeft: 15 },
+                borderRadius: { topRight: 15, topLeft: 15, bottomRight: 15 },
                 data: values
               }
             ]
@@ -178,13 +181,14 @@ const index = () => {
       <Row className='match-height'>
       {!loading ? (
             <>
-           { Object.values(departmentDropdown).length > 0 && (
+           {type !== 'dashboard' && Object.values(departmentDropdown).length > 0 && (
               <>
                 <Col md='12'>
                 <Card>
                     <CardBody>
                       <Row>
-                      <Col md='9'>
+                      
+                      <Col md="9">
                           <Label className="form-label">
                             Select Department <Badge color='light-danger'>*</Badge>
                             </Label>
@@ -199,9 +203,11 @@ const index = () => {
                                 menuPosition='fixed'
                             />
                       </Col>
-                      <Col md='3'>
-                      <Button className='btn btn-success float-right mt-2' onClick={handleExport}>Export Report</Button>
-                      </Col>
+                      
+                        <Col md='3'>
+                            <Button className='btn btn-success float-right mt-2' onClick={handleExport}>Export Report</Button>
+                        </Col>
+                      
                       </Row>
                     </CardBody>
                 </Card>
@@ -210,18 +216,18 @@ const index = () => {
             )}
            
             </>
-        ) : <div className='text-center'><Spinner color='white'/></div>}
+        ) : <div className='text-center'><Spinner color=''/></div>}
         <Col md='4'>
             <Card className='mb-2'>
             {!loading && (
                 (data && Object.values(data).length > 0) ? (
                     <CardBody className='pb-0'>
-                        <h3>{countData.head_count ? countData.head_count : 'N/A'}</h3>
+                        <h3><FaUsers color="#315180" size={'24px'}/> {countData.head_count ? countData.head_count : 'N/A'}</h3>
                         <p><b>Head Count</b></p>
                     </CardBody>
                 ) : (
                     <CardBody className='pb-0'>
-                        <h3>N/A</h3>
+                        {/* <h3>N/A</h3> */}
                         <b>Head Count</b>
                     </CardBody>
                 )
@@ -234,12 +240,12 @@ const index = () => {
             {!loading && (
                 (data && Object.values(data).length > 0) ? (
                     <CardBody className='pb-0'>
-                        <h3>{countData.avg_employee_age ? (countData.avg_employee_age.toFixed(2)) : 'N/A'}</h3>
+                        <h3><RiNumbersFill color="#315180" size={'24px'}/> {countData.avg_employee_age ? countData.avg_employee_age : 'N/A'}</h3>
                        <p><b>Average Employee Age</b></p>
                     </CardBody>
                 ) :  (
                     <CardBody className='pb-0'>
-                        <h3>N/A</h3>
+                        {/* <h3>N/A</h3> */}
                         <b>Average Employee Age</b>
                     </CardBody>
                 )
@@ -252,12 +258,12 @@ const index = () => {
             {!loading && (
                 (data && Object.values(data).length > 0) ? (
                     <CardBody className='pb-0'>
-                        <h3>{countData.avg_tenure ? Number(countData.avg_tenure.toFixed(2)) : 'N/A'}</h3>
+                        <h3><GrLineChart color="#315180" size={'24px'}/> {countData.avg_tenure ? `${Number(countData.avg_tenure.toFixed(2))}` : 'N/A'}</h3>
                         <p><b>Average Employee Tenure</b></p>
                     </CardBody>
                 ) : (
                     <CardBody className='pb-0'>
-                        <h3>N/A</h3>
+                        {/* <h3>N/A</h3> */}
                         <b>Average Employee Tenure</b>
                     </CardBody>
                 )
@@ -270,7 +276,7 @@ const index = () => {
             <EmployeeBarChart  labelColor={labelColor} gridLineColor={gridLineColor} data={empChartData} highestTotalEmployeeCount={highestTotalEmployeeCount}/>
             </Col>
         )}
-        {tableData && Object.values(tableData).length > 0 && (
+        {(type !== 'dashboard' && tableData && Object.values(tableData).length > 0) && (
             <Col md='12'>
             <EmployeeDataTable  data={tableData}/>
             </Col>

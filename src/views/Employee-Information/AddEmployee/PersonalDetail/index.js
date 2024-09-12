@@ -1,8 +1,8 @@
 import {Fragment, useState} from "react" 
-import {Label, Row, Col, Input, Form, Badge } from "reactstrap" 
+import {Label, Row, Col, Input, Form, Badge, Card, CardBody, CardHeader, CardFooter, CardTitle } from "reactstrap" 
 import Select from 'react-select'
 import { useForm, Controller } from 'react-hook-form'
-import { XCircle } from "react-feather"
+import { XCircle, Check } from "react-feather"
 import apiHelper from "../../../Helpers/ApiHelper"
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
@@ -54,7 +54,18 @@ const PersonalDetail = ({state, CallBack, emp_state}) => {
   } = useForm({
     defaultValues
   })
-
+  const renderUserImg = () => {
+      return (
+      
+        <img
+          height='110'
+          width='110'
+          alt='user-avatar'
+          src={profileImage !== null ? URL.createObjectURL(profileImage) : null}
+          className='img-fluid rounded mt-3 mb-2'
+        />
+      )
+  }
     const onSubmitHandler = data => {
         const passport_expiry = data.date_of_expiry ? Api.formatDate(data.date_of_expiry) : ''
         const emp_dob =  data.dob ? Api.formatDate(data.dob) : ''
@@ -354,7 +365,8 @@ const PersonalDetail = ({state, CallBack, emp_state}) => {
           </Form>
         ) : (
             Object.values(emp_state).length > 0 && (
-                <Row>
+                <>
+                {/* <Row>
                     <div className="col-lg-12 col-md-12 col-sm-12 text-center mb-2">
                         <h2>Personal Details</h2>
                     </div>
@@ -372,12 +384,105 @@ const PersonalDetail = ({state, CallBack, emp_state}) => {
                         <p className='label'>Passport No: &nbsp;  &nbsp;<strong>{emp_state['emp_data']['passport_data'][0] ? emp_state['emp_data']['passport_data'][0].passport_no : "N/A" }</strong></p>
                         <p className='label'>Passport Expiry Date: &nbsp;  &nbsp;<strong>{emp_state['emp_data']['passport_data'][0] ? emp_state['emp_data']['passport_data'][0].date_of_expiry : "N/A" }</strong></p>
                     </div>
-            </Row>
+            </Row> */}
+            <Fragment>
+            <Card>
+              <CardBody>
+                <div className='user-avatar-section'>
+                  <div className='d-flex align-items-center flex-column'>
+                    {renderUserImg()}
+                    <div className='d-flex flex-column align-items-center text-center'>
+                      <div className='user-info'>
+                        <h4>{emp_state['emp_data'].name ? emp_state['emp_data'].name : "N/A" }</h4>
+                          <Badge color="secondary" className='text-capitalize'>
+                           {emp_state['emp_data'].job_position_title ? emp_state['emp_data'].job_position_title : "N/A" }
+                          </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='d-flex justify-content-around my-2 pt-75'>
+                  <div className='d-flex align-items-start me-2'>
+                    <Badge color='light-primary' className='rounded p-75'>
+                      <Check className='font-medium-2' />
+                    </Badge>
+                    {/* <div className='ms-75'>
+                      <h4 className='mb-0'>1.23k</h4>
+                      <small>Tasks Done</small>
+                    </div> */}
+                  </div>
+                  {/* <div className='d-flex align-items-start'>
+                    <Badge color='light-primary' className='rounded p-75'>
+                      <Briefcase className='font-medium-2' />
+                    </Badge>
+                    <div className='ms-75'>
+                      <h4 className='mb-0'>568</h4>
+                      <small>Projects Done</small>
+                    </div>
+                  </div> */}
+                </div>
+                <h4 className='fw-bolder border-bottom pb-50 mb-1'>Details</h4>
+                <div className='info-container'>
+                  {/* {selectedUser !== null ? ( */}
+                    <ul className='list-unstyled'>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Name:</span>
+                        <span>{emp_state['emp_data'].name ? emp_state['emp_data'].name : "N/A" }</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Personal Email:</span>
+                        <span>{emp_state['emp_data'].personal_email ? emp_state['emp_data'].personal_email : "N/A" }</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Father Name:</span>
+                        <Badge className='text-capitalize' color="light-success">
+                        {emp_state['emp_data'].father_name ? emp_state['emp_data'].father_name : "N/A" }
+                        </Badge>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>D-O-B:</span>
+                        <span className='text-capitalize'>{emp_state['emp_data'].dob ? emp_state['emp_data'].dob : "N/A" }</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>CNIC:</span>
+                        <span>{emp_state['emp_data'].cnic_no ? emp_state['emp_data'].cnic_no : "N/A" }</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Passport NO:</span>
+                        <span>{emp_state['emp_data']['passport_data'][0] ? emp_state['emp_data']['passport_data'][0].passport_no : "N/A" }</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Passport Expiry Date:</span>
+                        <span>{emp_state['emp_data']['passport_data'][0] ? emp_state['emp_data']['passport_data'][0].date_of_expiry : "N/A" }</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Blood Group:</span>
+                        <span>{emp_state['emp_data'].blood_group ? emp_state['emp_data'].blood_group : "N/A" }</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Gender:</span>
+                        <span>{emp_state['emp_data'].gender_type ? emp_state['emp_data'].gender_type : "N/A" }</span>
+                      </li>
+                    </ul>
+                  {/* ) : null} */}
+                </div>
+                {/* <div className='d-flex justify-content-center pt-2'>
+                  <Button color='primary' onClick={() => setShow(true)}>
+                    Edit
+                  </Button>
+                  <Button className='ms-1' color='danger' outline onClick={handleSuspendedClick}>
+                    Suspended
+                  </Button>
+                </div> */}
+              </CardBody>
+            </Card>
+          </Fragment>
+          </>
             ) 
             
         )}
-       
        </Fragment>
+     
     )
 }
 export default PersonalDetail

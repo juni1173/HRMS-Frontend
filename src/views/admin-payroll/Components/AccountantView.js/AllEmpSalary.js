@@ -18,16 +18,15 @@ import {
   ModalBody
 } from "reactstrap"
 import { Eye, Edit, Trash2, Check } from "react-feather"
-import { useLocation, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import apiHelper from "../../../Helpers/ApiHelper"
 import { useState, Fragment, useEffect } from "react"
 import PayView from "./PayView"
 import { CSVLink } from "react-csv"
 import GenerateCSV from "./CSV"
 const AllEmpSalary = ({data, active, batchData, CallBack}) => {
-  console.log(batchData)
   const Api = apiHelper()
-  const location = useLocation()
+  // const location = useLocation()
   const history = useHistory()
   const [loading, setLoading] = useState(false)
   // const [data, setData] = useState([])
@@ -54,8 +53,8 @@ const AllEmpSalary = ({data, active, batchData, CallBack}) => {
 const handleverify = () => {
   setLoading(true)
   const formData = new FormData()
-  formData['salary_batch'] = location.state.batchData.id
-  formData['payroll_batch'] = location.state.batchData.payroll_batch
+  formData['salary_batch'] = batchData.id
+  formData['payroll_batch'] = batchData.payroll_batch
   formData['employee_data'] = selectedItems
   Api.jsonPost(`/payroll/accountant/verify/`, formData).then((response) => {
     if (response.status === 200) {
@@ -76,8 +75,8 @@ const closeModal = () => {
 const handleprocess = () => {
   setLoading(true)
   const formData = new FormData()
-  formData['salary_batch'] = location.state.batchData.id
-  formData['payroll_batch'] = location.state.batchData.payroll_batch
+  formData['salary_batch'] = batchData.id
+  formData['payroll_batch'] = batchData.payroll_batch
   formData['employee_data'] = selectedItems
   Api.jsonPost(`/payroll/process/employee/salary/`, formData).then((response) => {
     if (response.status === 200) {

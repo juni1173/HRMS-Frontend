@@ -1,21 +1,22 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 // import PermissionsHelper from '../../Helpers/PermissionsHelper'
 import { Card, Row, Col, CardBody, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
-import Charts from './Charts/index'
-import EventsCalender from './Calender/index'
+// import Charts from './Charts/index'
+// import EventsCalender from './Calender/index'
 import DashboardAdmin from './DashboardAdmin/index'
 const AdminDashboard = () => {
     // const Permissions = PermissionsHelper()
-    const [active, setActive] = useState('1')
-    const toggle = tab => {
-      if (active !== tab) {
-        setActive(tab)
-      }
-    }
+    // const [active, setActive] = useState('1')
+    // const toggle = tab => {
+    //   if (active !== tab) {
+    //     setActive(tab)
+    //   }
+    // }
   return (
     // Permissions.admin ? (
         <Fragment>
-            <Card>
+          <DashboardAdmin />
+            {/* <Card>
               <CardBody style={{padding:'0.5rem 1.5rem'}}>
                 <Row>
                   <Col md='3'>
@@ -60,12 +61,12 @@ const AdminDashboard = () => {
                   </Col>
                   <Col md='3'>
                     {/* <Button color='gradient-secondary'>Secondary</Button> */}
-                  </Col>
+                  {/* </Col>
                 </Row>
               </CardBody>
-            </Card>
+            </Card> */}
             
-              <TabContent className='py-50' activeTab={active}>
+              {/* <TabContent className='py-50' activeTab={active}>
                 <TabPane tabId='1'>
                 
                 {active === '1' ? (
@@ -113,7 +114,7 @@ const AdminDashboard = () => {
                   
                  
                 </TabPane>
-              </TabContent>
+              </TabContent> */} 
             
         </Fragment>
     // ) : (

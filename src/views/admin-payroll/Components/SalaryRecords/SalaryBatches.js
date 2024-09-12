@@ -1,14 +1,17 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import apiHelper from '../../../Helpers/ApiHelper'
 import { Spinner, Card, CardBody, Badge, Button } from 'reactstrap'
 import { ArrowRight, Eye } from 'react-feather'
+import Record from './Record'
 
-const Index = () => {
+const RecordBatches = () => {
   const Api = apiHelper()
-  const history = useHistory()
+  // const history = useHistory()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
+  const [showRecords, setShowRecords] = useState(false)
+  const [batchData, setBatchData] = useState(null)
 
   const getData = async () => {
     
@@ -29,12 +32,17 @@ const Index = () => {
     }
   }
 
+  // const handleProceed = (item) => {
+  //   // Navigate to the HrProcess component and pass data
+  //   history.push({
+  //     pathname: '/payroll/salary/record',
+  //     state: { batchData: item }
+  //   })
+  // }
   const handleProceed = (item) => {
-    // Navigate to the HrProcess component and pass data
-    history.push({
-      pathname: '/payroll/salary/record',
-      state: { batchData: item }
-    })
+    // Set the state to show the HrProcess component and pass data
+    setBatchData(item)
+    setShowRecords(true)
   }
 
   useEffect(() => {
@@ -43,6 +51,7 @@ const Index = () => {
 
   return (
     <Fragment>
+      {!showRecords ? <> 
       {!loading ? (
         <>
         {data.length > 0 ? <>
@@ -133,9 +142,9 @@ const Index = () => {
         <div className='text-center'>
           <Spinner type='grow' color='primary' />
         </div>
-      )}
+      )} </> : <Record batchData={batchData}/> }
     </Fragment>
   )
 }
 
-export default Index
+export default RecordBatches

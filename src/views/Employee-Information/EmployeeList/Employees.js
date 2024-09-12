@@ -1,6 +1,6 @@
-import { Fragment, useEffect, useState } from "react"
-import {  UserMinus, Eye, Search, UserCheck} from "react-feather"
-import {Container, Row, Card, CardBody, CardTitle, Badge, InputGroup, Input, InputGroupText, Col, Spinner, Button, Offcanvas, OffcanvasHeader, OffcanvasBody} from "reactstrap"
+import React, { Fragment, useEffect, useState } from "react"
+import {  UserMinus, Eye, Search, UserCheck, Settings, FileText, MoreVertical, Compass} from "react-feather"
+import {Container, Row, Card, CardBody, CardTitle, Badge, InputGroup, Input, InputGroupText, Col, Spinner, Button, Offcanvas, OffcanvasHeader, OffcanvasBody,  Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalBody, ModalHeader} from "reactstrap"
 import user_blank  from "../../../assets/images/avatars/user_blank.png"
 import apiHelper from "../../Helpers/ApiHelper"
 import SearchHelper from "../../Helpers/SearchHelper/SearchByObject"
@@ -11,6 +11,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import ESS from '../ESS-Scripts/index'
 import Preview from "../../emp_resume/Preview"
+// import AssignModel from "../../WorkModels/WorkingModelAssign/Assign"
 const Employees = ({ employeeList, CallBack, type }) => {
     
     const Api = apiHelper()
@@ -27,6 +28,15 @@ const Employees = ({ employeeList, CallBack, type }) => {
     const [canvasOpen, setCanvasOpen] = useState(false)
     const [canvas, setcanvas] = useState('')
     const [empID, setEmpID] = useState('')
+    const [dropdownOpen, setDropdownOpen] = useState({})
+    // const [modal, setModal] = useState(false)
+    // const toggle = () => setModal(!modal)
+    const toggleDropdown = (itemId) => {
+      setDropdownOpen((prevState) => ({
+        ...prevState,
+        [itemId]: !prevState[itemId]
+      }))
+    }
     //Resume
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
@@ -81,6 +91,10 @@ const Employees = ({ employeeList, CallBack, type }) => {
         setCanvasPlacement('end')
         setCanvasOpen(!canvasOpen)
       }
+    // const handleworkingmodel = (id) => {
+    //     setEmpID(id)
+    //     toggle()
+    // }
     const ESSToggle = (id, canvasvalue) => {
         console.log(canvas)
         if (canvasvalue === 'ESS') {
@@ -255,48 +269,26 @@ const Employees = ({ employeeList, CallBack, type }) => {
             {!loading ? (
             Object.values(currentItems).length > 0 ? (
             Object.values(currentItems).map((item) => (
-                <Col md={6} key={item.uuid}>
-                <Card>
+                <Col md={3} key={item.uuid}>
+                 <Card>
                     <CardBody>
                         <div className="row">
-                            <div className="col-md-3">
-                            {/* <CardTitle tag='h1'> </CardTitle> */}
-                                <Badge color='light-warning'>
-                                {item.profile_image ?  <img src={`${Api.BaseUrl}${item.profile_image}`} style={{height: '50px', width: "50px"}} alt="logo" /> : <img src={user_blank} style={{height: '50px', width: "50px"}} alt="logo" />}   
-                                </Badge> 
-                            </div>
-                            <div className="col-md-6">
-                                <Badge color='light-info p-0'>
-                                    Name
-                                </Badge>
-                                <br></br>
-                                <strong>{item.name ? item.name : <Badge color="light-danger">N/A</Badge>}</strong>
-                            </div>
-                           
-                            <div className="col-lg-3 float-right">
-                                
-                                <div className="float-right">
-                                
-                                {type === 'active' ? (
+                        <div className="col-md-12 d-flex justify-content-end">
+                            <Dropdown  isOpen={dropdownOpen[item.uuid]} toggle={() => toggleDropdown(item.uuid)} direction="end">
+                                {/* <DropdownToggle className="no-background m-0 px-0"> */}
+                                <div onClick={() => toggleDropdown(item.uuid)}><MoreVertical/></div>
+        {/* </DropdownToggle> */}
+        <DropdownMenu>
+          <DropdownItem>{type === 'active' ? (
                                     <>
                                     <a href={`/employeeDetail/${item.uuid}`}>
                                     <button
                                             className="border-0 no-background"
                                             title="View Employee Detail"
                                             >
-                                            <Eye color="green"/>
+                                           <span className="mr-1"><Eye size={12}/></span>Profile
                                         </button>
                                     </a>
-                                    <button
-                                        className="border-0 no-background"
-                                        title="Deactivate Employee"
-                                        onClick={() => removeAction(item.uuid)}
-                                        >
-                                        <UserMinus color="red"/>
-                                    </button>
-                                    {/* <Row> */}
-                               
-                                    {/* </Row> */}
                                     </>
                                 ) : (
                                     <button
@@ -304,52 +296,71 @@ const Employees = ({ employeeList, CallBack, type }) => {
                                     title="Activate Employee"
                                     onClick={() => activateAction(item.uuid)}
                                     >
-                                    <UserCheck color="green"/>
+                                    <span className="mr-1"><UserCheck size={12}/></span> Activate
                                 </button>
-                                )}
-                                
-                                    
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                            {/* <CardTitle tag='h1'> </CardTitle>
-                                <Badge color='light-warning'>
-                                {item.profile_image ?  <img src={`${Api.BaseUrl}${item.profile_image}`} style={{height: '50px', width: "50px"}} alt="logo" /> : <img src={user_blank} style={{height: '50px', width: "50px"}} alt="logo" />}   
-                                </Badge>  */}
-                            </div>
-                            <div className="col-md-3">
-                                <Badge color='light-success p-0'>
-                                    Employee Code
-                                </Badge><br></br>
-                                <strong>{item.emp_code ? item.emp_code : <Badge color="light-danger">N/A</Badge>}</strong>
-                                
-                            </div>
-                          <div className="col-md-3">
-                          <button
-                                        className="btn btn-primary btn-sm text-nowrap"
-                                        style={{marginTop:'15px', padding:'10px'}}
+                                )}</DropdownItem>
+      {type === 'active' ? <DropdownItem>
+              <button
+                                        className="border-0 no-background"
+                                        title="Deactivate Employee"
+                                        onClick={() => removeAction(item.uuid)}
+                                        >
+                                        <span className="mr-1"><UserMinus size={12}/></span>Inactive
+                                    </button> 
+         </DropdownItem> : null}
+         {/* {type === 'active' ? <DropdownItem>
+              <button
+                                        className="border-0 no-background"
+                                        title="Set Working Model"
+                                        onClick={() => handleworkingmodel(item.id)}
+                                        >
+                                        <span className="mr-1"><UserMinus size={12}/></span>Set Working Model
+                                    </button> 
+         </DropdownItem> : null} */}
+         <DropdownItem>
+         <button
+                                        className="border-0 no-background text-nowrap"
+                                        // style={{marginTop:'15px', padding:'10px'}}
                                         title="ESS Setup"
                                         onClick={() => {
                                             setcanvas('ESS')
                                             ESSToggle(item.id, 'ESS')
                                         }}
                                         >
-                                        ESS Setup
+                                        <span className="mr-1"><Settings size={12}/></span>ESS Setup
                                     </button>
-                                    </div>
-                                    <div className="col-md-3">
-                                    <button
-                                        className="btn btn-primary btn-sm"
-                                        style={{marginTop:'15px', padding:'10px'}}
+         </DropdownItem>
+         <DropdownItem>
+         <button
+                                        className="border-0 no-background"
+                                        // style={{marginTop:'15px', padding:'10px'}}
                                         title="Resume"
                                         onClick={() => {
                                             setcanvas('Resume')
                                             ESSToggle(item.id, 'Resume')
                                         }}
                                         >
-                                        Resume
+                                        <span className="mr-1"><FileText size={12}/> </span>Resume
                                     </button>
-                          </div>
+         </DropdownItem>
+        </DropdownMenu>
+      </Dropdown> 
+                            </div>
+                            <div className="col-md-12 d-flex justify-content-center" style={{marginTop: -30}}>
+  {item.profile_image ?   <div className="rounded-circle overflow-hidden border border-secondary" style={{height: '70px', width: '70px'}}>
+      <img src={`${Api.BaseUrl}${item.profile_image}`} className="w-100 h-100 object-fit-cover" alt="logo" />
+    </div>  : <div className="rounded-circle overflow-hidden border border-secondary" style={{height: '70px', width: '70px'}}>
+      <img src={user_blank} className="w-100 h-100 object-fit-cover" alt="logo" />
+    </div>
+  }   
+                            </div>
+                            
+                            <div className="col-md-12 d-flex justify-content-center mt-1">
+                                <strong className="text-nowrap">{item.name ? item.name : <Badge color="light-danger">N/A</Badge>}</strong>
+                            </div>
+                            <div className="col-md-12 d-flex justify-content-center">
+                                @{item.position_title ? item.position_title : <Badge color="light-danger">N/A</Badge>}
+                            </div>  
                         </div>
                     </CardBody>
                 </Card> 
@@ -389,6 +400,12 @@ const Employees = ({ employeeList, CallBack, type }) => {
             {canvas === 'Resume' ? <Preview name={name} location={location} mobile={mobile} email={email} summary={summary} accomplishments={accomplishments} experiences={experiences} educations={educations}/>  : null}
           </OffcanvasBody>
         </Offcanvas>
+        {/* <Modal isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+        <ModalBody>
+            <AssignModel employee={empID} CallBack={toggle}/>
+        </ModalBody>
+        </Modal> */}
     </Fragment>
    )
 }

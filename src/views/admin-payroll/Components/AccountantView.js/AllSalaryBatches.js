@@ -1,14 +1,17 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import apiHelper from '../../../Helpers/ApiHelper'
 import { Spinner, Card, CardBody, Badge, Button } from 'reactstrap'
 import { ArrowRight } from 'react-feather'
+import Tabs from './Tabs'
 
-const Index = () => {
+const SalaryBatches = () => {
   const Api = apiHelper()
-  const history = useHistory()
+  // const history = useHistory()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
+  const [showAccountantView, setshowAccountantView] = useState(false)
+  const [batchData, setBatchData] = useState(null)
 
   const getData = async () => {
     
@@ -29,12 +32,17 @@ const Index = () => {
     }
   }
 
+  // const handleProceed = (item) => {
+  //   // Navigate to the HrProcess component and pass data
+  //   history.push({
+  //     pathname: '/accountant/payroll',
+  //     state: { batchData: item }
+  //   })
+  // }
   const handleProceed = (item) => {
-    // Navigate to the HrProcess component and pass data
-    history.push({
-      pathname: '/accountant/payroll',
-      state: { batchData: item }
-    })
+    // Set the state to show the HrProcess component and pass data
+    setBatchData(item)
+    setshowAccountantView(true)
   }
 
   useEffect(() => {
@@ -43,6 +51,7 @@ const Index = () => {
 
   return (
     <Fragment>
+      {!showAccountantView ? <>
       {!loading ? (
         <>
         {data.length > 0 ? <>
@@ -96,9 +105,9 @@ const Index = () => {
         <div className='text-center'>
           <Spinner type='grow' color='primary' />
         </div>
-      )}
+      )} </> : <Tabs batchData={batchData}/> }
     </Fragment>
   )
 }
 
-export default Index
+export default SalaryBatches

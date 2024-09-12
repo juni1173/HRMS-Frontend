@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState, useCallback } from "react"
 import { Spinner, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col} from "reactstrap"
  import apiHelper from "../Helpers/ApiHelper"
 import AddTicket from "./Components/AddTicket"
+import AssignedTickets from "./Components/Admin/AssignedTickets"
 import TransferTickets from "./Components/Admin/TransferTickets"
 import AssignedList from "./Components/AssignedList"
 import LeadApprovals from "./Components/LeadApprovals"
@@ -58,59 +59,8 @@ const TicketsModule = () => {
           }, [ticketData])
    return (
     <Fragment>
-        <AddTicket CallBack={CallBack}/>
+        <AddTicket CallBack={CallBack} toggle={toggle} active={active}/>
         
-            <Nav tabs className='course-tabs'>
-                                    {/* <div className='col-md-6'> */}
-                                        <NavItem >
-                                        <NavLink
-                                            active={active === '1'}
-                                            onClick={() => {
-                                            toggle('1')
-                                            }}
-                                        >
-                                        <span style={{ marginRight: '8px' }}>Tickets</span>
-                                        {/* <Badge color="success">{countData && countData.general_ticket_count}</Badge> */}
-                                        </NavLink>
-                                        </NavItem>
-                                    {/* </div>
-                                    <div className='col-md-6'> */}
-                                        <NavItem >
-                                        <NavLink
-                                            active={active === '2'}
-                                            onClick={() => {
-                                            toggle('2')
-                                            }}
-                                        >
-                                            <span style={{ marginRight: '8px' }}>Lead Approvals</span>
-                                            {/* <Badge color="danger">{countData && countData.procurement_ticket_count}</Badge> */}
-                                        </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                        <NavLink
-                                            active={active === '3'}
-                                            onClick={() => {
-                                            toggle('3')
-                                            }}
-                                        >
-                                            <span style={{ marginRight: '8px' }}>Assigned To You</span>
-                                            {/* <Badge color="danger">{countData && countData.procurement_ticket_count}</Badge> */}
-                                        </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                        <NavLink
-                                            active={active === '4'}
-                                            onClick={() => {
-                                            toggle('4')
-                                            }}
-                                        >
-                                            <span style={{ marginRight: '8px' }}>Transferred To You</span>
-                                            {/* <Badge color="danger">{countData && countData.procurement_ticket_count}</Badge> */}
-                                        </NavLink>
-                                        </NavItem>
-                                    
-                                    {/* </div> */}
-            </Nav>
             <TabContent className='py-50' activeTab={active}>
             <TabPane tabId={'1'}>
                 {!loading ? (
@@ -130,7 +80,7 @@ const TicketsModule = () => {
             </TabPane>
             <TabPane tabId={'3'}>
             {!loading ? (
-                    active === '3' ? <AssignedList type="assigned"/> : null
+                    active === '3' ? <AssignedTickets type="assigned"/> : null
                 ) : (
                     <div className="text-center"><Spinner/></div> 
                 )}

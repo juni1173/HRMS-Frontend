@@ -167,13 +167,13 @@ const index = ({ type, countData }) => {
         {!loading ? (
             <>
             {type === 'recheck' && (
-                <EmployeeList data={recheckData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr}} type={type} CallBack={CallBack} />
+                <EmployeeList data={recheckData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr, objectiveData: objectiveDropdownArr}} type={type} CallBack={CallBack} />
             )}
             {type === 'cancel' && (
-                <EmployeeList data={cancelData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr}} type={type} CallBack={CallBack} />
+                <EmployeeList data={cancelData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr, objectiveData: objectiveDropdownArr}} type={type} CallBack={CallBack} />
             ) }
             {(type !== 'cancel' && type !== 'recheck') && (
-                <EmployeeList data={TLData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr}} type={type} CallBack={CallBack} />
+                <EmployeeList data={TLData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr, objectiveData: objectiveDropdownArr}} type={type} CallBack={CallBack} />
                 
             )}
             </>

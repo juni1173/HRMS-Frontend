@@ -10,6 +10,7 @@ import ExperienceDetail from "./AddEmployee/ExperienceDetail"
 import SkillDetail from "./AddEmployee/SkillDetail"
 import DependentDetail from "./AddEmployee/DependentDetail"
 import EmpProjectRole from "./AddEmployee/EmpProjectRole"
+import Index from "./ESS-Scripts"
 const employeeInformation = () => {
     const ref = useRef(null)
     const [stepper, setStepper] = useState(null)
@@ -19,6 +20,7 @@ const employeeInformation = () => {
     const CallBack = (data) => {
       setLoading(true)
       set_emp_state(data)
+      // console.log(data)
       setState(true)
       setTimeout(() => {
         setLoading(false)
@@ -86,6 +88,12 @@ const employeeInformation = () => {
               subtitle: 'Enter Your Details.',
               content: <DependentDetail stepper={stepper} emp_state={emp_state}/>
             
+          },
+          {
+            id: 'ess-script',
+            title: 'ESS Scripts',
+            subtitle: 'Enter Your Details.',
+            content: <Index stepper={stepper} id={emp_state.emp_data.id}/>
           }
           ]
         ) : (

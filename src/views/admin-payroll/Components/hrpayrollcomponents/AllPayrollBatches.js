@@ -1,13 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import apiHelper from '../../../Helpers/ApiHelper'
 import { Spinner, Card, CardBody, Badge, Button } from 'reactstrap'
 import { ArrowRight } from 'react-feather'
+import HrProcess from './list'
 
 const Index = () => {
   const Api = apiHelper()
-  const history = useHistory()
+  // const history = useHistory()
   const [loading, setLoading] = useState(false)
+  const [showHrProcess, setShowHrProcess] = useState(false)
+  const [batchData, setBatchData] = useState(null)
   const [data, setData] = useState([])
 
   const getData = async () => {
@@ -28,12 +31,16 @@ const Index = () => {
     }
   }
 
+  // const handleProceed = (item) => {
+  //   // Navigate to the HrProcess component and pass data
+  //   history.push({
+  //     pathname: '/hr/payroll',
+  //     state: { batchData: item }
+  //   })
+  // }
   const handleProceed = (item) => {
-    // Navigate to the HrProcess component and pass data
-    history.push({
-      pathname: '/hr/payroll',
-      state: { batchData: item }
-    })
+    setBatchData(item)
+    setShowHrProcess(true)
   }
 
   useEffect(() => {
@@ -42,6 +49,7 @@ const Index = () => {
 
   return (
     <Fragment>
+      {!showHrProcess ? <> 
       {!loading ? (
         <>
           {data.map((item, key) => (
@@ -94,6 +102,7 @@ const Index = () => {
           <Spinner type='grow' color='primary' />
         </div>
       )}
+      </> : <HrProcess batchData={batchData} /> }
     </Fragment>
   )
 }

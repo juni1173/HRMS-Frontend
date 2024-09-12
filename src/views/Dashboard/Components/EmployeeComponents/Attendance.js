@@ -20,7 +20,7 @@ const Attendance = ({atndceData, CallBack}) => {
     const [notify, setNotify] = useState(false)
     const [teamLead, setTeamLead] = useState('')
     const types_choices = [
-        {value:'office', label: 'office'},
+        // {value:'office', label: 'office'},
         {value: 'WFH', label: 'WFH'}
     ]
     const typeChange = (e) => {

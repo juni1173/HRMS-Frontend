@@ -151,7 +151,7 @@ getData()
                 {Object.values(data).length > 0 ? (
                     <Row>
                         <Col md={12}>
-                            <Table bordered striped responsive className='my-1'>
+                        <Table bordered striped responsive className='my-1'>
                                     <thead className='table-dark text-center'>
                                     <tr>
                                         <th scope="col" className="text-nowrap">

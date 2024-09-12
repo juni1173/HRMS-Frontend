@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, Suspense } from 'react'
-import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
+// import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import {
   Row,
   Col,
@@ -33,9 +33,9 @@ import { Save, PlusCircle, CheckCircle, Lock, Unlock, Plus } from 'react-feather
 import SalaryBatch from './SalaryBatchForm'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-const HrProcess = () => {
+const HrProcess = ({batchData}) => {
   const Api = apiHelper()
-  const location = useLocation()
+  // const location = useLocation()
   const [batchdata, setBatchData] = useState([])
   const [addondata, setaddonData] = useState([])
   const [deductiondata, setdeductiondata] = useState([])
@@ -61,7 +61,7 @@ const HrProcess = () => {
     setLoading(true)
     try {
       const formData = new FormData()
-      formData['payroll_batch'] = location.state.batchData.id
+      formData['payroll_batch'] = batchData.id
       const response = await Api.jsonPost(`/payroll/get/salary/batch/`, formData)
       const hrviewResponse = await Api.jsonPost(`/payroll/salary/attributes/list/`, formData)
       if (hrviewResponse.status === 200) {
@@ -343,7 +343,7 @@ const HrProcess = () => {
           <div className='text-center mb-2'>
             <h1>Salary Batch</h1>
           </div>
-            <SalaryBatch batch={location.state.batchData} CallBack={CallBack} DiscardModal={DiscardModal}/>  
+            <SalaryBatch batch={batchData} CallBack={CallBack} DiscardModal={DiscardModal}/>  
         </ModalBody>
       </Modal>
     </div>

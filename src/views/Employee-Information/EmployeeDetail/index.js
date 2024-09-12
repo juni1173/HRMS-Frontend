@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect} from "react"
-import { Edit, Plus, XCircle} from "react-feather"
+import { Edit, Plus, XCircle, Check} from "react-feather"
 import {Modal, ModalBody, ModalHeader, Card, CardBody, CardTitle, Spinner, Table, Badge, Button, Input} from "reactstrap"
 import UpdatePersonalDetail from "../AddEmployee/PersonalDetail/updatePersonalDetail"
 import UpdateOfficeDetail from "../AddEmployee/OfficeDetail/UpdateOfficeDetail"
@@ -19,7 +19,7 @@ import CreateProjectRole from "../CreateEmployeeComponents/CreateProjectRole"
 import {useParams} from "react-router-dom" 
 import apiHelper from "../../Helpers/ApiHelper"
 import EmployeeHelper from "../../Helpers/EmployeeHelper"
-import user_blank  from "../../../assets/images/avatars/user_blank.png"
+// import user_blank  from "../../../assets/images/avatars/user_blank.png"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
@@ -44,7 +44,17 @@ const EmployeeDetail = () => {
         employee_skills: [],
         employee_project_roles: []
     })
-
+    const renderUserImg = () => {
+        return (
+          <img
+            height='110'
+            width='110'
+            alt='user-avatar'
+            src={`${process.env.REACT_APP_PUBLIC_URL}${empData.employee.profile_image}`}
+            className='img-fluid rounded mt-3 mb-2'
+          />
+        )
+    }
     const BloodGrup = [
         {value: "A+", label: "A+"},
         {value: "A-", label: "A-"},
@@ -260,7 +270,7 @@ const EmployeeDetail = () => {
     
     return (
             <Fragment>
-                <Card className="emplyee_personal_detail">
+                {/* <Card className="emplyee_personal_detail">
                     <CardTitle>
                         <div className="row bg-blue">
                                 <div className="col-lg-4 col-md-4 col-sm-4"></div>
@@ -316,7 +326,110 @@ const EmployeeDetail = () => {
                     ) : (
                         <div className="text-center"><Spinner /></div>
                     )}
-                </Card>
+                </Card> */}
+ <Fragment>
+            <Card>
+            {!loading ? (
+                    Object.values(empData.employee).length > 0 ? (
+                    <>
+              <CardBody>
+                <div className='user-avatar-section'>
+                  <div className='d-flex align-items-center flex-column'>
+                    {renderUserImg()}
+                    <div className='d-flex flex-column align-items-center text-center'>
+                      <div className='user-info'>
+                        <h4>{empData.employee.name ? empData.employee.name : 'N/A'}</h4>
+                          <Badge color="secondary" className='text-capitalize'>
+                          {empData.employee.position_title ? empData.employee.position_title : 'N/A'}
+                          </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='d-flex justify-content-around my-2 pt-75'>
+                  <div className='d-flex align-items-start me-2'>
+                    <Badge color='light-primary' className='rounded p-75'>
+                      <Check className='font-medium-2' />
+                    </Badge>
+                    {/* <div className='ms-75'>
+                      <h4 className='mb-0'>1.23k</h4>
+                      <small>Tasks Done</small>
+                    </div> */}
+                  </div>
+                  {/* <div className='d-flex align-items-start'>
+                    <Badge color='light-primary' className='rounded p-75'>
+                      <Briefcase className='font-medium-2' />
+                    </Badge>
+                    <div className='ms-75'>
+                      <h4 className='mb-0'>568</h4>
+                      <small>Projects Done</small>
+                    </div>
+                  </div> */}
+                </div>
+                <h4 className='fw-bolder border-bottom pb-50 mb-1'>Details</h4>
+                <div className='info-container'>
+                  {/* {selectedUser !== null ? ( */}
+                    <ul className='list-unstyled'>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Name:</span>
+                        <span>{empData.employee.name ? empData.employee.name : 'N/A'}</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Personal Email:</span>
+                        <span>{empData.employee.personal_email ? empData.employee.personal_email : 'N/A'}</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Father Name:</span>
+                        <Badge className='text-capitalize' color="light-success">
+                        {empData.employee.father_name ? empData.employee.father_name : 'N/A'}
+                        </Badge>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>D-O-B:</span>
+                        <span className='text-capitalize'>{empData.employee.dob ? empData.employee.dob : 'N/A'}</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>CNIC:</span>
+                        <span>{empData.employee.cnic_no ? empData.employee.cnic_no : 'N/A'}</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Passport NO:</span>
+                        <span>{empData.employee['passport_data'][0] ? empData.employee['passport_data'][0].passport_no : 'N/A'}</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Passport Expiry Date:</span>
+                        <span>{empData.employee['passport_data'][0] ? empData.employee['passport_data'][0].date_of_expiry : 'N/A'}</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Blood Group:</span>
+                        <span>{BloodGrup.find(pre => pre.value === empData.employee.blood_group) ? BloodGrup.find(pre => pre.value === empData.employee.blood_group).label : 'N/A'}</span>
+                      </li>
+                      <li className='mb-75'>
+                        <span className='fw-bolder me-25'>Gender:</span>
+                        <span>{Gender.find(pre => pre.value === empData.employee.gender) ? Gender.find(pre => pre.value === empData.employee.gender).label : 'N/A'}</span>
+                      </li>
+                    </ul>
+                  {/* ) : null} */}
+                </div>
+                {/* <div className='d-flex justify-content-center pt-2'>
+                  <Button color='primary' onClick={() => setShow(true)}>
+                    Edit
+                  </Button>
+                  <Button className='ms-1' color='danger' outline onClick={handleSuspendedClick}>
+                    Suspended
+                  </Button>
+                </div> */}
+              </CardBody>
+              </>) : (
+                            <CardBody>
+                                No Data Found
+                            </CardBody>
+                    )) : (
+                        <div className="text-center"><Spinner /></div>
+                    )}
+                
+            </Card>
+          </Fragment>
 
                 <Card className="emplyee_office_detail">
                     <CardTitle>

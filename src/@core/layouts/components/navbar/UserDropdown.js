@@ -1,6 +1,6 @@
 // ** React Imports
 import { Link, Redirect } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import {  useEffect } from 'react'
 
 // ** Custom Components
 import Avatar from '@components/avatar'
@@ -25,16 +25,16 @@ const UserDropdown = () => {
   // const [userData] = useState(null)
   const Api = apiHelper()
   const dispatch = useDispatch()
-  const [userData, setUserData] = useState(null)
+  // const [userData, setUserData] = useState(null)
   // const history = useHistory()
   //** ComponentDidMount
   useEffect(() => {
     if (isUserLoggedIn() !== null) {
       if (JSON.parse(localStorage.getItem('userData'))) {
         if (JSON.parse(localStorage.getItem('userData')).user_role === 'employee') {
-          setUserData(JSON.parse(localStorage.getItem('user')))
+          // setUserData(JSON.parse(localStorage.getItem('user')))
        } else {
-        setUserData(JSON.parse(localStorage.getItem('user')))
+        // setUserData(JSON.parse(localStorage.getItem('user')))
        }
       }
     }
@@ -54,10 +54,10 @@ const UserDropdown = () => {
   return (
     <UncontrolledDropdown tag='li' className='dropdown-user nav-item'>
       <DropdownToggle href='/' tag='a' className='nav-link dropdown-user-link' onClick={e => e.preventDefault()}>
-        <div className='user-nav d-sm-flex d-none'>
+        {/* <div className='user-nav d-sm-flex d-none'>
           <span className='user-name fw-bold'>{(userData && userData.name) || 'user'}</span>
           <span className='user-status'>{localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).user_role : ''}</span>
-        </div>
+        </div> */}
         <Avatar img={userAvatar !== '' ? `${process.env.REACT_APP_PUBLIC_URL}${userAvatar}` : defaultAvatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>
       <DropdownMenu end>

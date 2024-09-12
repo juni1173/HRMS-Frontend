@@ -177,8 +177,7 @@ const GymReport = () => {
                                                 <td className='nowrap'>{item.date ? item.date : 'N/A'}</td>
                                                 <td>{item.amount ? item.amount : 'N/A'}</td>
                                                 <td>{item.gym_monthly_limit ? item.gym_monthly_limit : 'N/A'}</td>
-                                                {/* <td>{item.gym_receipt ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.gym_receipt}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.gym_receipt}`} width={20} height={20}/></a> : 'N/A'}</td> */}
-                                                <td>{item.gym_receipt ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.gym_receipt}`}> <DownloadCloud size={20}/></a> : 'N/A'}</td>
+                                                <td>{item.gym_receipt ? <a target='_blank' href={`${process.env.REACT_APP_PUBLIC_URL}${item.gym_receipt}`}> <img src={`${process.env.REACT_APP_BACKEND_URL}${item.gym_receipt}`} width={20} height={20}/></a> : 'N/A'}</td>
                                                 <td>{item.status ? <Badge color='light-success'>{item.status}</Badge> : <Badge color='light-danger'>'N/A'</Badge>}</td>
                                                 </tr>
                                                 ) 

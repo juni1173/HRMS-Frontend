@@ -32,6 +32,7 @@ const list = () => {
     const [btnstatus, setBtnStatus] = useState('')
     const [monthvalue, setmonthvalue] = useState(currentMonth)
     const [yearvalue, setyearvalue] = useState(currentYear)
+    const [selectedPk, setSelectedPk] = useState(null)
     const monthOptions = [
         { value: 1, label: 'January' },
         { value: 2, label: 'February' },
@@ -52,7 +53,7 @@ const list = () => {
         yearoptions.push({ value: year, label: year.toString() })
     }
     const types_choices = [
-        {value:'office', label: 'Office'},
+        // {value:'office', label: 'Office'},
         {value: 'WFH', label: 'WFH'}
     ]
     const typeChange = (e) => {
@@ -127,13 +128,21 @@ const list = () => {
     }
     const Check_in = async () => {
         setLoading(true)
-        if (type !== '') {
+        if (btnstatus === 'check_in' && type === '') {
+            Api.Toast('error', 'Please fill all required fields!')
+        } else {
             const formData = new FormData()
             if (check_in_time) formData['check_in'] = `${check_in_time}:00`
             if (date) formData['date'] = Api.formatDate(date)
             if (type) formData['attendance_type'] = type
+            let endPoint
+            if (btnstatus === 'check_in') {
+             endPoint = '/attendance/check_in/'
+            } else if (btnstatus === 'check_in_missing') {
+            endPoint =  `/attendance/check_in/${selectedPk}/` 
+            }
             // return false
-            await Api.jsonPost(`/attendance/check_in/`, formData)
+            await Api.jsonPost(endPoint, formData)
             .then((result) => {
                 if (result) {
                     if (result.status === 200) {
@@ -145,16 +154,17 @@ const list = () => {
                             setType('')
                             setCheckInTime(getCurrentTime)
                             setCheckOutTime(getCurrentTime)
+                            setSelectedPk(null)
                     } else {
                             Api.Toast('error', result.message)
+                            // setSelectedPk(null)
                         
                     }
                 } else {
                     Api.Toast('error', 'Server not responding')
+                    // setSelectedPk(null)
                 }
             })
-        } else {
-            Api.Toast('error', 'Please fill all required fields!')
         }
         setTimeout(() => {
             setLoading(false)
@@ -165,7 +175,13 @@ const Check_out = async () => {
             const formData = new FormData()
             if (check_out_time) formData['check_out'] = `${check_out_time}:00` 
             if (date) formData['date'] = Api.formatDate(date)
-            await Api.jsonPost(`/attendance/check_out/`, formData)
+                let endPoint
+            if (btnstatus === 'check_out') {
+                    endPoint = '/attendance/check_out/'
+                   } else if (btnstatus === 'check_out_missing') {
+                   endPoint =  `/attendance/check_out/${selectedPk}/` 
+                   }
+            await Api.jsonPost(endPoint, formData)
             .then((result) => {
                 if (result) {
                     if (result.status === 200) {
@@ -176,12 +192,15 @@ const Check_out = async () => {
                             setType('')
                             setCheckInTime(getCurrentTime)
                             setCheckOutTime(getCurrentTime)
+                            setSelectedPk(null)
                     } else {
                             Api.Toast('error', result.message)
+                            // setSelectedPk(null)
                         
                     }
                 } else {
                     Api.Toast('error', 'Server not responding')
+                    // setSelectedPk(null)
                 }
             })
         setTimeout(() => {
@@ -302,8 +321,23 @@ const EmployeeList = () => {
                                 <td className='nowrap'>{item.date ? item.date : <Badge color='light-danger'>N/A</Badge>}</td>
                                 <td>{item.attendance_type ? item.attendance_type : <Badge color='light-danger'>N/A</Badge>}</td>
                                 <td>{item.duration ? <Badge color='light-success'>{item.duration}</Badge> : <Badge color='light-danger'>N/A</Badge>}</td>
-                                <td>{item.check_in ? item.check_in : <Badge color='light-danger'>N/A</Badge>}</td>
-                                <td>{item.check_out ? item.check_out : <Badge color='light-danger'>N/A</Badge>}</td>
+                                <td>{item.check_in ? item.check_in : <Button 
+  className='btn btn-success btn-sm' 
+  onClick={() => {
+    setBtnStatus('check_in_missing')
+    setSelectedPk(item.id)
+    setCenteredModal(!centeredModal)
+  }}>
+  Check In
+</Button>
+}</td>
+                                <td>{item.check_out ? item.check_out :  <Button className='btn btn-danger btn-sm'  onClick={() => {
+                            setBtnStatus('check_out_missing')
+                            setSelectedPk(item.id)
+                            setCenteredModal(!centeredModal)
+                        }}>
+                            Check Out
+                        </Button>}</td>
                                 </tr>
                             </tbody>
                         ))
@@ -326,7 +360,7 @@ const EmployeeList = () => {
                 </Table>
             </CardBody>
         </Card>
-        <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered modal-lg'>
+        <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className={`modal-dialog-centered ${btnstatus === 'check_in_missing' || btnstatus === 'check_out_missing' ? 'modal-sm' : 'modal-lg'}`}>
           <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Enter Time</ModalHeader>
           <ModalBody>
                 {!loading ? (
@@ -400,6 +434,24 @@ const EmployeeList = () => {
                            </Col>
                      </Row>
                      )}
+                     { btnstatus === 'check_in_missing' && (
+                        <Row>
+                        <Col md="12">
+                          <h3> Check in</h3></Col>   
+                       <Col md="9" className="mb-1">
+                       <Label className="form-label">
+                        Time
+                       </Label><br></br>
+                           <input className="form-control" type="time" onChange={e => setCheckInTime(e.target.value)} defaultValue={check_in_time}></input>
+                       </Col>
+                           
+                           <Col md="3" className="mb-1">
+                               <Button className='btn btn-primary mt-2 float-right' onClick={Check_in}>
+                               <Clock/>
+                           </Button>
+                           </Col>
+                     </Row>
+                     )}
                      {btnstatus === 'check_out' && (
                           <Row>
                           <Col md="12">
@@ -430,6 +482,23 @@ const EmployeeList = () => {
                           />
                       </Col>
                           <Col md="4" className="mb-1">
+                          <Button className='btn btn-primary mt-2' onClick={Check_out}>
+                              <Clock />
+                          </Button>
+                          </Col>
+                    </Row>
+                     )}
+                      {btnstatus === 'check_out_missing' && (
+                          <Row>
+                          <Col md="12">
+                         <h3> Check out</h3></Col>  
+                      <Col md="9" className="mb-1">
+                      <Label className="form-label">
+                       Time
+                      </Label><br></br>
+                          <input className="form-control" type="time" onChange={e => setCheckOutTime(e.target.value)} defaultValue={check_out_time}></input>
+                      </Col>
+                          <Col md="3" className="mb-1">
                           <Button className='btn btn-primary mt-2' onClick={Check_out}>
                               <Clock />
                           </Button>

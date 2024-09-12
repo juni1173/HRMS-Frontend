@@ -23,8 +23,10 @@ import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import PercentageChart from './Components/PercentageChart'
 import BarChart from './Components/BarChart'
+import LineChart from './Components/LineChart'
+import LineChartjs from './Components/LineChartjs'
 
-const index = () => {
+const index = ({ type }) => {
   const Api = apiHelper()
     const [data, setData] = useState([])
     const [total_working_days, setTotalWorkingDays] = useState(1)
@@ -36,8 +38,9 @@ const index = () => {
     })
     const [loading, setLoading] = useState(false)
     const currentDate = new Date()
+    const firstOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
     const [reportParameters, setReportParameters] = useState({
-        start_date: Api.formatDate(currentDate),
+        start_date: Api.formatDate(firstOfMonth),
         end_date : Api.formatDate(currentDate)
     })
     
@@ -243,52 +246,56 @@ const index = () => {
   
   return (
     <Fragment>
-        <Card>
-      <CardBody>
-      <Row className='mb-2'>
-        <Col md={3}>
-          <Label className='form-label' for='default-picker'>
-            From
-          </Label>
-          <Flatpickr className='form-control'  
-            onChange={ (e) => { onChangeParametersDetailHandler('start_date', 'date', e) }} 
-            id='default-picker' 
-            placeholder='Start Date'
-            defaultValue={reportParameters.start_date && reportParameters.start_date}
-          />
-        </Col>
-        <Col md={3}>
-          <Label className='form-label' for='default-picker'>
-            To
-          </Label>
-          <Flatpickr className='form-control'  
-            onChange={ (e) => { onChangeParametersDetailHandler('end_date', 'date', e) }} 
-            id='default-picker' 
-            placeholder='End Date'
-            defaultValue={reportParameters.end_date && reportParameters.end_date}
-          />
-        </Col>
-        <Col md="4">
-                <Label className="form-label">
-                  Select Department <Badge color='light-danger'>*</Badge>
+      {type !== "dashboard" && (
+            <Card>
+            <CardBody> 
+              
+            <Row className='mb-2'>
+              <Col md={3}>
+                <Label className='form-label' for='default-picker'>
+                  From
                 </Label>
-                <Select
-                    isClearable={false}
-                    className='react-select'
-                    classNamePrefix='select'
-                    name="scale_group"
-                    options={departmentDropdown ? departmentDropdown : ''}
-                    onChange={ (e) => { onChangeDepartmentHandler(e ? e.value : onChangeDepartmentHandler()) }}
-                    menuPlacement="auto" 
-                    menuPosition='fixed'
+                <Flatpickr className='form-control'  
+                  onChange={ (e) => { onChangeParametersDetailHandler('start_date', 'date', e) }} 
+                  id='default-picker' 
+                  placeholder='Start Date'
+                  defaultValue={reportParameters.start_date && reportParameters.start_date}
                 />
-        </Col>
-        <Col md="2">
-          <Button className='btn btn-md btn-primary mt-2' onClick={() => getData()}>Go</Button>
-        </Col>
-    </Row>
-      </CardBody>
-    </Card>
+              </Col>
+              <Col md={3}>
+                <Label className='form-label' for='default-picker'>
+                  To
+                </Label>
+                <Flatpickr className='form-control'  
+                  onChange={ (e) => { onChangeParametersDetailHandler('end_date', 'date', e) }} 
+                  id='default-picker' 
+                  placeholder='End Date'
+                  defaultValue={reportParameters.end_date && reportParameters.end_date}
+                />
+              </Col>
+              <Col md="4">
+                      <Label className="form-label">
+                        Select Department <Badge color='light-danger'>*</Badge>
+                      </Label>
+                      <Select
+                          isClearable={false}
+                          className='react-select'
+                          classNamePrefix='select'
+                          name="scale_group"
+                          options={departmentDropdown ? departmentDropdown : ''}
+                          onChange={ (e) => { onChangeDepartmentHandler(e ? e.value : onChangeDepartmentHandler()) }}
+                          menuPlacement="auto" 
+                          menuPosition='fixed'
+                      />
+              </Col>
+              <Col md="2">
+                <Button className='btn btn-md btn-primary mt-2' onClick={() => getData()}>Go</Button>
+              </Col>
+            </Row>
+            </CardBody>
+          </Card>
+          )}
+        
       <Row className='match-height'>
         <Col md='6'>
             <Card className='mb-2'>
@@ -304,7 +311,7 @@ const index = () => {
                 ) : (
                     <CardBody className='pb-0'>
                         <h3 className='text-center'>Annual / Casual</h3>
-                        <h3 className='text-center'>N/A</h3>
+                        {/* <h3 className='text-center'>N/A</h3> */}
                     </CardBody>
                 )
                 
@@ -330,19 +337,22 @@ const index = () => {
             )}
             </Card>
         </Col>
-        
-          {countData.Presents > 0 && (
+          
+          {type !== 'dashboard' && countData.Presents > 0 && (
             <Col md='6'>
               <PercentageChart data={countData.Presents} total={(countData.Presents / (countData.Employees * total_working_days)) * 100} employeeTotal={(countData.Employees * total_working_days)} label='WFO Rate'/>
             </Col>
           )}
-          {countData.WFH > 0 && (
+          {type !== 'dashboard' && countData.WFH > 0 && (
             <Col md='6'>
               <PercentageChart data={countData.WFH} total={(countData.WFH / (countData.Employees * total_working_days)) * 100} employeeTotal={(countData.Employees * total_working_days)} label='WFH Rate'/>
             </Col>
           )}
-          {(ChartData.categories !== '' && ChartData.percentage !== '') && (
+          {type !== 'dashboard' && (ChartData.categories !== '' && ChartData.percentage !== '') && (
               <BarChart categories={ChartData.categories} percentage={ChartData.percentage} />
+          )}
+          {(ChartData.categories !== '' && ChartData.percentage !== '') && (
+              <LineChartjs categories={ChartData.categories} percentage={ChartData.percentage} from={reportParameters.start_date} to={reportParameters.end_date}/>
           )}
         {/* <Col md='4'>
             <Card className='mb-2'>

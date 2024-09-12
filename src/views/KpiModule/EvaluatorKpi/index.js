@@ -176,7 +176,7 @@ const index = ({ type, countData }) => {
                 (recheckData && Object.values(recheckData).length > 0) ? (
                     Object.values(recheckData).map((item, key) => (
                     <div key={key}>
-                        <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, batchDropdown: batchDropdownArr}} CallBack={CallBack} type={type}/>
+                        <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, batchDropdown: batchDropdownArr, objectiveData: objectiveDropdownArr}} CallBack={CallBack} type={type}/>
                      </div>    
                     ))
                 
@@ -188,7 +188,7 @@ const index = ({ type, countData }) => {
                 (cancelData && Object.values(cancelData).length > 0) ? (
                     Object.values(cancelData).map((item, key) => (
                     <div key={key}>
-                        <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr}} CallBack={CallBack} type={type}/>
+                        <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr, objectiveData: objectiveDropdownArr}} CallBack={CallBack} type={type}/>
                      </div>    
                     ))
                 
@@ -201,7 +201,7 @@ const index = ({ type, countData }) => {
                 Object.values(preData).map((item, key) => (
                     
                 <div key={key}>
-                    <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr}} type={type} CallBack={CallBack} />
+                    <KpiRequests index={key} key={item.id} data={item} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, scaleGroupData: scaleGroup, batchData: batchDropdownArr, objectiveData: objectiveDropdownArr}} type={type} CallBack={CallBack} />
                  </div>    
                 ))
             

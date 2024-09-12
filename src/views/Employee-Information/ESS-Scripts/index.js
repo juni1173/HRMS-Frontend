@@ -2,7 +2,7 @@ import {Fragment, useEffect, useState} from 'react'
 import apiHelper from '../../Helpers/ApiHelper'
 import { Col, Spinner, Row, Progress, Button, Badge, Card, CardBody } from 'reactstrap'
 import { CheckCircle, RefreshCw, XOctagon } from 'react-feather'
-const index = ({id}) => {
+const Index = ({id}) => {
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [logLoading, setlogLoading] = useState(false)
@@ -166,4 +166,4 @@ const index = ({id}) => {
   )
 }
 
-export default index
+export default Index

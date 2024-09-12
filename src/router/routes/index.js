@@ -122,7 +122,7 @@ const Routes = [
   },
   {
     path: '/employeeDetail/:uuid',
-    component: lazy(() => import('../../views/Employee-Information/EmployeeDetail/index'))
+    component: lazy(() => import('../../views/Employee-Information/EmployeeDetail/index1'))
   },
   {
     path: '/email_templates',
@@ -171,6 +171,10 @@ const Routes = [
   {
     path: '/hr/trainings',
     component: lazy(() => import('../../views/LearningDevelopment/Components/Trainings/index'))
+  },
+  {
+    path: '/hr/courses',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Courses/Tabs'))
   },
   {
     path: '/kind_notes',
@@ -227,6 +231,18 @@ const Routes = [
   {
     path: '/admin/dashboard',
     component: lazy(() => import('../../views/Dashboard/Components/AdminDashboard'))
+  },
+  {
+    path: '/admin/learning&development',
+    component: lazy(() => import('../../views/LearningDevelopment'))
+  },
+  {
+    path: '/admin/payroll',
+    component: lazy(() => import('../../views/admin-payroll/Tabs'))
+  },
+  {
+    path: '/admin/jobs',
+    component: lazy(() => import('../../views/Jobs/Tabs'))
   },
   {
     path: '/employee/dashboard',
@@ -338,28 +354,47 @@ const Routes = [
     path: '/tasks',
     component: lazy(() => import('../../views/TasksModule/index'))
   },
+  {
+    path: '/apps',
+    component: lazy(() => import('../../views/Apps'))
+  },
   // Zoom routes
-  // {
-  //   path: '/zoom',
-  //   component: lazy(() => import('../../views/Zoom/index'))
-  // },
-  // {
-  //   path: '/zoommeeting/:id/:pass/:token/:role',
-  //   component: lazy(() => import('../../views/Zoom/Components/JoinMeeting')),
-  //   layout:'BlankLayout'
-  // },
-  // // Email Routes
-  // {
-  //   path: '/email/connect',
-  //   component: lazy(() => import('../../views/EmailIntegrations/index'))
-  // },
-  // {
-  //   path: '/email/panel',
-  //   exact: true,
-  //   appLayout: true,
-  //   className: 'email-application',
-  //   component: lazy(() => import('../../views/EmailIntegrations/EmailComponents/Panel'))
-  // }
+  {
+    path: '/zoom',
+    component: lazy(() => import('../../views/Zoom/index'))
+  },
+  {
+    path: '/zoommeeting/:id/:pass/:token/:role',
+    component: lazy(() => import('../../views/Zoom/Components/JoinMeeting')),
+    layout:'BlankLayout'
+  },
+  {
+    path: '/integerations',
+    component: lazy(() => import('../../views/Integrations/index'))
+  },
+  {
+    path: '/requisition',
+    component: lazy(() => import('../../views/Requisition/index'))
+  },
+  {
+    path: '/hr/requisition',
+    component: lazy(() => import('../../views/Requisition/hrcomponents/index'))
+  },
+  {
+    path: '/email/connect',
+    component: lazy(() => import('../../views/EmailIntegrations/index'))
+  },
+  {
+    path: '/email/panel',
+    exact: true,
+    appLayout: true,
+    className: 'email-application',
+    component: lazy(() => import('../../views/EmailIntegrations/EmailComponents/Panel'))
+  },
+  {
+    path: '/employee/interviews',
+    component: lazy(() => import('../../views/EmpInterviews'))
+  }
   // {
   //   path: '/zoom',
   //   component: lazy(() => import('../../views/Zoom/index'))

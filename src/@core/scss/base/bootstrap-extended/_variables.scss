@@ -30,7 +30,7 @@ $blue: #00cfe8 !default; //$info
 $orange: #ff9f43 !default; //$warning
 $red: #ea5455 !default; //$danger
 
-$primary: $purple !default;
+$primary: #315180 !default;
 $secondary: #82868b !default;
 $success: $green !default;
 $danger: $red !default;
@@ -106,7 +106,7 @@ $spacers: map-merge(
 //
 // Settings for the `<body>` element.
 $body-bg: #f8f8f8 !default;
-$body-color: #6e6b7b !default;
+$body-color: #000 !default;
 
 // Links
 //
@@ -169,7 +169,7 @@ $h4-font-size: $font-size-base * 1.286 !default;
 $h5-font-size: $font-size-base * 1.07 !default;
 
 $headings-font-family: inherit !default;
-$headings-color: #5e5873 !default;
+$headings-color: #000 !default;
 
 $display-font-sizes: (
   1: 6rem,

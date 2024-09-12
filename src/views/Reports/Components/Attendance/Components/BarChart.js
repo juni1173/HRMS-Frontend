@@ -1,13 +1,13 @@
 // ** Third Party Components
-import { useContext } from 'react'
+// import { useContext } from 'react'
 import Chart from 'react-apexcharts'
-import { ThemeColors } from '@src/utility/context/ThemeColors'
+// import { ThemeColors } from '@src/utility/context/ThemeColors'
 
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody, CardSubtitle } from 'reactstrap'
 
 const BarChart = props => {
-    const { colors } = useContext(ThemeColors)
+    // const { colors } = useContext(ThemeColors)
   // ** Chart Options
   const options = {
     chart: {
@@ -21,7 +21,7 @@ const BarChart = props => {
             horizontal: true
           }
     },
-    colors: colors.primary.main,
+    colors: '#315180',
     dataLabels: {
       enabled: true
     },

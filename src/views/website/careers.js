@@ -44,7 +44,7 @@ const CareersPage = () => {
           document.body.appendChild(bootstrapScript)
     
           const templateScript = document.createElement('script')
-          templateScript.src = 'http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/assets/js/template.js'
+          templateScript.src = 'https://kavtech.net/assets/js/template.js'
           document.body.appendChild(templateScript)
         }
     
@@ -64,10 +64,10 @@ const CareersPage = () => {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/style.css" />
+        <link rel="stylesheet" href="https://kavtech.net/style.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         {/* <link rel="stylesheet" href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/assets/font-awesome-4.7.0/css/font-awesome.min.css" /> */}
-        <link href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/assets/css/template.css" rel="stylesheet" type="text/css" />
+        <link href="https://kavtech.net/assets/css/template.css" rel="stylesheet" type="text/css" />
         <title>Careers</title>
       </Helmet>
       <div className="container-fluid" style={{ height: '65px' }}>
@@ -75,12 +75,12 @@ const CareersPage = () => {
                  <div className="nav-animation"></div>
                  <div data-collapse="medium" data-animation="default" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" className="navbar w-nav">
                     <div className="container nav-container" style={{backgroundColor: 'transparent'}}>
-                       <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/index.html" className="brand w-nav-brand"><img src="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/images/logo-white.png" width="200" loading="lazy" alt="Kavtech logo"/></a>
+                       <a href="https://kavtech.net/index.html" className="brand w-nav-brand"><img src="https://kavtech.net/images/logo-white.png" width="200" loading="lazy" alt="Kavtech logo"/></a>
                        <nav role="navigation" className="nav-menu w-nav-menu">
-                          <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/about.html" className="nav-link w-nav-link">About</a><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/our-people.html" className="nav-link w-nav-link">Team</a><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/careers.html" className="nav-link w-nav-link">Careers</a><a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/case-studies.html" className="nav-link w-nav-link">Case Studies</a>
+                          <a href="https://kavtech.net/about.html" className="nav-link w-nav-link">About</a><a href="https://kavtech.net/our-people.html" className="nav-link w-nav-link">Team</a><a href="https://kavtech.net/careers.html" className="nav-link w-nav-link">Careers</a><a href="https://kavtech.net/case-studies.html" className="nav-link w-nav-link">Case Studies</a>
                           <div className="nav-button-wrapper">
                              <div className="button-wrapper">
-                                <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/contact.html" className="button w-button">Give us a call</a>
+                                <a href="https://kavtech.net/contact.html" className="button w-button">Give us a call</a>
                                 <div className="button-background"></div>
                              </div>
                           </div>
@@ -102,12 +102,12 @@ const CareersPage = () => {
                   <p style={{textAlign:'inherit'}}>Where Passion Meets Purpose </p>
               </div>
               <div className="col-md-5 float-right">
-                  <img src="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/images/Careers-Image.png" className="w-100" />
+                  <img src="https://kavtech.net/images/Careers-Image.png" className="banner-img-width" />
               </div>
           </div>
 
       <div className="careers-background">
-            <div className="container mt-5">
+            <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-md-2"></div>
                     <div className="col-md-8">
@@ -134,7 +134,7 @@ const CareersPage = () => {
                             {!loading ? (
                                 Object.values(data).length > 0 ? (
                                     Object.values(data).map((item, index) => (
-                                        <a href={`http://178.128.85.114:30/apply/${item.uuid}`} index={index} target="_blank">
+                                        <a href={`http://kav.smartpems.com/apply/${item.uuid}`} index={index} target="_blank">
                                         <div  className="card text-white careers-card bg-dark" style={{cursor: 'pointer'}}>
                                         <div className="card-body">
                                             <div className="row">
@@ -176,7 +176,7 @@ const CareersPage = () => {
       {/* Footer section */}
       <div className="container footer">
             <div className="row">
-                  <div class="col-md-4">
+                  {/* <div class="col-md-6">
                       <h5 className='text-white'>Corporate Lahore</h5>
                       <div class="row">
                         <div class="col-lg-1"><MapPin color='white'/></div>
@@ -190,8 +190,8 @@ const CareersPage = () => {
                           <p><a href="tel:04232291104">(042) 32291104</a></p>
                         </div>
                       </div>
-                  </div>
-                  <div class="col-md-4">
+                  </div> */}
+                  <div class="col-md-6">
                       <h5 className='text-white'>Los Angeles, USA</h5>
                       <div class="row">
                         <div class="col-lg-1"><MapPin color='white'/></div>
@@ -204,8 +204,8 @@ const CareersPage = () => {
                         </div>
                       </div>
                   </div>
-                  <div class="col-md-4">
-                      <h5 className='text-white'>Dev Lahore</h5>
+                  <div class="col-md-6">
+                      <h5 className='text-white'>Lahore, Pakistan</h5>
                       <div class="row">
                         <div class="col-lg-1"><MapPin color='white'/></div>
                         <div class="col-lg-10"><p>P.M Bhatti Building, Major Mustafa Sabir Shaheed Rd, Block D Divine Gardens, Lahore</p>
@@ -222,16 +222,16 @@ const CareersPage = () => {
                 <div class="col-md-6">
                   <div class="d-flex justify-content-start">
                     <div class="p-2">
-                      <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/services.html">Services</a>
+                      <a href="https://kavtech.net/services.html">Services</a>
                     </div>
                     <div class="p-2">
-                      <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/pricing.html">Pricing</a>
+                      <a href="https://kavtech.net/pricing.html">Pricing</a>
                     </div>
                     <div class="p-2">
-                      <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/our-values.html">Our Values</a>
+                      <a href="https://kavtech.net/our-values.html">Our Values</a>
                     </div>
                       <div class="p-2">
-                      <a href="http://kavtech.sgp1.cdn.digitaloceanspaces.com/staging/contact.html">Contact</a>
+                      <a href="https://kavtech.net/contact.html">Contact</a>
                     </div>
                   </div>
                 </div>

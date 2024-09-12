@@ -229,6 +229,19 @@ p.label{
 	text-align: center;
 	margin: auto;
   }
+  .bg-lightgrey {
+	background-color: #E9E2E3;
+	padding : 10px 10px;
+	text-align: center;
+	margin: auto;
+	border-radius: 20px;
+  }
+  .bg-lightgrey h4{
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	font-weight: 600;
+	padding: 0 10px;
+  }
   .cursor-pointer{
 	cursor:pointer;
   }
@@ -402,3 +415,120 @@ div.configuration_panel .tab-pane-orange {
   .congratulation-medal{
 	right:-55px;
   }
+  .Small-font{
+	font-size: 10px !important;
+  }
+  .attendance-card {
+//   border: 1px solid #e4e9f2;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge-up {
+  font-size: 14px;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.check-time-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.check-time {
+  text-align: center;
+}
+
+.time-title {
+  font-size: 14px;
+  color: #888;
+}
+
+.time {
+  font-size: 16px;
+  font-weight: bold;
+}
+.detail-table td{
+	color: black;
+	font-weight: 500;
+  }
+  .progress-bar-white .progress-bar{
+	background-color: #fff;
+  }
+  
+  /* CSS */
+  .button-47 {
+	align-items: center;
+	background: #FFFFFF;
+	border: 0 solid #E2E8F0;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	box-sizing: border-box;
+	color: #1A202C;
+	display: inline-flex;
+	font-family: Inter, sans-serif;
+	font-size: 1rem;
+	font-weight: 700;
+	height: 56px;
+	justify-content: center;
+	line-height: 24px;
+	overflow-wrap: break-word;
+	padding: 24px;
+	text-decoration: none;
+	width: auto;
+	border-radius: 8px;
+	cursor: pointer;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+  }
+
+  .approval-table {
+	border: 1px solid #dee2e6;
+	border-radius: 0.25rem;
+  }
+  
+  .table-header {
+	background-color: #f8f9fa;
+  }
+  
+  .table-header th {
+	font-weight: bold;
+	text-align: center;
+  }
+  
+  tbody tr {
+	transition: background-color 0.3s ease;
+  }
+  
+  tbody tr:hover {
+	background-color: #f1f1f1;
+  }
+  
+  .react-select-container {
+	width: 100%;
+  }
+  
+  .badge-info {
+	background-color: #17a2b8;
+  }
+  
+  .shadow-sm {
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+  }
+  
+  .text-danger {
+	color: #dc3545 !important;
+  }
+  
+  .text-center {
+	text-align: center;
+  }
+  

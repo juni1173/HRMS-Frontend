@@ -14,8 +14,8 @@
       // Sidebar menu list items
       
       .list-group .list-group-item {
-        background-color: #315180;
-        color: white;
+        background-color: #fff;
+        color: #000;
         padding: 0.58rem 1.5rem;
         border: 0;
         font-weight: $font-weight-bold;
@@ -30,13 +30,13 @@
         &:focus,
         &.active {
           background: transparent;
-          color: #315180;
-          background-color: white;
+          color: white;
+          background-color: #315180;
         }
         &.active {
-          border-color: #315180;
+          border-color: #fff;
           border-bottom: 1px solid lightgray;
-          background-color: white;
+          background-color: #315180;
         }
       }
     }

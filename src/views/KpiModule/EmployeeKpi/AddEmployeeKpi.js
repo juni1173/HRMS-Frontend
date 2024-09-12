@@ -77,7 +77,7 @@ const AddEmployeeKpi = ({ preData, dropdownData, type, CallBack}) => {
             }
             formData['ep_complexity'] = employeeKpiData.ep_complexity
             formData['ep_batch'] = employeeKpiData.ep_batch
-            formData['scale_group'] = 23
+            // formData['scale_group'] = 23
             if (employeeKpiData.employees_project !== '') formData['employee_project'] = employeeKpiData.employees_project
             if (type === 'evaluator') {
                 await Api.jsonPost(`/kpis/team/lead/employees/`, formData).then(result => {

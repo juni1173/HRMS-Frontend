@@ -339,27 +339,36 @@ const Routes = [
     component: lazy(() => import('../../views/TasksModule/index'))
   },
   // Zoom routes
-  {
-    path: '/zoom',
-    component: lazy(() => import('../../views/Zoom/index'))
-  },
-  {
-    path: '/zoommeeting/:id/:pass/:token/:role',
-    component: lazy(() => import('../../views/Zoom/Components/JoinMeeting')),
-    layout:'BlankLayout'
-  },
-  // Email Routes
-  {
-    path: '/email/connect',
-    component: lazy(() => import('../../views/EmailIntegrations/index'))
-  },
-  {
-    path: '/email/panel',
-    exact: true,
-    appLayout: true,
-    className: 'email-application',
-    component: lazy(() => import('../../views/EmailIntegrations/EmailComponents/Panel'))
-  }
+  // {
+  //   path: '/zoom',
+  //   component: lazy(() => import('../../views/Zoom/index'))
+  // },
+  // {
+  //   path: '/zoommeeting/:id/:pass/:token/:role',
+  //   component: lazy(() => import('../../views/Zoom/Components/JoinMeeting')),
+  //   layout:'BlankLayout'
+  // },
+  // // Email Routes
+  // {
+  //   path: '/email/connect',
+  //   component: lazy(() => import('../../views/EmailIntegrations/index'))
+  // },
+  // {
+  //   path: '/email/panel',
+  //   exact: true,
+  //   appLayout: true,
+  //   className: 'email-application',
+  //   component: lazy(() => import('../../views/EmailIntegrations/EmailComponents/Panel'))
+  // }
+  // {
+  //   path: '/zoom',
+  //   component: lazy(() => import('../../views/Zoom/index'))
+  // },
+  // {
+  //   path: '/zoommeeting/:id/:pass/:token/:role',
+  //   component: lazy(() => import('../../views/Zoom/Components/JoinMeeting')),
+  //   layout:'BlankLayout'
+  // }
 ]
 
 export { DefaultRoute, TemplateTitle, Routes }

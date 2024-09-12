@@ -16,7 +16,7 @@ export default function EventsCalender() {
     const getData = async () => {
         setLoading(true)
         try {
-            const result = await Api.get(`/current/month/joining/date/`)
+            const result = await Api.jsonPost(`/current/month/joining/date/`)
             if (result && result.status === 200) {
                 const currentDate = new Date()
                 const currentYear = currentDate.getFullYear()

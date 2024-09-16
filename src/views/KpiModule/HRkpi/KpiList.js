@@ -365,7 +365,7 @@ const KpiList = ({ data, CallBack, index, type }) => {
     ))}
     </>
     ) : (
-        <div className="text-center">No Evaluation Reuests Found!</div>
+        <div className="text-center">No Evaluation Requests Found!</div>
     )
   ) : (
     <div className='text-center'><Spinner color='white'/></div>

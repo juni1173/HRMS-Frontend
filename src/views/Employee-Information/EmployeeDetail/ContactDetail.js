@@ -24,7 +24,7 @@ const ContactDetail = ({empData, CallBack, url_params}) => {
                             <MdContactPhone  color="#315180" size={'18px'}/> <h4>Contact Details</h4>
                         </div>
                         <div>
-                            {Api.role === 'admin' && (
+                            {/* {Api.role === 'admin' && ( */}
                                 <button
                                     className="border-0 no-background float-right"
                                     title="Add Contact"
@@ -33,7 +33,7 @@ const ContactDetail = ({empData, CallBack, url_params}) => {
                                     >
                                     <IoAddCircleOutline  color="#315180" size={'18px'}/> New
                                 </button>
-                            )}
+                            {/* )} */}
                         </div>
                     </div>
                     

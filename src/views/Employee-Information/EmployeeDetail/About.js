@@ -31,7 +31,7 @@ const About = ({empData, CallBack}) => {
                             <FaUserTie color="#315180" size={'18px'}/> <h4>Personal Info</h4>
                         </div>
                         <div>
-                        {Api.role === 'admin' && (
+                        {/* {Api.role === 'admin' && ( */}
                                 <button
                                 className="border-0 no-background float-right"
                                 title="Edit Employee"
@@ -40,7 +40,7 @@ const About = ({empData, CallBack}) => {
                                 >
                                 <RiEditBoxFill color="#315180" size={'18px'}/> update
                             </button>
-                            )}
+                            {/* )} */}
                         </div>
                     </div>
                     

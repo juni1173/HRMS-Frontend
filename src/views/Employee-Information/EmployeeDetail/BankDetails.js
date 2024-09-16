@@ -22,7 +22,7 @@ const BankDetail = ({empData, CallBack, url_params}) => {
                             <RiBankFill  color="#315180" size={'18px'}/> <h4>Bank Details</h4>
                         </div>
                         <div>
-                            {Api.role === 'admin' && (
+                            {/* {Api.role === 'admin' && ( */}
                                 <button
                                     className="border-0 no-background float-right"
                                     title="Add Bank detail"
@@ -31,7 +31,7 @@ const BankDetail = ({empData, CallBack, url_params}) => {
                                     >
                                     <IoAddCircleOutline  color="#315180" size={'18px'}/> New
                                 </button>
-                            )}
+                            {/* )} */}
                         </div>
                     </div>
         </CardTitle>

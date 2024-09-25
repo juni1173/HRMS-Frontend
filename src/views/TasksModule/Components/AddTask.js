@@ -26,6 +26,7 @@ const AddTask = ({ projectsData, CallBack, task, ChildCallBack }) => {
    const [files, setFiles] = useState([])
    
    const [typeDropdown, setTypeDropdown] = useState([])
+   const [hoursError, setHoursError] = useState('')
    const priority_choices = [
     {value: 'Low', label: 'Low'},
     {value: 'Medium', label:'Medium'},
@@ -156,7 +157,9 @@ const AddTask = ({ projectsData, CallBack, task, ChildCallBack }) => {
         InputValue = e.target.files[0].name
     }
     if ((InputName === 'planned_hours' && InputValue > 4.00) || (InputName === 'actual_hours' && InputValue > 4.00) || (InputName === 'account_hours' && InputValue > 4.00)) {
-        Api.Toast('error', `${InputName} is recommended to be less than 4 hours!`)
+        setHoursError(`Planned and Actual hours are recommended to be less than 4 hours!`)
+    } else {
+        setHoursError('')
     }
     setTaskData(prevState => ({
     ...prevState,
@@ -443,7 +446,11 @@ const handleSubmit = async (event) => {
               <Input type="text" name="external_ticket_reference" value={TaskData.external_ticket_reference} onChange={handleExternalTicketChange} className="form-control" />
               {urlValidationMessage && <div className='text-danger'>{urlValidationMessage}</div>}
             </Col>
-            
+            {hoursError !== '' && (
+                <div className=''>
+                    <small className='text-danger'>{hoursError}</small>
+                </div>
+            )}
             {/* <Col md={3} className='mb-1'>
                 <label className='form-label'>
                     Status<Badge color='light-danger'>*</Badge>

@@ -12,6 +12,7 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
          designation : '',
          joiningDate : '',
          leavingDate : '',
+         is_currently_employed: false,
          leavingReason : '',
          experienceLetter : ''
     })
@@ -30,6 +31,8 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
             InputValue = dateFormat
         } else if (InputType === 'file') {
             InputValue = e.target.files[0]
+        } else if (InputType === 'switch') {
+            InputValue = e.target.checked
         }
        
         setExperienceDetail(prevState => ({
@@ -42,13 +45,21 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
    }
     const Submit = async (e) => {
         e.preventDefault()
+        if (!experienceDetail.is_currently_employed && experienceDetail.leavingDate === '') {
+            Api.Toast('error', 'Please fill all required fields')
+            return false
+        }
         if (experienceDetail.companyName !== '' && experienceDetail.designation !== ''
-         && experienceDetail.joiningDate !== '' && experienceDetail.leavingDate !== '') {
+         && experienceDetail.joiningDate !== '') {
             const formData = new FormData()
             formData.append('company_name', experienceDetail.companyName) 
             formData.append('designation', experienceDetail.designation) 
             formData.append('joining_date', experienceDetail.joiningDate) 
-            formData.append('leaving_date', experienceDetail.leavingDate) 
+           if (experienceDetail.is_currently_employed) {
+            formData.append('is_currently_employed', experienceDetail.is_currently_employed) 
+            } else {
+                formData.append('leaving_date', experienceDetail.leavingDate) 
+            }
             formData.append('leaving_reason', experienceDetail.leavingReason) 
             formData.append('experience_letter', experienceDetail.experienceLetter)
          await Api.jsonPost(`/employee/${uuid}/companies/`, formData, false)
@@ -102,17 +113,28 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
             </div>  
         </Col>
         <Col md="6" className="mb-1">
-            <Label className="form-label">
-           Leaving Date <Badge color='light-danger'>*</Badge>
-            </Label>
-            <div className='calendar-container'>
-               <Flatpickr
-                name="leavingDate"  
-                value={experienceDetail.leavingDate ? experienceDetail.leavingDate : ''}
-                placeholder="Leaving Date"
-                onChange={ (date) => { onChangeExperienceHandler('leavingDate', 'date', date) }}
-                className="form-control"    />
-            </div> 
+            {!experienceDetail.is_currently_employed && (
+                <>
+                    <Label className="form-label">
+                    Leaving Date <Badge color='light-danger'>*</Badge>
+                    </Label>
+                    <div className='calendar-container'>
+                        <Flatpickr
+                        name="leavingDate"  
+                        value={experienceDetail.leavingDate ? experienceDetail.leavingDate : ''}
+                        placeholder="Leaving Date"
+                        onChange={ (date) => { onChangeExperienceHandler('leavingDate', 'date', date) }}
+                        className="form-control"   />
+                    </div> 
+                 </>
+            )}
+            
+            <div className='form-check form-switch'>
+                <Input type='switch' name='customSwitch' id='exampleCustomSwitch' onChange={e => onChangeExperienceHandler('is_currently_employed', 'switch', e)}/>
+                <Label for='exampleCustomSwitch' className='form-check-label'>
+                    Currently Working
+                </Label>
+            </div>
         </Col>
     </Row>
     <Row>

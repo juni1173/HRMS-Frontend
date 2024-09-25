@@ -155,7 +155,9 @@ const AddTask = ({ projectsData, CallBack, task, ChildCallBack }) => {
     } else if (InputType === 'file') {
         InputValue = e.target.files[0].name
     }
-
+    if ((InputName === 'planned_hours' && InputValue > 4.00) || (InputName === 'actual_hours' && InputValue > 4.00) || (InputName === 'account_hours' && InputValue > 4.00)) {
+        Api.Toast('error', `${InputName} is recommended to be less than 4 hours!`)
+    }
     setTaskData(prevState => ({
     ...prevState,
     [InputName] : InputValue
@@ -213,7 +215,7 @@ const handleTimeChange = (fieldName, e, onChangeTaskDetailHandler) => {
   
     // Create the adjusted time string
     const adjustedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
-   console.log(adjustedTime)
+   console.warn(adjustedTime)
     // Call the change handler with adjusted time
     onChangeTaskDetailHandler(fieldName, 'hours', { target: { value: adjustedTime } })
   }

@@ -1,44 +1,51 @@
 // ** React Imports
 import { Fragment, useState, useEffect, useCallback } from 'react'
-
 // ** Todo App Components
 import Tasks from './Components/Tasks'
-
 import apiHelper from '../Helpers/ApiHelper'
 import Select from 'react-select'
 // ** Styles
 import '@styles/react/apps/app-todo.scss'
-import { Card, CardBody, Spinner, Nav, NavLink, NavItem, TabContent, TabPane, Badge, Row, Col, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap'
-import { Crosshair, Filter, RefreshCcw, Save, AlignRight } from 'react-feather'
+import { Card, CardBody, Spinner, TabContent, TabPane, Badge, Row, Col, Button } from 'reactstrap'
+import { Filter, RefreshCcw, Save } from 'react-feather'
 
 const index = () => {
     const Api = apiHelper()
-  // ** States
-  const [loading, setLoading] = useState(false)
-  const [taskloading, setTaskLoading] = useState(false)
-  const [filterLoading, setFilterLoading] = useState(false)
-  const [projects, setProjects] = useState([])
-  const [tasks, setTasks] = useState([])
-  const [activeTab, setActiveTab] = useState(0)
-  const [selectedTask, setSelectedTask] = useState(null)
-  const [sortState, setSortState] = useState('all-task')
-  const [filterStatus, setFilterStatus] = useState(false)
-  const [typeDropdown, setTypeDropdown] = useState([])
-  const [statusDropdown, setStatusDropdown] = useState([])
-  const [employeeDropdown, setEmployeeDropdown] = useState([])  
+    // ** States
+    const [loading, setLoading] = useState(false)
+    const [taskloading, setTaskLoading] = useState(false)
+    const [filterLoading, setFilterLoading] = useState(false)
+    const [projects, setProjects] = useState([])
+    const [projDropdown, setProjectDropdown] = useState([])
+    const [tasks, setTasks] = useState([])
+    const [activeTab, setActiveTab] = useState(0)
+    const [selectedTask, setSelectedTask] = useState(null)
+    const [sortState, setSortState] = useState('all-task')
+    const [filterStatus, setFilterStatus] = useState(false)
+    const [typeDropdown, setTypeDropdown] = useState([])
+    const [statusDropdown, setStatusDropdown] = useState([])
+    const [employeeDropdown, setEmployeeDropdown] = useState([])  
 
-  const priority_choices = [
-    {value: 'Low', label: 'Low'},
-    {value: 'Medium', label:'Medium'},
-    {value: 'High', label:'High'}
-   ]
-  const [query, setQuery] = useState({
+    const priority_choices = [
+        {value: 'Low', label: 'Low'},
+        {value: 'Medium', label:'Medium'},
+        {value: 'High', label:'High'}
+    ]
+    const projectDropdown =  (projectsData) => {
+    const arr = []
+    if (projectsData) {
+        for (const pro of projectsData) {
+            arr.push({value: pro.id, label: pro.name})
+        }
+    }
+    return arr
+    }
+    const [query, setQuery] = useState({
     assign_to: null,
     task_type: null,
     priority: null,
     status: null
-})
-  
+    }) 
     const getTaskTypes = async (id = null) => {
         const formData = new FormData()
         if (id) {
@@ -69,8 +76,8 @@ const index = () => {
                 Api.Toast('error', 'Server error!')
             }
         })
-      } 
-      const getStatuses = async (id = null) => {
+    } 
+    const getStatuses = async (id = null) => {
         const formData = new FormData()
         if (id) {
             formData['project'] = id
@@ -100,28 +107,28 @@ const index = () => {
                 Api.Toast('error', 'Server error!')
             }
         })
-      }  
-      const getEmployees = async (id) => {
-        await Api.get(`/taskify/get/project/employee/${id}/`).then(result => {
-            if (result) {
-                if (result.status === 200) {
-                    const employeeData = result.data
-                    if (employeeData.length > 0) {
-                        const arr = []
-                        for (const emp of employeeData) {
-                            arr.push({value: emp.id, label: emp.name, img:emp.profile_image})
-                        }
-                        setEmployeeDropdown(arr)
+    }  
+    const getEmployees = async (id) => {
+    await Api.get(`/taskify/get/project/employee/${id}/`).then(result => {
+        if (result) {
+            if (result.status === 200) {
+                const employeeData = result.data
+                if (employeeData.length > 0) {
+                    const arr = []
+                    for (const emp of employeeData) {
+                        arr.push({value: emp.id, label: emp.name, img:emp.profile_image})
                     }
-                } else {
-                    Api.Toast('error', result.message)
+                    setEmployeeDropdown(arr)
                 }
             } else {
-                Api.Toast('error', 'Server error!')
+                Api.Toast('error', result.message)
             }
-        })
-      }
-      const onChangeTaskQueryHandler = (InputName, InputType, e) => {
+        } else {
+            Api.Toast('error', 'Server error!')
+        }
+    })
+    }
+    const onChangeTaskQueryHandler = (InputName, InputType, e) => {
         if (!e) {
             e = {
               target: InputName,
@@ -202,53 +209,53 @@ const index = () => {
         setTimeout(() => {
             setTaskLoading(false)
         }, 500)
-      }
-  const getData = async () => {
-    await Api.get(`/taskify/get/project/`).then(result => {
-        if (result) {
-            if (result.status === 200) {
-                const projectsData = result.data
-                if (projectsData.length > 0) {
-                    setProjects(projectsData)
-                    getTasks(projectsData[0].id)
-                    setActiveTab(projectsData[0].id)
-                    getTaskTypes(projectsData[0].id)
-                    getStatuses(projectsData[0].id)
-                    getEmployees(projectsData[0].id)
+    }    
+    const getData = async () => {
+        await Api.get(`/taskify/get/project/`).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    const projectsData = result.data
+                    if (projectsData.length > 0) {
+                        setProjects(projectsData)
+                        setProjectDropdown(projectDropdown(projectsData))
+                        getTasks(projectsData[0].id)
+                        setActiveTab(projectsData[0].id)
+                        getTaskTypes(projectsData[0].id)
+                        getStatuses(projectsData[0].id)
+                        getEmployees(projectsData[0].id)
+                    }
+                } else {
+                    Api.Toast('error', result.message)
                 }
             } else {
-                Api.Toast('error', result.message)
+                Api.Toast('error', 'Server error!')
             }
-        } else {
-            Api.Toast('error', 'Server error!')
-        }
-    })
-  }
-
-  const toggleTab = (id, type = null) => {
-    setQuery(prev => ({
-        ...prev,
-        [type]: type
-    }))
-    setActiveTab(id)
-    getTasks(id, query.type, query.status)
-  }
-  const filterClick = () => {
-    setFilterStatus(!filterStatus)
-    setFilterLoading(true)
-    setTimeout(() => {
-        setFilterLoading(false)
-    }, 500)
-}
+        })
+    }
+    const toggleTab = (id, type = null) => {
+        setQuery(prev => ({
+            ...prev,
+            [type]: type
+        }))
+        setActiveTab(id)
+        getTasks(id, query.type, query.status)
+    }
+    const filterClick = () => {
+        setFilterStatus(!filterStatus)
+        setFilterLoading(true)
+        setTimeout(() => {
+            setFilterLoading(false)
+        }, 500)
+    }
   // ** Get Tasks on mount & based on dependency change
-  useEffect(() => {
-    setLoading(true)
-        getData()
-    setTimeout(() => {
-        setLoading(false)
-    }, 500)
-    
-  }, [setProjects])
+    useEffect(() => {
+        setLoading(true)
+            getData()
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
+        
+    }, [setProjects])
     const CallBack = useCallback((id, selectedTaskid, sort) => {
         setActiveTab(id)
         getTasks(id, sort)
@@ -261,8 +268,28 @@ const index = () => {
     <Fragment>
             <Card>
                 <CardBody className='pt-1'>
+                    
                     <Row>
-                        <Col md="3">
+                        <Col md="6">
+                            <h3>Task Management</h3>
+                        </Col>
+                        <Col md="6">
+                            {!loading && (
+                                <Select
+                                isClearable={false}
+                                className='react-select w-75 float-right mb-1'
+                                classNamePrefix='select'
+                                name="project"
+                                options={projDropdown}
+                                placeholder="Select Project"
+                                defaultValue={projDropdown.length > 0 && projDropdown[0]}
+                                isLoading={taskloading}
+                                onChange={ (e) => { toggleTab(e.value) }}
+                            />
+                            )}
+                            
+                        </Col>
+                        {/* <Col md="3">
                             <h3>Task Management</h3>
                         </Col>
                         <Col md="9">
@@ -283,7 +310,7 @@ const index = () => {
                             ) : <div className='text-center'><Spinner size={'18'} type="grow"/> Loading projects...</div>
                             }
                         </Nav>
-                        </Col>
+                        </Col> */}
                     </Row>
                     
               
@@ -293,7 +320,7 @@ const index = () => {
                  
                 </div>
                 <div>
-                <span onClick={filterClick} className='cursor-pointe'><Filter color={filterStatus ? 'darkblue' : 'gray'} size={'18'} title="Filters"/> Filters </span>
+                <span onClick={filterClick} className='cursor-pointer'><Filter color={filterStatus ? 'darkblue' : 'gray'} size={'18'} title="Filters"/> Filters </span>
                 </div>
                 
 
@@ -371,25 +398,25 @@ const index = () => {
                 <hr></hr>
                 <div className='todo-application'>
                 {!taskloading ? (
-    <TabContent activeTab={activeTab}>
-        <TabPane tabId={activeTab}>
-            <Tasks
-                data={tasks}
-                projectsData={projects}
-                CallBack={CallBack}
-                selectedTaskid={selectedTask ? selectedTask : null}
-                project_id={activeTab}
-                employees={employeeDropdown}
-                priorities={priority_choices}
-                types={typeDropdown} // Ensure it's passed when available
-            />
-        </TabPane>
-    </TabContent>
-) : (
-    <div className="text-center">
-        <Spinner size="18" /> Loading tasks...
-    </div>
-)}
+                    <TabContent activeTab={activeTab}>
+                        <TabPane tabId={activeTab}>
+                            <Tasks
+                                data={tasks}
+                                projectsData={projects}
+                                CallBack={CallBack}
+                                selectedTaskid={selectedTask ? selectedTask : null}
+                                project_id={activeTab}
+                                employees={employeeDropdown}
+                                priorities={priority_choices}
+                                types={typeDropdown} // Ensure it's passed when available
+                            />
+                        </TabPane>
+                    </TabContent>
+                ) : (
+                    <div className="text-center">
+                        <Spinner size="18" /> Loading tasks...
+                    </div>
+                )}
 
                 </div>
                  </CardBody>

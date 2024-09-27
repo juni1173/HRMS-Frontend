@@ -5,24 +5,21 @@ import TaskDetail from './TaskDetail'
 const ChildTasks = ({ childTasks, projectsData, employees, priorities, types, onModalToggle }) => {
     const [taskDetailModal, setTaskDetailModal] = useState(false)
     const [selectedTask, setSelectedTask] = useState(null)
-
     const handleTaskClick = (task) => {
         setSelectedTask(task)
         setTaskDetailModal(true)
     }
-
     const toggleModal = () => {
         setTaskDetailModal(!taskDetailModal)
         if (onModalToggle) {
             onModalToggle()  // Trigger the callback to alert parent when the modal is toggled
         }
     }
-
     return (
         <>
             {/* Display child tasks */}
             <div className="child-tasks-container">
-                <ListGroup className="mt-1">
+                <ListGroup className="">
                     {childTasks.length > 0 ? (
                         childTasks.map((task, index) => (
                             <ListGroupItem
@@ -38,8 +35,9 @@ const ChildTasks = ({ childTasks, projectsData, employees, priorities, types, on
                                 <span className="text-dark">{task.title}</span>
                             </ListGroupItem>
                         ))
+                    
                     ) : (
-                        <ListGroupItem className="border-0 p-2">No child tasks available.</ListGroupItem>
+                        <p className="border-0">No child tasks available.</p>
                     )}
                 </ListGroup>
 

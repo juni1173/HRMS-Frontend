@@ -22,111 +22,110 @@ const AddTask = ({ projectsData, CallBack, task, ChildCallBack }) => {
         external_ticket_reference: '',
         status: '',
         description: ''
-   })
-   const [files, setFiles] = useState([])
-   
-   const [typeDropdown, setTypeDropdown] = useState([])
-   const [hoursError, setHoursError] = useState('')
-   const priority_choices = [
-    {value: 'Low', label: 'Low'},
-    {value: 'Medium', label:'Medium'},
-    {value: 'High', label:'High'}
-   ]
-   const [projDropdown, setProjectDropdown] = useState([])
-   const [employeeDropdown, setEmployeeDropdown] = useState([])
-   const [isDisabled, setisDisabled] = useState(false)
-   const [urlValidationMessage, setUrlValidationMessage] = useState('')
+    })
+    const [files, setFiles] = useState([])
+    const [typeDropdown, setTypeDropdown] = useState([])
+    const [hoursError, setHoursError] = useState('')
+    const priority_choices = [
+        {value: 'Low', label: 'Low'},
+        {value: 'Medium', label:'Medium'},
+        {value: 'High', label:'High'}
+    ]
+    const [projDropdown, setProjectDropdown] = useState([])
+    const [employeeDropdown, setEmployeeDropdown] = useState([])
+    const [isDisabled, setisDisabled] = useState(false)
+    const [urlValidationMessage, setUrlValidationMessage] = useState('')
 //    const [statusDropdown, setStatusDropdown] = useState([])
-  const projectDropdown =  () => {
-    const arr = []
-    if (projectsData) {
-        for (const pro of projectsData) {
-            arr.push({value: pro.id, label: pro.name})
-        }
-    }
-    return arr
-  }
-  const getEmployees = async (id) => {
-    await Api.get(`/taskify/get/project/employee/${id}/`).then(result => {
-        if (result) {
-            if (result.status === 200) {
-                const employeeData = result.data
-                if (employeeData.length > 0) {
-                    const arr = []
-                    for (const emp of employeeData) {
-                        arr.push({value: emp.id, label: emp.name})
-                    }
-                    setEmployeeDropdown(arr)
-                }
-            } else {
-                Api.Toast('error', result.message)
+    const projectDropdown =  () => {
+        const arr = []
+        if (projectsData) {
+            for (const pro of projectsData) {
+                arr.push({value: pro.id, label: pro.name})
             }
-        } else {
-            Api.Toast('error', 'Server error!')
         }
-    })
-  }
-  const getTaskTypes = async (id = null) => {
-    const formData = new FormData()
-    if (id) {
-        formData['project'] = id
+        return arr
     }
-    await Api.jsonPost(`/taskify/task/types/pre/data/`, formData).then(result => {
-        if (result) {
-            if (result.status === 200) {
-                const typesData = result.data
-                if (Object.values(typesData).length > 0) {
-                    const defaultTypesArr = []
-                    const projectTypesArr = []
-                    for (const default_types of typesData.default_task_type) {
-                        defaultTypesArr.push({value: default_types.id, label: default_types.title, type: 'default_task_type'})
-                    }
-                    if (Object.values(typesData.project_task_type).length > 0) {
-                        for (const project_types of typesData.project_task_type) {
-                            projectTypesArr.push({value: project_types.id, label: project_types.title, type: 'project_task_type'})
+    const getEmployees = async (id) => {
+        await Api.get(`/taskify/get/project/employee/${id}/`).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    const employeeData = result.data
+                    if (employeeData.length > 0) {
+                        const arr = []
+                        for (const emp of employeeData) {
+                            arr.push({value: emp.id, label: emp.name})
                         }
+                        setEmployeeDropdown(arr)
                     }
-                    setTypeDropdown([...defaultTypesArr, ...projectTypesArr])
+                } else {
+                    Api.Toast('error', result.message)
                 }
             } else {
-                Api.Toast('error', result.message)
+                Api.Toast('error', 'Server error!')
             }
-        } else {
-            Api.Toast('error', 'Server error!')
-        }
-    })
-  }  
-  const getStatuses = async (id = null) => {
-    const formData = new FormData()
-    if (id) {
-        formData['project'] = id
+        })
     }
-    await Api.jsonPost(`/taskify/task/status/pre/data/`, formData).then(result => {
-        if (result) {
-            if (result.status === 200) {
-                const statusData = result.data
-                if (Object.values(statusData).length > 0) {
-                    const defaultStatusArr = []
-                    const projectStatusArr = []
-                    for (const status of statusData.default_status) {
-                        defaultStatusArr.push({value: status.id, label: status.title})
-                    }
-                    if (Object.values(statusData.project_status).length > 0) {
-                        for (const status of statusData.project_status) {
-                            projectStatusArr.push({value: status.id, label: status.title})
+    const getTaskTypes = async (id = null) => {
+        const formData = new FormData()
+        if (id) {
+            formData['project'] = id
+        }
+        await Api.jsonPost(`/taskify/task/types/pre/data/`, formData).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    const typesData = result.data
+                    if (Object.values(typesData).length > 0) {
+                        const defaultTypesArr = []
+                        const projectTypesArr = []
+                        for (const default_types of typesData.default_task_type) {
+                            defaultTypesArr.push({value: default_types.id, label: default_types.title, type: 'default_task_type'})
                         }
+                        if (Object.values(typesData.project_task_type).length > 0) {
+                            for (const project_types of typesData.project_task_type) {
+                                projectTypesArr.push({value: project_types.id, label: project_types.title, type: 'project_task_type'})
+                            }
+                        }
+                        setTypeDropdown([...defaultTypesArr, ...projectTypesArr])
                     }
-                    
-                    // setStatusDropdown([...defaultStatusArr, ...projectStatusArr])
+                } else {
+                    Api.Toast('error', result.message)
                 }
             } else {
-                Api.Toast('error', result.message)
+                Api.Toast('error', 'Server error!')
             }
-        } else {
-            Api.Toast('error', 'Server error!')
+        })
+    }  
+    const getStatuses = async (id = null) => {
+        const formData = new FormData()
+        if (id) {
+            formData['project'] = id
         }
-    })
-  }  
+        await Api.jsonPost(`/taskify/task/status/pre/data/`, formData).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    const statusData = result.data
+                    if (Object.values(statusData).length > 0) {
+                        const defaultStatusArr = []
+                        const projectStatusArr = []
+                        for (const status of statusData.default_status) {
+                            defaultStatusArr.push({value: status.id, label: status.title})
+                        }
+                        if (Object.values(statusData.project_status).length > 0) {
+                            for (const status of statusData.project_status) {
+                                projectStatusArr.push({value: status.id, label: status.title})
+                            }
+                        }
+                        
+                        // setStatusDropdown([...defaultStatusArr, ...projectStatusArr])
+                    }
+                } else {
+                    Api.Toast('error', result.message)
+                }
+            } else {
+                Api.Toast('error', 'Server error!')
+            }
+        })
+    }  
    const onChangeTaskDetailHandler = (InputName, InputType, e) => {
     if (!e) {
         e = {
@@ -156,7 +155,7 @@ const AddTask = ({ projectsData, CallBack, task, ChildCallBack }) => {
     } else if (InputType === 'file') {
         InputValue = e.target.files[0].name
     }
-    if ((InputName === 'planned_hours' && InputValue > 4.00) || (InputName === 'actual_hours' && InputValue > 4.00) || (InputName === 'account_hours' && InputValue > 4.00)) {
+    if ((InputName === 'planned_hours' && InputValue > 4.00) || (InputName === 'actual_hours' && InputValue > 4.00)) {
         setHoursError(`Planned and Actual hours are recommended to be less than 4 hours!`)
     } else {
         setHoursError('')
@@ -167,121 +166,120 @@ const AddTask = ({ projectsData, CallBack, task, ChildCallBack }) => {
     
     }))
 
-}
-const onChangeProject = (e) => {
-    setTaskData(prevState => ({
-        ...prevState,
-        project : '',
-        assign_to: ''
-        }))
-    if (e) {
-        onChangeTaskDetailHandler('project', 'select', e)
-        getTaskTypes(e)
-        getEmployees(e)
-        getStatuses(e)
-    } else {
+    }
+    const onChangeProject = (e) => {
         setTaskData(prevState => ({
             ...prevState,
             project : '',
             assign_to: ''
             }))
-    }
-    
-  }
-useEffect(() => {
-    setProjectDropdown(projectDropdown())
-    getTaskTypes()
-    getStatuses()
-    if (task) {
-        setisDisabled(true)
-    }
-}, [])
-const getProjectTaskType = () => {
-    const taskTypeCheck = typeDropdown.find(pre => (pre.value === TaskData.task_type))
-    if (taskTypeCheck.type === 'project_task_type') {
-        return true
-    } else {
-        return false
-    }
-}
-const handleTimeChange = (fieldName, e, onChangeTaskDetailHandler) => {
-    const value = e.target.value
-    const [hoursStr, minutesStr] = value.split(':')
-    let hours = parseInt(hoursStr, 10) || 0
-    let minutes = parseInt(minutesStr, 10) || 0
-  
-    // Adjust hours and minutes if minutes exceed 59
-    if (minutes > 59) {
-      hours += Math.floor(minutes / 60)
-      minutes = minutes % 60
-    }
-  
-    // Create the adjusted time string
-    const adjustedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
-   console.warn(adjustedTime)
-    // Call the change handler with adjusted time
-    onChangeTaskDetailHandler(fieldName, 'hours', { target: { value: adjustedTime } })
-  }
-  const isValidUrl = (url) => {
-    const pattern = /^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i
-    return pattern.test(url)
-  }
-const handleSubmit = async (event) => {
-    event.preventDefault()
-    if (TaskData.external_ticket_reference !== null && TaskData.external_ticket_reference !== '') {
-    if (!isValidUrl(TaskData.external_ticket_reference)) {
-        setUrlValidationMessage('Please enter a valid URL')
-        return
-    } else {
-        setUrlValidationMessage('')
-    }
-}
-    if (TaskData.title !== '' && TaskData.project !== '' && TaskData.assign_to !== '' && TaskData.description !== ''
-    && TaskData.priority !== '' && TaskData.task_type !== '') {
-      const formData = new FormData()
-      formData.append('title', TaskData.title)
-      formData.append('project', TaskData.project)
-      formData.append('assign_to', TaskData.assign_to)
-      formData.append('description', TaskData.description)
-      formData.append('project_task_type', getProjectTaskType())
-      formData.append('priority',  TaskData.priority)
-    //   formData['attachments'] = files
-     files.forEach(file => {
-        formData.append('attachments', file)
-      })
-      if (TaskData.due_date !== '') formData.append('due_date', TaskData.due_date)
-      if (TaskData.planned_hours !== '') formData.append('planned_hours', TaskData.planned_hours)
-      if (TaskData.actual_hours !== '') formData.append('actual_hours', TaskData.actual_hours)
-      if (TaskData.account_hours !== '') formData.append('account_hour', TaskData.account_hours)
-      if (TaskData.external_ticket_reference !== '') formData.append('external_ticket_reference', TaskData.external_ticket_reference)
-      formData.append('task_type', TaskData.task_type)
-      formData.append('status', TaskData.status)
-      if (task) formData.append('parent', task.id) 
-      await Api.jsonPost(`/taskify/new/task/`, formData, false).then(result => {
-        if (result) {
-          if (result.status === 200) {
-            Api.Toast('success', result.message)
-            if (task) {
-                ChildCallBack()
-            } else {
-            CallBack(TaskData.project) 
-            }
-          } else {
-            Api.Toast('error', result.message)
-          }
+        if (e) {
+            onChangeTaskDetailHandler('project', 'select', e)
+            getTaskTypes(e)
+            getEmployees(e)
+            getStatuses(e)
         } else {
-          Api.Toast('error', 'Server not responding!')
+            setTaskData(prevState => ({
+                ...prevState,
+                project : '',
+                assign_to: ''
+                }))
         }
-      })
-    } else {
-      Api.Toast('error', 'Please fill all the fields')
+        
     }
-  }
-  
-  const handleExternalTicketChange = (e) => {
-    const { value } = e.target
-    setTaskData(prev => ({ ...prev, external_ticket_reference: value }))
-  }
+    useEffect(() => {
+        setProjectDropdown(projectDropdown())
+        getTaskTypes()
+        getStatuses()
+        if (task) {
+            setisDisabled(true)
+        }
+    }, [])
+    const getProjectTaskType = () => {
+        const taskTypeCheck = typeDropdown.find(pre => (pre.value === TaskData.task_type))
+        if (taskTypeCheck.type === 'project_task_type') {
+            return true
+        } else {
+            return false
+        }
+    }
+    const handleTimeChange = (fieldName, e, onChangeTaskDetailHandler) => {
+        const value = e.target.value
+        const [hoursStr, minutesStr] = value.split(':')
+        let hours = parseInt(hoursStr, 10) || 0
+        let minutes = parseInt(minutesStr, 10) || 0
+    
+        // Adjust hours and minutes if minutes exceed 59
+        if (minutes > 59) {
+        hours += Math.floor(minutes / 60)
+        minutes = minutes % 60
+        }
+    
+        // Create the adjusted time string
+        const adjustedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
+    console.warn(adjustedTime)
+        // Call the change handler with adjusted time
+        onChangeTaskDetailHandler(fieldName, 'hours', { target: { value: adjustedTime } })
+    }
+    const isValidUrl = (url) => {
+        const pattern = /^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i
+        return pattern.test(url)
+    }
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        if (TaskData.external_ticket_reference !== null && TaskData.external_ticket_reference !== '') {
+        if (!isValidUrl(TaskData.external_ticket_reference)) {
+            setUrlValidationMessage('Please enter a valid URL')
+            return
+        } else {
+            setUrlValidationMessage('')
+        }
+    }
+        if (TaskData.title !== '' && TaskData.project !== '' && TaskData.assign_to !== '' && TaskData.description !== ''
+        && TaskData.priority !== '' && TaskData.task_type !== '') {
+        const formData = new FormData()
+        formData.append('title', TaskData.title)
+        formData.append('project', TaskData.project)
+        formData.append('assign_to', TaskData.assign_to)
+        formData.append('description', TaskData.description)
+        formData.append('project_task_type', getProjectTaskType())
+        formData.append('priority',  TaskData.priority)
+        //   formData['attachments'] = files
+        files.forEach(file => {
+            formData.append('attachments', file)
+        })
+        if (TaskData.due_date !== '') formData.append('due_date', TaskData.due_date)
+        if (TaskData.planned_hours !== '') formData.append('planned_hours', TaskData.planned_hours)
+        if (TaskData.actual_hours !== '') formData.append('actual_hours', TaskData.actual_hours)
+        if (TaskData.account_hours !== '') formData.append('account_hour', TaskData.account_hours)
+        if (TaskData.external_ticket_reference !== '') formData.append('external_ticket_reference', TaskData.external_ticket_reference)
+        formData.append('task_type', TaskData.task_type)
+        formData.append('status', TaskData.status)
+        if (task) formData.append('parent', task.id) 
+        await Api.jsonPost(`/taskify/new/task/`, formData, false).then(result => {
+            if (result) {
+            if (result.status === 200) {
+                Api.Toast('success', result.message)
+                if (task) {
+                    ChildCallBack()
+                } else {
+                CallBack(TaskData.project) 
+                }
+            } else {
+                Api.Toast('error', result.message)
+            }
+            } else {
+            Api.Toast('error', 'Server not responding!')
+            }
+        })
+        } else {
+        Api.Toast('error', 'Please fill all the fields')
+        }
+    }
+    const handleExternalTicketChange = (e) => {
+        const { value } = e.target
+        setTaskData(prev => ({ ...prev, external_ticket_reference: value }))
+    }
     // Function to handle file drops
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*, .pdf, .doc, .docx',
@@ -293,13 +291,11 @@ const handleSubmit = async (event) => {
         ])
         }
     })
-
     // Function to remove a file
     const removeFile = file => {
         const newFiles = files.filter(f => f.path !== file.path)
         setFiles(newFiles)
     }
-
     // Generate file previews
     const filePreviews = files.map(file => (
         <Col md={3}>
@@ -314,8 +310,6 @@ const handleSubmit = async (event) => {
             </div>
         </Col>
     ))
-
-  
   return (
     <Fragment>
          <Row>
@@ -396,7 +390,7 @@ const handleSubmit = async (event) => {
                 </label>
                 <Flatpickr className='form-control' placeholder='YYYY-MM-DD'  onChange={date => onChangeTaskDetailHandler('due_date', 'date', date)} id='default-picker' />
             </Col>
-            <Col md='3' className='mb-1'>
+            <Col md='4' className='mb-1'>
         <label className='form-label' htmlFor='planned_hours'>
           Planned Hours
         </label>
@@ -410,7 +404,7 @@ const handleSubmit = async (event) => {
           onChange={e => handleTimeChange('planned_hours', e, onChangeTaskDetailHandler)}
         />
       </Col>
-            <Col md='3' className='mb-1'>
+            <Col md='4' className='mb-1'>
             <label className='form-label'>
                     Actual Hours
                 </label>
@@ -426,7 +420,7 @@ const handleSubmit = async (event) => {
                         
                         />
             </Col>
-            <Col md='3' className='mb-1'>
+            {/* <Col md='3' className='mb-1'>
             <label className='form-label'>
                     Account Hours
                 </label>
@@ -440,8 +434,8 @@ const handleSubmit = async (event) => {
                         onChange={e => handleTimeChange('account_hours', e, onChangeTaskDetailHandler)}
                         
                         />
-            </Col>
-            <Col md={3} className='mb-1'>
+            </Col> */}
+            <Col md={4} className='mb-1'>
               <label className='form-label'>External Ticket</label>
               <Input type="text" name="external_ticket_reference" value={TaskData.external_ticket_reference} onChange={handleExternalTicketChange} className="form-control" />
               {urlValidationMessage && <div className='text-danger'>{urlValidationMessage}</div>}
@@ -466,12 +460,12 @@ const handleSubmit = async (event) => {
                 />
             </Col> */}
             <Col md={12} className="mb-2">
-                            <div {...getRootProps({ className: 'dropzone bg-light border-dashed border-2 p-3 text-center' })}>
-                                <input {...getInputProps()} />
-                                <p>Drag 'n' drop some files here, or click to select files</p>
-                            </div>
-                            <Row className='mt-1'>{filePreviews}</Row>
-                        </Col>
+                <div {...getRootProps({ className: 'dropzone bg-light border-dashed border-2 p-3 text-center' })}>
+                    <input {...getInputProps()} />
+                    <p>Drag 'n' drop some files here, or click to select files</p>
+                </div>
+                <Row className='mt-1'>{filePreviews}</Row>
+            </Col>
             
             <Col md='8' className='mb-1'>
                 <label className='form-label'>

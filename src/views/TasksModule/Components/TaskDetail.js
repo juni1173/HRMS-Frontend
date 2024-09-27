@@ -1,18 +1,15 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { Badge, Row, Col, Tooltip, Modal, ModalBody, ModalHeader, ModalFooter, Card, CardBody, CardText, Button, CardImg } from 'reactstrap'
-import { BarChart2, User, Zap, Plus, Link, FileText } from 'react-feather'
+import { BarChart2, User, Zap, Plus, XCircle, FileText, Trash2 } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Select from 'react-select'
 import TaskComments from './Comments/comments'
-import { CiCalendarDate } from "react-icons/ci"
-import { HiOutlineLightBulb, HiLightBulb } from "react-icons/hi"
-import { RiAccountPinCircleFill } from "react-icons/ri"
 import InputMask from 'react-input-mask'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import ChildTasks from './ChildTask'
 import AddTask from './AddTask'
-import { Title } from 'chart.js'
+import { useDropzone } from 'react-dropzone'
 const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild }) => {
     const Api = apiHelper()
     const formatTime = (timeValue) => {
@@ -29,12 +26,12 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
     const [initialData, setInitialData] = useState(data)
     const [plannedHours, setPlannedHours] = useState(formatTime(data.planned_hours || 'N/A'))
     const [actualHours, setActualHours] = useState(formatTime(data.actual_hours || 'N/A'))
-    const [accountHours, setAccountHours] = useState(formatTime(data.account_hour || 'N/A'))
+    // const [accountHours, setAccountHours] = useState(formatTime(data.account_hour || 'N/A'))
     const [external_ticket_reference, setexternal_ticket_reference] = useState(data.external_ticket_reference || 'N/A')
     const [dueDate, setDueDate] = useState(data.due_date || 'N/A')
     const [isEditingPlannedHours, setIsEditingPlannedHours] = useState(false)
     const [isEditingActualHours, setIsEditingActualHours] = useState(false)
-    const [isEditingAccountHours, setIsEditingAccountHours] = useState(false)
+    // const [isEditingAccountHours, setIsEditingAccountHours] = useState(false)
     const [isEditingDueDate, setIsEditingDueDate] = useState(false)
     const [selectedStatus, setSelectedStatus] = useState('')
     const [statusDropdown, setStatusDropdown] = useState([])
@@ -52,6 +49,16 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
     const [loading, setLoading] = useState(false)
     const [centeredModal, setCenteredModal] = useState(false)
     const [tooltipOpenAssignBy, setTooltipOpenAssignBy] = useState({})
+    const [files, setFiles] = useState([])
+    const [addAttachment, setAddAttachment] = useState(false)
+    const [hoveredAttachment, setHoveredAttachment] = useState(null)
+
+    const handleMouseEnter = (id) => {
+        setHoveredAttachment(id)
+    }
+    const handleMouseLeave = () => {
+        setHoveredAttachment(null)
+    }
     const [selectedPriority, setSelectedPriority] = useState(() => {
         const initialPriority = priorities.find(p => p.value === data.priority)
         return initialPriority || { value: '', label: 'N/A' }
@@ -190,9 +197,9 @@ const handleAssigneeChange = (assignee) => {
         if (fieldName === 'actual_hours') {
             setActualHours(adjustedTime)
         }
-        if (fieldName === 'account_hour') {
-            setAccountHours(adjustedTime)
-        }
+        // if (fieldName === 'account_hour') {
+        //     setAccountHours(adjustedTime)
+        // }
     }
     const handleDateChange = (selectedDates) => {
         const formattedDate = Api.formatDate(selectedDates)
@@ -295,7 +302,57 @@ const handleAssigneeChange = (assignee) => {
           const handleImageClick = (url) => {
             window.open(url, '_blank')
         }
+    
+        // Function to handle file drops
+        const uploadAttachment = async (newFiles) => {
+            if (Object.values(newFiles).length > 0) {
+                const formData = new FormData()
+                newFiles.forEach(file => {
+                    formData.append('attachments', file)
+                  })
+                await Api.jsonPost(`/taskify/attachments/${data.id}/`, formData, false).then(result => {
+                    if (result) {
+                        if (result.status === 200) {
+                            Api.Toast('success', result.message)
+                        } else {
+                            Api.Toast('error', result.message)
+                        }
+                        fetchAttachments()
+                    } else {
+                        Api.Toast('error', 'Attachment could not updated!')
+                    }
+                })
+            }
+            
+        }
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'image/*, .pdf, .doc, .docx',
+        onDrop: acceptedFiles => {
+            setFiles([
+                ...files, ...acceptedFiles.map(file => Object.assign(file, {
+                preview: URL.createObjectURL(file)
+            }))
+        ])
+        uploadAttachment(acceptedFiles)
+        }
+    })
 
+    const deleteAttachment = async (id) => {
+        await Api.deleteData(`/taskify/attachments/delete/${id}/`, {method: 'DELETE'}).then(result => {
+            if (result) {
+                if (result.status === 200) {
+                    Api.Toast('success', 'Attachment deleted successfully!')
+                    fetchAttachments()
+                } else {
+                    Api.Toast('error', result.message)
+                }
+            } else {
+                Api.Toast('error', 'Attachment could not updated!')
+            }
+        })
+    }
+
+   
     return (
         <Fragment>
             <Row className='mt-1 mb-1'>
@@ -395,13 +452,14 @@ const handleAssigneeChange = (assignee) => {
                                 <Select
                                     value={selectedType}
                                     options={types}
+                                    className="float-right"
                                     onChange={(e) => handleTypeChange(e)}
                                     autoFocus
                                 />
                             ) : (
                                 <Badge
                                     color='info'
-                                    className='cursor-pointer'
+                                    className='cursor-pointer float-right'
                                     onClick={() => setIsEditingType(true)}
                                     title='Task Type'
                                 >
@@ -454,54 +512,82 @@ const handleAssigneeChange = (assignee) => {
     
             <Row className="mt-1">
                 <Col md="12" className="d-flex align-items-center">
-                    <h6>Attachments</h6>
+                    <h6 className='border-right' style={{ paddingRight: '10px'}}>Attachments</h6> 
+                    <div>
+                        <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa',  padding: '5px', marginTop: '-10px' }} onClick={() => setAddAttachment(!addAttachment)}/>
+                    </div>
                 </Col>
-            </Row>
-            <Row>
-                {attachments.length > 0 ? (
-                    attachments.map((attachment) => {
-                        const isImage = attachment.attachment.match(/\.(jpeg|jpg|gif|png|svg)$/i)
-                        return (
-                            <Col md={4} key={attachment.id} className="">
-                                <Card className="text-center">
-                                    {isImage ? (
-                                        <CardImg
-                                            top
-                                            width="100%"
-                                            height="150px" // Fixed height
-                                            src={attachment.attachment}
-                                            alt="Attachment preview"
-                                            onClick={() => handleImageClick(attachment.attachment)}
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                    ) : (
-                                        <CardBody onClick={() => handleImageClick(attachment.attachment)}>
-                                            <FileText size={50} />
-                                            <CardText className="mt-2">
-                                                {attachment.attachment.split('/').pop()}
-                                            </CardText>
-                                        </CardBody>
-                                    )}
-                                </Card>
-                            </Col>
-                        )
-                    })
-                ) : (
-                    <Col md="12">
-                        {/* <Card body> */}
-                            No Attachments Found
-                        {/* </Card> */}
+                {addAttachment && (
+                    <Col md={12} className="mb-1">
+                        <div {...getRootProps({ className: 'dropzone bg-light border-dashed border-2 p-3 text-center' })}>
+                            <input {...getInputProps()} />
+                            <p>Drag 'n' drop some files here, or click to select files</p>
+                        </div>
                     </Col>
                 )}
+                
+            </Row>
+            <Row>
+            {attachments.length > 0 ? (
+                attachments.map((attachment) => {
+                    const isImage = attachment.attachment.match(/\.(jpeg|jpg|gif|png|svg)$/i)
+                    return (
+                        <Col md={4} key={attachment.id} className="position-relative">
+                            <Card
+                                className="text-center"
+                                onMouseEnter={() => handleMouseEnter(attachment.id)}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                {isImage ? (
+                                    <CardImg
+                                        top
+                                        width="100%"
+                                        height="150px" // Fixed height
+                                        src={attachment.attachment}
+                                        alt="Attachment preview"
+                                        onClick={() => handleImageClick(attachment.attachment)}
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                ) : (
+                                    <CardBody onClick={() => handleImageClick(attachment.attachment)}>
+                                        <FileText size={50} />
+                                        <CardText className="mt-2">
+                                            {attachment.attachment.split('/').pop()}
+                                        </CardText>
+                                    </CardBody>
+                                )}
+                                {hoveredAttachment === attachment.id && (
+                                    <div
+                                        onClick={() => deleteAttachment(attachment.id)} // Call remove function
+                                        style={{
+                                            position: 'absolute',
+                                            top: '5px',
+                                            right: '5px',
+                                            cursor: 'pointer',
+                                            color: 'red'
+                                        }}
+                                    >
+                                        <Trash2 size={20} />
+                                    </div>
+                                )}
+                            </Card>
+                        </Col>
+                    )
+                })
+            ) : (
+                <Col md="12">
+                    No Attachments Found
+                </Col>
+            )}
             </Row>
             
 
-{!isChild ?   <> <Row className="mt-1">
+{!isChild ?   <> <Row className="">
     
-            <Col md="12" className="d-flex align-items-center">
-                <h6>Child Issues</h6>
+            <Col md="12" className="d-flex align-items-center mt-1">
+                <h6 className='border-right' style={{ paddingRight: '10px'}}>Child Issues</h6>
                 <div>
-                    <Plus size={25} className='ms-2' style={{ cursor: 'pointer', backgroundColor: '#f8f9fa',  padding: '5px' }} onClick={() => setCenteredModal(!centeredModal)} />
+                    <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa',  padding: '5px', marginTop: '-10px' }} onClick={() => setCenteredModal(!centeredModal)} />
                     {/* <Link size={25} className='ms-2' style={{ cursor: 'pointer', backgroundColor: '#f8f9fa', padding: '5px' }} onClick={() => console.log("Link issue clicked")} /> */}
                 </div>
             </Col>
@@ -513,33 +599,33 @@ const handleAssigneeChange = (assignee) => {
                 <Col md={4}>
                     <div className="d-flex flex-column px-2">
                          {/* Status Dropdown */}
-    <div className="mb-2">
-      <Select
-        isClearable={false}
-        className='react-select sm custom-dropdown'
-        styles={{
-          control: (base) => ({
-            ...base,
-            height: '36px',
-            fontSize: '14px',
-            padding: '2px 8px',
-            borderColor: '#ccc'
-          }),
-          option: (base) => ({
-            ...base,
-            color: '#333'
-          })
-        }}
-        classNamePrefix='select'
-        theme={theme}
-        name="status"
-        options={statusDropdown ? statusDropdown : ''}
-        value={selectedStatus}
-        menuPlacement="auto"
-        onChange={(e) => updateStatus(data.id, e)}
-      />
-    </div>
-     {/* Due Date */}
+                    <div className="mb-2">
+                    <Select
+                        isClearable={false}
+                        className='react-select sm custom-dropdown'
+                        styles={{
+                        control: (base) => ({
+                            ...base,
+                            height: '36px',
+                            fontSize: '14px',
+                            padding: '2px 8px',
+                            borderColor: '#ccc'
+                        }),
+                        option: (base) => ({
+                            ...base,
+                            color: '#333'
+                        })
+                        }}
+                        classNamePrefix='select'
+                        theme={theme}
+                        name="status"
+                        options={statusDropdown ? statusDropdown : ''}
+                        value={selectedStatus}
+                        menuPlacement="auto"
+                        onChange={(e) => updateStatus(data.id, e)}
+                    />
+                    </div>
+                    {/* Due Date */}
                         <div className="mb-1">
                             <div className="d-flex flex-column">
                                 <span style={{ fontSize: '12px' }}>Assign By</span>
@@ -680,7 +766,7 @@ const handleAssigneeChange = (assignee) => {
                         </div>
 
                         {/* Account Hours */}
-                        <div className="mb-1">
+                        {/* <div className="mb-1">
                             <div className="d-flex flex-column">
                                 <span style={{ fontSize: '12px' }}>Account Hours</span>
                                 {isEditingAccountHours ? (
@@ -712,7 +798,7 @@ const handleAssigneeChange = (assignee) => {
                                     </span>
                                 )}
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </Col>
             </Row>

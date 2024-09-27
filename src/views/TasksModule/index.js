@@ -113,6 +113,7 @@ const index = () => {
         if (result) {
             if (result.status === 200) {
                 const employeeData = result.data
+                console.warn(employeeData)
                 if (employeeData.length > 0) {
                     const arr = []
                     for (const emp of employeeData) {
@@ -239,6 +240,7 @@ const index = () => {
         }))
         setActiveTab(id)
         getTasks(id, query.type, query.status)
+        getEmployees(id)
     }
     const filterClick = () => {
         setFilterStatus(!filterStatus)

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Badge, Row, Col, Tooltip, Modal, ModalBody, ModalHeader, ModalFooter, Card, CardBody, CardText, Button, CardImg } from 'reactstrap'
+import { Badge, Input, Row, Col, Tooltip, Modal, ModalBody, ModalHeader, ModalFooter, Card, CardBody, CardText, Button, CardImg } from 'reactstrap'
 import { BarChart2, User, Zap, Plus, XCircle, FileText, Trash2 } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Select from 'react-select'
@@ -52,6 +52,10 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
     const [files, setFiles] = useState([])
     const [addAttachment, setAddAttachment] = useState(false)
     const [hoveredAttachment, setHoveredAttachment] = useState(null)
+    const [timeLogs, setTimeLogs] = useState([])
+    const [addTimeLogModal, setAddTimeLogModal] = useState(false)
+    const [newHoursSpent, setNewHoursSpent] = useState('')
+    const [newDate, setNewDate] = useState(new Date())
 
     const handleMouseEnter = (id) => {
         setHoveredAttachment(id)
@@ -110,6 +114,37 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
         } catch (error) {
             Api.Toast('error', 'Unable to fetch attachments')
         }
+    }
+    const fetchTimeLogs = async () => {
+        try {
+            const response = await Api.get(`/taskify/task/time/log/${data.id}/`)
+            if (response.status === 200) {
+                setTimeLogs(response.data)
+            }
+        } catch (error) {
+            Api.Toast('error', 'Unable to fetch time logs')
+        }
+    }
+    const toggletimelogmodal = () => {
+        setAddTimeLogModal(!addTimeLogModal)
+    }
+    const handleAddTimeLog = async() => {
+        const hs = newHoursSpent.replace(':', '.')
+        const payload = {
+            hours_spent: parseFloat(hs),
+            date: newDate.toISOString().split('T')[0]
+        }
+        try {
+            const response = await Api.jsonPost(`/taskify/task/time/log/${data.id}/`, payload)
+            if (response.status === 200) {
+                fetchTimeLogs()
+            }
+        } catch (error) {
+            Api.Toast('error', 'Unable to update time logs')
+        }
+        setAddTimeLogModal(false)
+        setNewHoursSpent('')
+        setNewDate(new Date())
     }
     const toggleTooltipAssignBy = (key) => {
         setTooltipOpenAssignBy(prev => ({ ...prev, [key]: !prev[key] }))
@@ -197,6 +232,9 @@ const handleAssigneeChange = (assignee) => {
         if (fieldName === 'actual_hours') {
             setActualHours(adjustedTime)
         }
+        if (fieldName === 'log_hours') {
+            setNewHoursSpent(adjustedTime)
+        }
         // if (fieldName === 'account_hour') {
         //     setAccountHours(adjustedTime)
         // }
@@ -265,6 +303,7 @@ const handleAssigneeChange = (assignee) => {
         if (data.id) {
             fetchChildTasks()
             fetchAttachments()
+            fetchTimeLogs()
             
         } else {
             console.log('not found')
@@ -508,6 +547,33 @@ const handleAssigneeChange = (assignee) => {
                     </span>
                 )}
                 {urlValidationMessage && <div style={{ color: 'red' }}>{urlValidationMessage}</div>}
+            </div>
+            <div className="mt-3">
+            <Col md="12" className="d-flex align-items-center">
+                    <h6 className='border-right' style={{ paddingRight: '10px'}}>Time Logs</h6> 
+                    <div>
+                        <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa',  padding: '5px', marginTop: '-10px' }} onClick={() => toggletimelogmodal()}/>
+                    </div>
+                </Col>
+                {timeLogs && timeLogs.length > 0 ? (
+    <>
+        {timeLogs.map((log) => (
+            <Row key={log.id} className="mb-1 align-items-center">
+                <Col md="3">
+                    {log.date}
+                </Col>
+                <Col md="3">
+                    <strong>{log.hours_spent} hours</strong>
+                </Col>
+            </Row>
+        ))}
+    </>
+) : (
+    <span>No time logs found.</span>
+)}
+                {/* <Button color="primary" onClick={() => setAddTimeLogModal(true)}>
+                    Add Time Log
+                </Button> */}
             </div>
     
             <Row className="mt-1">
@@ -808,6 +874,33 @@ const handleAssigneeChange = (assignee) => {
                     <AddTask projectsData={projectsData} ChildCallBack={ChildCallBack} task={data} />
                 </ModalBody>
             </Modal>
+            <Modal isOpen={addTimeLogModal} toggle={() => setAddTimeLogModal(false)} className='modal-dialog-centered'>
+            <ModalHeader toggle={() => setAddTimeLogModal(false)}>Add Time Log</ModalHeader>
+            <ModalBody>
+                <Row className='mt-1'>
+                    <Col md={4}>
+                <InputMask
+                    mask="99:99"
+                    placeholder="Hours Spent"
+                    className="form-control"
+                    value={newHoursSpent}
+                    onChange={e => handleTimeChange('log_hours', e)}
+                    autoFocus
+                />
+                </Col>
+                <Col md={4}>
+                <Flatpickr
+                    className='form-control'
+                    value={newDate}
+                    onChange={([date]) => setNewDate(date)}
+                    options={{ dateFormat: 'Y-m-d' }}
+                />
+                </Col>
+                <Col md={4}>
+                <Button color="primary" onClick={handleAddTimeLog}>Save</Button></Col>
+                </Row>
+            </ModalBody>
+        </Modal>
         </Fragment>
     )
 }

@@ -39,8 +39,8 @@ const LeavesBalance = ({ data }) => {
   const renderPendingLeavesApprovals = () => {
     return data.map(item => {
       return (
-        <SwiperSlide className='rounded swiper-shadow'>
-            <div key={item.id} className=''>
+        <SwiperSlide className='rounded swiper-shadow' key={item.id}>
+            <div className=''>
             <div className='text-center'>
             <a href='../statusrequests/'><Avatar className='rounded mb-2' color='light-primary' icon={<Icon.Calendar color='white'/>} /></a>
                 <div>

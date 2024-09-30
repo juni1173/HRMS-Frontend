@@ -4,10 +4,11 @@ import { Fragment, useState, useEffect, useCallback } from 'react'
 import Tasks from './Components/Tasks'
 import apiHelper from '../Helpers/ApiHelper'
 import Select from 'react-select'
+import { CSVLink } from "react-csv"
 // ** Styles
 import '@styles/react/apps/app-todo.scss'
 import { Card, CardBody, Spinner, TabContent, TabPane, Badge, Row, Col, Button } from 'reactstrap'
-import { Filter, RefreshCcw, Save } from 'react-feather'
+import { Download, Filter, RefreshCcw, Save } from 'react-feather'
 
 const index = () => {
     const Api = apiHelper()
@@ -16,6 +17,7 @@ const index = () => {
     const [taskloading, setTaskLoading] = useState(false)
     const [filterLoading, setFilterLoading] = useState(false)
     const [projects, setProjects] = useState([])
+    const [activeProject, setActiveProjects] = useState('')
     const [projDropdown, setProjectDropdown] = useState([])
     const [tasks, setTasks] = useState([])
     const [activeTab, setActiveTab] = useState(0)
@@ -113,7 +115,6 @@ const index = () => {
         if (result) {
             if (result.status === 200) {
                 const employeeData = result.data
-                console.warn(employeeData)
                 if (employeeData.length > 0) {
                     const arr = []
                     for (const emp of employeeData) {
@@ -233,14 +234,15 @@ const index = () => {
             }
         })
     }
-    const toggleTab = (id, type = null) => {
+    const toggleTab = (proj, type = null) => {
         setQuery(prev => ({
             ...prev,
             [type]: type
         }))
-        setActiveTab(id)
-        getTasks(id, query.type, query.status)
-        getEmployees(id)
+        setActiveProjects(proj)
+        setActiveTab(proj.value)
+        getTasks(proj.value, query.type, query.status)
+        getEmployees(proj.value)
     }
     const filterClick = () => {
         setFilterStatus(!filterStatus)
@@ -266,6 +268,45 @@ const index = () => {
     const applyFilters = () => {
         getTasks(activeTab, sortState)
     }
+    const theme = (theme) => ({
+        ...theme,
+        spacing: {
+            ...theme.spacing,
+            controlHeight: 30,
+            baseUnit: 2
+        }
+    })
+    const customStyles = {
+    control: (base, state) => ({
+        ...base,
+        background: "#2229351a",
+        fontWeight: "600",
+        textAlign: "center",
+        cursor: 'pointer',
+        // match with the menu
+        borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
+        // Overwrittes the different states of border
+        borderColor: state.isFocused ? "yellow" : "green",
+        // Removes weird border around container
+        boxShadow: state.isFocused ? null : null,
+        "&:hover": {
+            // Overwrittes the different states of border
+            borderColor: state.isFocused ? "red" : "gray"
+        }
+        })
+    }
+    const csvData = [
+        ["Title", "Assigned_to", "Status", "Type", "Priority", "Planned_hours", "Actual_hours"],
+        ...tasks.map((item) => [
+          item.title,
+          item.assign_to_name,
+          item.status_title ? item.status_title : 'N/A',
+          item.task_type_title ? item.task_type_title : 'N/A',
+          item.priority ? item.priority : 'N/A',
+          item.planned_hours ? item.planned_hours : 'N/A',
+          item.actual_hours ? item.actual_hours : 'N/A'
+        ])
+      ]     
   return (
     <Fragment>
             <Card>
@@ -275,21 +316,37 @@ const index = () => {
                         <Col md="6">
                             <h3>Task Management</h3>
                         </Col>
-                        <Col md="6">
+                        <Col md="5">
                             {!loading && (
                                 <Select
                                 isClearable={false}
                                 className='react-select w-75 float-right mb-1'
+                                styles={customStyles}
                                 classNamePrefix='select'
+                                theme={theme}
                                 name="project"
                                 options={projDropdown}
                                 placeholder="Select Project"
+                                components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
                                 defaultValue={projDropdown.length > 0 && projDropdown[0]}
                                 isLoading={taskloading}
-                                onChange={ (e) => { toggleTab(e.value) }}
+                                menuPlacement="auto"
+                                menuPosition="fixed"
+                                onChange={ (e) => { toggleTab(e) }}
                             />
                             )}
                             
+                        </Col>
+                        <Col md="1">
+                        <CSVLink
+                            className=" mb-2"
+                            filename={`Tasks_${activeProject.label}`}
+                            data={csvData}  
+                            title='Download CSV of tasks'
+                            >
+                            <Download color='blue' className='text-center'/>
+                        </CSVLink>
+                                
                         </Col>
                         {/* <Col md="3">
                             <h3>Task Management</h3>
@@ -437,5 +494,4 @@ const index = () => {
     </Fragment>
   )
 }
-
 export default index

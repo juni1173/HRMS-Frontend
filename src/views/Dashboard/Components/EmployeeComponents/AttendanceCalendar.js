@@ -159,7 +159,7 @@ const Check_out = async () => {
                 <div className='d-flex justify-content-between align-items-center mb-3'>
                   
                   <Col md={6} className='text-center'>
-                  <button class="button-47" role="button" onClick={() => {
+                  <button className="button-47" role="button" onClick={() => {
                             setBtnStatus('check_in')
                             setCenteredModal(!centeredModal)
                             }}><TbClockPlus color='' size={'24'}/>  Check In</button>

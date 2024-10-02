@@ -132,7 +132,7 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
         const hs = newHoursSpent.replace(':', '.')
         const payload = {
             hours_spent: parseFloat(hs),
-            date: newDate.toISOString().split('T')[0]
+            date: Api.formatDate(newDate)
         }
         try {
             const response = await Api.jsonPost(`/taskify/task/time/log/${data.id}/`, payload)
@@ -548,33 +548,7 @@ const handleAssigneeChange = (assignee) => {
                 )}
                 {urlValidationMessage && <div style={{ color: 'red' }}>{urlValidationMessage}</div>}
             </div>
-            <div className="mt-3">
-            <Col md="12" className="d-flex align-items-center">
-                    <h6 className='border-right' style={{ paddingRight: '10px'}}>Time Logs</h6> 
-                    <div>
-                        <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa',  padding: '5px', marginTop: '-10px' }} onClick={() => toggletimelogmodal()}/>
-                    </div>
-                </Col>
-                {timeLogs && timeLogs.length > 0 ? (
-    <>
-        {timeLogs.map((log) => (
-            <Row key={log.id} className="mb-1 align-items-center">
-                <Col md="3">
-                    {log.date}
-                </Col>
-                <Col md="3">
-                    <strong>{log.hours_spent} hours</strong>
-                </Col>
-            </Row>
-        ))}
-    </>
-) : (
-    <span>No time logs found.</span>
-)}
-                {/* <Button color="primary" onClick={() => setAddTimeLogModal(true)}>
-                    Add Time Log
-                </Button> */}
-            </div>
+            
     
             <Row className="mt-1">
                 <Col md="12" className="d-flex align-items-center">
@@ -830,6 +804,30 @@ const handleAssigneeChange = (assignee) => {
                                 )}
                             </div>
                         </div>
+                        <div className="mt-3" style={{ height: '200px', overflowY: 'auto', overflowX: 'hidden' }}>
+    <Col md="12" className="d-flex align-items-center">
+        <h6 className='border-right' style={{ paddingRight: '10px'}}>Time Logs</h6> 
+        <div>
+            <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa', padding: '5px', marginTop: '-10px' }} onClick={() => toggletimelogmodal()}/>
+        </div>
+    </Col>
+    {timeLogs && timeLogs.length > 0 ? (
+        <>
+            {timeLogs.map((log) => (
+                <Row key={log.id} className="mb-1 align-items-center">
+                    <Col md="6">
+                        {log.date}
+                    </Col>
+                    <Col md="6">
+                        <strong>{log.hours_spent} hours</strong>
+                    </Col>
+                </Row>
+            ))}
+        </>
+    ) : (
+        <span>No time logs found.</span>
+    )}
+</div>
 
                         {/* Account Hours */}
                         {/* <div className="mb-1">

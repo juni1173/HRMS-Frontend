@@ -12,40 +12,195 @@ const Routes = [
     path: '/home',
     component: lazy(() => import('../../views/Home'))
   },
+  // ** admin routes STARTS
   {
     path: '/positions',
-    component: lazy(() => import('../../views/Jobs-Setup/positions'))
+    component: lazy(() => import('../../views/Jobs-Setup/positions')),
+    meta: {
+      role: 'admin'
+    }
   },
   {
     path: '/job-description',
-    component: lazy(() => import('../../views/Jobs-Setup/job-description'))
+    component: lazy(() => import('../../views/Jobs-Setup/job-description')),
+    meta: {
+      role: 'admin'
+    }
   },
   {
     path: '/Jobs',
-    component: lazy(() => import('../../views/Jobs'))
-  },
-  {
-    path: '/second-page',
-    component: lazy(() => import('../../views/SecondPage'))
+    component: lazy(() => import('../../views/Jobs')),
+    meta: {
+      role: 'admin'
+    }
   },
   {
     path: '/organizationHome',
-    component: lazy(() => import('../../views/Organization/index'))
+    component: lazy(() => import('../../views/Organization/index')),
+    meta: {
+      role: 'admin'
+    }
   },
   {
     path: '/organization-setup',
     component: lazy(() => import('../../views/Organization/setup-form/index')),
     meta: {
-      navLink: '/organizationHome'
+      navLink: '/organizationHome',
+      role: 'admin'
     }
   },
   {
     path: '/candidates',
-    component: lazy(() => import('../../views/Candidates/index'))
+    component: lazy(() => import('../../views/Candidates/index')),
+    meta: {
+      role: 'admin'
+    }
   },
   {
     path: '/questions',
-    component: lazy(() => import('../../views/Interview-Questions/index'))
+    component: lazy(() => import('../../views/Interview-Questions/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/employeeList',
+    component: lazy(() => import('../../views/Employee-Information/EmployeeList/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/email_templates',
+    component: lazy(() => import('../../views/SettingsModule/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/hr/certifications',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Certification/HRApprovals')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/hr/trainings',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Trainings/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/hr/courses',
+    component: lazy(() => import('../../views/LearningDevelopment/Components/Courses/Tabs')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/projects',
+    component: lazy(() => import('../../views/Projects')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/statusrequests',
+    component: lazy(() => import('../../views/HRApprovals/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/configurations',
+    component: lazy(() => import('../../views/SettingsModule/ConfigurationModule/Configuration')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/reports',
+    component: lazy(() => import('../../views/Reports/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/admin/dashboard',
+    component: lazy(() => import('../../views/Dashboard/Components/AdminDashboard')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/admin/learning&development',
+    component: lazy(() => import('../../views/LearningDevelopment')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/admin/payroll',
+    component: lazy(() => import('../../views/admin-payroll/Tabs')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/admin/jobs',
+    component: lazy(() => import('../../views/Jobs/Tabs')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/hr/kpi',
+    component: lazy(() => import('../../views/KpiModule/HRkpi/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/hr/kavskills',
+    component: lazy(() => import('../../views/Kavskills/hr_kavskills/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/admin/attendance',
+    component: lazy(() => import('../../views/Admin_Attendance/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/hr/payroll',
+    component: lazy(() => import('../../views/admin-payroll/Components/hrpayroll')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/hr/tickets',
+    component: lazy(() => import('../../views/TicketsModule/HRModule/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/hr/requisition',
+    component: lazy(() => import('../../views/Requisition/hrcomponents/index')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  // ** admin routes ENDS
+  
+  {
+    path: '/second-page',
+    component: lazy(() => import('../../views/SecondPage'))
   },
   {
     path: '/exam',
@@ -116,18 +271,12 @@ const Routes = [
     path: '/employeeInformation',
     component: lazy(() => import('../../views/Employee-Information/index'))
   },
-  {
-    path: '/employeeList',
-    component: lazy(() => import('../../views/Employee-Information/EmployeeList/index'))
-  },
+  
   {
     path: '/employeeDetail/:uuid',
     component: lazy(() => import('../../views/Employee-Information/EmployeeDetail/index1'))
   },
-  {
-    path: '/email_templates',
-    component: lazy(() => import('../../views/SettingsModule/index'))
-  },
+  
   {
     path: '/subjects',
     component: lazy(() => import('../../views/LearningDevelopment/Components/Subjects'))
@@ -164,18 +313,7 @@ const Routes = [
     path: '/employee/certifications',
     component: lazy(() => import('../../views/LearningDevelopment/Components/Certification'))
   },
-  {
-    path: '/hr/certifications',
-    component: lazy(() => import('../../views/LearningDevelopment/Components/Certification/HRApprovals'))
-  },
-  {
-    path: '/hr/trainings',
-    component: lazy(() => import('../../views/LearningDevelopment/Components/Trainings/index'))
-  },
-  {
-    path: '/hr/courses',
-    component: lazy(() => import('../../views/LearningDevelopment/Components/Courses/Tabs'))
-  },
+  
   {
     path: '/kind_notes',
     component: lazy(() => import('../../views/Kind-Notes'))
@@ -188,10 +326,7 @@ const Routes = [
       publicRoute: true
     }
   },
-  {
-    path: '/projects',
-    component: lazy(() => import('../../views/Projects'))
-  },
+ 
   {
     path: '/jira',
     component: lazy(() => import('../../views/Projects/Components/JiraProjectComponents/JiraIndex'))
@@ -200,10 +335,7 @@ const Routes = [
     path: '/requests',
     component: lazy(() => import('../../views/EmployeeHRrequests/index'))
   },
-  {
-    path: '/statusrequests',
-    component: lazy(() => import('../../views/HRApprovals/index'))
-  },
+  
   {
     path: '/attendancelist',
     component: lazy(() => import('../../views/EmployeeAttendance/index'))
@@ -220,30 +352,8 @@ const Routes = [
     path: '/rolesandpermissions',
     component: lazy(() => import('../../views/SettingsModule/ConfigurationModule/RolesConfiguration/Roles'))
   },
-  {
-    path: '/configurations',
-    component: lazy(() => import('../../views/SettingsModule/ConfigurationModule/Configuration'))
-  },
-  {
-    path: '/reports',
-    component: lazy(() => import('../../views/Reports/index'))
-  },
-  {
-    path: '/admin/dashboard',
-    component: lazy(() => import('../../views/Dashboard/Components/AdminDashboard'))
-  },
-  {
-    path: '/admin/learning&development',
-    component: lazy(() => import('../../views/LearningDevelopment'))
-  },
-  {
-    path: '/admin/payroll',
-    component: lazy(() => import('../../views/admin-payroll/Tabs'))
-  },
-  {
-    path: '/admin/jobs',
-    component: lazy(() => import('../../views/Jobs/Tabs'))
-  },
+ 
+  
   {
     path: '/employee/dashboard',
     component: lazy(() => import('../../views/Dashboard/Components/EmployeeDashboard'))
@@ -253,14 +363,7 @@ const Routes = [
     component: lazy(() => import('../../views/KpiModule/index'))
   },
 
-  {
-    path: '/hr/kpi',
-    component: lazy(() => import('../../views/KpiModule/HRkpi/index'))
-  },
-  {
-    path: '/hr/kavskills',
-    component: lazy(() => import('../../views/Kavskills/hr_kavskills/index'))
-  },
+  
   {
     path: '/learning_development/employee/sheet',
     component: lazy(() => import('../../views/LearningDevelopment/Components/EmployeeSheet'))
@@ -269,10 +372,7 @@ const Routes = [
     path: '/employee/manuals',
     component: lazy(() => import('../../views/EmployeeSOPModule/index'))
   },
-  {
-    path: '/admin/attendance',
-    component: lazy(() => import('../../views/Admin_Attendance/index'))
-  },
+  
 
   {
     path: '/forgot-password',
@@ -291,10 +391,7 @@ const Routes = [
     path: '/salary-permissions',
     component: lazy(() => import('../../views/admin-payroll/Components/emp-salary'))
   },
-  {
-    path: '/hr/payroll',
-    component: lazy(() => import('../../views/admin-payroll/Components/hrpayroll'))
-  },
+  
   {
     path: '/accountant/payroll',
     component: lazy(() => import('../../views/admin-payroll/Components/AccountantView.js/Tabs'))
@@ -337,10 +434,7 @@ const Routes = [
     path: '/employee/tickets',
     component: lazy(() => import('../../views/TicketsModule/index'))
   },
-  {
-    path: '/hr/tickets',
-    component: lazy(() => import('../../views/TicketsModule/HRModule/index'))
-  },
+  
   {
     path: '/error',
     component: lazy(() => import('../../views/Error')),
@@ -376,10 +470,7 @@ const Routes = [
     path: '/requisition',
     component: lazy(() => import('../../views/Requisition/index'))
   },
-  {
-    path: '/hr/requisition',
-    component: lazy(() => import('../../views/Requisition/hrcomponents/index'))
-  },
+  
   {
     path: '/email/connect',
     component: lazy(() => import('../../views/EmailIntegrations/index'))

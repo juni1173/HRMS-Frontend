@@ -86,12 +86,18 @@ const Router = () => {
 
     } else if (route.meta && route.meta.authRoute && isUserLoggedIn()) {
       // ** If route has meta and authRole and user is Logged in then redirect user to home page (DefaultRoute)
+      
       if (Permissions === 'admin') return <Redirect to='/admin/dashboard' />
       if (Permissions === 'employee') return <Redirect to='/employee/dashboard' />
       return <Redirect to={DefaultRoute} />
       // }  else if (isUserLoggedIn() && !ability.can(action || 'read', resource)) {
       // // ** If user is Logged in and doesn't have ability to visit the page redirect the user to Not Authorized
       // return <Redirect to='/misc/not-authorized' />
+    } else if (route.meta && route.meta.role && isUserLoggedIn()) {
+        if (route.meta.role !== Permissions) {
+          return <Redirect to={DefaultRoute} />
+        }
+        return <route.component {...props} />
     } else {
       // ** If none of the above render component
       return <route.component {...props} />

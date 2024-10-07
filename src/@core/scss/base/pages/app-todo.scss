@@ -276,6 +276,19 @@
     opacity: 1;
   }
 }
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    top: 100px;
+  }
+  75% {
+    opacity: 0.5;
+    top: 0px;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 
 @include media-breakpoint-down(lg) {
   .todo-application {
@@ -331,3 +344,30 @@
 .horizontal-menu .todo-application .content-area-wrapper .content-right .todo-task-list-wrapper {
   height: calc(100% - 3.6rem); // ? search box height (48.79px + 1px border = 3.56), horizontal needs 1 decimal point
 }
+.list-group .list-group-item-completed {
+  background-color: #197e46 !important;
+  color: white !important;
+  padding: 0.58rem 1.5rem;
+  border: 0;
+  font-weight: $font-weight-bold;
+  letter-spacing: 0.4px;
+  border-left: 2px solid transparent;
+  border-bottom: 1px solid lightgray;
+  border-radius: 0;
+  + .list-group-item-completed.active {
+    margin-top: 0;
+  }
+  &:hover,
+  &:focus,
+  &.active {
+    background: transparent;
+    color: white;
+    background-color: #006400 !important;
+  }
+  &.active {
+    border-color: #fff;
+    border-bottom: 1px solid lightgray;
+    background-color: #006400 !important;
+  }
+}
+

@@ -4,11 +4,15 @@ import { Fragment, useState, useEffect, useCallback } from 'react'
 import Tasks from './Components/Tasks'
 import apiHelper from '../Helpers/ApiHelper'
 import Select from 'react-select'
-import { CSVLink } from "react-csv"
+import * as XLSX from 'xlsx'
 // ** Styles
 import '@styles/react/apps/app-todo.scss'
-import { Card, CardBody, Spinner, TabContent, TabPane, Badge, Row, Col, Button } from 'reactstrap'
-import { Download, Filter, RefreshCcw, Save } from 'react-feather'
+import { Card, CardBody, Spinner, TabContent, TabPane, Badge, Row, Col, Button, Modal, ModalBody, ModalHeader, Table } from 'reactstrap'
+import { Download, Filter, RefreshCcw, Save, Search } from 'react-feather'
+import { TbReportAnalytics } from "react-icons/tb"
+import Flatpickr from 'react-flatpickr'
+import '@styles/react/libs/flatpickr/flatpickr.scss'
+import ReactPaginate from 'react-paginate'
 
 const index = () => {
     const Api = apiHelper()
@@ -20,6 +24,9 @@ const index = () => {
     const [activeProject, setActiveProjects] = useState('')
     const [projDropdown, setProjectDropdown] = useState([])
     const [tasks, setTasks] = useState([])
+    const [pagination, setPagination] = useState(
+        {currentPage: 1, totalPages: null}
+    )
     const [activeTab, setActiveTab] = useState(0)
     const [selectedTask, setSelectedTask] = useState(null)
     const [sortState, setSortState] = useState('all-task')
@@ -27,7 +34,13 @@ const index = () => {
     const [typeDropdown, setTypeDropdown] = useState([])
     const [statusDropdown, setStatusDropdown] = useState([])
     const [employeeDropdown, setEmployeeDropdown] = useState([])  
-
+    const [centeredModal, setCenteredModal] = useState(false)
+    const [reportStartDate, setReportStartDate] = useState('')
+    const [reportEndDate, setReportEndDate] = useState('')
+    const [csvExportData, setCsvExportData] = useState(null)
+    const [workbook, setWorkbook] = useState(null)
+    const [projectRole, setProjectRole] = useState('')
+    const [selectedAssignee, setSelectedAssignee] = useState([{ value: '', label: 'select employee' }])
     const priority_choices = [
         {value: 'Low', label: 'Low'},
         {value: 'Medium', label:'Medium'},
@@ -47,69 +60,70 @@ const index = () => {
     task_type: null,
     priority: null,
     status: null
+    // page: pagination.currentPage ? pagination.currentPage : null
     }) 
-    const getTaskTypes = async (id = null) => {
-        const formData = new FormData()
-        if (id) {
-            formData['project'] = id
-        }
-        await Api.jsonPost(`/taskify/task/types/pre/data/`, formData).then(result => {
-            if (result) {
-                if (result.status === 200) {
-                    const typesData = result.data
-                    if (Object.values(typesData).length > 0) {
-                        const defaultTypesArr = []
-                        const projectTypesArr = []
-                        for (const default_types of typesData.default_task_type) {
-                            defaultTypesArr.push({value: default_types.id, label: default_types.title, type: 'default_task_type'})
-                        }
-                        if (Object.values(typesData.project_task_type).length > 0) {
-                            for (const project_types of typesData.project_task_type) {
-                                projectTypesArr.push({value: project_types.id, label: project_types.title, type: 'project_task_type'})
-                            }
-                        }
-                        setTypeDropdown([...defaultTypesArr, ...projectTypesArr])
-                    }
-                } else {
-                    Api.Toast('error', result.message)
-                    setTypeDropdown(false)
-                }
-            } else {
-                Api.Toast('error', 'Server error!')
-            }
-        })
-    } 
-    const getStatuses = async (id = null) => {
-        const formData = new FormData()
-        if (id) {
-            formData['project'] = id
-        }
-        await Api.jsonPost(`/taskify/task/status/pre/data/`, formData).then(result => {
-            if (result) {
-                if (result.status === 200) {
-                    const statusData = result.data
-                    if (Object.values(statusData).length > 0) {
-                        const defaultStatusArr = []
-                        const projectStatusArr = []
-                        for (const status of statusData.default_status) {
-                            defaultStatusArr.push({value: status.id, label: status.title})
-                        }
-                        if (Object.values(statusData.project_status).length > 0) {
-                            for (const status of statusData.project_status) {
-                                projectStatusArr.push({value: status.id, label: status.title})
-                            }
-                        }
+    // const getTaskTypes = async (id = null) => {
+    //     const formData = new FormData()
+    //     if (id) {
+    //         formData['project'] = id
+    //     }
+    //     await Api.jsonPost(`/taskify/task/types/pre/data/`, formData).then(result => {
+    //         if (result) {
+    //             if (result.status === 200) {
+    //                 const typesData = result.data
+    //                 if (Object.values(typesData).length > 0) {
+    //                     const defaultTypesArr = []
+    //                     const projectTypesArr = []
+    //                     for (const default_types of typesData.default_task_type) {
+    //                         defaultTypesArr.push({value: default_types.id, label: default_types.title, type: 'default_task_type'})
+    //                     }
+    //                     if (Object.values(typesData.project_task_type).length > 0) {
+    //                         for (const project_types of typesData.project_task_type) {
+    //                             projectTypesArr.push({value: project_types.id, label: project_types.title, type: 'project_task_type'})
+    //                         }
+    //                     }
+    //                     setTypeDropdown([...defaultTypesArr, ...projectTypesArr])
+    //                 }
+    //             } else {
+    //                 Api.Toast('error', result.message)
+    //                 setTypeDropdown(false)
+    //             }
+    //         } else {
+    //             Api.Toast('error', 'Server error!')
+    //         }
+    //     })
+    // } 
+    // const getStatuses = async (id = null) => {
+    //     const formData = new FormData()
+    //     if (id) {
+    //         formData['project'] = id
+    //     }
+    //     await Api.jsonPost(`/taskify/task/status/pre/data/`, formData).then(result => {
+    //         if (result) {
+    //             if (result.status === 200) {
+    //                 const statusData = result.data
+    //                 if (Object.values(statusData).length > 0) {
+    //                     const defaultStatusArr = []
+    //                     const projectStatusArr = []
+    //                     for (const status of statusData.default_status) {
+    //                         defaultStatusArr.push({value: status.id, label: status.title})
+    //                     }
+    //                     if (Object.values(statusData.project_status).length > 0) {
+    //                         for (const status of statusData.project_status) {
+    //                             projectStatusArr.push({value: status.id, label: status.title})
+    //                         }
+    //                     }
                         
-                        setStatusDropdown([...defaultStatusArr, ...projectStatusArr])
-                    }
-                } else {
-                    Api.Toast('error', result.message)
-                }
-            } else {
-                Api.Toast('error', 'Server error!')
-            }
-        })
-    }  
+    //                     setStatusDropdown([...defaultStatusArr, ...projectStatusArr])
+    //                 }
+    //             } else {
+    //                 Api.Toast('error', result.message)
+    //             }
+    //         } else {
+    //             Api.Toast('error', 'Server error!')
+    //         }
+    //     })
+    // }  
     const getEmployees = async (id) => {
     await Api.get(`/taskify/get/project/employee/${id}/`).then(result => {
         if (result) {
@@ -164,6 +178,7 @@ const index = () => {
         
         }))
     }
+    
     const getTasks = async (id = null, sortData = null, type = null) => {
         setTaskLoading(true)
         let url = ''
@@ -179,11 +194,18 @@ const index = () => {
             if (query.assign_to) formData['assign_to'] = query.assign_to
             if (query.priority) formData['priority'] = query.priority
             if (query.task_type) formData['task_type'] = query.task_type
+            if (pagination.currentPage) formData['page'] = pagination.currentPage
             await Api.jsonPost(url, formData).then(tasksResult => {
                 if (tasksResult) {
                     if (tasksResult.status === 200) {
-                        const tasksData = tasksResult.data
+                        setPagination(prevState => ({
+                            ...prevState,
+                            totalPages : tasksResult.data.total_pages
+                            
+                            }))
+                        const tasksData = tasksResult.data.task_data
                         setTasks(tasksData)
+                        
                     } else Api.Toast('error', tasksResult.message)
                 } else {
                     Api.Toast('error', 'Server error!')
@@ -211,7 +233,65 @@ const index = () => {
         setTimeout(() => {
             setTaskLoading(false)
         }, 500)
-    }    
+    }   
+    const getProjectPreData = async (id) => {
+        if (id) {
+            await Api.get(`/taskify/get/project/pre/data/${id}/`).then(result => {
+                if (result) {
+                    if (result.status === 200) {
+                        const resultData = result.data
+                        const employeeData = resultData.project_employees
+                        if (Object.values(resultData).length > 0) {
+                            const defaultTypesArr = []
+                            const projectTypesArr = []
+                            for (const default_types of resultData.default_task_type) {
+                                defaultTypesArr.push({value: default_types.id, label: default_types.title, type: 'default_task_type'})
+                            }
+                            if (Object.values(resultData.project_task_type).length > 0) {
+                                for (const project_types of resultData.project_task_type) {
+                                    projectTypesArr.push({value: project_types.id, label: project_types.title, type: 'project_task_type'})
+                                }
+                            }
+                            setTypeDropdown([...defaultTypesArr, ...projectTypesArr])
+                        }
+                        if (employeeData.length > 0) {
+                            const arr = []
+                            for (const emp of employeeData) {
+                                arr.push({value: emp.id, label: emp.name, img:emp.profile_image})
+                            }
+                            setEmployeeDropdown(arr)
+                        }
+                        if (Object.values(resultData).length > 0) {
+                            const defaultStatusArr = []
+                            const projectStatusArr = []
+                            for (const status of resultData.default_status) {
+                                defaultStatusArr.push({value: status.id, label: status.title})
+                            }
+                            if (Object.values(resultData.project_status).length > 0) {
+                                for (const status of resultData.project_status) {
+                                    projectStatusArr.push({value: status.id, label: status.title})
+                                }
+                            }
+                            
+                            setStatusDropdown([...defaultStatusArr, ...projectStatusArr])
+                        }
+                        if (Object.values(resultData).length > 0) {
+                            const projRole = resultData.employee_project_role
+                            if (projRole.length > 0) {
+                                setProjectRole(projRole[0])
+                            }
+                        }
+                        
+                    } else {
+                        Api.Toast('error', result.message)
+                        setTypeDropdown(false)
+                    }
+                } else {
+                    Api.Toast('error', 'Server error!')
+                }
+            })
+        }
+    } 
     const getData = async () => {
         await Api.get(`/taskify/get/project/`).then(result => {
             if (result) {
@@ -222,9 +302,11 @@ const index = () => {
                         setProjectDropdown(projectDropdown(projectsData))
                         getTasks(projectsData[0].id)
                         setActiveTab(projectsData[0].id)
-                        getTaskTypes(projectsData[0].id)
-                        getStatuses(projectsData[0].id)
-                        getEmployees(projectsData[0].id)
+                        setActiveProjects({value: projectsData[0].id, label: projectsData[0].name})
+                        getProjectPreData(projectsData[0].id)
+                        // getTaskTypes(projectsData[0].id)
+                        // getStatuses(projectsData[0].id)
+                        // getEmployees(projectsData[0].id)
                     }
                 } else {
                     Api.Toast('error', result.message)
@@ -241,6 +323,7 @@ const index = () => {
         }))
         setActiveProjects(proj)
         setActiveTab(proj.value)
+        setCsvExportData(null)
         getTasks(proj.value, query.type, query.status)
         getEmployees(proj.value)
     }
@@ -250,6 +333,29 @@ const index = () => {
         setTimeout(() => {
             setFilterLoading(false)
         }, 500)
+    }
+    const handleAssigneeChange = (assignee) => {
+        setSelectedAssignee(assignee)
+    }
+    const CustomOption = (props) => {
+        const { data, innerRef, innerProps, isFocused, isSelected } = props
+        
+        return (
+            <div
+            ref={innerRef}
+            {...innerProps}
+            className={`d-flex align-items-center p-2 ${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary text-white' : 'bg-light'}`}
+            style={{ cursor: 'pointer' }}
+            >
+            <img 
+                src={data.img} 
+                alt={data.label} 
+                className="rounded-circle me-2"
+                style={{ width: '30px', height: '30px' }}
+            />
+            <span>{data.label}</span>
+            </div>
+        )
     }
   // ** Get Tasks on mount & based on dependency change
     useEffect(() => {
@@ -268,6 +374,21 @@ const index = () => {
     const applyFilters = () => {
         getTasks(activeTab, sortState)
     }
+    const Previous = () => {
+        return <span className='align-middle d-none d-md-inline-block'>Prev</span>
+      }
+      
+      const Next = () => {
+        return <span className='align-middle d-none d-md-inline-block'>Next </span>
+      }
+    const handlePageChange = (selected) => {
+        const newPage = selected.selected + 1 // Convert to one-based index
+        console.warn('Current Page:', newPage)
+        // Update your pagination state
+        setPagination(prev => ({ ...prev, currentPage: newPage }))
+        // You can also fetch new data or perform other actions here
+        getTasks(activeTab, sortState)
+      }
     const theme = (theme) => ({
         ...theme,
         spacing: {
@@ -294,19 +415,125 @@ const index = () => {
             borderColor: state.isFocused ? "red" : "gray"
         }
         })
+    } 
+    const getAllDatesBetween = (startDate, endDate) => {
+        const dates = []
+        const currentDate = new Date(startDate)
+        const end = new Date(endDate)
+
+        while (currentDate <= end) {
+            dates.push(currentDate.toISOString().split('T')[0]) // Format as YYYY-MM-DD
+            currentDate.setDate(currentDate.getDate() + 1)
+        }
+
+        return dates
     }
-    const csvData = [
-        ["Title", "Assigned_to", "Status", "Type", "Priority", "Planned_hours", "Actual_hours"],
-        ...tasks.map((item) => [
-          item.title,
-          item.assign_to_name,
-          item.status_title ? item.status_title : 'N/A',
-          item.task_type_title ? item.task_type_title : 'N/A',
-          item.priority ? item.priority : 'N/A',
-          item.planned_hours ? item.planned_hours : 'N/A',
-          item.actual_hours ? item.actual_hours : 'N/A'
-        ])
-      ]     
+      const ExportReport = async () => {
+        if (reportStartDate !== '' && reportEndDate !== '' && activeProject) {
+            const formData = new FormData()
+            formData['start_date'] = reportStartDate
+            formData['end_date'] = reportEndDate
+            if (selectedAssignee.value !== '') formData['employee'] = selectedAssignee.value
+            try {
+                const result = await Api.jsonPost(`/taskify/get/task/report/${activeProject.value}/`, formData)
+                if (result.status === 200) {
+                    const csvRows = []
+                    const headerRow = [
+                        "Title", "Parent", "Assigned_to", "Status", "Type", "Priority", 
+                        "Planned_hours", "Actual_hours"
+                    ]
+
+                    const allDates = getAllDatesBetween(reportStartDate, reportEndDate)
+                    headerRow.push(...allDates)
+                    csvRows.push(headerRow)
+                    
+                    // Populate the data rows
+                    result.data.forEach(item => {
+                        const row = [
+                            item.title,
+                            item.parent_title || 'N/A',
+                            item.assign_to_name,
+                            item.status_title || 'N/A',
+                            item.task_type_title || 'N/A',
+                            item.priority || 'N/A',
+                            item.planned_hours || 'N/A',
+                            item.actual_hours || 'N/A'
+                        ]
+
+                         // Create a map for hours spent on each date
+                         const dateToHoursMap = {}
+                         if (item.task_time_logs) {
+                            item.task_time_logs.forEach(log => {
+                                const logDate = new Date(log.date).toISOString().split('T')[0] // Format as YYYY-MM-DD
+                                dateToHoursMap[logDate] = log.hours_spent || '0.00' // Default to '0.00' if no hours
+                            })
+                         }
+ 
+                         // Fill the row with hours for each date in the range
+                         allDates.forEach(date => {
+                             row.push(dateToHoursMap[date] || '0.00') // Use '0.00' if no log exists for that date
+                         })
+ 
+                         csvRows.push(row)
+                    })
+                    setCsvExportData(csvRows)
+                         // Create a new workbook
+                    const ws = XLSX.utils.aoa_to_sheet(csvRows)
+                    const wb = XLSX.utils.book_new()
+                    XLSX.utils.book_append_sheet(wb, ws, "Report")
+
+                    // Set column widths
+                    ws['!cols'] = [
+                        { wpx: 150 }, // Title
+                        { wpx: 150 }, // Parent
+                        { wpx: 150 }, // Assigned_to
+                        { wpx: 100 }, // Status
+                        { wpx: 100 }, // Type
+                        { wpx: 100 }, // Priority
+                        { wpx: 100 }, // Planned_hours
+                        { wpx: 100 }, // Actual_hours
+                        ...allDates.map(() => ({ wpx: 100 })) // Dates columns
+                    ]
+
+                    // Set header style (height and bold)
+                    const headerCellStyle = { 
+                        font: { bold: true }, 
+                        alignment: { horizontal: "center" }
+                    }
+
+                    // Apply style to the header row
+                    const headerRowIndex = 0 // First row (header)
+                    for (let col = 0; col < headerRow.length; col++) {
+                        const cell = ws[XLSX.utils.encode_cell({ r: headerRowIndex, c: col })]
+                        if (cell) {
+                            cell.s = headerCellStyle // Apply style
+                        }
+                    }
+
+                    // Set row height for the header
+                    ws['!rows'] = [{ hpx: 30 }] // Height in pixels for the header row
+
+                    // Store the workbook in state
+                    setWorkbook(wb)
+                } else {
+                    Api.Toast('error', result.message)
+                }
+            } catch (error) {
+                console.error(error)
+                Api.Toast('error', 'An error occurred while fetching the report.')
+            }
+        } 
+      }
+      const DownloadReport = () => {
+        if (csvExportData) {
+            if (workbook) {
+                // Generate Excel file
+                XLSX.writeFile(workbook, `report_${activeProject.label}_${new Date().toISOString().split('T')[0]}.xlsx`)
+            } else {
+                alert('Please generate the report first.')
+            }
+        }
+      }
   return (
     <Fragment>
             <Card>
@@ -337,42 +564,13 @@ const index = () => {
                             )}
                             
                         </Col>
-                        <Col md="1">
-                        <CSVLink
-                            className=" mb-2"
-                            filename={`Tasks_${activeProject.label}`}
-                            data={csvData}  
-                            title='Download CSV of tasks'
-                            >
-                            <Download color='blue' className='text-center'/>
-                        </CSVLink>
-                                
-                        </Col>
-                        {/* <Col md="3">
-                            <h3>Task Management</h3>
-                        </Col>
-                        <Col md="9">
-                            <Nav tabs className='mb-0'>
-                            {!loading ? (
-                                    projects.map((item) => (
-                                        <NavItem key={item.id}>
-                                        <NavLink
-                                            className={activeTab === item.id ? 'active' : ''}
-                                            style={{height:'55px'}}
-                                            onClick={() => toggleTab(item.id)}
-                                        >
-                                            {item.name}
-                                        </NavLink>
-                                        </NavItem>
-                                    ))
-                            
-                            ) : <div className='text-center'><Spinner size={'18'} type="grow"/> Loading projects...</div>
-                            }
-                        </Nav>
-                        </Col> */}
+                        {(projectRole !== '' && projectRole.length > 0 && projectRole.role_level < 3
+                        && projectRole.role_level > 0) && (
+                            <Col md="1">
+                                <TbReportAnalytics className='cursor-pointer' title='Report' size={'30'} color="blue" onClick={() => setCenteredModal(!centeredModal)}/>
+                            </Col>
+                        )}
                     </Row>
-                    
-              
             <div className='d-flex justify-content-between'>
                 <div>
                 <b>Sort by  </b> <Badge>{sortState}</Badge>
@@ -476,10 +674,118 @@ const index = () => {
                         <Spinner size="18" /> Loading tasks...
                     </div>
                 )}
-
+                                <ReactPaginate
+                                pageCount={ Math.ceil(pagination.totalPages) || 0 }
+                                breakLabel='...'
+                                nextLabel={<Next />}
+                                pageRangeDisplayed={5}
+                                marginPagesDisplayed={2}
+                                onPageChange={handlePageChange} // This will handle page changes
+                                forcePage={pagination.currentPage - 1} // Set the current page (ReactPaginate uses zero-based index)
+                                activeClassName='active'
+                                pageClassName='page-item'
+                                breakClassName='page-item'
+                                previousLabel={<Previous />}
+                                nextLinkClassName='page-link'
+                                pageLinkClassName='page-link'
+                                nextClassName='page-item next'
+                                breakLinkClassName='page-link'
+                                previousClassName='page-item prev'
+                                previousLinkClassName='page-link'
+                                containerClassName='pagination react-paginate mt-2'
+                              />
                 </div>
                  </CardBody>
             </Card> 
+            <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className={csvExportData ? 'modal-dialog-centered modal-xl' : 'modal-dialog-centered modal-lg'}>
+                <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Export Report</ModalHeader>
+                <ModalBody>
+                <Row>
+                    <Col md='3' className='mb-1'>
+                        <label className='form-label'>
+                            Time Log Start Date
+                        </label>
+                        <Flatpickr className='form-control' placeholder='YYYY-MM-DD'  onChange={date => setReportStartDate(Api.formatDate(date))} id='default-picker' />
+                    </Col>
+                    <Col md='3' className='mb-1'>
+                        <label className='form-label'>
+                        Time Log End Date
+                        </label>
+                        <Flatpickr className='form-control' placeholder='YYYY-MM-DD'  onChange={date => setReportEndDate(Api.formatDate(date))} id='default-picker' />
+                    </Col>
+                    <Col md={csvExportData ? '2' : '3'}>
+                        <label className='form-label'>
+                            Select Project Member
+                        </label>
+                            <Select
+                                 value={selectedAssignee}
+                                 options={employeeDropdown}
+                                 onChange={handleAssigneeChange}
+                                 components={{ Option: CustomOption }}
+                                 getOptionLabel={(option) => option.label}
+                                 getOptionValue={(option) => option.value}
+                                 autoFocus
+                                 styles={{
+                                   option: (provided) => ({
+                                     ...provided,
+                                    //  Hide the default options to prevent conflicts with CustomOption
+                                     display: 'none'
+                                   }),
+                                   singleValue: (provided) => ({
+                                     ...provided,
+                                     display: 'flex',
+                                     alignItems: 'center'
+                                   }),
+                                   menu: (provided) => ({
+                                     ...provided,
+                                     zIndex: 9999
+                                   })
+                                 }}
+                            />
+                    </Col>
+                    <Col md={csvExportData ? '2' : '3'}>
+                                <Button.Ripple color='primary' className="mt-2" onClick={ExportReport}>
+                                    <Search size={14} />
+                                    <span className='align-middle ms-25'>Generate</span>
+                                </Button.Ripple>
+                    </Col>
+                        {csvExportData && (
+                            <Col md="2">
+                                <Button.Ripple color='primary' className="mt-2" onClick={DownloadReport}>
+                                    <Download size={14} />
+                                    <span className='align-middle ms-25'>Download</span>
+                                </Button.Ripple>
+                            </Col>  
+                        )}
+                           
+                        {csvExportData && (
+                            
+                            <Table size='sm' responsive bordered>
+                                <thead>
+                                    <tr>
+                                        {csvExportData[0].map((header, index) => (
+                                            <th key={index}>{header}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {csvExportData.slice(1).map((row, rowIndex) => (
+                                        <tr key={rowIndex}>
+                                            {row.map((cell, cellIndex) => (
+                                                <td key={cellIndex}>{cell}</td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        )}    
+                    <Col md="12">
+                            
+                    </Col>       
+                </Row>
+                
+                </ModalBody>
+            </Modal>
             {/* <TaskSidebar
               store={store}
               params={params}

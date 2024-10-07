@@ -58,10 +58,12 @@ const CreateEmpExperience = ({uuid, CallBack}) => {
            if (experienceDetail.is_currently_employed) {
             formData.append('is_currently_employed', experienceDetail.is_currently_employed) 
             } else {
+               if (experienceDetail.leavingDate !== '') {
                 formData.append('leaving_date', experienceDetail.leavingDate) 
+                } else return Api.Toast('error', 'Leaving Date is required!')
             }
-            formData.append('leaving_reason', experienceDetail.leavingReason) 
-            formData.append('experience_letter', experienceDetail.experienceLetter)
+            if (experienceDetail.leavingReason) formData.append('leaving_reason', experienceDetail.leavingReason) 
+            if (experienceDetail.experienceLetter) formData.append('experience_letter', experienceDetail.experienceLetter)
          await Api.jsonPost(`/employee/${uuid}/companies/`, formData, false)
             .then(result => {
                 if (result) {

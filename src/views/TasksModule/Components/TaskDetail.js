@@ -85,7 +85,6 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
             '(\\#[-a-z\\d_]*)?$', 'i') 
         return !!pattern.test(url)
     }
-
     // State for URL validation message and temporary URL input
     const [urlValidationMessage, setUrlValidationMessage] = useState('')
     const [tempUrl, setTempUrl] = useState(data.external_ticket_reference || 'N/A')
@@ -148,7 +147,7 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
     }
     const toggleTooltipAssignBy = (key) => {
         setTooltipOpenAssignBy(prev => ({ ...prev, [key]: !prev[key] }))
-      }
+    }
     const handleSaveData = async (fieldName, value) => {
         const fieldsToCheck = ['planned_hours', 'actual_hours', 'account_hour']
     if (fieldsToCheck.includes(fieldName)) {
@@ -170,7 +169,6 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
     const handleExternalTicketChange = (e) => {
         setTempUrl(e.target.value)
     }
-
     const handleExternalTicketBlur = () => {
         if (isValidUrl(tempUrl)) {
             setexternal_ticket_reference(tempUrl)
@@ -197,22 +195,21 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
             baseUnit: 2
         }
     })
-    
-const handlePriorityChange = (priority) => {
-    setSelectedPriority(priority)
-    handleSaveData('priority', priority.value)
-    setIsEditingPriority(false) 
-}
-const handleTypeChange = (type) => {
-    setSelectedType(type)
-    handleSaveData('task_type', type.value)
-    setIsEditingType(false)
-}
-const handleAssigneeChange = (assignee) => {
-    setSelectedAssignee(assignee)
-    handleSaveData('assign_to', assignee.value)
-    setIsEditingAssignee(false)
-}
+    const handlePriorityChange = (priority) => {
+        setSelectedPriority(priority)
+        handleSaveData('priority', priority.value)
+        setIsEditingPriority(false) 
+    }
+    const handleTypeChange = (type) => {
+        setSelectedType(type)
+        handleSaveData('task_type', type.value)
+        setIsEditingType(false)
+    }
+    const handleAssigneeChange = (assignee) => {
+        setSelectedAssignee(assignee)
+        handleSaveData('assign_to', assignee.value)
+        setIsEditingAssignee(false)
+    }
     const handleTimeChange = (fieldName, e) => {
         const value = e.target.value
         const [hoursStr, minutesStr] = value.split(':')
@@ -309,61 +306,57 @@ const handleAssigneeChange = (assignee) => {
             console.log('not found')
         }
     }, [data.id])
-    
-
     const ChildCallBack = () => {
                 fetchChildTasks()
-        }
-
+    }
     const handleModalToggle = () => {
             fetchChildTasks()  
-        }
-        const CustomOption = (props) => {
-            const { data, innerRef, innerProps, isFocused, isSelected } = props
-          
-            return (
-              <div
-                ref={innerRef}
-                {...innerProps}
-                className={`d-flex align-items-center p-2 ${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary text-white' : 'bg-light'}`}
-                style={{ cursor: 'pointer' }}
-              >
-                <img 
-                  src={data.img} 
-                  alt={data.label} 
-                  className="rounded-circle me-2"
-                  style={{ width: '30px', height: '30px' }}
-                />
-                <span>{data.label}</span>
-              </div>
-            )
-          }
-          const handleImageClick = (url) => {
+    }
+    const CustomOption = (props) => {
+        const { data, innerRef, innerProps, isFocused, isSelected } = props
+        
+        return (
+            <div
+            ref={innerRef}
+            {...innerProps}
+            className={`d-flex align-items-center p-2 ${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary text-white' : 'bg-light'}`}
+            style={{ cursor: 'pointer' }}
+            >
+            <img 
+                src={data.img} 
+                alt={data.label} 
+                className="rounded-circle me-2"
+                style={{ width: '30px', height: '30px' }}
+            />
+            <span>{data.label}</span>
+            </div>
+        )
+    }
+    const handleImageClick = (url) => {
             window.open(url, '_blank')
-        }
-    
-        // Function to handle file drops
-        const uploadAttachment = async (newFiles) => {
-            if (Object.values(newFiles).length > 0) {
-                const formData = new FormData()
-                newFiles.forEach(file => {
-                    formData.append('attachments', file)
-                  })
-                await Api.jsonPost(`/taskify/attachments/${data.id}/`, formData, false).then(result => {
-                    if (result) {
-                        if (result.status === 200) {
-                            Api.Toast('success', result.message)
-                        } else {
-                            Api.Toast('error', result.message)
-                        }
-                        fetchAttachments()
-                    } else {
-                        Api.Toast('error', 'Attachment could not updated!')
-                    }
+    }
+    // Function to handle file drops
+    const uploadAttachment = async (newFiles) => {
+        if (Object.values(newFiles).length > 0) {
+            const formData = new FormData()
+            newFiles.forEach(file => {
+                formData.append('attachments', file)
                 })
-            }
-            
+            await Api.jsonPost(`/taskify/attachments/${data.id}/`, formData, false).then(result => {
+                if (result) {
+                    if (result.status === 200) {
+                        Api.Toast('success', result.message)
+                    } else {
+                        Api.Toast('error', result.message)
+                    }
+                    fetchAttachments()
+                } else {
+                    Api.Toast('error', 'Attachment could not updated!')
+                }
+            })
         }
+        
+    }
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*, .pdf, .doc, .docx',
         onDrop: acceptedFiles => {
@@ -375,7 +368,6 @@ const handleAssigneeChange = (assignee) => {
         uploadAttachment(acceptedFiles)
         }
     })
-
     const deleteAttachment = async (id) => {
         await Api.deleteData(`/taskify/attachments/delete/${id}/`, {method: 'DELETE'}).then(result => {
             if (result) {
@@ -390,8 +382,6 @@ const handleAssigneeChange = (assignee) => {
             }
         })
     }
-
-   
     return (
         <Fragment>
             <Row className='mt-1 mb-1'>
@@ -509,7 +499,7 @@ const handleAssigneeChange = (assignee) => {
                     </Row>
 
                     {/* Description */}
-                    <div className='mt-2'>
+                    <div className='mt-2' style={{overflowWrap: 'break-word'}}>
                         {isEditingDescription ? (
                             <textarea
                                 value={description}
@@ -620,8 +610,6 @@ const handleAssigneeChange = (assignee) => {
                 </Col>
             )}
             </Row>
-            
-
 {!isChild ?   <> <Row className="">
     
             <Col md="12" className="d-flex align-items-center mt-1">
@@ -714,20 +702,20 @@ const handleAssigneeChange = (assignee) => {
                                     />
                                 ) : (
                                     <span
-    style={{
-        backgroundColor: "#f8f9fa",
-        padding: '5px',
-        display: 'inline-block',
-        textAlign: 'center', 
-        borderRadius: '4px', 
-        cursor: 'pointer' 
-    }}
-    className="cursor-pointer"
-    onClick={() => setIsEditingDueDate(true)}
-    title='Assignee'
->
-    {dueDate || 'N/A'}
-</span>
+                                        style={{
+                                            backgroundColor: "#f8f9fa",
+                                            padding: '5px',
+                                            display: 'inline-block',
+                                            textAlign: 'center', 
+                                            borderRadius: '4px', 
+                                            cursor: 'pointer' 
+                                        }}
+                                        className="cursor-pointer"
+                                        onClick={() => setIsEditingDueDate(true)}
+                                        title='Assignee'
+                                    >
+                                        {dueDate || 'N/A'}
+                                    </span>
 
                                 
                                 )}
@@ -805,29 +793,29 @@ const handleAssigneeChange = (assignee) => {
                             </div>
                         </div>
                         <div className="mt-3" style={{ height: '200px', overflowY: 'auto', overflowX: 'hidden' }}>
-    <Col md="12" className="d-flex align-items-center">
-        <h6 className='border-right' style={{ paddingRight: '10px'}}>Time Logs</h6> 
-        <div>
-            <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa', padding: '5px', marginTop: '-10px' }} onClick={() => toggletimelogmodal()}/>
-        </div>
-    </Col>
-    {timeLogs && timeLogs.length > 0 ? (
-        <>
-            {timeLogs.map((log) => (
-                <Row key={log.id} className="mb-1 align-items-center">
-                    <Col md="6">
-                        {log.date}
-                    </Col>
-                    <Col md="6">
-                        <strong>{log.hours_spent} hours</strong>
-                    </Col>
-                </Row>
-            ))}
-        </>
-    ) : (
-        <span>No time logs found.</span>
-    )}
-</div>
+                            <Col md="12" className="d-flex align-items-center">
+                                <h6 className='border-right' style={{ paddingRight: '10px'}}>Time Logs</h6> 
+                                <div>
+                                    <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa', padding: '5px', marginTop: '-10px' }} onClick={() => toggletimelogmodal()}/>
+                                </div>
+                            </Col>
+                            {timeLogs && timeLogs.length > 0 ? (
+                                <>
+                                    {timeLogs.map((log) => (
+                                        <Row key={log.id} className="mb-1 align-items-center">
+                                            <Col md="6">
+                                                {log.date}
+                                            </Col>
+                                            <Col md="6">
+                                                <strong>{log.hours_spent} hours</strong>
+                                            </Col>
+                                        </Row>
+                                    ))}
+                                </>
+                            ) : (
+                                <span>No time logs found.</span>
+                            )}
+                        </div>
 
                         {/* Account Hours */}
                         {/* <div className="mb-1">
@@ -898,7 +886,7 @@ const handleAssigneeChange = (assignee) => {
                 <Button color="primary" onClick={handleAddTimeLog}>Save</Button></Col>
                 </Row>
             </ModalBody>
-        </Modal>
+            </Modal>
         </Fragment>
     )
 }

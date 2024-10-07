@@ -75,6 +75,7 @@ const Tasks = ({ data, projectsData, CallBack, selectedTaskid, project_id, emplo
     CallBack(project)
     setCenteredModal(!centeredModal)
   }
+ 
   return (
     <Fragment>
       <div className='sidebar'>
@@ -133,114 +134,116 @@ const Tasks = ({ data, projectsData, CallBack, selectedTaskid, project_id, emplo
                           const assigneeFormattedName = formatName(item.assign_to_name)
 
                           return (
-                            <ListGroupItem
-                              action
-                              key={key}
-                              className="task-list-item py-2 cursor-pointer"
-                              onClick={() => onClickIssue(item)}
-                              tag="div"
-                              onMouseEnter={() => setHovered(key)}
-                              onMouseLeave={() => setHovered(null)}
-                            >
-                              <Row className='d-flex justify-content-between align-items-center small'>
-                                {/* Task Title */}
-                                <Col xs={12} sm={4} md={3}>
-                                  <strong className={
-                                      hovered === key  ? 'text-white cursor-pointer'  : 'text-dark cursor-pointer'
-                                    }>{(item.title).substring(0, 20)}...</strong>
-                                </Col>
+                              <ListGroupItem
+                                action
+                                key={key}
+                                className={item.status_title === 'Completed' ? "task-list-item py-2 cursor-pointer list-group-item-completed" : "task-list-item py-2 cursor-pointer"}
+                                onClick={() => onClickIssue(item)}
+                                tag="div"
+                                onMouseEnter={() => setHovered(key)}
+                                onMouseLeave={() => setHovered(null)}
+                              >
+                                <Row className='d-flex justify-content-between align-items-center small'>
+                                  {/* Task Title */}
+                                  <Col xs={12} sm={4} md={3}>
+                                    <strong className={
+                                        hovered === key  ? 'text-white cursor-pointer'  : item.status_title !== 'Completed' ? 'text-dark cursor-pointer' : 'text-white cursor-pointer'
+                                      }>{(item.title).substring(0, 20)}...</strong>
+                                  </Col>
 
-                                {/* Assigner Profile Image and Name */}
-                                {/* <Col xs={6} sm={2} md={2}>
-                                  <div className='d-flex align-items-center'>
-                                    {item.profile_image_employee && (
-                                      <img
-                                        src={item.profile_image_employee}
-                                        alt="Assigner"
-                                        className="rounded-circle"
-                                        style={{ width: '24px', height: '24px', marginRight: '8px' }}
-                                      />
-                                    )}
-                                    <span
-                                      id={`assignBy-${key}`}
-                                      className={hovered === key ? 'text-white cursor-pointer' : 'text-dark cursor-pointer'}
-                                    >
-                                      {assignerFormattedName}
-                                    </span>
-                                    <Tooltip
-                                      placement="top"
-                                      isOpen={tooltipOpenAssignBy[key]}
-                                      target={`assignBy-${key}`}
-                                      toggle={() => toggleTooltipAssignBy(key)}
-                                    >
-                                      {item.employee_name}
-                                    </Tooltip>
-                                  </div>
-                                </Col> */}
+                                  {/* Assigner Profile Image and Name */}
+                                  {/* <Col xs={6} sm={2} md={2}>
+                                    <div className='d-flex align-items-center'>
+                                      {item.profile_image_employee && (
+                                        <img
+                                          src={item.profile_image_employee}
+                                          alt="Assigner"
+                                          className="rounded-circle"
+                                          style={{ width: '24px', height: '24px', marginRight: '8px' }}
+                                        />
+                                      )}
+                                      <span
+                                        id={`assignBy-${key}`}
+                                        className={hovered === key ? 'text-white cursor-pointer' : 'text-dark cursor-pointer'}
+                                      >
+                                        {assignerFormattedName}
+                                      </span>
+                                      <Tooltip
+                                        placement="top"
+                                        isOpen={tooltipOpenAssignBy[key]}
+                                        target={`assignBy-${key}`}
+                                        toggle={() => toggleTooltipAssignBy(key)}
+                                      >
+                                        {item.employee_name}
+                                      </Tooltip>
+                                    </div>
+                                  </Col> */}
 
-                                {/* Assignee Profile Image and Name */}
-                                <Col xs={6} sm={2} md={2}>
-                                  <div className='d-flex align-items-center'>
-                                    {item.profile_image_assign_to && (
-                                      <img
-                                        src={item.profile_image_assign_to}
-                                        alt="Assignee"
-                                        className="rounded-circle"
-                                        style={{ width: '24px', height: '24px', marginRight: '8px' }}
-                                      />
-                                    )}
-                                    <span
-                                      id={`assignTo-${key}`}
-                                      className={hovered === key ? 'text-white cursor-pointer' : 'text-dark cursor-pointer'}
-                                    >
-                                      {assigneeFormattedName}
-                                    </span>
-                                    <Tooltip
-                                      placement="top"
-                                      isOpen={tooltipOpenAssignTo[key]}
-                                      target={`assignTo-${key}`}
-                                      toggle={() => toggleTooltipAssignTo(key)}
-                                    >
-                                      {item.assign_to_name}
-                                    </Tooltip>
-                                  </div>
-                                </Col>
+                                  {/* Assignee Profile Image and Name */}
+                                  <Col xs={6} sm={2} md={2}>
+                                    <div className='d-flex align-items-center'>
+                                      {item.profile_image_assign_to && (
+                                        <img
+                                          src={item.profile_image_assign_to}
+                                          alt="Assignee"
+                                          className="rounded-circle"
+                                          style={{ width: '24px', height: '24px', marginRight: '8px' }}
+                                        />
+                                      )}
+                                      <span
+                                        id={`assignTo-${key}`}
+                                        className={hovered === key ? 'text-white cursor-pointer' : item.status_title !== 'Completed' ? 'text-dark cursor-pointer' : 'text-white cursor-pointer'}
+                                      >
+                                        {assigneeFormattedName}
+                                      </span>
+                                      <Tooltip
+                                        placement="top"
+                                        isOpen={tooltipOpenAssignTo[key]}
+                                        target={`assignTo-${key}`}
+                                        toggle={() => toggleTooltipAssignTo(key)}
+                                      >
+                                        {item.assign_to_name}
+                                      </Tooltip>
+                                    </div>
+                                  </Col>
 
-                                {/* Task Status */}
-                                <Col xs={6} sm={2} md={2}>
-                                  <Badge className='badge-glow'>{item.status_title}</Badge>
-                                </Col>
+                                  {/* Task Status */}
+                                  <Col xs={6} sm={2} md={2}>
+                                    <Badge className='badge-glow'>{item.status_title}</Badge>
+                                  </Col>
 
-                                {/* Task Type */}
-                                <Col xs={6} sm={2} md={2}>
-                                  <span className={
-                                      hovered === key  ? 'text-white cursor-pointer'  : 'text-dark cursor-pointer'
-                                    }>{item.task_type_title}</span>
-                                </Col>
+                                  {/* Task Type */}
+                                  <Col xs={6} sm={2} md={2}>
+                                    <span className={
+                                        hovered === key  ? 'text-white cursor-pointer'  : item.status_title !== 'Completed' ? 'text-dark cursor-pointer' : 'text-white cursor-pointer'
+                                      }>{item.task_type_title}</span>
+                                  </Col>
 
-                                {/* Task Priority */}
-                                <Col xs={6} sm={2} md={1}>
-                                  <Badge color={getPriorityBadgeColor(item.priority)}>
-                                    {item.priority}
-                                  </Badge>
-                                </Col>
+                                  {/* Task Priority */}
+                                  <Col xs={6} sm={2} md={1}>
+                                    <Badge color={getPriorityBadgeColor(item.priority)}>
+                                      {item.priority}
+                                    </Badge>
+                                  </Col>
 
-                                {/* Due Date */}
-                                <Col xs={6} sm={2} md={2} className='text-nowrap'>
-                                  <span className={
-                                      hovered === key  ? 'text-white cursor-pointer'  : 'text-dark cursor-pointer'
-                                    }>{item.due_date ? item.due_date : 'N/A'}</span>
-                                </Col>
-                              </Row>
-                            </ListGroupItem>
+                                  {/* Due Date */}
+                                  <Col xs={6} sm={2} md={2} className='text-nowrap'>
+                                    <span className={
+                                        hovered === key  ? 'text-white cursor-pointer'  :  item.status_title !== 'Completed' ? 'text-dark cursor-pointer' : 'text-white cursor-pointer'
+                                      }>{item.due_date ? item.due_date : 'N/A'}</span>
+                                  </Col>
+                                </Row>
+                              </ListGroupItem>
                           )
                         })
                       ) : (
                         <p className='text-center small'>No tasks found!</p>
                       )}
                     </ListGroup>
+                    
                   </div>
                 </PerfectScrollbar>
+                
               </Col>
             </Row>
           </div>

@@ -293,6 +293,7 @@ const index = () => {
         }
     } 
     const getData = async () => {
+        setLoading(true)
         await Api.get(`/taskify/get/project/`).then(result => {
             if (result) {
                 if (result.status === 200) {
@@ -315,6 +316,9 @@ const index = () => {
                 Api.Toast('error', 'Server error!')
             }
         })
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
     }
     const toggleTab = (proj, type = null) => {
         setQuery(prev => ({
@@ -359,12 +363,7 @@ const index = () => {
     }
   // ** Get Tasks on mount & based on dependency change
     useEffect(() => {
-        setLoading(true)
             getData()
-        setTimeout(() => {
-            setLoading(false)
-        }, 500)
-        
     }, [setProjects])
     const CallBack = useCallback((id, selectedTaskid, sort) => {
         setActiveTab(id)

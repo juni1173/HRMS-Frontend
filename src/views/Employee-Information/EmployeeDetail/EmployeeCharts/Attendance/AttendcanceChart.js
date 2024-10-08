@@ -213,14 +213,13 @@ const AttendcanceChart = ({ data }) => {
       return (
         <>
             <Card className='holiday-chart align-item-center'>
-            <CardTitle className='mb-1'>Attendance</CardTitle>
             <CardBody className='d-flex justify-content-center p-0'>
                 <div>
                     <Table striped responsive >
                         <thead>
                             <tr>
                                 <th className='cursor-pointer' ><MdWork size={17} className='text-primary' /> <span style={{fontSize:'x-large'}}>{data[0].total_working_days && data[0].total_working_days}<span className='font-small-1 text-secondary'> Working Days</span></span><br></br><span className='font-small-1 text-secondary'>{data[0].total_working_days && convertDaysToYearsMonths(data[0].total_working_days)}</span></th>
-                                <th><span style={{fontSize:'x-large'}}>{(((data[0].total_presents + data[0].total_wfh + data[0].total_leaves) / data[0].total_working_days) * 100).toFixed('2')}%</span><br></br><span className='font-small-1 text-secondary'> Including Leaves</span></th>
+                                <th><span style={{fontSize:'x-large'}}>{(((data[0].total_presents + data[0].total_wfh + data[0].total_leaves + data[0].total_weekday_holidays) / data[0].total_working_days) * 100).toFixed('2')}%</span><br></br><span className='font-small-1 text-secondary'> Including Leaves</span></th>
                             </tr>
                             <tr>
                                 <th className='cursor-pointer' ><MdCoPresent size={17} className='text-success' /> <span>{data[0].total_presents && data[0].total_presents}<span className='font-small-1 text-secondary'> Presents</span></span><br></br><span className='font-small-1 text-secondary'>{data[0].total_presents && convertDaysToYearsMonths(data[0].total_presents)}</span></th>

@@ -48,7 +48,6 @@ const BankDetail = ({emp_state}) => {
         ...prevState,
         [InputName] : InputValue
         
-        
         }))
     }
 

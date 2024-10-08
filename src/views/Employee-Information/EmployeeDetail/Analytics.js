@@ -4,7 +4,6 @@ import { IoAnalyticsOutline } from "react-icons/io5"
 import EmployeeAttendanceChart from "./EmployeeCharts/Attendance/index"
 import EmployeePerformanceChart from "./EmployeeCharts/Performance/index"
 const Analytics = ({ empData}) => {
-console.warn(empData)
   return (
     <Fragment>
         <Card className="emplyee_office_detail mb-0">

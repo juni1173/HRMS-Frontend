@@ -7,7 +7,7 @@ import { Fragment, useState, useEffect } from 'react'
 import user_blank  from "../../../../assets/images/avatars/user_blank.png"
 import apiHelper from '../../../Helpers/ApiHelper'
 import Avatar from '@components/avatar'
-import { Spinner, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody } from 'reactstrap'
+import { Spinner, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, Badge, CardHeader, CardTitle } from 'reactstrap'
 import { GiGlassCelebration } from "react-icons/gi"
 import { FaBirthdayCake } from "react-icons/fa"
 export default function EventsCalender() {
@@ -106,6 +106,26 @@ export default function EventsCalender() {
 
     return (
         <Fragment>
+            {/* <Card className='card-transaction cursor-pointer mb-1' style={{background: 'linear-gradient(to right, #2c3e50, #3498db)'}}>
+                <CardHeader className='p-1'>
+                <Badge pill style={{background: 'linear-gradient(to right, #2c3e50, #3498db)'}} className='badge-up'>
+                    {anniversaries.length}
+                    </Badge>
+                    <CardTitle tag='h5' className='text-white'> Anniversaries</CardTitle>
+                    <a href='../requests/'><Icon.ArrowRight size={18} className='cursor-pointer' /></a> 
+                     <Icon.ArrowDown size={18} color='white'  /> 
+                </CardHeader>
+            </Card> */}
+             {/* <Card className='card-transaction cursor-pointer mb-1' style={{background: 'linear-gradient(to right, #2c3e50, #3498db)'}}>
+                 <CardHeader className='p-1'>
+                 <Badge pill style={{background: 'linear-gradient(to right, #2c3e50, #3498db)'}} className='badge-up'>
+                     {birthdays.length}
+                     </Badge>
+                     <CardTitle tag='h5' className='text-white'> Birthdays</CardTitle>
+                      <a href='../requests/'><Icon.ArrowRight size={18} className='cursor-pointer' /></a> 
+                      <Icon.ArrowDown size={18} color='white'  />
+                 </CardHeader>
+             </Card> */}
             <Card className='card-browser-states'>
                 <CardBody>
                     <Nav pills justified>
@@ -116,7 +136,7 @@ export default function EventsCalender() {
                     toggle('1')
                     }}
                 >
-                    <GiGlassCelebration color={active === '1' ? '#fff' : '#315180'} size={'24'}  /> Anniversaries
+                    <GiGlassCelebration color={active === '1' ? '#fff' : '#315180'} size={'24'}  /> Anniversaries {anniversaries.length}
                 </NavLink>
                 </NavItem>
                 <NavItem>

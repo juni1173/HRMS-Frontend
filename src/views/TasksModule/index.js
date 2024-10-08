@@ -681,17 +681,12 @@ const index = () => {
                                 marginPagesDisplayed={2}
                                 onPageChange={handlePageChange} // This will handle page changes
                                 forcePage={pagination.currentPage - 1} // Set the current page (ReactPaginate uses zero-based index)
-                                activeClassName='active'
-                                pageClassName='page-item'
-                                breakClassName='page-item'
                                 previousLabel={<Previous />}
-                                nextLinkClassName='page-link'
-                                pageLinkClassName='page-link'
-                                nextClassName='page-item next'
-                                breakLinkClassName='page-link'
-                                previousClassName='page-item prev'
-                                previousLinkClassName='page-link'
-                                containerClassName='pagination react-paginate mt-2'
+                                containerClassName='pagination mt-2'
+                                pageLinkClassName='page-num'
+                                previousLinkClassName='page-num'
+                                nextLinkClassName='page-num'
+                                activeLinkClassName='active'
                               />
                 </div>
                  </CardBody>

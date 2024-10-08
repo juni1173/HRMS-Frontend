@@ -83,11 +83,14 @@ const ProjectBasedKpiData = ({ id }) => {
   }
   return (
     <Fragment>
-        <Row>
-            <Col md="12" className=''>
-            {
+        <div className="d-flex justify-content-between">
+            <div>
+                <h3>Kpi Performance Overview</h3>
+            </div>
+            <div>
+              {
                 projectList.length > 0 && (
-                    <div className="w-25 float-right mb-1">
+                    <div className="w-100 mb-1">
                             <Select
                             type="text"
                             placeholder="Select Project"
@@ -101,7 +104,9 @@ const ProjectBasedKpiData = ({ id }) => {
                             />
                         </div>
                 )}
-            </Col>
+            </div>
+        </div>
+        <Row>
             <Col md="12">
                 {!loading ? (
                     data && data.length > 0 ? (

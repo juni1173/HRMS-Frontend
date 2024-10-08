@@ -39,7 +39,7 @@ const EmployeeDashboard = () => {
                 <Row>
                   <Col md='3'>
                     {active === '1' && <h3 style={{paddingTop:'0.5rem'}}>Dashboard</h3>}
-                    {active === '2' &&  <h3 style={{paddingTop:'0.5rem'}}>Charts</h3>}
+                    {/* {active === '2' &&  <h3 style={{paddingTop:'0.5rem'}}>Charts</h3>} */}
                     {active === '3' &&  <h3 style={{paddingTop:'0.5rem'}}>Calender</h3>}
                   </Col>
                   <Col md='6'>
@@ -54,7 +54,7 @@ const EmployeeDashboard = () => {
                         Dashboard
                       </NavLink>
                     </NavItem>
-                    <NavItem>
+                    {/* <NavItem>
                       <NavLink
                         active={active === '2'}
                         onClick={() => {
@@ -63,7 +63,7 @@ const EmployeeDashboard = () => {
                       >
                         Charts
                       </NavLink>
-                    </NavItem>
+                    </NavItem> */}
                     <NavItem>
                       <NavLink
                         active={active === '3'}
@@ -100,7 +100,7 @@ const EmployeeDashboard = () => {
                   )}
                  
                 </TabPane>
-                <TabPane tabId='2'>
+                {/* <TabPane tabId='2'>
                   {active === '2' ? (
                     <>
                       <Charts />
@@ -112,7 +112,7 @@ const EmployeeDashboard = () => {
                       </CardBody>
                     </Card>
                   )}
-                </TabPane>
+                </TabPane> */}
                 <TabPane tabId='3'>
                 {active === '3' ? (
                     <>

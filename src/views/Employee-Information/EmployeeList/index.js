@@ -46,7 +46,7 @@ const viewEmployee = () => {
           }, [employeeActiveList, employeeInactiveList])
    return (
     <Fragment>
-      <Nav tabs className='course-tabs'>
+        <Nav tabs className='course-tabs'>
                                 {/* <div className='col-md-6'> */}
                                     <NavItem >
                                     <NavLink
@@ -74,25 +74,25 @@ const viewEmployee = () => {
                                     </NavItem>
                                 
                                 {/* </div> */}
-                        </Nav>
-                        <TabContent className='py-50' activeTab={active}>
-                        <TabPane tabId={'1'}>
-                            {!loading ? (
-                                <Employees employeeList={employeeActiveList} CallBack={CallBack} type="active"/>
-                            ) : (
-                                <div className="text-center"><Spinner/></div> 
-                            )}
-                           
-                        </TabPane>
-                        <TabPane tabId={'2'}>
-                        {!loading ? (
-                                 <Employees employeeList={employeeInactiveList} CallBack={CallBack} type="inactive"/>
-                            ) : (
-                                <div className="text-center"><Spinner/></div> 
-                            )}
-                           
-                        </TabPane>
-                    </TabContent>
+        </Nav>
+        <TabContent className='py-50' activeTab={active}>
+        <TabPane tabId={'1'}>
+            {!loading ? (
+                <Employees employeeList={employeeActiveList} CallBack={CallBack} type="active"/>
+            ) : (
+                <div className="text-center"><Spinner/></div> 
+            )}
+            
+        </TabPane>
+        <TabPane tabId={'2'}>
+        {!loading ? (
+                    <Employees employeeList={employeeInactiveList} CallBack={CallBack} type="inactive"/>
+            ) : (
+                <div className="text-center"><Spinner/></div> 
+            )}
+            
+        </TabPane>
+        </TabContent>
     </Fragment>
    )
 }

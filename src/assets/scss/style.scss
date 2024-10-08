@@ -531,4 +531,28 @@ div.configuration_panel .tab-pane-orange {
   .text-center {
 	text-align: center;
   }
-  
+  th.sticky-col, td.sticky-col {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    background-color: #315180;
+	color: white;
+    z-index: 1; /* Ensure the sticky columns are on top */
+    box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); /* Optional shadow for visual effect */
+}
+
+th.sticky-col:first-of-type, td.sticky-col:first-of-type {
+    left: -15px;
+    z-index: 2; /* Higher z-index for the first sticky column */
+}
+
+th.sticky-col:nth-of-type(2), td.sticky-col:nth-of-type(2) {
+    left: 50px; /* Adjust based on the width of the first sticky column */
+    z-index: 1;
+}
+.onHovergrey {
+	transition: background-color 0.3s ease;
+  }
+.onHovergrey:hover {
+	background-color: lightgray !important;
+	border: #315180 solid 1px;
+}

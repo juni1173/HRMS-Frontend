@@ -11,7 +11,13 @@ import apiHelper from '../../../Helpers/ApiHelper'
 import GymApprovals from './GymApprovals'
 import AttendanceCard from './AttendanceCalendar'
 import TasksModule from '../../../TasksModule/index'
+import { useSelector } from 'react-redux'
+import ProjectBasedKpiData from '../../../Employee-Information/EmployeeDetail/EmployeeCharts/Performance/ProjectBasedKpiData'
+import EmployeeAttendanceChart from '../../../Employee-Information/EmployeeDetail/EmployeeCharts/Attendance/index'
+import EventsCalender from '../Calender'
 const EmployeeDash = () => {
+    const currentUserState = useSelector(state => state.auth.userData.user)
+    console.warn(currentUserState)
     const Api = apiHelper()
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
@@ -44,6 +50,21 @@ const EmployeeDash = () => {
                 <GymApprovals data={data.gym ? data.gym : []}/>
             </Col>
             <Col md='8'>
+                {/* <Card>
+                    <CardBody>
+                        <EmployeeAttendanceChart id={currentUserState.id} />
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardBody>
+                        <ProjectBasedKpiData id={currentUserState.id} />
+                    </CardBody>
+                </Card> */}
+                {/* <Card>
+                    <CardBody>
+                        <EventsCalender />
+                    </CardBody>
+                </Card> */}
                 <TasksModule />
             </Col>
             

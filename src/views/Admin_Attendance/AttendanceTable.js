@@ -250,66 +250,67 @@ const AttendanceTable = () => {
 </Row>
 {/* <Container> */}
 <Masonry className="row js-animation">
-     {!loading ? (
-                       <Table borderless striped responsive className='table table-sm my-1 Small-font'>
-                        <thead  className='table-dark text-center'>
+      {!loading ? (
+                       <Table borderless responsive className='table table-sm my-1 Small-font sticky-header'>
+                        <thead  className='table-dark text-center sticky'>
                             <tr>
                             <th className="px-1">Emp code</th>
                             <th className="px-1">Name</th>
                             <th className="px-1">WFH</th>
-        <th className="px-1">P</th>
-        <th className="px-1">A</th>
-        <th className="px-1">L</th>
-        <th className="px-1">H</th>
+                            <th className="px-1">P</th>
+                            <th className="px-1">A</th>
+                            <th className="px-1">L</th>
+                            <th className="px-1">H</th>
                             {uniqueDates.map((date, index) => (
-           <th key={index} className="px-1">
-           {String(date.date).slice(-2)} {/* Extract the last two characters */}
-           <div className="text-small">{date.label}</div>
-       </th>
-        ))}
+                              <th key={index} className="px-1">
+                                  {String(date.date).slice(-2)} {/* Extract the last two characters */}
+                                  <div className="text-small">{date.label}</div>
+                              </th>
+                            ))}
        
                             </tr>
                               </thead> 
                                      
-   {currentItems && Object.values(currentItems).length > 0 ? (
-    currentItems.map((item, key) => (
-        <tbody >
-            <tr key={key} onClick={() => handleRowClick(item)} style={{ cursor: 'pointer' }}>
-            <td className="px-1">{item.emp_code}</td>
-            <td className="px-1 text-small" >{item.name}</td>
-            <td className="px-1"><strong>{item.attendance_status_data?.total_wfh || '0'}</strong></td>
-<td className="px-1"><strong>{item.attendance_status_data?.total_presents || '0'}</strong></td>
-<td className="px-1"><strong>{item.attendance_status_data?.total_absesnts || '0'}</strong></td>
-<td className="px-1"><strong>{item.attendance_status_data?.total_leaves || '0'}</strong></td>
-<td className="px-1"><strong>{item.attendance_status_data?.total_holidays || '0'}</strong></td>
-          {item.attendance_status_data && item.attendance_status_data.data ? (
-                        uniqueDates.map((date, index) => {
-                            const statusItem = item.attendance_status_data.data.find(
-                                (status) => status.date === date.date
-                            )
-                            return (
-                                <td
-                                key={index}
-                                className="px-1"
-                              >
-                          {statusItem && statusItem.attendance_status !== null ?  statusItem.attendance_status === 'W' ? statusItem.attendance_status : statusItem.attendance_status === 'L' ?    statusItem.comments.split(' ').map(word => word.charAt(0)).join('') :  statusItem.attendance_status === 'P' ? <Monitor size={12} color="green"/> :  statusItem.attendance_status === 'WFH' ? <Wifi size={12} color="blue"/> : statusItem.attendance_status === 'H' ? <Calendar color='#A020F0' size={12}/> : <AlertTriangle color="red" size={12}/>  :    <AlertTriangle color="red" size={12}/>}
+                          {currentItems && Object.values(currentItems).length > 0 ? (
+                            currentItems.map((item, key) => (
+                                <tbody >
+                                    <tr key={key} onClick={() => handleRowClick(item)} style={{ cursor: 'pointer' }} className='onHovergrey'>
+                                    <td className="px-1 sticky-col bg-blue" title="Employee Code">{item.emp_code}</td>
+                                    <td className="px-1 text-small sticky-col" title="Employee Name">{item.name}</td>
+                                    <td className="px-1" title="WFH"><strong>{item.attendance_status_data?.total_wfh || '0'}</strong></td>
+                                    <td className="px-1" title="Total Presents"><strong>{item.attendance_status_data?.total_presents || '0'}</strong></td>
+                                    <td className="px-1" title="Total Absents"><strong>{item.attendance_status_data?.total_absesnts || '0'}</strong></td>
+                                    <td className="px-1" title="Total Leaves"><strong>{item.attendance_status_data?.total_leaves || '0'}</strong></td>
+                                    <td className="px-1" title="Total Holidays"><strong>{item.attendance_status_data?.total_holidays || '0'}</strong></td>
+                                    {item.attendance_status_data && item.attendance_status_data.data ? (
+                                                uniqueDates.map((date, index) => {
+                                                    const statusItem = item.attendance_status_data.data.find(
+                                                        (status) => status.date === date.date
+                                                    )
+                                                    return (
+                                                        <td
+                                                        key={index}
+                                                        className="px-1"
+                                                        title={date.date}
+                                                      >
+                                                  {statusItem && statusItem.attendance_status !== null ?  statusItem.attendance_status === 'W' ? statusItem.attendance_status : statusItem.attendance_status === 'L' ?    statusItem.comments.split(' ').map(word => word.charAt(0)).join('') :  statusItem.attendance_status === 'P' ? <Monitor size={12} color="green"/> :  statusItem.attendance_status === 'WFH' ? <Wifi size={12} color="blue"/> : statusItem.attendance_status === 'H' ? <Calendar color='#A020F0' size={12}/> : <AlertTriangle color="red" size={12}/>  :    <AlertTriangle color="red" size={12}/>}
 
-                              </td>
-                              
-                            )
-                        })
-                    ) : (
-                        <td colSpan={uniqueDates.length}>No Attendance Data Found!</td>
-                    )}
-                                        
-                                        
-            </tr>
-        </tbody>
-        
-    ))
-) : (
-    <div className='text-center'>No Data Found!</div>
-)}
+                                                      </td>
+                                                      
+                                                    )
+                                                })
+                                            ) : (
+                                                <td colSpan={uniqueDates.length}>No Attendance Data Found!</td>
+                                            )}
+                                                                
+                                                                
+                                    </tr>
+                                </tbody>
+                                
+                            ))
+      ) : (
+          <div className='text-center'>No Data Found!</div>
+      )}
                        </Table>
                  
         ) : (

@@ -56,9 +56,9 @@ const UpcomingHolidays = ({ data }) => {
   }
 
   return (
-    <Card className='card-transaction cursor-pointer mb-1 p-0' style={{background: 'linear-gradient(to right, #870000, #190a05)'}}>
+    <Card className='card-transaction cursor-pointer mb-1 p-0' style={{background: 'linear-gradient(to right, #000000, #434343)'}}>
       <CardHeader onClick={toggleCardBody} className='p-1'>
-      <Badge pill style={{background: 'linear-gradient(to right, #870000, #190a05)'}} className='badge-up'>
+      <Badge pill style={{background: 'linear-gradient(to right, #000000, #434343)'}} className='badge-up'>
           {data.length}
         </Badge>
         <CardTitle tag='h4' className='text-white'><MdWorkOff color='#fff' size={'24'} /> Upcoming Holidays</CardTitle>

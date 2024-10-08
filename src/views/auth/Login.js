@@ -74,7 +74,7 @@ const Login = () => {
       .then((result) => {
         if (result) {
           if (result.status === 200) {
-            const data = {status:result.status, accessToken: result.token.accessToken, refreshToken: result.token.refreshToken, org: {id: result.org_id, name: result.organization_name, logo: result.organization_logo}, user_id: result.user_id, user_role: result.admin ? 'admin' : 'employee' }
+            const data = {status:result.status, accessToken: result.token.accessToken, refreshToken: result.token.refreshToken, org: {id: result.org_id, name: result.organization_name, logo: result.organization_logo}, user: result.user, user_id: result.user_id, user_role: result.admin ? 'admin' : 'employee' }
             dispatch(handleLogin(data))
             localStorage.setItem('organization', JSON.stringify(data.org))
             localStorage.setItem('user', JSON.stringify(result.user))

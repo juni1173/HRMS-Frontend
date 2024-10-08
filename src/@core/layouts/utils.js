@@ -96,6 +96,6 @@ export const canViewMenuGroup = item => {
 
 export const canViewMenuItem = item => {
   const ability = useContext(AbilityContext)
-  console.log('AbilityContext :>> ', AbilityContext)
+  // console.log('AbilityContext :>> ', AbilityContext)
   return ability.can(item.action, item.resource)
 }

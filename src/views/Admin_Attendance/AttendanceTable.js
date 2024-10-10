@@ -213,8 +213,10 @@ const AttendanceTable = () => {
                     } else {
                         setmonthvalue(currentMonth)
                     }
-            
-              }}
+              
+                }}
+                menuPlacement="auto" 
+                menuPosition='fixed'
             />
         </Col>
 <Col md={4}>

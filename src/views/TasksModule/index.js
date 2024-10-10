@@ -178,62 +178,6 @@ const index = () => {
         
         }))
     }
-    
-    const getTasks = async (id = null, sortData = null, type = null) => {
-        setTaskLoading(true)
-        let url = ''
-        if (id) {
-            url = `/taskify/get/project/all/task/${id}/`
-            const formData = new FormData()
-            if (sortData) {
-                setSortState(sortData)
-                if (sortData === 'assign-to-me') formData['assign_to'] = Api.user.id
-                if (sortData === 'created-by-me') formData['employee'] = Api.user.id
-            }
-            if (query.status) formData['status'] = query.status
-            if (query.assign_to) formData['assign_to'] = query.assign_to
-            if (query.priority) formData['priority'] = query.priority
-            if (query.task_type) formData['task_type'] = query.task_type
-            if (pagination.currentPage) formData['page'] = pagination.currentPage
-            await Api.jsonPost(url, formData).then(tasksResult => {
-                if (tasksResult) {
-                    if (tasksResult.status === 200) {
-                        setPagination(prevState => ({
-                            ...prevState,
-                            totalPages : tasksResult.data.total_pages
-                            
-                            }))
-                        const tasksData = tasksResult.data.task_data
-                        setTasks(tasksData)
-                        
-                    } else Api.Toast('error', tasksResult.message)
-                } else {
-                    Api.Toast('error', 'Server error!')
-                }
-            })
-            setTimeout(() => {
-                setTaskLoading(false)
-            }, 500)
-            return false
-        }
-        if (id && type === 'my_tasks') {
-            url = `/taskify/get/project/assign/task/${id}/`
-        }
-       
-        await Api.get(url).then(tasksResult => {
-            if (tasksResult) {
-                if (tasksResult.status === 200) {
-                    const tasksData = tasksResult.data
-                    setTasks(tasksData)
-                } else Api.Toast('error', tasksResult.message)
-            } else {
-                Api.Toast('error', 'Server error!')
-            }
-        })
-        setTimeout(() => {
-            setTaskLoading(false)
-        }, 500)
-    }   
     const getProjectPreData = async (id) => {
         if (id) {
             await Api.get(`/taskify/get/project/pre/data/${id}/`).then(result => {
@@ -292,6 +236,61 @@ const index = () => {
             })
         }
     } 
+    const getTasks = async (id = null, sortData = null, type = null) => {
+        setTaskLoading(true)
+        let url = ''
+        if (id) {
+            url = `/taskify/get/project/all/task/${id}/`
+            const formData = new FormData()
+            if (sortData) {
+                setSortState(sortData)
+                if (sortData === 'assign-to-me') formData['assign_to'] = Api.user.id
+                if (sortData === 'created-by-me') formData['employee'] = Api.user.id
+            }
+            if (query.status) formData['status'] = query.status
+            if (query.assign_to) formData['assign_to'] = query.assign_to
+            if (query.priority) formData['priority'] = query.priority
+            if (query.task_type) formData['task_type'] = query.task_type
+            if (pagination.currentPage) formData['page'] = pagination.currentPage
+            await Api.jsonPost(url, formData).then(tasksResult => {
+                if (tasksResult) {
+                    if (tasksResult.status === 200) {
+                        setPagination(prevState => ({
+                            ...prevState,
+                            totalPages : tasksResult.data.total_pages
+                            
+                            }))
+                        const tasksData = tasksResult.data.task_data
+                        setTasks(tasksData)
+                        getProjectPreData(id)
+                    } else Api.Toast('error', tasksResult.message)
+                } else {
+                    Api.Toast('error', 'Server error!')
+                }
+            })
+            setTimeout(() => {
+                setTaskLoading(false)
+            }, 500)
+            return false
+        }
+        if (id && type === 'my_tasks') {
+            url = `/taskify/get/project/assign/task/${id}/`
+        }
+       
+        await Api.get(url).then(tasksResult => {
+            if (tasksResult) {
+                if (tasksResult.status === 200) {
+                    const tasksData = tasksResult.data
+                    setTasks(tasksData)
+                } else Api.Toast('error', tasksResult.message)
+            } else {
+                Api.Toast('error', 'Server error!')
+            }
+        })
+        setTimeout(() => {
+            setTaskLoading(false)
+        }, 500)
+    }   
     const getData = async () => {
         setLoading(true)
         await Api.get(`/taskify/get/project/`).then(result => {
@@ -304,7 +303,6 @@ const index = () => {
                         getTasks(projectsData[0].id)
                         setActiveTab(projectsData[0].id)
                         setActiveProjects({value: projectsData[0].id, label: projectsData[0].name})
-                        getProjectPreData(projectsData[0].id)
                         // getTaskTypes(projectsData[0].id)
                         // getStatuses(projectsData[0].id)
                         // getEmployees(projectsData[0].id)
@@ -563,7 +561,7 @@ const index = () => {
                             )}
                             
                         </Col>
-                        {(projectRole !== '' && projectRole.length > 0 && projectRole.role_level < 3
+                        {(projectRole !== '' && Object.values(projectRole).length > 0 && projectRole.role_level < 3
                         && projectRole.role_level > 0) && (
                             <Col md="1">
                                 <TbReportAnalytics className='cursor-pointer' title='Report' size={'30'} color="blue" onClick={() => setCenteredModal(!centeredModal)}/>

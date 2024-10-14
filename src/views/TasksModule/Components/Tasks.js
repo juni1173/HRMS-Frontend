@@ -6,7 +6,7 @@ import AddTask from './AddTask'
 import TaskDetail from './TaskDetail'
 import { IoAddCircleOutline } from "react-icons/io5"
 
-const Tasks = ({ data, projectsData, CallBack, selectedTaskid, project_id, employees, priorities, types }) => {
+const Tasks = ({ data, projectsData, CallBack, selectedTaskid, project_id, employees, priorities, types, role }) => {
 //   const [tooltipOpenAssignBy, setTooltipOpenAssignBy] = useState({})
   const [tooltipOpenAssignTo, setTooltipOpenAssignTo] = useState({})
   const [centeredModal, setCenteredModal] = useState(false)
@@ -261,7 +261,15 @@ const Tasks = ({ data, projectsData, CallBack, selectedTaskid, project_id, emplo
         <ModalHeader toggle={toggleTaskDetailModal}>Task Details</ModalHeader>
         <ModalBody>
           {currentIssue && !loading ? (
-            <TaskDetail projectsData={projectsData} data={currentIssue} CallBack={CallBackTask} employees={employees} priorities={priorities} types={types}/>
+            <TaskDetail 
+            projectsData={projectsData}
+            data={currentIssue}
+            CallBack={CallBackTask}
+            employees={employees}
+            priorities={priorities}
+            types={types}
+            role={role}
+            />
           ) : (
             <div className='text-center'><Spinner size="sm" /></div>
           )}

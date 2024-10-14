@@ -10,7 +10,7 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
 import ChildTasks from './ChildTask'
 import AddTask from './AddTask'
 import { useDropzone } from 'react-dropzone'
-const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild }) => {
+const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild, role }) => {
     const Api = apiHelper()
     const formatTime = (timeValue) => {
         if (!timeValue || timeValue === 'N/A') return 'N/A'
@@ -56,6 +56,7 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
     const [addTimeLogModal, setAddTimeLogModal] = useState(false)
     const [newHoursSpent, setNewHoursSpent] = useState('')
     const [newDate, setNewDate] = useState(new Date())
+    const [LogAssignee, setLogAsignee] = useState('')
 
     const handleMouseEnter = (id) => {
         setHoveredAttachment(id)
@@ -132,6 +133,9 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
         const payload = {
             hours_spent: parseFloat(hs),
             date: Api.formatDate(newDate)
+        }
+        if (LogAssignee !== null && LogAssignee !== '') {
+            payload.employee = LogAssignee
         }
         try {
             const response = await Api.jsonPost(`/taskify/task/time/log/${data.id}/`, payload)
@@ -864,26 +868,57 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild 
             <ModalHeader toggle={() => setAddTimeLogModal(false)}>Add Time Log</ModalHeader>
             <ModalBody>
                 <Row className='mt-1'>
-                    <Col md={4}>
-                <InputMask
-                    mask="99:99"
-                    placeholder="Hours Spent"
-                    className="form-control"
-                    value={newHoursSpent}
-                    onChange={e => handleTimeChange('log_hours', e)}
-                    autoFocus
-                />
+                {(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 3) && (
+                    <Col md={6}>
+                        <Select
+                            value={LogAssignee}
+                            options={employees}
+                            onChange={(e) => setLogAsignee(e.value)}
+                            components={{ Option: CustomOption }}
+                            getOptionLabel={(option) => option.label}
+                            getOptionValue={(option) => option.value}
+                            autoFocus
+                            styles={{
+                            option: (provided) => ({
+                                ...provided,
+                            //  Hide the default options to prevent conflicts with CustomOption
+                                display: 'none'
+                            }),
+                            singleValue: (provided) => ({
+                                ...provided,
+                                display: 'flex',
+                                alignItems: 'center'
+                            }),
+                            menu: (provided) => ({
+                                ...provided,
+                                zIndex: 9999
+                            })
+                            }}
+                        />
+                    </Col>
+                )}
+                <Col md={4}>
+                    <InputMask
+                        mask="99:99"
+                        placeholder="Hours Spent"
+                        className="form-control"
+                        value={newHoursSpent}
+                        onChange={e => handleTimeChange('log_hours', e)}
+                        autoFocus
+                    />
                 </Col>
                 <Col md={4}>
                 <Flatpickr
-                    className='form-control'
+                    className={(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 3) ? 'form-control mt-2' : 'form-control'}
                     value={newDate}
                     onChange={([date]) => setNewDate(date)}
                     options={{ dateFormat: 'Y-m-d' }}
                 />
                 </Col>
                 <Col md={4}>
-                <Button color="primary" onClick={handleAddTimeLog}>Save</Button></Col>
+                <Button color="primary" 
+                className={(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 3) ? 'form-control mt-2' : 'form-control'}
+                onClick={handleAddTimeLog}>Save</Button></Col>
                 </Row>
             </ModalBody>
             </Modal>

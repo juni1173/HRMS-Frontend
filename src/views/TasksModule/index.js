@@ -60,7 +60,6 @@ const index = () => {
     task_type: null,
     priority: null,
     status: null
-    // page: pagination.currentPage ? pagination.currentPage : null
     }) 
     // const getTaskTypes = async (id = null) => {
     //     const formData = new FormData()
@@ -425,6 +424,11 @@ const index = () => {
 
         return dates
     }
+    const splitFunction = value => {
+        const [integerPart, decimalPart] = value.split('.')
+        if (decimalPart === '00') return integerPart
+        return value
+    } 
       const ExportReport = async () => {
         if (reportStartDate !== '' && reportEndDate !== '' && activeProject) {
             const formData = new FormData()
@@ -453,8 +457,8 @@ const index = () => {
                             item.status_title || 'N/A',
                             item.task_type_title || 'N/A',
                             item.priority || 'N/A',
-                            item.planned_hours || 'N/A',
-                            item.actual_hours || 'N/A'
+                            splitFunction(item.planned_hours) || 'N/A',
+                            splitFunction(item.actual_hours) || 'N/A'
                         ]
 
                          // Create a map for hours spent on each date
@@ -462,13 +466,13 @@ const index = () => {
                          if (item.task_time_logs) {
                             item.task_time_logs.forEach(log => {
                                 const logDate = new Date(log.date).toISOString().split('T')[0] // Format as YYYY-MM-DD
-                                dateToHoursMap[logDate] = log.hours_spent || '0.00' // Default to '0.00' if no hours
+                                dateToHoursMap[logDate] = splitFunction(log.hours_spent) || '0' // Default to '0.00' if no hours
                             })
                          }
  
                          // Fill the row with hours for each date in the range
                          allDates.forEach(date => {
-                             row.push(dateToHoursMap[date] || '0.00') // Use '0.00' if no log exists for that date
+                             row.push(dateToHoursMap[date] || '0') // Use '0.00' if no log exists for that date
                          })
  
                          csvRows.push(row)
@@ -491,13 +495,11 @@ const index = () => {
                         { wpx: 100 }, // Actual_hours
                         ...allDates.map(() => ({ wpx: 100 })) // Dates columns
                     ]
-
                     // Set header style (height and bold)
                     const headerCellStyle = { 
                         font: { bold: true }, 
                         alignment: { horizontal: "center" }
                     }
-
                     // Apply style to the header row
                     const headerRowIndex = 0 // First row (header)
                     for (let col = 0; col < headerRow.length; col++) {
@@ -506,7 +508,6 @@ const index = () => {
                             cell.s = headerCellStyle // Apply style
                         }
                     }
-
                     // Set row height for the header
                     ws['!rows'] = [{ hpx: 30 }] // Height in pixels for the header row
 
@@ -535,7 +536,6 @@ const index = () => {
     <Fragment>
             <Card>
                 <CardBody className='pt-1'>
-                    
                     <Row>
                         <Col md="6">
                             <h3>Task Management</h3>
@@ -559,7 +559,6 @@ const index = () => {
                                 onChange={ (e) => { toggleTab(e) }}
                             />
                             )}
-                            
                         </Col>
                         {(projectRole !== '' && Object.values(projectRole).length > 0 && projectRole.role_level < 3
                         && projectRole.role_level > 0) && (
@@ -576,8 +575,6 @@ const index = () => {
                 <div>
                 <span onClick={filterClick} className='cursor-pointer'><Filter color={filterStatus ? 'darkblue' : 'gray'} size={'18'} title="Filters"/> Filters </span>
                 </div>
-                
-
             </div> 
                 {filterStatus && (
                     !filterLoading ? (
@@ -662,6 +659,7 @@ const index = () => {
                                 project_id={activeTab}
                                 employees={employeeDropdown}
                                 priorities={priority_choices}
+                                role={projectRole}
                                 types={typeDropdown} // Ensure it's passed when available
                             />
                         </TabPane>
@@ -770,26 +768,12 @@ const index = () => {
                                     ))}
                                 </tbody>
                             </Table>
-                        )}    
-                    <Col md="12">
-                            
-                    </Col>       
+                        )}       
                 </Row>
                 
                 </ModalBody>
             </Modal>
-            {/* <TaskSidebar
-              store={store}
-              params={params}
-              addTask={addTask}
-              dispatch={dispatch}
-              open={openTaskSidebar}
-              updateTask={updateTask}
-              selectTask={selectTask}
-              deleteTask={deleteTask}
-              handleTaskSidebar={handleTaskSidebar}
-            /> */}
     </Fragment>
-  )
+    )
 }
 export default index

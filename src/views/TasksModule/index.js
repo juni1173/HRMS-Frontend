@@ -425,9 +425,12 @@ const index = () => {
         return dates
     }
     const splitFunction = value => {
-        const [integerPart, decimalPart] = value.split('.')
-        if (decimalPart === '00') return integerPart
-        return value
+        if (value) {
+            const [integerPart, decimalPart] = value.split('.')
+            if (decimalPart === '00') return integerPart
+            return value
+        }
+        return false
     } 
       const ExportReport = async () => {
         if (reportStartDate !== '' && reportEndDate !== '' && activeProject) {
@@ -526,7 +529,7 @@ const index = () => {
         if (csvExportData) {
             if (workbook) {
                 // Generate Excel file
-                XLSX.writeFile(workbook, `report_${activeProject.label}_${new Date().toISOString().split('T')[0]}.xlsx`)
+                XLSX.writeFile(workbook, `report_${selectedAssignee !== '' && selectedAssignee.label}_${activeProject.label}_${new Date().toISOString().split('T')[0]}.xlsx`)
             } else {
                 alert('Please generate the report first.')
             }

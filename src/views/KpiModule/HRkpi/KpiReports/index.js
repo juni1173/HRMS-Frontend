@@ -125,9 +125,12 @@ const index = ({segmentation, dropdownData}) => {
           const csvjson = data.flatMap(item => item.employees_data.map(employee => ({
             id: employee.emp_id,
             name: employee.name,
-            designation: employee.designation,
-            kpi_count: employee.total_kpis_count,
+            designation: employee.desgination,
             projects: employee.projects ? employee.projects.join(', ') : '',
+            kpi_count: employee.total_kpis_count,
+            Completed_kpis: employee.Completed_kpis,
+            carry_forward: employee.Carry_Forward,
+            Incompleted_kpis: employee.Incompleted_kpis,
             score: employee.total_result,
             quarter: employee.batch,
             year: employee.year
@@ -138,8 +141,11 @@ const index = ({segmentation, dropdownData}) => {
                   'Emp ID',
                   'Name',
                   'Designation',
-                  'Total Kpi',
                   'Project',
+                  'Total Kpi',
+                  'Completed Kpi',
+                  'Carry Forward Kpi',
+                  'Incomplete Kpi',
                   'Average Kpi Score',
                   'Quarter',
                   'Year'
@@ -209,7 +215,6 @@ const index = ({segmentation, dropdownData}) => {
             labels: item.employees_data.map(emp => emp.name),
             values: item.employees_data.map(emp => emp.Carry_Forward)
         }))
-        console.warn(empCarryGraph)
         const EmpCarryGraph = {
             labels: empCarryGraph[0].labels,
             datasets: [

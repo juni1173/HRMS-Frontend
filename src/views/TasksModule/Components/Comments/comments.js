@@ -135,24 +135,23 @@ const TaskComments = ({ task_id }) => {
                     <Avatar img={Api.user ? Api.user.profile_image : defaultAvatar} />
                 </Col>
                 <Col md="6" className="position-relative">
-    <Input
-        type='textarea'
-        name="new-comment"
-        placeholder="Enter new comment!"
-        value={newComment}
-        onChange={(e) => setNewComment(e.target.value)}
-    />
-    <label className="position-absolute top-0 end-0 mt-2 me-2" style={{ cursor: 'pointer' }}>
-        <Paperclip size={24} />
-        <Input type='file' multiple onChange={handleFileChange} style={{ display: 'none' }} />
-    </label>
-</Col>
-<Col md="3">
-    <Button className='btn btn-primary btn-sm' onClick={() => ActionComments('post')}>
-        <Send color='white' />
-    </Button>
-</Col>
-
+                    <Input
+                        type='textarea'
+                        name="new-comment"
+                        placeholder="Enter new comment!"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                    />
+                    <label className="position-absolute top-0 end-0 mt-2 me-2" style={{ cursor: 'pointer' }}>
+                        <Paperclip size={24} />
+                        <Input type='file' multiple onChange={handleFileChange} style={{ display: 'none' }} />
+                    </label>
+                </Col>
+                <Col md="3">
+                    <Button className='btn btn-primary btn-sm' onClick={() => ActionComments('post')}>
+                        <Send color='white' />
+                    </Button>
+                </Col>
                 <Col md="12" className='mt-1'>
                     {files.length > 0 && (
                         <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '10px' }}>

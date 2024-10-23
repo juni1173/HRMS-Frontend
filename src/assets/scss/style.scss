@@ -556,3 +556,59 @@ th.sticky-col:nth-of-type(2), td.sticky-col:nth-of-type(2) {
 	background-color: lightgray !important;
 	border: #315180 solid 1px;
 }
+.tags-input-container{
+    border: 1px solid lightgray;
+    padding: .5em;
+    border-radius: 3px;
+    margin-top: 1em;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .5em;
+}
+
+.tag-item{
+    background-color: rgb(218, 216, 216);
+    display: inline-block;
+    padding: .5em .75em;
+    border-radius: 20px;
+}
+.tag-item .close{
+    height: 20px;
+    width: 20px;
+    background-color: rgb(48, 48, 48);
+    color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: .5em;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.tags-input{
+    flex-grow: 1;
+    padding: .5em 0;
+    border: none;
+    outline: none;
+}
+.kavpedia .link {
+	color: #1a0dab;
+	font-family: Arial, sans-serif;
+	font-size: 20px;
+	font-weight: 40px;
+}
+.kavpedia .link:hover {
+	color: #1a0dab;
+	font-family: Arial, sans-serif;
+	text-decoration: underline;
+	font-size: 20px;
+	font-weight: 40px;
+}
+.kavpedia .link:visited {
+	color: #681da8;
+	font-family: Arial, sans-serif;
+	font-size: 20px;
+	font-weight: 40px;
+}

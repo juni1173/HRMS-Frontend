@@ -74,17 +74,32 @@ const Login = () => {
       .then((result) => {
         if (result) {
           if (result.status === 200) {
-            const data = {status:result.status, accessToken: result.token.accessToken, refreshToken: result.token.refreshToken, org: {id: result.org_id, name: result.organization_name, logo: result.organization_logo}, user: result.user, user_id: result.user_id, user_role: result.admin ? 'admin' : 'employee' }
+            const data = {
+                status:result.status,
+                accessToken: result.token.accessToken,
+                refreshToken: result.token.refreshToken,
+                super_user: result.super_user, 
+                org: {id: result.org_id, name: result.organization_name, logo: result.organization_logo},
+                user: result.user,
+                user_id: result.user_id,
+                user_role: result.super_user ? 'superuser' : (result.admin ? 'admin' : 'employee') 
+              }
             dispatch(handleLogin(data))
             localStorage.setItem('organization', JSON.stringify(data.org))
             localStorage.setItem('user', JSON.stringify(result.user))
             localStorage.setItem('user_id', data.user_id)
-            localStorage.setItem('is_superuser', result.is_privileged)
-            if (result.admin) {
+            localStorage.setItem('is_superuser', result.super_user)
+            if (result.admin && !result.super_user) {
               history.push('/admin/dashboard')              
               // history.push('/organizationHome')
               toast.success(
                 <ToastContent name={data.fullName || data.username || 'HR Manager'} role={data.role || 'admin'} />,
+                { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
+              )
+            } else if (result.admin && result.super_user) {
+              history.push('/superpanel')
+              toast.success(
+                <ToastContent name={data.fullName || data.username || 'Super Admin'} role={data.role || 'Super Admin'} />,
                 { icon: false, transition: Slide, hideProgressBar: true, autoClose: 2000 }
               )
             } else {

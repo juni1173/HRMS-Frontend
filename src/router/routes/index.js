@@ -12,6 +12,16 @@ const Routes = [
     path: '/home',
     component: lazy(() => import('../../views/Home'))
   },
+  // superadmin routes starts
+  {
+    path: '/superpanel',
+    component: lazy(() => import('../../views/SuperAdmin/index')),
+    layout: 'BlankLayout',
+    meta: {
+      role: 'superuser'
+    }
+  },
+  // superadmin routes ends
   // ** admin routes STARTS
   {
     path: '/positions',
@@ -485,6 +495,10 @@ const Routes = [
   {
     path: '/employee/interviews',
     component: lazy(() => import('../../views/EmpInterviews'))
+  },
+  {
+    path: '/kavpedia',
+    component: lazy(() => import('../../views/Kavpedia/index'))
   }
   // {
   //   path: '/zoom',

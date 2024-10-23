@@ -86,9 +86,9 @@ const Router = () => {
 
     } else if (route.meta && route.meta.authRoute && isUserLoggedIn()) {
       // ** If route has meta and authRole and user is Logged in then redirect user to home page (DefaultRoute)
-      
       if (Permissions === 'admin') return <Redirect to='/admin/dashboard' />
       if (Permissions === 'employee') return <Redirect to='/employee/dashboard' />
+      if (Permissions === 'superuser') return <Redirect to='/superpanel' />
       return <Redirect to={DefaultRoute} />
       // }  else if (isUserLoggedIn() && !ability.can(action || 'read', resource)) {
       // // ** If user is Logged in and doesn't have ability to visit the page redirect the user to Not Authorized

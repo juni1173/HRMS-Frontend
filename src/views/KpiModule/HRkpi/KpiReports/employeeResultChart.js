@@ -20,7 +20,7 @@ const EmployeeResultChart = ({ gridLineColor, labelColor, data, title }) => {
       },
       y: {
         min: 0,
-        max: 100,
+        max: Math.max(...data.datasets[0].data),
         grid: {
           color: gridLineColor,
           borderColor: gridLineColor

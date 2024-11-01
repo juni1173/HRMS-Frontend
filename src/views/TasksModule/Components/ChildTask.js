@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Spinner } from 'reactstrap'
 import TaskDetail from './TaskDetail'
 
-const ChildTasks = ({ childTasks, projectsData, employees, priorities, types, onModalToggle }) => {
+const ChildTasks = ({ childTasks, projectsData, employees, priorities, types, onModalToggle, role }) => {
+    console.warn(role)
     const [taskDetailModal, setTaskDetailModal] = useState(false)
     const [selectedTask, setSelectedTask] = useState(null)
     const handleTaskClick = (task) => {
@@ -57,6 +58,7 @@ const ChildTasks = ({ childTasks, projectsData, employees, priorities, types, on
                                 priorities={priorities}
                                 types={types}
                                 isChild={true}
+                                role={role}
                             />
                         ) : (
                             <div className='text-center'><Spinner size="sm" /></div>

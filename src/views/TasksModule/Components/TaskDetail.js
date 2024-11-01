@@ -624,7 +624,7 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
                 </div>
             </Col>
         </Row>
-        {!loading ? <ChildTasks childTasks={childTasks} projectsData={projectsData} employees={employees} priorities={priorities} types={types} onModalToggle={handleModalToggle}/> : null} </> : null}
+        {!loading ? <ChildTasks childTasks={childTasks} projectsData={projectsData} employees={employees} priorities={priorities} types={types} role={role} onModalToggle={handleModalToggle}/> : null} </> : null}
                     <TaskComments task_id={data.id} className/>
                 </Col>
 
@@ -869,14 +869,16 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
             <ModalBody>
                 <Row className='mt-1'>
                 {(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 3) && (
-                    <Col md={6}>
+                    <Col md={12}>
                         <Select
                             value={LogAssignee}
+                            placeholder='Select Team Member'
                             options={employees}
                             onChange={(e) => setLogAsignee(e.value)}
                             components={{ Option: CustomOption }}
                             getOptionLabel={(option) => option.label}
                             getOptionValue={(option) => option.value}
+                            className='mb-1'
                             autoFocus
                             styles={{
                             option: (provided) => ({
@@ -909,7 +911,7 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
                 </Col>
                 <Col md={4}>
                 <Flatpickr
-                    className={(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 3) ? 'form-control mt-2' : 'form-control'}
+                    className={(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 3) ? 'form-control' : 'form-control'}
                     value={newDate}
                     onChange={([date]) => setNewDate(date)}
                     options={{ dateFormat: 'Y-m-d' }}
@@ -917,7 +919,7 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
                 </Col>
                 <Col md={4}>
                 <Button color="primary" 
-                className={(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 3) ? 'form-control mt-2' : 'form-control'}
+                className={(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 3) ? 'form-control' : 'form-control'}
                 onClick={handleAddTimeLog}>Save</Button></Col>
                 </Row>
             </ModalBody>

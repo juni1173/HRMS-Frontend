@@ -1,10 +1,11 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState, useRef } from 'react'
 import { Card, CardBody, CardText, CardTitle, CardHeader, Button, Row, Badge, Col, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import apiHelper from '../Helpers/ApiHelper'
 import EvaluationForm from '../Candidates/Components/EvaluationComponents/EvaluationForm'
 
 const UpcomingInterviews = () => {
   const Api = apiHelper()
+  const isMounted = useRef(true)
   const [data, setData] = useState([])
   const [evaluateModal, setEvaluateModal] = useState(false)
   const [activeEvaluationModal, setEvaluationModal] = useState(1)
@@ -22,17 +23,23 @@ const UpcomingInterviews = () => {
     try {
       const response = await Api.get('/interviews/upcoming/interviews/')
       if (response.status === 200) {
-        setData(response.data.upcoming_interviews)
-        setLoading(false)
+        if (isMounted.current) setData(response.data.upcoming_interviews)
+        if (isMounted.current) setLoading(false)
       } else {
         Api.Toast('error', 'Server not found')
       }
     } catch (error) {
       Api.Toast('error', 'Error fetching data')
     }
+    return () => {
+      isMounted.current = false
+    }
   }
   useEffect(() => {
     fetchData()
+    return () => {
+      isMounted.current = false
+    }
   }, [])
   const CallBack = () => {
     fetchData()

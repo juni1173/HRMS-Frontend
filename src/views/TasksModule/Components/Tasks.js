@@ -5,7 +5,6 @@ import { Spinner, Row, Col, Badge, ListGroup, ListGroupItem, Button, Tooltip, Mo
 import AddTask from './AddTask'
 import TaskDetail from './TaskDetail'
 import { IoAddCircleOutline } from "react-icons/io5"
-
 const Tasks = ({ data, projectsData, CallBack, selectedTaskid, project_id, employees, priorities, types, role }) => {
 //   const [tooltipOpenAssignBy, setTooltipOpenAssignBy] = useState({})
   const [tooltipOpenAssignTo, setTooltipOpenAssignTo] = useState({})
@@ -113,17 +112,19 @@ const Tasks = ({ data, projectsData, CallBack, selectedTaskid, project_id, emplo
                   </div>
                 </div>
 
-                <PerfectScrollbar className='sidebar-menu-list' options={{ wheelPropagation: false }}>
-                  <div className='task-list'>
+                <PerfectScrollbar className='sidebar-menu-list'
+                 options={{ wheelPropagation: true, suppressScrollX: true }}
+                 style={{ maxHeight: '400px', overflow: 'hidden' }}>
+                  <div className='task-list' >
                     {/* Header Section */}
-                    <Row className='bg-light fw-bold py-2 px-3 small'>
-                      <Col xs={12} sm={4} md={3}>Title</Col>
+                    <Row className='bg-dark fw-bold py-2 px-3 small'>
+                      <Col xs={12} sm={4} md={3} className='text-white'>Title</Col>
                       {/* <Col xs={6} sm={2} md={2}>Assigned By</Col> */}
-                      <Col xs={6} sm={2} md={2}>Assigned To</Col>
-                      <Col xs={6} sm={2} md={2}>Status</Col>
-                      <Col xs={6} sm={2} md={2}>Type</Col>
-                      <Col xs={6} sm={2} md={1}>Priority</Col>
-                      <Col xs={6} sm={2} md={2} className='text-nowrap'>Due Date</Col>  
+                      <Col xs={6} sm={2} md={2} className='text-white'>Assigned To</Col>
+                      <Col xs={6} sm={2} md={2} className='text-white'>Status</Col>
+                      <Col xs={6} sm={2} md={2} className='text-white'>Type</Col>
+                      <Col xs={6} sm={2} md={1} className='text-nowrap text-white'>Priority</Col>
+                      <Col xs={6} sm={2} md={2} className='text-nowrap text-white'>Due Date</Col>  
                     </Row>
 
                     {/* Body Section */}
@@ -240,10 +241,8 @@ const Tasks = ({ data, projectsData, CallBack, selectedTaskid, project_id, emplo
                         <p className='text-center small'>No tasks found!</p>
                       )}
                     </ListGroup>
-                    
                   </div>
-                </PerfectScrollbar>
-                
+                </PerfectScrollbar>           
               </Col>
             </Row>
           </div>

@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from 'react'
+import { Fragment, useState, useEffect, useRef } from 'react'
 // import FullCalendar from '@fullcalendar/react'
 // import dayGridPlugin from '@fullcalendar/daygrid'
 // import listPlugin from '@fullcalendar/list'
@@ -13,6 +13,7 @@ import { FaBirthdayCake } from "react-icons/fa"
 export default function EventsCalender() {
     const Api = apiHelper()
     // const [events, setEvents] = useState([])
+    const isMounted = useRef(true)
     const [anniversaries, setAnniversaries] = useState([])
     const [birthdays, setBirthdays] = useState([])
     const [loading, setLoading] = useState(false)
@@ -23,7 +24,7 @@ export default function EventsCalender() {
       setActive(tab)
     }
     const getData = async () => {
-        setLoading(true)
+        if (isMounted.current) setLoading(true)
         try {
             const result = await Api.jsonPost(`/month/joining/dob/date/`, {})
             if (result && result.status === 200) {
@@ -31,9 +32,8 @@ export default function EventsCalender() {
                 // const currentYear = currentDate.getFullYear()
                 
                 const resultData = result.data
-                setAnniversaries(resultData.joining_date_data)
-                setBirthdays(resultData.dob_data)
-                console.log("Result data:", resultData) // Log the received data
+                if (isMounted.current) setAnniversaries(resultData.joining_date_data)
+                if (isMounted.current) setBirthdays(resultData.dob_data)
                 
                 // Map the data, replacing the year part with the current year
                 // const mappedData = resultData.map(item => {
@@ -51,8 +51,11 @@ export default function EventsCalender() {
         } catch (error) {
             console.error('Error fetching data:', error)
         } finally {
-            setLoading(false)
+            if (isMounted.current)  setLoading(false)
         }
+        return () => {
+            isMounted.current = false 
+          }
     }
     // function renderEventContent(eventInfo) {
     //     const { event } = eventInfo
@@ -102,6 +105,9 @@ export default function EventsCalender() {
     
     useEffect(() => {
         getData()
+        return () => {
+            isMounted.current = false 
+          }
     }, []) // Empty dependency array to ensure getData() only runs once on component mount
 
     return (
@@ -136,7 +142,7 @@ export default function EventsCalender() {
                     toggle('1')
                     }}
                 >
-                    <GiGlassCelebration color={active === '1' ? '#fff' : '#315180'} size={'24'}  /> Anniversaries {anniversaries.length}
+                    <GiGlassCelebration color={active === '1' ? '#fff' : '#315180'} size={'24'}  /> Anniversaries
                 </NavLink>
                 </NavItem>
                 <NavItem>
@@ -151,12 +157,11 @@ export default function EventsCalender() {
                 </NavItem>
                 
                     </Nav>
-                    <TabContent className='py-50' activeTab={active}>
+                    <TabContent className='' activeTab={active}>
                         <TabPane tabId='1'>
-                        
                         {!loading ? (
                                 anniversaries.map(state => (
-                                    <div key={state.id} className='browser-states'>
+                                    <div key={state.id} className='browser-states mt-1'>
                                 <div className='d-flex'>
                                 <Avatar img={state.profile_image ? state.profile_image : user_blank}/>
                                     <h6 className='align-self-center mb-0'>{state.name}</h6>
@@ -173,7 +178,7 @@ export default function EventsCalender() {
                         
                                 {!loading ? (
                                 birthdays.map(state => (
-                                    <div key={state.id} className='browser-states d-flex justify-content-between'>
+                                    <div key={state.id} className='browser-states d-flex justify-content-between mt-1'>
                                         <div className='d-flex'>
                                             <Avatar img={state.profile_image ? state.profile_image : user_blank}/>
                                             

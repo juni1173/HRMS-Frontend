@@ -1,5 +1,5 @@
 import {React, Fragment, useState} from 'react'
-import { Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink, Col, CardHeader } from 'reactstrap'
+import { Card, CardBody, TabContent, TabPane, Nav, NavItem, NavLink, Col } from 'reactstrap'
 import Manualpdfreader from './Manualpdfreader'
 
 const ManualsList = ({data, typeId}) => {
@@ -16,12 +16,10 @@ const ManualsList = ({data, typeId}) => {
   return (
     <Fragment>
         <Card>
-            <CardHeader>
-                <h2>Policy Manuals</h2>
-            </CardHeader>
             <CardBody>
             <div className='row'>
                 <Col md="3">
+                <h2 className='border-bottom'>Policy Manuals</h2>
                 {Object.values(data).length > 0 && (
                     data.map((item, key) => (
                         <div key={key}>

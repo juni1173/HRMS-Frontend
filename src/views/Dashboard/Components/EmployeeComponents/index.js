@@ -1,6 +1,6 @@
 // ** Reactstrap Imports
-import { Fragment, useState, useEffect } from 'react'
-import { Row, Col, Card, CardBody, CardText } from 'reactstrap'
+import { Fragment, useState, useEffect, useRef } from 'react'
+import { Row, Col, Card, CardBody } from 'reactstrap'
 // import welcomeImage from '@src/assets/images/illustration/dashboard_image.svg'
 // import welcomeImage from '@src/assets/images/illustration/email.svg'
 // ** Images
@@ -10,64 +10,74 @@ import MedicalApprovals from './MedicalApprovals'
 import apiHelper from '../../../Helpers/ApiHelper'
 import GymApprovals from './GymApprovals'
 import AttendanceCard from './AttendanceCalendar'
-import TasksModule from '../../../TasksModule/index'
+// import TasksModule from '../../../TasksModule/index'
 import { useSelector } from 'react-redux'
 import ProjectBasedKpiData from '../../../Employee-Information/EmployeeDetail/EmployeeCharts/Performance/ProjectBasedKpiData'
 import EmployeeAttendanceChart from '../../../Employee-Information/EmployeeDetail/EmployeeCharts/Attendance/index'
 import EventsCalender from '../Calender'
+import TaskChart from './TaskChart/index'
+import UpcomingInterviews from '../../../EmpInterviews/UpcomingInterviews'
 const EmployeeDash = () => {
     const currentUserState = useSelector(state => state.auth.userData.user)
-    console.warn(currentUserState)
     const Api = apiHelper()
+    const isMounted = useRef(true)
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const preDataApi = async () => {
-      setLoading(true)
+      if (isMounted.current) setLoading(true)
       const response = await Api.get('/employees-self-service/homepage/')
       if (response.status === 200) {
-          setData(response.data)
+        if (isMounted.current) setData(response.data)
       } else {
           return Api.Toast('error', 'Server not found')
       }
       // let date = new Date()
       // date = Api.formatDate(date)
       setTimeout(() => {
-        setLoading(false)
+        if (isMounted.current) setLoading(false)
       }, 1000)
+      return () => {
+        isMounted.current = false
+      }
   }
     useEffect(() => {
       preDataApi()
-      }, [])
+      return () => {
+        isMounted.current = false
+      }
+      }, [currentUserState.id])
   return (
     <Fragment>
         {(!loading) && (
         <Row>
-            <Col md='4'>
+            <Col md='3'>
                 <AttendanceCard data={data.upcoming_holiday ? data.upcoming_holiday : []}/>
-                <UpcomingHolidays data={data.upcoming_holiday ? data.upcoming_holiday : []}/>
                 <UpcomingLeaves data={data.Leaves_count ? data.Leaves_count : []}/>
                 <MedicalApprovals data={data.medical ? data.medical : []} medical_count={data.medical_count ? data.medical_count : {}}/>
                 <GymApprovals data={data.gym ? data.gym : []}/>
-            </Col>
-            <Col md='8'>
-                {/* <Card>
+                <UpcomingHolidays data={data.upcoming_holiday ? data.upcoming_holiday : []}/>
+                <Card style={{minHeight: '155px'}}>
                     <CardBody>
-                        <EmployeeAttendanceChart id={currentUserState.id} />
+                        <UpcomingInterviews />
                     </CardBody>
                 </Card>
+            </Col>
+            <Col md='5'>
+                <TaskChart />
+                <Card style={{minHeight: '250px'}}>
+                    <CardBody>
+                        <ProjectBasedKpiData id={currentUserState.id} empDash={true}/>
+                    </CardBody>
+                </Card>
+            </Col>
+            <Col md='4'>
                 <Card>
                     <CardBody>
-                        <ProjectBasedKpiData id={currentUserState.id} />
+                        <EmployeeAttendanceChart id={currentUserState.id} empDash={true}/>
                     </CardBody>
-                </Card> */}
-                {/* <Card>
-                    <CardBody>
-                        <EventsCalender />
-                    </CardBody>
-                </Card> */}
-                <TasksModule />
+                </Card>
+                <EventsCalender />
             </Col>
-            
         </Row>
         )}
         {/* <Row>

@@ -126,7 +126,7 @@ const textCenter = {
         </Row>
       </CardBody>
     </Card>
-    <Modal isOpen={basicModal} toggle={() => setBasicModal(!basicModal)}>
+    <Modal isOpen={basicModal} toggle={() => setBasicModal(!basicModal)} className='modal-xl'>
     <ModalHeader toggle={() => setBasicModal(!basicModal)}>
         {employeeData.type === 'presents' && (
             <h5 >{employeeData.total} Presents</h5>
@@ -139,7 +139,7 @@ const textCenter = {
         )}
     </ModalHeader>
     <ModalBody>
-      <EmployeeListData empData={employeeData}/>
+      <EmployeeListData empData={employeeData} mode={employeeData.type}/>
     </ModalBody>
     </Modal>
     </>

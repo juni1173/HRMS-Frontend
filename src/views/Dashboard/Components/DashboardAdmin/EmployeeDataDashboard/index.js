@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useContext } from 'react'
+import { Fragment, useState, useEffect, useContext, useRef } from 'react'
 import Select from 'react-select'
 import {writeFile, utils} from 'xlsx'
 // ** Reactstrap Imports
@@ -25,6 +25,7 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
 
 const index = ({ type }) => {
     const [data, setData] = useState([])
+    const isMounted = useRef(true)
     const [tableData, settableData] = useState([])
     const [empChartData, setEmpChartData] = useState([])
     const [loading, setLoading] = useState(false)
@@ -141,7 +142,7 @@ const index = ({ type }) => {
     return flatCounts
   }
     const calculateCount = (arr) => {
-        settableData(arr.flatMap(item => item.employees_data))
+       if (isMounted.current) settableData(arr.flatMap(item => item.employees_data))
         let totalEmployee = 0
         let ageSum = 0
         let ageCount = 0
@@ -160,7 +161,7 @@ const index = ({ type }) => {
             }
         })
     
-        setCountData(prevState => ({
+       if (isMounted.current) setCountData(prevState => ({
             ...prevState,
             head_count: totalEmployee,
             avg_employee_age: ageSum / ageCount, // corrected calculation
@@ -188,7 +189,7 @@ const index = ({ type }) => {
            probationFemaleCount = probationFemaleCount.map(item => item.count)
           const totalPermanentEmployees = permanentEmployeesCountArr.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
           const totalProbationEmployees = probationEmployeesCountArr.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
-          setCountData(prevState => ({
+          if (isMounted.current) setCountData(prevState => ({
             ...prevState,
             totalPermanentEmployees,
             totalProbationEmployees
@@ -280,11 +281,11 @@ const index = ({ type }) => {
 
             ]
           }
-          sethighestTotalEmployeeCount(arr.reduce((max, item) => {
+         if (isMounted.current) sethighestTotalEmployeeCount(arr.reduce((max, item) => {
                     return item.total_employee_count > max ? item.total_employee_count : max
                 }, 0))
         
-          setEmpChartData(EmpResultChart)
+          if (isMounted.current) setEmpChartData(EmpResultChart)
     }
     
     const getData = async () => {
@@ -292,16 +293,15 @@ const index = ({ type }) => {
         await Api.get(`/employees/generate/report/`).then(result => {
             
             if (result) {
-                setLoading(true)
+              if (isMounted.current) setLoading(true)
                 if (result.status === 200) {
                     const resultData = result.data
-                  console.warn(resultData)
-                    setData(resultData)
+                    if (isMounted.current) setData(resultData)
                     const departments = resultData.map(item => ({
                         label: item.title, 
                         value: item.title
                     }))
-                    setdepDropdown(departments)
+                    if (isMounted.current) setdepDropdown(departments)
                     calculateCount(resultData)
                 } else {
                     // Api.Toast('error', result.message)
@@ -309,6 +309,9 @@ const index = ({ type }) => {
                 setTimeout(() => {
                     setLoading(false)
                 }, 1000)
+                return () => {
+                  isMounted.current = false
+                }
             } else (
              Api.Toast('error', 'Server not responding!')   
             )
@@ -317,6 +320,9 @@ const index = ({ type }) => {
     
       useEffect(() => {
         getData()
+        return () => {
+          isMounted.current = false
+        }
         }, [setData])
     
         // const CallBack = useCallback(() => {

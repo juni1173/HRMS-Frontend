@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { Table } from 'reactstrap'
 import { FaBatteryFull, FaBatteryHalf, FaBatteryQuarter } from "react-icons/fa"
-const ProjectBasedKpiChart = ({ data }) => {
+const ProjectBasedKpiChart = ({ data, empDash }) => {
 console.warn(data)
   const getDataset = (arr) => {
 
@@ -152,7 +152,7 @@ console.warn(data)
   // }
   return (
       <Fragment>
-        <div className='d-flex justify-content-center'>
+        <div className={empDash ? 'justify-content-center' : 'd-flex justify-content-center'}>
           <div style={{height:'200px'}}>
               <Bar data={() => getDataset(data)} options={options} height={200} />
           </div>
@@ -167,13 +167,13 @@ console.warn(data)
                         <th colSpan="3">Project / {item.project_name && item.project_name}</th>
                       </tr>
                     </thead>
-                   <tbody>
-                      <tr>
-                      <td><FaBatteryFull /> High <br></br><span className='font-small-2 text-primary'>{(item.total_high_complexity_result && item.total_high_complexity_completed > 0) ? `${(item.total_high_complexity_result / item.total_high_complexity_completed).toFixed(2)}%` : 0}</span></td>
-                      <td><FaBatteryHalf /> Medium <br></br><span className='font-small-2 text-warning'>{(item.total_medium_complexity_result && item.total_medium_complexity_completed > 0) ? `${(item.total_medium_complexity_result / item.total_medium_complexity_completed).toFixed(2)}%` : 0}</span></td>
-                      <td><FaBatteryQuarter /> Low <br></br><span className='font-small-2 text-danger'>{(item.total_low_complexity_result && item.total_low_complexity_completed > 0) ? `${(item.total_low_complexity_result / item.total_low_complexity_completed).toFixed(2)}%` : 0}</span></td>
-                    </tr>
-                    </tbody>
+                      <tbody>
+                        <tr>
+                          <td><FaBatteryFull /> High <br></br><span className='font-small-2 text-primary'>{(item.total_high_complexity_result && item.total_high_complexity_completed > 0) ? `${(item.total_high_complexity_result / item.total_high_complexity_completed).toFixed(2)}%` : 0}</span></td>
+                          <td><FaBatteryHalf /> Medium <br></br><span className='font-small-2 text-warning'>{(item.total_medium_complexity_result && item.total_medium_complexity_completed > 0) ? `${(item.total_medium_complexity_result / item.total_medium_complexity_completed).toFixed(2)}%` : 0}</span></td>
+                          <td><FaBatteryQuarter /> Low <br></br><span className='font-small-2 text-danger'>{(item.total_low_complexity_result && item.total_low_complexity_completed > 0) ? `${(item.total_low_complexity_result / item.total_low_complexity_completed).toFixed(2)}%` : 0}</span></td>
+                        </tr>
+                      </tbody>
                     </Table>
                   ))
                 )}

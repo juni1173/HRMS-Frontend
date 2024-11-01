@@ -3,7 +3,8 @@ import apiHelper from '../../../../Helpers/ApiHelper'
 import AttendcanceChart from './AttendcanceChart'
 import { Row, Col, Spinner } from 'reactstrap'
 import Select from 'react-select'
-const index = ({ id }) => {
+import EmpDashboardChart from './EmpDashboardChart'
+const index = ({ id, empDash }) => {
     const [loading, setLoading] = useState(false)
     const Api = apiHelper()
     const [data, setData] = useState([])
@@ -49,42 +50,50 @@ const index = ({ id }) => {
             setLoading(false)
         }, 500)
     }
+    function getFirstAndLastDate(month) {
+        // Ensure month is in the correct range (0-11 for Jan-Dec)
+        const year = new Date().getFullYear()
+        if (month < 0 || month > 11) {
+          throw new Error('Month must be between 0 (January) and 11 (December).')
+        }
+      
+        // Get the first date of the month
+        const firstDate = new Date(year, month, 1)
+      
+        // Get the last date of the month by setting the day to 0 of the next month
+        const lastDate = new Date(year, month + 1, 0)
+      
+        return {
+          firstDate,
+          lastDate
+        }
+      }
+      const onMonthChange = e => {
+        if (e.value !== "") {
+          const {firstDate, lastDate}  = getFirstAndLastDate(e.value)
+          setDateRange((prev) => ({
+            ...prev,
+            firstDate: Api.formatDate(firstDate),
+            lastDate: Api.formatDate(lastDate)
+          }))
+          }
+      }
  useEffect(() => {
-    getData()
- }, [setData])
- useEffect(() => {
-    getData()
-  }, [dateRange])
- function getFirstAndLastDate(month) {
-    // Ensure month is in the correct range (0-11 for Jan-Dec)
-    const year = new Date().getFullYear()
-    if (month < 0 || month > 11) {
-      throw new Error('Month must be between 0 (January) and 11 (December).')
-    }
-  
-    // Get the first date of the month
-    const firstDate = new Date(year, month, 1)
-  
-    // Get the last date of the month by setting the day to 0 of the next month
-    const lastDate = new Date(year, month + 1, 0)
-  
-    return {
-      firstDate,
-      lastDate
-    }
-  }
-  const onMonthChange = e => {
-    console.warn(e)
-    if (e.value !== "") {
-        console.warn(e.value)
-      const {firstDate, lastDate}  = getFirstAndLastDate(e.value)
+    if (currentMonth) {
+        const {firstDate, lastDate}  = getFirstAndLastDate(currentMonth)
       setDateRange((prev) => ({
         ...prev,
         firstDate: Api.formatDate(firstDate),
         lastDate: Api.formatDate(lastDate)
       }))
+    }
+ }, [currentMonth])
+ useEffect(() => {
+    if (dateRange.firstDate && dateRange.lastDate) {
+        getData()
       }
-  }
+  }, [dateRange])
+ 
   // Example usage:
 //   const year = 2024;
 //   const month = 8; // September (0-based index)
@@ -96,7 +105,7 @@ const index = ({ id }) => {
     <Fragment>
         <div className='d-flex justify-content-between'>
             <div>
-                <h3>Attendance</h3>
+                <a href="/attendancelist" className='cursor-pointer'><h3>Attendance</h3></a>
             </div>
             <div>
                 <Select
@@ -120,7 +129,11 @@ const index = ({ id }) => {
             // data.map(item => (
             //     <p key={item.id}>{item.id}</p>
             // ))
-            <AttendcanceChart data={data}/>
+            empDash ? (
+                <EmpDashboardChart data={data} />
+            ) : (
+                <AttendcanceChart data={data}/>
+            )
                 ) : <div>No data found!</div>
             ) : <div className='text-center'><Spinner /> Loading Attendance Data</div>
             }

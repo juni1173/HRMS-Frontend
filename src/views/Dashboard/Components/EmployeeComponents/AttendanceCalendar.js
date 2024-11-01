@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button, Card, CardBody, Spinner, Row, Col, Table, Modal, ModalHeader, ModalBody, ModalFooter, Label, Badge, Input, CardHeader, CardFooter, CardTitle } from 'reactstrap'
 import * as Icon from 'react-feather'
 import Avatar from '@components/avatar'
@@ -10,6 +10,7 @@ import Select from 'react-select'
 import { TbClockPlus, TbClockMinus  } from "react-icons/tb"
 
 const AttendanceCard = () => {
+    const isMounted = useRef(true)
   const Api = apiHelper()
   const EmpHelper = EmployeeHelper()
   const [loading, setLoading] = useState(false)
@@ -73,21 +74,27 @@ const AttendanceCard = () => {
       )
   }
   const preDataApi = async () => {
-    setLoading(true)
+    if (isMounted.current) setLoading(true)
     const response = await Api.get('/employee/current/date/atteandance/')
     if (response.status === 200) {
-        setData(response.data)
+        if (isMounted.current) setData(response.data)
     } else {
         return Api.Toast('error', 'Server not found')
     }
     // let date = new Date()
     // date = Api.formatDate(date)
     setTimeout(() => {
-      setLoading(false)
+      if (isMounted.current) setLoading(false)
     }, 1000)
+    return () => {
+        isMounted.current = false
+      }
 }
 useEffect(() => {
   preDataApi()
+  return () => {
+    isMounted.current = false
+  }
   }, [])
   const CallBack = () => {
     preDataApi()
@@ -152,17 +159,17 @@ const Check_out = async () => {
     return (
         <Card className='attendance-card' style={{background: 'linear-gradient(to right, #2c3e50, #3498db)'}}>
             <CardHeader>
-                <CardTitle tag='h4' className='text-white'>Attendance</CardTitle>
+                <CardTitle tag='h4' className='text-white'>Today</CardTitle>
                 <a href='../attendancelist/'><Icon.ArrowRight size={18} color='white' className='cursor-pointer' /></a>
             </CardHeader>
-            {!loading ?   <CardBody>
-                <div className='d-flex justify-content-between align-items-center mb-3'>
+            {!loading ?   <CardBody className='px-1'>
+                <div className='d-flex justify-content-between align-items-center mb-2'>
                   
                   <Col md={6} className='text-center'>
                   <button className="button-47" role="button" onClick={() => {
                             setBtnStatus('check_in')
                             setCenteredModal(!centeredModal)
-                            }}><TbClockPlus color='' size={'24'}/>  Check In</button>
+                            }}><TbClockPlus color='' size={'20'}/>  Check In</button>
                   {/* <Button  className='btn'> </Button> */}
                     </Col>
                     <Col md={6} className='text-center'>
@@ -170,7 +177,7 @@ const Check_out = async () => {
                      <button onClick={() => {
                             setBtnStatus('check_out')
                             setCenteredModal(!centeredModal)
-                            }} className='button-47'><TbClockMinus color='' size={'24'}/> Check Out</button>
+                            }} className='button-47'><TbClockMinus color='' size={'20'}/> Check Out</button>
                     </Col>
                 </div>
                 <h4 className='transaction-title text-center text-white'>{data && data.total_time}</h4>
@@ -178,8 +185,8 @@ const Check_out = async () => {
   data.data.map((item, index) => (
     <div className='text-center' key={index}>
       <span className='text-white'>Check In : </span>
-      <small className='pr-1 text-white'>{item.check_in ? item.check_in : 'Pending'}</small>
-      <span className='text-white'>Check Out : </span>
+      <small className='pr-1 text-white'>{item.check_in ? item.check_in : 'Pending'}</small><br></br>
+      <span className='text-white pt-1'>Check Out : </span>
       <small className='text-white'>{item.check_out ? item.check_out : 'Pending'}</small>     
     </div>
   ))

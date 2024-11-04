@@ -44,7 +44,7 @@ const AttendcanceChart = ({ data }) => {
         return result
     }
     const labels = [
-      (data.length > 0 && data[0].total_presents > 0) ? 'Presents' : '', 
+      (data.length > 0 && data[0].total_presents > 0) ? 'Presents' : 'No Presents Data', 
       'WFH', 
       'Leaves', 
       'Weekday Holidays', 
@@ -162,7 +162,7 @@ const AttendcanceChart = ({ data }) => {
                             </tr>
                             <tr>
                                 <th className='cursor-pointer'><MdWorkOff size={17} color='#1A5319' /> {data[0].total_weekday_holidays && data[0].total_weekday_holidays} <span className='font-small-1 text-secondary'> Weekday Holidays</span><br></br><span className='font-small-1 text-secondary'>{(data[0].total_weekday_holidays && data[0].total_weekday_holidays !== 0) && convertDaysToYearsMonths(data[0].total_weekday_holidays)}</span></th>
-                                <th className='cursor-pointer'><MdWorkOff size={17} color='#508D4E' /> {data[0].total_weekend_holidays && data[0].total_weekend_holidays} <span className='font-small-1 text-secondary'> Weekdend Holidays</span><br></br><span className='font-small-1 text-secondary'>{(data[0].total_weekend_holidays && data[0].total_weekend_holidays !== 0) && convertDaysToYearsMonths(data[0].total_weekend_holidays)}</span></th>
+                                <th className='cursor-pointer'><MdWorkOff size={17} color='#508D4E' /> {data[0].total_weekend_holidays && data[0].total_weekend_holidays} <span className='font-small-1 text-secondary'> Weekend Holidays</span><br></br><span className='font-small-1 text-secondary'>{(data[0].total_weekend_holidays && data[0].total_weekend_holidays !== 0) && convertDaysToYearsMonths(data[0].total_weekend_holidays)}</span></th>
                             </tr>
                            
                         </thead>

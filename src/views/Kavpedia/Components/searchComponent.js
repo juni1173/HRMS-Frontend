@@ -1,11 +1,20 @@
 import React, { useState, Fragment } from 'react'
+import { Search } from 'react-feather'
 import Select from 'react-select'
-import { Row, Col } from 'reactstrap'
+import { Row, Col, Input, Button, Dropdown,
+    InputGroup,
+    DropdownMenu,
+    DropdownItem,
+    DropdownToggle } from 'reactstrap'
 const SearchComponent = ({ Callback, projectsDropdown }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [tags, setTags] = useState([])
-  const [projects, setProjects] = useState('')
-  const [showFilters, setShowFilters] = useState(false)    
+  const [projects, setProjects] = useState('') 
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+
+  const toggleDropDown = () => {
+    setDropdownOpen(!dropdownOpen)
+  }
 //   const [tagInput, setTagInput] = useState('')
   function handleKeyDown(e) {
     // If user did not press enter key, return
@@ -37,61 +46,50 @@ const SearchComponent = ({ Callback, projectsDropdown }) => {
   }
   return (
    <Fragment>
-    <Row className='justify-content-center'>
-        <Col md={showFilters ? '3' : '7'} className='mb-1'>
-            {/* Search Input */}
-                <div className=" mb-1">
-                <label>Search Document</label>
-                    <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search here..."
+        <Row className='justify-content-center'>
+            <Col md='2'></Col>
+            <Col md='8'>
+            <InputGroup>
+                    <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
+                        <DropdownToggle color='primary' caret outline>
+                            {projects === '' ? 'Select Projects' : projectsDropdown.find(pre => pre.value === projects).label}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem onClick={() => setProjects('')}>
+                                Select Projects
+                            </DropdownItem>
+                            {projectsDropdown.map(project => (
+                                <DropdownItem key={project.value} onClick={() => setProjects(project.value)}>
+                                    {project.label}
+                                </DropdownItem>
+                            ))}
+                        </DropdownMenu>
+                    </Dropdown>
+                    <Input  
+                    placeholder="Search title here..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                   
-                </div>
-        </Col>
-        {showFilters && (
-            <>
-                <Col md='3' className='mb-1'>
-                    {/* Projects Dropdown */}
-                    <div className="">
-                        <label>Projects</label>
-                        <Select
-                            className="react-select"
-                            options={projectsDropdown}
-                            onChange={(e) => setProjects(e.value)}
                         />
-                    </div>
-                </Col>
-                <Col md='4' className='mb-1'>
-                    {/* Tags Filter */}
+                    <Input onKeyDown={handleKeyDown} type="text" placeholder="Type tag and press enter" />
+                    <Button color='primary' outline onClick={handleSearch}>
+                        <Search size={12}/> Search
+                    </Button>
+                </InputGroup>
+                {tags.length > 0 && (
                     <div className="tags-input-container">
+                        Tags: 
                         { tags.map((tag, index) => (
                             <div className="tag-item" key={index}>
                                 <span className="text">{tag}</span>
                                 <span className="close" onClick={() => removeTag(index)}>&times;</span>
                             </div>
                         )) }
-                        <input onKeyDown={handleKeyDown} type="text" className="tags-input" placeholder="Type tag and press enter" />
+                    
                     </div>
-                </Col>
-        </>
-        )}
-        <Col md='1' className='mb-1'>
-            <button className="btn btn-primary mt-2" onClick={handleSearch}>
-            Search
-            </button>
-        </Col>
-        {!showFilters && (
-            <Col md='2' className='mb-1'>
-                <button className="btn btn-primary mt-2" onClick={() => setShowFilters(!showFilters)}>
-                Advance Search
-                </button>
+                )}
             </Col>
-        )}
-    </Row>
+            <Col md='2'></Col>
+        </Row>
    </Fragment>
 
     

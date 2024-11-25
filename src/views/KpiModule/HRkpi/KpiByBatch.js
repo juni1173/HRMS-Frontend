@@ -85,7 +85,6 @@ const KpiByBatch = ({segmentation, dropdownData, CallBack}) => {
     useEffect(() => {
         if (Object.values(department).length === 0) {
             depHelper.fetchDepartments().then(result => {
-                console.warn(result)
                 setDepartment(result.depActive)
             })
         }
@@ -94,9 +93,8 @@ const KpiByBatch = ({segmentation, dropdownData, CallBack}) => {
     <Fragment>
         <Card>
             <CardBody>
-            <Row>
-                   
-                   <Col md="3" className="mb-1">
+            <Row>  
+                <Col md="3" className="mb-1">
                        <Label className="form-label">
                        Yearly Segmentation <Badge color='light-danger'>*</Badge>
                        </Label>

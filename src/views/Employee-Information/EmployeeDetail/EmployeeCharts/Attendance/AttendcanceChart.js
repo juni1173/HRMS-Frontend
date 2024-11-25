@@ -140,7 +140,7 @@ const AttendcanceChart = ({ data }) => {
           }
         ]
       }
-      const hasMultipleValues = seriesData.filter(value => value > 1).length > 1
+      const hasMultipleValues = seriesData.filter(value => value > 0).length > 1
       return (
         <>
             <Card className='holiday-chart align-item-center'>

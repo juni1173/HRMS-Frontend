@@ -7,7 +7,6 @@ import ViewKpiEvaluation from './EmployeeKpi/ViewKpiEvaluation'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const Comments = ({ data, by, callBack }) => {
-    console.warn(data)
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)

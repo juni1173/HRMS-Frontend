@@ -60,7 +60,7 @@ const TaskComments = ({ task_id }) => {
 
     useEffect(() => {
         ActionComments('get')
-    }, [])
+    }, [task_id])
     const commentMouseEnter = (index) => {
         setHoveredIndex(index)
     }
@@ -130,7 +130,7 @@ const TaskComments = ({ task_id }) => {
     return (
         <Fragment>
             <Row>
-                <Col md="12"><h5>Comments</h5></Col>
+                {/* <Col md="12"><h5>Comments</h5></Col> */}
                 <Col md={1} className="text-center">
                     <Avatar img={Api.user ? Api.user.profile_image : defaultAvatar} />
                 </Col>

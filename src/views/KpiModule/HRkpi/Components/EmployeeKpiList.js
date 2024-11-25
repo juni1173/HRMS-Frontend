@@ -3,12 +3,13 @@ import { Row, Col, Table, Spinner, Button, Badge, CardBody, Card, CardTitle, Off
 import { Eye } from 'react-feather'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import apiHelper from '../../Helpers/ApiHelper'
+import apiHelper from '../../../Helpers/ApiHelper'
 // import UpdateKpi from '../UpdateKpi/update'
-import Comments from '../Comments'
-import ViewKpiEvaluation from '../EmployeeKpi/ViewKpiEvaluation'
-const KpiList = ({ data, CallBack, index, type }) => {
-    console.warn(data)
+import Comments from '../../Comments'
+import ViewKpiEvaluation from '../../EmployeeKpi/ViewKpiEvaluation'
+import Avatar from '@components/avatar'
+import defaultAvatar from '@src/assets/images/avatars/user_blank.png'
+const EmployeeKpiList = ({ data, CallBack, type }) => {
     const Api = apiHelper()
     const MySwal = withReactContent(Swal)
     const [loading, setLoading] = useState(false)
@@ -219,17 +220,9 @@ const KpiList = ({ data, CallBack, index, type }) => {
     }
     const getKpiData = async () => {
         setLoading(true)
-        let url = ''
-        if (type !== 'cancel' && type !== 'recheck') {
-            url = `/kpis/requests/to/hr/data/${data.id}/`
-        }
-        if (type === 'recheck') {
-            url = `/kpis/recheck/requests/to/hr/data/${data.id}/`
-        }
-        if (type === 'cancel') {
-           url = `/kpis/cancle/requests/to/hr/data/${data.id}/`
-        }
-        await Api.get(`${url}`).then(result => {
+        const url = `/kpis/employee/data/${data.employee_id}/`
+        const formData = new FormData()
+        await Api.jsonPost(`${url}`, formData).then(result => {
                 if (result) {
                     if (result.status === 200) {
                        setKpiData(result.data)
@@ -247,10 +240,13 @@ const KpiList = ({ data, CallBack, index, type }) => {
     }
     useEffect(() => {
         getKpiData() 
-    }, [setKpiData])
+    }, [data])
   return (
-    <Fragment key={index}>
-        <h3 className='text-center'><b>{data.name ? data.name : 'N/A'}</b></h3>
+    <Fragment>
+        <div className='d-flex flex-wrap align-items-center justify-content-center'>
+          <Avatar className='my-0 me-1' size='lg' img={data.profile_image ? data.profile_image : defaultAvatar} />
+          <div className='font-large-1'>{data.employee_name ? data.employee_name : 'N/A'}</div>
+        </div>
         {(checkedItems.length > 0 && type !== 'cancel' && type !== 'recheck' && type !== 'search') && (
             <Button className='btn btn-warning mb-1' onClick={multipleKpiApprove}>
                 Approve Selected Kpi's
@@ -297,7 +293,7 @@ const KpiList = ({ data, CallBack, index, type }) => {
                                         <Card bg="light" style={{ backgroundColor: '#F2F3F4' }} className='text-nowrap'>    
                                             <CardBody>
                                                 <Row>
-                                                    <Col md={9}><CardTitle>{kpi.title ? (kpi.title).substring(0, 20) : 'N/A'}</CardTitle></Col>
+                                                    <Col md={9}><CardTitle>{kpi.title ? `${(kpi.title).substring(0, 20)}...` : 'N/A'}</CardTitle></Col>
                                                     <Col md={3} className='d-flex justify-content-end'>
                                                         <Eye onClick={() => CommentToggle(kpi)}/>
                                                     </Col>
@@ -403,4 +399,4 @@ const KpiList = ({ data, CallBack, index, type }) => {
   )
 }
 
-export default KpiList
+export default EmployeeKpiList

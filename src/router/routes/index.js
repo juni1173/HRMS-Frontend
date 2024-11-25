@@ -166,6 +166,13 @@ const Routes = [
   },
   {
     path: '/hr/kpi',
+    component: lazy(() => import('../../views/KpiModule/HRkpi/index-old')),
+    meta: {
+      role: 'admin'
+    }
+  },
+  {
+    path: '/hr/kpi-beta',
     component: lazy(() => import('../../views/KpiModule/HRkpi/index')),
     meta: {
       role: 'admin'

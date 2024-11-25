@@ -10,6 +10,7 @@ import '@styles/react/libs/flatpickr/flatpickr.scss'
 import ChildTasks from './ChildTask'
 import AddTask from './AddTask'
 import { useDropzone } from 'react-dropzone'
+import HistoryLog from './History/history'
 const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild, role }) => {
     const Api = apiHelper()
     const formatTime = (timeValue) => {
@@ -57,6 +58,8 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
     const [newHoursSpent, setNewHoursSpent] = useState('')
     const [newDate, setNewDate] = useState(new Date())
     const [LogAssignee, setLogAsignee] = useState('')
+    const attributeDropdown = [{value: 'comments', label: 'Comments'}, {value: 'history', label: 'History'}]
+    const [selectedAttribute, setSelectedAttribute] = useState(attributeDropdown[0])
 
     const handleMouseEnter = (id) => {
         setHoveredAttachment(id)
@@ -109,7 +112,6 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
             const response = await Api.jsonPost(`/taskify/attachments/list/${data.id}/`)
             if (response.status === 200) {
                 setAttachments(response.data)
-                console.log(attachments)
             }
         } catch (error) {
             Api.Toast('error', 'Unable to fetch attachments')
@@ -247,8 +249,9 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
         setIsEditingDueDate(false)
     }
     const getStatuses = async (id = null) => {
+        console.warn(id)
         const formData = new FormData()
-        if (id) formData.append('project', id)
+        if (id) formData['project'] = id
 
         await Api.jsonPost(`/taskify/task/status/pre/data/`, formData).then(result => {
             if (result && result.status === 200) {
@@ -295,7 +298,11 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
         const lastName = names[names.length - 1] || ''
         return `${firstInitial}. ${lastName}`
       }
-
+      const handleAttributeChange = e => {
+        if (e) {
+            setSelectedAttribute(e)
+        }
+      }
     useEffect(() => {
         if (data && Object.values(data).length > 0) getStatuses(data.project)
     }, [data])
@@ -625,7 +632,50 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
             </Col>
         </Row>
         {!loading ? <ChildTasks childTasks={childTasks} projectsData={projectsData} employees={employees} priorities={priorities} types={types} role={role} onModalToggle={handleModalToggle}/> : null} </> : null}
-                    <TaskComments task_id={data.id} className/>
+        <div className='d-flex align-items-center mb-1'>
+    <div>
+        <h5 style={{ margin: 0 }}> {/* Remove default margin for better alignment */}
+            {selectedAttribute.label}
+        </h5>
+    </div>
+    <div style={{ marginLeft: '10px' }}> {/* Add spacing between label and select */}
+        <Select
+            className='react-select'
+            classNamePrefix='select'
+            defaultValue={selectedAttribute}
+            options={attributeDropdown}
+            onChange={handleAttributeChange}
+            isClearable={false}
+            styles={{
+                control: (provided) => ({
+                    ...provided,
+                    minHeight: '30px', // Adjust height
+                    height: '30px', // Set exact height
+                    fontSize: '12px' // Adjust font size
+                }),
+                dropdownIndicator: (provided) => ({
+                    ...provided,
+                    padding: '4px' // Adjust padding
+                }),
+                indicatorSeparator: (provided) => ({
+                    ...provided,
+                    display: 'none' // Hide separator if desired
+                }),
+                menu: (provided) => ({
+                    ...provided,
+                    fontSize: '12px' // Adjust font size for dropdown menu
+                })
+            }}
+        />
+    </div>
+</div>
+
+                    {selectedAttribute.value === 'comments' ? (
+                        <TaskComments task_id={data.id} />
+                    ) : (
+                        <HistoryLog task_id={data.id} />
+                    )}
+                    
                 </Col>
 
                 <Col md={4}>

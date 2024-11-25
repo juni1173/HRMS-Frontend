@@ -1,85 +1,28 @@
 import { Fragment, useEffect, useState, useCallback } from "react"
-import { Spinner, TabContent, TabPane, Nav, NavItem, NavLink, Badge} from "reactstrap"
+import { Spinner, Modal, ModalHeader, ModalBody} from "reactstrap"
 import apiHelper from "../../Helpers/ApiHelper"
 import KpiByBatch from "./KpiByBatch"
-import KpiList from "./KpiList"
-import EmployeeListHR from "./EmployeeListHR"
 import KpiReports from "./KpiReports/index"
+import KpiStatusCounts from "./KpiStatusCounts"
  
 const index = () => {
     
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
-    const [requestData, setRequestData] = useState([])
-    const [recheckData, setRecheckData] = useState([])
-    const [cancelData, setCancelData] = useState([])
+    
     const [typesDropdownArr] = useState([])
     const [complexityDropdownArr] = useState([])
     const [employeesDropdownArr] = useState([]) 
     const [yearlySegmentation] = useState([])
     const [segmentationData, setSegmentationData] = useState([])
     const [ep_batch] = useState([])
-    const [active, setActive] = useState('1')
-    const [count, setCount] = useState([
-        {evaluation: 0},
-        {recheck: 0},
-        {cancel: 0}
-    ])
-    const toggle = tab => {
-        setActive(tab)
-      }
-    const getCount = (name, value) => {
-        if (name && value) {
-            value > 0 ? setCount(previous => ({...previous, [name] : value})) : setCount(previous => ({...previous, [name] : 0}))
-        }
-    }
+    // const [active, setActive] = useState('1')
+    const [searchToolModal, setsearchToolModal] = useState(false)
+    const [evaluationReportModal, setevaluationReportModal] = useState(false)
+    
     const getPreData = async () => {
         setLoading(true)
-        await Api.get(`/kpis/requests/to/hr/`).then(result => {
-            if (result) {
-                if (result.status === 200) {
-                    setRequestData(result.data)
-                    if (result.data) {
-                        getCount('evaluation', result.data.length)
-                    }
-                } else {
-                    // Api.Toast('error', result.message)
-                    return false
-                }
-            } else {
-             Api.Toast('error', 'Server not responding!') 
-            }
-        }) 
-        await Api.get(`/kpis/recheck/requests/to/hr/`).then(result => {
-            if (result) {
-                if (result.status === 200) {
-                    setRecheckData(result.data)
-                    if (result.data) {
-                        getCount('recheck', result.data.length)
-                    }
-                } else {
-                    // Api.Toast('error', result.message)
-                    return false
-                }
-            } else {
-             Api.Toast('error', 'Server not responding!') 
-            }
-        }) 
-        await Api.get(`/kpis/cancle/requests/to/hr/`).then(result => {
-            if (result) {
-                if (result.status === 200) {
-                    setCancelData(result.data)
-                    if (result.data) {
-                        getCount('cancel', result.data.length)
-                    }
-                } else {
-                    // Api.Toast('error', result.message)
-                    return false
-                }
-            } else {
-             Api.Toast('error', 'Server not responding!') 
-            }
-        })  
+       
         await Api.get(`/kpis/pre/data/`).then(result => {
             if (result) {
                 if (result.status === 200) {
@@ -97,7 +40,7 @@ const index = () => {
                         complexityDropdownArr.push({value: data.complexity[i].id, label: data.complexity[i].title})
                     }
                     for (let i = 0; i < employeeLength; i++) {
-                        employeesDropdownArr.push({value: data.employees[i].id, label: data.employees[i].name})
+                        employeesDropdownArr.push({value: data.employees[i].id, label: data.employees[i].name, avatar: data.employees[i].profile_image})
                     }
                     for (let i = 0; i < yearly_segmentation; i++) {
                         yearlySegmentation.push({value: data.yearly_segmentation[i].id, label: data.yearly_segmentation[i].year})
@@ -124,109 +67,52 @@ const index = () => {
 
         const CallBack = useCallback(() => {
             getPreData()
-          }, [requestData])
+          }, [])
    return (
     <Fragment>
-        <h2>HR KPI's PANEL</h2>
-        <div className='nav-vertical configuration_panel'>
-            <Nav tabs className='nav-left'>
-                                
-                                    <NavItem >
-                                    <NavLink
-                                        active={active === '1'}
-                                        onClick={() => {
-                                        toggle('1')
-                                        }}
-                                    >
-                                    Kpi's Approvals <Badge className="bg-danger ml-5">{(count && count.evaluation > 0) && count.evaluation}</Badge>
-                                    </NavLink>
-                                    </NavItem>
-                                
-                                    <NavItem >
-                                    <NavLink
-                                        active={active === '2'}
-                                        onClick={() => {
-                                        toggle('2')
-                                        }}
-                                    >
-                                        ReCheck Requests <Badge className="bg-danger ml-5">{(count && count.recheck > 0) && count.recheck}</Badge>
-                                    </NavLink>
-                                    <NavLink
-                                        active={active === '3'}
-                                        onClick={() => {
-                                        toggle('3')
-                                        }}
-                                    >
-                                        Cancelled Kpi's <Badge className="bg-danger ml-5">{(count && count.cancel > 0) && count.cancel}</Badge>
-                                    </NavLink>
-                                    <NavLink
-                                        active={active === '4'}
-                                        onClick={() => {
-                                        toggle('4')
-                                        }}
-                                    >
-                                        Search Kpi
-                                    </NavLink>
-                                    <NavLink
-                                        active={active === '5'}
-                                        onClick={() => {
-                                        toggle('5')
-                                        }}
-                                    >
-                                        Reports
-                                    </NavLink>
-                                    </NavItem>
-                                
-                                {/* </div> */}
-            </Nav>
-            <TabContent className='py-50' activeTab={active}>
-                        <TabPane tabId={'1'} className='tab-pane-blue'>
-                        {!loading ? (
-                            <EmployeeListHR data={requestData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='approvals'/>
+        <h2 className="text-center">HR KPI's PANEL</h2>
+        {/* <div className='nav-horizontal configuration_panel'> */}
+        {!loading ? (
+                            <>
+                            <KpiStatusCounts 
+                                segmentation={segmentationData}
+                                dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, yearlySegmentation}}
+                                searchTool={() => setsearchToolModal(!searchToolModal)}
+                                evaluationReport={() => setevaluationReportModal(!evaluationReportModal)}
+                             />
+                            {/* <EmployeeListHR data={requestData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='approvals'/> */}
+                            </>
                         ) : (
-                            <div className='text-center'><Spinner color="white"/></div>
+                            <div className='text-center'><Spinner color=""/></div>
                         )
                         }
-                        </TabPane>
-                        <TabPane tabId={'2'} className='tab-pane-blue'>
-                        {!loading ? (
-                            <EmployeeListHR data={recheckData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='recheck'/>
-                            
-                        ) : (
-                            <div className='text-center'><Spinner color="white"/></div>
-                        )
-                        }
-                        </TabPane>
-                        <TabPane tabId={'3'} className='tab-pane-blue'>
-                        {!loading ? (
-                           <EmployeeListHR data={cancelData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr}} CallBack={CallBack} type='cancel'/>
-                            
-                        ) : (
-                            <div className='text-center'><Spinner color="white"/></div>
-                        )
-                        }
-                        </TabPane>
-                        <TabPane tabId={'4'} className='tab-pane-blue'>
-                        {!loading ? (
+        {/* </div> */}
+        <Modal isOpen={searchToolModal} toggle={() => setsearchToolModal(!searchToolModal)} className="modal-xl">
+          <ModalHeader toggle={() => setsearchToolModal(!searchToolModal)}>Search Kpi Tool</ModalHeader>
+          <ModalBody>
+                {!loading ? (
                            <KpiByBatch segmentation={segmentationData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, yearlySegmentation}} CallBack={CallBack} type='search'/> 
                         ) : (
-                            <div className='text-center'><Spinner color="white"/></div>
+                            <div className='text-center'><Spinner color=""/></div>
                         )
-                        }
-                        </TabPane>
-                        <TabPane tabId={'5'} className='tab-pane-blue'>
-                            {!loading ? (
+                }
+          </ModalBody>
+        </Modal>
+
+        <Modal isOpen={evaluationReportModal} toggle={() => setevaluationReportModal(!evaluationReportModal)} className="modal-xl">
+          <ModalHeader toggle={() => setevaluationReportModal(!evaluationReportModal)}>Evaluations Insights</ModalHeader>
+          <ModalBody>
+                {!loading ? (
                                 
-                                    <KpiReports segmentation={segmentationData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, yearlySegmentation}}/>
-                                
-                                ) : (
-                                    <div className='text-center'><Spinner color="white"/></div>
-                                )
-                            
-                            }
-                        </TabPane>
-            </TabContent>
-        </div>
+                        <KpiReports segmentation={segmentationData} dropdownData={{typeDropdown: typesDropdownArr, complexityDropdown: complexityDropdownArr, employeesDropdown: employeesDropdownArr, yearlySegmentation}}/>
+                    
+                    ) : (
+                        <div className='text-center'><Spinner color=""/></div>
+                    )
+                
+                }
+          </ModalBody>
+        </Modal>
         
     </Fragment>
    )

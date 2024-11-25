@@ -14,7 +14,6 @@ const DepartmentsHelper = () => {
   const fetchDepartments = async () => {
     
     const response = await Api.get('/organization/department/', { headers: {Authorization: Api.token} })
-    console.warn(response)
     if (response.status === 200) {
     
         // emptying the array

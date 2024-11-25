@@ -3,7 +3,6 @@ import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Spinner } from
 import TaskDetail from './TaskDetail'
 
 const ChildTasks = ({ childTasks, projectsData, employees, priorities, types, onModalToggle, role }) => {
-    console.warn(role)
     const [taskDetailModal, setTaskDetailModal] = useState(false)
     const [selectedTask, setSelectedTask] = useState(null)
     const handleTaskClick = (task) => {

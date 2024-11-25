@@ -4,9 +4,7 @@ import { Bar } from 'react-chartjs-2'
 import { Table } from 'reactstrap'
 import { FaBatteryFull, FaBatteryHalf, FaBatteryQuarter } from "react-icons/fa"
 const ProjectBasedKpiChart = ({ data, empDash }) => {
-console.warn(data)
   const getDataset = (arr) => {
-
     const labels = data.map(d => d.project_name)
      // Extract data for each KPI complexity and status
   const highCompletedData = arr.map(d => d.total_high_complexity_completed)

@@ -120,7 +120,6 @@ const KpiList = ({ searchData, CallBack, dropdownData, type }) => {
             await Api.get(`/kpis/employees/`).then(result => {
                 if (result) {
                     if (result.status === 200) {
-                        console.warn(result.data)
                        setData(result.data)
                     } else {
                         Api.Toast('error', result.message)

@@ -3,6 +3,7 @@ import Select from 'react-select'
 // ** Custom Components
 // import Breadcrumbs from '@components/breadcrumbs'
 import {writeFile, utils} from 'xlsx'
+import { BiSearchAlt, BiExport  } from "react-icons/bi"
 // ** Reactstrap Imports
 import {
     Row, Col, 
@@ -267,7 +268,7 @@ const index = ({segmentation, dropdownData}) => {
         </Col> */}
         <Row>
                     <Col md="3" className="mb-1">
-                       <Label className="form-label text-white">
+                       <Label className="form-label">
                        Yearly Segmentation <Badge color='light-danger'>*</Badge>
                        </Label>
                        <Select
@@ -282,7 +283,7 @@ const index = ({segmentation, dropdownData}) => {
                        />
                    </Col>
                      <Col md="4" className="mb-1">
-                        <Label className="form-label text-white">
+                        <Label className="form-label">
                         Batch <Badge color='light-danger'>*</Badge>
                         </Label>
                         <Select
@@ -296,10 +297,12 @@ const index = ({segmentation, dropdownData}) => {
                             menuPosition='fixed'
                         />
                     </Col>
-                    <Col md={4}>
-                        <Button color="warning" className="btn-next mt-2" onClick={getData}>
-                            Get Reports
-                        </Button>
+                    <Col md={4} className="py-2 d-flex align-items-center">
+                        <Button.Ripple outline className='round mr-1' size='md' color='primary' onClick={getData}>
+                            <BiSearchAlt size={14}/>
+                            <span className='align-middle ms-10'>Get Departments</span>
+                        </Button.Ripple>
+                        
                    </Col>
                    
         </Row>
@@ -307,8 +310,6 @@ const index = ({segmentation, dropdownData}) => {
             <>
            { Object.values(departmentDropdown).length > 0 && (
               <>
-                
-                
                 <Col md='12'>
                 <Card>
                     <CardBody>
@@ -328,8 +329,12 @@ const index = ({segmentation, dropdownData}) => {
                                 menuPosition='fixed'
                             />
                       </Col>
-                      <Col md='3'>
-                      <Button className='btn btn-success float-right' onClick={handleExport}>Export Report</Button>
+                      <Col md='3' className='py-2'>
+                        <Button.Ripple outline className='round' size='md' color='primary' onClick={handleExport}>
+                            <BiExport size={14}/>
+                            <span className='align-middle ms-10'>Export Report</span>
+                        </Button.Ripple>
+                      {/* <Button className='btn btn-success float-right' onClick={handleExport}>Export Report</Button> */}
                       </Col>
                       </Row>
                     </CardBody>

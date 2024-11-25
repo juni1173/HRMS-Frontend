@@ -51,7 +51,14 @@ let nav = []
     icon: <PieChart size={20} />,
     navLink: '/hr/kpi',
         isAccess: 'Admin'
-},
+  },
+  {
+    id: 'nav-kpi-beta',
+    title: 'KPI-beta',
+    icon: <PieChart size={20} />,
+    navLink: '/hr/kpi-beta',
+        isAccess: 'Admin'
+  },
   {
     id: 'Recruitment',
     title: 'Recruitment',

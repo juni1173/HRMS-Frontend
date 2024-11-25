@@ -612,3 +612,54 @@ th.sticky-col:nth-of-type(2), td.sticky-col:nth-of-type(2) {
 	font-size: 20px;
 	font-weight: 40px;
 }
+.filters{
+	background: linear-gradient(to right, #ff512f, #f09819);
+	cursor: pointer;
+	color:white;
+}
+.filters:hover, .filter:active, .filters-active, .filter-card:hover, .filter-card:active {
+	background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+	cursor: pointer;
+	color:white;
+}
+.filter-card h1,
+.filter-card h3,
+.filter-card span,
+.filter-card:hover svg {
+  color: black; /* Black color on hover */
+}
+.filter-card:hover h1,
+.filter-card:hover h3,
+.filter-card:hover span,
+.filter-card:hover svg {
+  color: #fff; /* White color on hover */
+}
+.border-primary-glow{
+	box-shadow: #302b63 0px 0px 20px;
+  border: 1px solid #302b63;
+  animation: animate 3s linear infinite;
+  transition: all 0.3s ease-in-out;
+}
+.border-primary-glow:hover{
+  border: 1px solid #f09819;
+  animation: animate 3s linear infinite;
+  box-shadow: 0px 0px 20px 5px #f09819;  /* Glowing effect */
+  transform: scale(1.05);  /* Zoom effect on hover */
+  animation: animateGlow 3s linear infinite;
+}
+@keyframes animateGlow {
+	0% {
+	  box-shadow: 0px 0px 20px 5px #f09819;
+	}
+	50% {
+	  box-shadow: 0px 0px 40px 10px #f09819;
+	}
+	100% {
+	  box-shadow: 0px 0px 20px 5px #f09819;
+	}
+  }
+.border-warning-glow{
+	box-shadow: #f09819 0px 0px 20px;
+  border: 1px solid #f09819;
+  animation: animate 3s linear infinite;
+}

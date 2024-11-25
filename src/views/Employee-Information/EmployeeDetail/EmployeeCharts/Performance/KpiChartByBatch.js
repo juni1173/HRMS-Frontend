@@ -4,7 +4,6 @@ import { Bar } from 'react-chartjs-2'
 import { Table } from 'reactstrap'
 import { FaBatteryFull, FaBatteryHalf, FaBatteryQuarter } from "react-icons/fa"
 const KpiChartByBatch = ({ data }) => {
-console.warn(data)
   const getDataset = (arr) => {
 
     const labels = data.map(d => d.batch)

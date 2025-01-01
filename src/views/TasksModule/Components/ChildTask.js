@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Spinner } from 'reactstrap'
 import TaskDetail from './TaskDetail'
-
+import apiHelper from '../../Helpers/ApiHelper'
+import { Copy } from 'react-feather'
 const ChildTasks = ({ childTasks, projectsData, employees, priorities, types, onModalToggle, role }) => {
+    
+    const Api = apiHelper()
     const [taskDetailModal, setTaskDetailModal] = useState(false)
     const [selectedTask, setSelectedTask] = useState(null)
     const handleTaskClick = (task) => {
@@ -26,18 +29,18 @@ const ChildTasks = ({ childTasks, projectsData, employees, priorities, types, on
                                 key={index}
                                 className="border-0 border-bottom mb-1"
                                 style={{
-                                    backgroundColor: "#f8f9fa",
+                                    backgroundColor: "rgb(0 0 0 / 10%)",
                                     borderRadius: '4px',
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => handleTaskClick(task)}
                             >
-                                <span className="text-dark">{task.title}</span>
+                                <span className="text-dark" style={{fontWeight: '600'}}>{task.title}</span>
                             </ListGroupItem>
                         ))
                     
                     ) : (
-                        <p className="border-0">No child tasks available.</p>
+                        <p className="border-0 text-muted small">No child tasks available.</p>
                     )}
                 </ListGroup>
 
@@ -45,10 +48,14 @@ const ChildTasks = ({ childTasks, projectsData, employees, priorities, types, on
                 <Modal
                     isOpen={taskDetailModal}
                     toggle={toggleModal}  // Use the toggle function here
-                    className='modal-dialog-centered modal-lg'
+                    className='modal-dialog-centered modal-md'
                 >
-                    <ModalHeader toggle={toggleModal}>Task Details</ModalHeader>
-                    <ModalBody>
+                    <ModalHeader toggle={toggleModal} className='text-secondary pb-0'>
+                        {selectedTask && (
+                            <p className='text-secondary mb-0'>{selectedTask.project_name} / Task ID - {selectedTask.id} <Copy onClick={() => Api.copyToClipboard(`${Api.FrontendBaseUrl}/task/${selectedTask.id}`)} size={14} color="gray" alt="copy Link"/><br></br><span className='text-muted small'>Created on {Api.formatDateWithMonthName(selectedTask.created_at)}</span></p>
+                        )}
+                    </ModalHeader>
+                    <ModalBody className='mx-1 pt-0'>
                         {selectedTask ? (
                             <TaskDetail
                                 projectsData={projectsData}

@@ -7,9 +7,8 @@ import Select from 'react-select'
 import * as XLSX from 'xlsx'
 // ** Styles
 import '@styles/react/apps/app-todo.scss'
-import { Card, CardBody, Spinner, TabContent, TabPane, Badge, Row, Col, Button, Modal, ModalBody, ModalHeader, Table } from 'reactstrap'
+import { Card, CardBody, Spinner, TabContent, TabPane, Badge, Row, Col, Button, Modal, ModalBody, ModalHeader, Table, CardFooter } from 'reactstrap'
 import { Download, Filter, RefreshCcw, Save, Search } from 'react-feather'
-import { TbReportAnalytics } from "react-icons/tb"
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import ReactPaginate from 'react-paginate'
@@ -19,18 +18,19 @@ const index = () => {
     // ** States
     const [loading, setLoading] = useState(false)
     const [taskloading, setTaskLoading] = useState(false)
-    const [filterLoading, setFilterLoading] = useState(false)
+    // const [filterLoading, setFilterLoading] = useState(false)
     const [projects, setProjects] = useState([])
     const [activeProject, setActiveProjects] = useState('')
     const [projDropdown, setProjectDropdown] = useState([])
     const [tasks, setTasks] = useState([])
+    const [projectStatuses, setProjectStatuses] = useState([])
     const [pagination, setPagination] = useState(
         {currentPage: 1, totalPages: null}
     )
     const [activeTab, setActiveTab] = useState(0)
     const [selectedTask, setSelectedTask] = useState(null)
     const [sortState, setSortState] = useState('all-task')
-    const [filterStatus, setFilterStatus] = useState(false)
+    // const [filterStatus, setFilterStatus] = useState(false)
     const [typeDropdown, setTypeDropdown] = useState([])
     const [statusDropdown, setStatusDropdown] = useState([])
     const [employeeDropdown, setEmployeeDropdown] = useState([])  
@@ -41,6 +41,13 @@ const index = () => {
     const [workbook, setWorkbook] = useState(null)
     const [projectRole, setProjectRole] = useState('')
     const [selectedAssignee, setSelectedAssignee] = useState([{ value: '', label: 'select employee' }])
+    const [viewType, setViewType] = useState('list')
+    const [query, setQuery] = useState({
+        assign_to: null,
+        task_type: null,
+        priority: null,
+        status: null
+        }) 
     const priority_choices = [
         {value: 'Low', label: 'Low'},
         {value: 'Medium', label:'Medium'},
@@ -55,12 +62,12 @@ const index = () => {
     }
     return arr
     }
-    const [query, setQuery] = useState({
-    assign_to: null,
-    task_type: null,
-    priority: null,
-    status: null
-    }) 
+    // const [query, setQuery] = useState({
+    // assign_to: null,
+    // task_type: null,
+    // priority: null,
+    // status: null
+    // }) 
     // const getTaskTypes = async (id = null) => {
     //     const formData = new FormData()
     //     if (id) {
@@ -143,40 +150,40 @@ const index = () => {
         }
     })
     }
-    const onChangeTaskQueryHandler = (InputName, InputType, e) => {
-        if (!e) {
-            e = {
-              target: InputName,
-              value: null
-            }
-            setQuery(prevState => ({
-                ...prevState,
-                [InputName] : null
+    // const onChangeTaskQueryHandler = (InputName, InputType, e) => {
+    //     if (!e) {
+    //         e = {
+    //           target: InputName,
+    //           value: null
+    //         }
+    //         setQuery(prevState => ({
+    //             ...prevState,
+    //             [InputName] : null
                 
-                }))
-                return false
-          }
-        let InputValue
-        if (InputType === 'input') {
+    //             }))
+    //             return false
+    //       }
+    //     let InputValue
+    //     if (InputType === 'input') {
         
-        InputValue = e.target.value
-        } else if (InputType === 'select') {
+    //     InputValue = e.target.value
+    //     } else if (InputType === 'select') {
         
-        InputValue = e
-        } else if (InputType === 'date') {
-            let dateFomat = e.split('/')
-                dateFomat = `${dateFomat[2]}-${dateFomat[1]}-${dateFomat[0]}`    
-            InputValue = dateFomat
-        } else if (InputType === 'file') {
-            InputValue = e.target.files[0].name
-        }
+    //     InputValue = e
+    //     } else if (InputType === 'date') {
+    //         let dateFomat = e.split('/')
+    //             dateFomat = `${dateFomat[2]}-${dateFomat[1]}-${dateFomat[0]}`    
+    //         InputValue = dateFomat
+    //     } else if (InputType === 'file') {
+    //         InputValue = e.target.files[0].name
+    //     }
     
-        setQuery(prevState => ({
-        ...prevState,
-        [InputName] : InputValue
+    //     setQuery(prevState => ({
+    //     ...prevState,
+    //     [InputName] : InputValue
         
-        }))
-    }
+    //     }))
+    // }
     const getProjectPreData = async (id) => {
         if (id) {
             await Api.get(`/taskify/get/project/pre/data/${id}/`).then(result => {
@@ -215,7 +222,7 @@ const index = () => {
                                     projectStatusArr.push({value: status.id, label: status.title})
                                 }
                             }
-                            
+                            setProjectStatuses(projectStatusArr)
                             setStatusDropdown([...defaultStatusArr, ...projectStatusArr])
                         }
                         if (Object.values(resultData).length > 0) {
@@ -235,10 +242,11 @@ const index = () => {
             })
         }
     } 
-    const getTasks = async (id = null, sortData = null, type = null) => {
-        setTaskLoading(true)
+    const getTasks = async (id = null, sortData = null, type = null, query = null) => {
+        
         let url = ''
         if (id) {
+
             url = `/taskify/get/project/all/task/${id}/`
             const formData = new FormData()
             if (sortData) {
@@ -246,11 +254,14 @@ const index = () => {
                 if (sortData === 'assign-to-me') formData['assign_to'] = Api.user.id
                 if (sortData === 'created-by-me') formData['employee'] = Api.user.id
             }
-            if (query.status) formData['status'] = query.status
-            if (query.assign_to) formData['assign_to'] = query.assign_to
-            if (query.priority) formData['priority'] = query.priority
-            if (query.task_type) formData['task_type'] = query.task_type
+            if (query) {
+                if (query.status) formData['status'] = query.status
+                if (query.assign_to) formData['assign_to'] = query.assign_to
+                if (query.priority) formData['priority'] = query.priority
+                if (query.task_type) formData['task_type'] = query.task_type
+            }
             if (pagination.currentPage) formData['page'] = pagination.currentPage
+            setTaskLoading(true)
             await Api.jsonPost(url, formData).then(tasksResult => {
                 if (tasksResult) {
                     if (tasksResult.status === 200) {
@@ -273,22 +284,22 @@ const index = () => {
             return false
         }
         if (id && type === 'my_tasks') {
+            setTaskLoading(true)
             url = `/taskify/get/project/assign/task/${id}/`
+            await Api.get(url).then(tasksResult => {
+                if (tasksResult) {
+                    if (tasksResult.status === 200) {
+                        const tasksData = tasksResult.data
+                        setTasks(tasksData)
+                    } else Api.Toast('error', tasksResult.message)
+                } else {
+                    Api.Toast('error', 'Server error!')
+                }
+            })
+            setTimeout(() => {
+                setTaskLoading(false)
+            }, 500)
         }
-       
-        await Api.get(url).then(tasksResult => {
-            if (tasksResult) {
-                if (tasksResult.status === 200) {
-                    const tasksData = tasksResult.data
-                    setTasks(tasksData)
-                } else Api.Toast('error', tasksResult.message)
-            } else {
-                Api.Toast('error', 'Server error!')
-            }
-        })
-        setTimeout(() => {
-            setTaskLoading(false)
-        }, 500)
     }   
     const getData = async () => {
         setLoading(true)
@@ -299,9 +310,9 @@ const index = () => {
                     if (projectsData.length > 0) {
                         setProjects(projectsData)
                         setProjectDropdown(projectDropdown(projectsData))
-                        getTasks(projectsData[0].id)
                         setActiveTab(projectsData[0].id)
                         setActiveProjects({value: projectsData[0].id, label: projectsData[0].name})
+                        getTasks(projectsData[0].id, null, null, null)
                         // getTaskTypes(projectsData[0].id)
                         // getStatuses(projectsData[0].id)
                         // getEmployees(projectsData[0].id)
@@ -328,13 +339,13 @@ const index = () => {
         getTasks(proj.value, query.type, query.status)
         getEmployees(proj.value)
     }
-    const filterClick = () => {
-        setFilterStatus(!filterStatus)
-        setFilterLoading(true)
-        setTimeout(() => {
-            setFilterLoading(false)
-        }, 500)
-    }
+    // const filterClick = () => {
+    //     setFilterStatus(!filterStatus)
+    //     setFilterLoading(true)
+    //     setTimeout(() => {
+    //         setFilterLoading(false)
+    //     }, 500)
+    // }
     const handleAssigneeChange = (assignee) => {
         setSelectedAssignee(assignee)
     }
@@ -362,14 +373,14 @@ const index = () => {
     useEffect(() => {
             getData()
     }, [setProjects])
-    const CallBack = useCallback((id, selectedTaskid, sort) => {
+    const CallBack = useCallback((id, selectedTaskid, sort, query) => {
         setActiveTab(id)
-        getTasks(id, sort)
+        getTasks(id, sort, null, query)
         if (selectedTaskid) setSelectedTask(selectedTaskid)
     }, [tasks, sortState])
-    const applyFilters = () => {
-        getTasks(activeTab, sortState)
-    }
+    // const applyFilters = () => {
+    //     getTasks(activeTab, sortState)
+    // }
     const Previous = () => {
         return <span className='align-middle d-none d-md-inline-block'>Prev</span>
       }
@@ -432,7 +443,7 @@ const index = () => {
         }
         return false
     } 
-      const ExportReport = async () => {
+    const ExportReport = async () => {
         if (reportStartDate !== '' && reportEndDate !== '' && activeProject) {
             const formData = new FormData()
             formData['start_date'] = reportStartDate
@@ -440,53 +451,106 @@ const index = () => {
             if (selectedAssignee.value !== '') formData['employee'] = selectedAssignee.value
             try {
                 const result = await Api.jsonPost(`/taskify/get/task/report/${activeProject.value}/`, formData)
+    
                 if (result.status === 200) {
                     const csvRows = []
                     const headerRow = [
-                        "Title", "Parent", "Assigned_to", "Status", "Type", "Priority", 
+                        "Title", "Parent", "Assigned_to", "Status", "Type", "Priority",
                         "Planned_hours", "Actual_hours"
                     ]
-
+    
                     const allDates = getAllDatesBetween(reportStartDate, reportEndDate)
                     headerRow.push(...allDates)
                     csvRows.push(headerRow)
-                    
-                    // Populate the data rows
-                    result.data.forEach(item => {
-                        const row = [
-                            item.title,
-                            item.parent_title || 'N/A',
-                            item.assign_to_name,
-                            item.status_title || 'N/A',
-                            item.task_type_title || 'N/A',
-                            item.priority || 'N/A',
-                            splitFunction(item.planned_hours) || 'N/A',
-                            splitFunction(item.actual_hours) || 'N/A'
-                        ]
-
-                         // Create a map for hours spent on each date
-                         const dateToHoursMap = {}
-                         if (item.task_time_logs) {
-                            item.task_time_logs.forEach(log => {
-                                const logDate = new Date(log.date).toISOString().split('T')[0] // Format as YYYY-MM-DD
-                                dateToHoursMap[logDate] = splitFunction(log.hours_spent) || '0' // Default to '0.00' if no hours
+    
+                    const { task_time_log_data, leaves_data, weekends_data } = result.data
+    
+                    // Map weekends and leaves for quick lookup
+                    const weekendsSet = new Set(weekends_data)
+                    const leavesMap = {}
+                    if (leaves_data) {
+                        leaves_data.forEach(leave => {
+                            leavesMap[leave.date] = leave.leave_types_title
+                        })
+                    }
+                   
+    
+                    // Populate data rows
+                    if (task_time_log_data) {
+                        task_time_log_data.forEach(item => {
+                            const row = [
+                                item.title,
+                                item.parent_title || 'N/A',
+                                item.assign_to_name,
+                                item.status_title || 'N/A',
+                                item.task_type_title || 'N/A',
+                                item.priority || 'N/A',
+                                splitFunction(item.planned_hours) || 'N/A',
+                                splitFunction(item.actual_hours) || 'N/A'
+                            ]
+        
+                            const dateToHoursMap = {}
+                            if (item.task_time_logs) {
+                                item.task_time_logs.forEach(log => {
+                                    const logDate = new Date(log.date).toISOString().split('T')[0]
+                                    dateToHoursMap[logDate] = splitFunction(log.hours_spent) || '0'
+                                })
+                            }
+        
+                            // Add data for each date column
+                            allDates.forEach(date => {
+                                let cellValue = dateToHoursMap[date] || '' // Default to empty
+                                if (weekendsSet.has(date)) {
+                                    cellValue = cellValue ? `${cellValue} - Weekend` : "Weekend"
+                                } else if (leavesMap[date]) {
+                                    cellValue = cellValue ? `${cellValue} - ${leavesMap[date]}` : `${leavesMap[date]}`
+                                }
+                                row.push(cellValue)
                             })
-                         }
- 
-                         // Fill the row with hours for each date in the range
-                         allDates.forEach(date => {
-                             row.push(dateToHoursMap[date] || '0') // Use '0.00' if no log exists for that date
-                         })
- 
-                         csvRows.push(row)
-                    })
+        
+                            csvRows.push(row)
+                        })
+                    }
                     setCsvExportData(csvRows)
-                         // Create a new workbook
+                    // Create worksheet and workbook
                     const ws = XLSX.utils.aoa_to_sheet(csvRows)
                     const wb = XLSX.utils.book_new()
                     XLSX.utils.book_append_sheet(wb, ws, "Report")
-
-                    // Set column widths
+    
+                    // Apply styles to data cells
+                    csvRows.forEach((row, rowIndex) => {
+                        if (rowIndex === 0) return // Skip header row
+    
+                        row.forEach((cellValue, colIndex) => {
+                            if (colIndex < 8) return // Skip non-date columns
+    
+                            const cellAddress = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex })
+                            const isWeekend = weekendsSet.has(allDates[colIndex - 8])
+                            const isLeave = leavesMap[allDates[colIndex - 8]]
+    
+                            if (isWeekend) {
+                                ws[cellAddress].s = {
+                                    fill: { bgColor: { rgb: "87CEEB" } }, // Sky Blue
+                                    font: { color: { rgb: "FFFFFF" }, bold: true },
+                                    alignment: { horizontal: "center" }
+                                }
+                            } else if (isLeave) {
+                                ws[cellAddress].s = {
+                                    fill: { bgColor: { rgb: "FF0000" } }, // Red
+                                    font: { color: { rgb: "FFFFFF" }, bold: true },
+                                    alignment: { horizontal: "center" }
+                                }
+                            } else if (cellValue) {
+                                ws[cellAddress].s = {
+                                    fill: { bgColor: { rgb: "00FF00" } }, // Green
+                                    font: { color: { rgb: "000000" }, bold: false },
+                                    alignment: { horizontal: "center" }
+                                }
+                            }
+                        })
+                    })
+    
+                    // Adjust column widths
                     ws['!cols'] = [
                         { wpx: 150 }, // Title
                         { wpx: 150 }, // Parent
@@ -496,25 +560,17 @@ const index = () => {
                         { wpx: 100 }, // Priority
                         { wpx: 100 }, // Planned_hours
                         { wpx: 100 }, // Actual_hours
-                        ...allDates.map(() => ({ wpx: 100 })) // Dates columns
+                        ...allDates.map(() => ({ wpx: 150 })) // Dates columns
                     ]
-                    // Set header style (height and bold)
-                    const headerCellStyle = { 
-                        font: { bold: true }, 
-                        alignment: { horizontal: "center" }
-                    }
-                    // Apply style to the header row
-                    const headerRowIndex = 0 // First row (header)
-                    for (let col = 0; col < headerRow.length; col++) {
-                        const cell = ws[XLSX.utils.encode_cell({ r: headerRowIndex, c: col })]
-                        if (cell) {
-                            cell.s = headerCellStyle // Apply style
+    
+                    // Apply styles to header
+                    headerRow.forEach((header, colIndex) => {
+                        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: colIndex })
+                        ws[cellAddress].s = {
+                            font: { bold: true },
+                            alignment: { horizontal: "center" }
                         }
-                    }
-                    // Set row height for the header
-                    ws['!rows'] = [{ hpx: 30 }] // Height in pixels for the header row
-
-                    // Store the workbook in state
+                    })
                     setWorkbook(wb)
                 } else {
                     Api.Toast('error', result.message)
@@ -523,18 +579,22 @@ const index = () => {
                 console.error(error)
                 Api.Toast('error', 'An error occurred while fetching the report.')
             }
-        } 
-      }
+        }
+    }
+    
       const DownloadReport = () => {
         if (csvExportData) {
             if (workbook) {
                 // Generate Excel file
-                XLSX.writeFile(workbook, `report_${selectedAssignee !== '' && selectedAssignee.label}_${activeProject.label}_${new Date().toISOString().split('T')[0]}.xlsx`)
+                const assigneeLabel = selectedAssignee?.label || "All"
+            const projectLabel = activeProject?.label || "NoProject"
+            XLSX.writeFile(workbook, `report_${assigneeLabel}_${projectLabel}_${new Date().toISOString().split('T')[0]}.xlsx`)
             } else {
                 alert('Please generate the report first.')
             }
         }
       }
+     
   return (
     <Fragment>
             <Card>
@@ -543,7 +603,7 @@ const index = () => {
                         <Col md="6">
                             <h3>Task Management</h3>
                         </Col>
-                        <Col md="5">
+                        <Col md="6" className='float-right'>
                             {!loading && (
                                 <Select
                                 isClearable={false}
@@ -563,23 +623,20 @@ const index = () => {
                             />
                             )}
                         </Col>
-                        {(projectRole !== '' && Object.values(projectRole).length > 0 && projectRole.role_level < 3
-                        && projectRole.role_level > 0) && (
-                            <Col md="1">
-                                <TbReportAnalytics className='cursor-pointer' title='Report' size={'30'} color="blue" onClick={() => setCenteredModal(!centeredModal)}/>
-                            </Col>
-                        )}
                     </Row>
-            <div className='d-flex justify-content-between'>
+            {/* <div className='d-flex justify-content-between'>
                 <div>
                 <b>Sort by  </b> <Badge>{sortState}</Badge>
                  
                 </div>
                 <div>
-                <span onClick={filterClick} className='cursor-pointer'><Filter color={filterStatus ? 'darkblue' : 'gray'} size={'18'} title="Filters"/> Filters </span>
+                    <Button.Ripple color='flat-secondary' onClick={filterClick}>
+                        <Filter size={14} color={filterStatus ? 'darkblue' : 'gray'}/>
+                        <span className='align-middle ms-25'>Filters</span>
+                    </Button.Ripple>
                 </div>
-            </div> 
-                {filterStatus && (
+            </div>  */}
+                {/* {filterStatus && (
                     !filterLoading ? (
                         <div className='row d-flex justify-content-between mb-1'>
                         <div className='col-md-2' style={{minWidth:'200px'}}>
@@ -649,12 +706,12 @@ const index = () => {
                     </div>                    
                     ) : <div className='text-center'><Spinner size={'16'} type='grow' color='blue'/></div>
                 )}
-                <hr></hr>
-                <div className='todo-application'>
-                {!taskloading ? (
+                <hr></hr> */}
+                <div className=''>
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={activeTab}>
-                            <Tasks
+                            {(tasks && Object.values(tasks).length > 0) ? (
+                                <Tasks
                                 data={tasks}
                                 projectsData={projects}
                                 CallBack={CallBack}
@@ -664,15 +721,26 @@ const index = () => {
                                 priorities={priority_choices}
                                 role={projectRole}
                                 types={typeDropdown} // Ensure it's passed when available
+                                statuses={statusDropdown}
+                                projectStatuses={projectStatuses}
+                                viewType={viewType}
+                                setViewType={setViewType}
+                                taskloading={taskloading}
+                                setQuery={setQuery}
+                                query={query}
+                                priority_choices={priority_choices}
+                                setReportModal={setCenteredModal}
+                                reportModal={centeredModal}
                             />
+                            ) : <div className='text-center'>No Task Loaded!</div>}
+                            
                         </TabPane>
                     </TabContent>
-                ) : (
-                    <div className="text-center">
-                        <Spinner size="18" /> Loading tasks...
-                    </div>
-                )}
-                                <ReactPaginate
+                </div>
+                 </CardBody>
+                 {/* {viewType !== 'group-view' && ( */}
+                    <CardFooter>
+                        <ReactPaginate
                                 pageCount={ Math.ceil(pagination.totalPages) || 0 }
                                 breakLabel='...'
                                 nextLabel={<Next />}
@@ -686,10 +754,11 @@ const index = () => {
                                 previousLinkClassName='page-num'
                                 nextLinkClassName='page-num'
                                 activeLinkClassName='active'
-                              />
-                </div>
-                 </CardBody>
+                                />
+                    </CardFooter>
+                  {/* )} */}
             </Card> 
+            
             <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className={csvExportData ? 'modal-dialog-centered modal-xl' : 'modal-dialog-centered modal-lg'}>
                 <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Export Report</ModalHeader>
                 <ModalBody>

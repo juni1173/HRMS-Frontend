@@ -46,8 +46,8 @@ const UpcomingHolidays = ({ data }) => {
             <div className='text-center'>
                 <Avatar className='rounded mb-2' color='light-secondary' icon={<Icon.Calendar color='white'/>} />
                 <div>
-                <h6 className='transaction-title'>{item.title.toUpperCase()}</h6>
-                <small> {`${item.date && item.date }`}</small>
+                <h6 className='transaction-title text-white'>{item.title.toUpperCase()}</h6>
+                <small className='text-white'> {`${item.date && item.date }`}</small>
                 </div>
             </div>
             </div>

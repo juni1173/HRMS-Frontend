@@ -463,7 +463,9 @@ div.configuration_panel .tab-pane-orange {
   .progress-bar-white .progress-bar{
 	background-color: #fff;
   }
-  
+  .dropdown-menu .dropdown-item{
+	width: 100%;
+  }
   /* CSS */
   .button-47 {
 	align-items: center;
@@ -560,7 +562,7 @@ th.sticky-col:nth-of-type(2), td.sticky-col:nth-of-type(2) {
     border: 0px solid lightgray;
     padding: .5em;
     border-radius: 3px;
-    margin-top: 1em;
+    // margin-top: 1em;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -592,6 +594,10 @@ th.sticky-col:nth-of-type(2), td.sticky-col:nth-of-type(2) {
     padding: .5em 0;
     border: none;
     outline: none;
+}
+.kavpedia-container .active{
+	background-color: #EB7623FF;
+	color: #fff;
 }
 .kavpedia .link {
 	color: #1a0dab;
@@ -658,8 +664,244 @@ th.sticky-col:nth-of-type(2), td.sticky-col:nth-of-type(2) {
 	  box-shadow: 0px 0px 20px 5px #f09819;
 	}
   }
+@keyframes dangeranimateGlow {
+	0% {
+	  box-shadow: 0px 0px 20px 5px #ea5455b5;
+	}
+	50% {
+	  box-shadow: 0px 0px 40px 10px #ea5455b5;
+	}
+	100% {
+	  box-shadow: 0px 0px 20px 5px #ea5455b5;
+	}
+  }
+@keyframes successanimateGlow {
+	0% {
+	  box-shadow: 0px 0px 20px 5px #0080008c;
+	}
+	50% {
+	  box-shadow: 0px 0px 40px 10px #0080008c;
+	}
+	100% {
+	  box-shadow: 0px 0px 20px 5px #0080008c;
+	}
+  }
 .border-warning-glow{
 	box-shadow: #f09819 0px 0px 20px;
   border: 1px solid #f09819;
   animation: animate 3s linear infinite;
 }
+.kanban-board {
+	display: flex;
+	gap: 1rem;
+	padding: 1rem;
+	overflow-x: auto; /* Allows horizontal scrolling for columns */
+	overflow-y: hidden; /* Prevent vertical scroll at the board level */
+	font-size: 12px;
+	height: 96%; /* Ensures it can expand to fill the viewport if required */
+  }
+  
+//   .kanban-column {
+// 	background-color: #f4f4f4;
+// 	border: 1px solid #ddd;
+// 	border-radius: 8px;
+// 	min-width: 250px;
+// 	max-width: 300px;
+// 	flex: 1;
+// 	display: flex;
+// 	flex-direction: column;
+//   }
+.kanban-column {
+	min-height: 200px;
+	background-color: #f8f9fa;
+	border: 1px solid #d3d3d3;
+	padding: 5px;
+	min-width: 288px;
+	max-width: 300px;
+	border-radius: 8px;
+	display: flex;
+	flex-direction: column; /* Stacks header and tasks */
+	overflow-y: auto; /* Enable vertical scrolling within the column */
+	height: 100%; /* Fills the parent container height */
+  }
+  
+  
+  .kanban-column:hover {
+	background-color: #e9ecef; /* Highlight when hovering over */
+  }
+  
+  .sortable {
+	min-height: 100vh; // Ensure there's always a drop area
+	flex-grow: 1; // Allow it to grow to fill the column
+	padding: 8px 0px;
+	// background-color: #f8f9fa; // Optional: Add background for better visibility
+	// border: 1px dashed #ddd; // Optional: Add dashed border to emphasize drop area
+  }
+  
+  .kanban-column-header {
+	// background-color: #007bff; /* Optional: Distinct background for the header */
+	color: white;
+	padding: 0.5rem;
+	border-bottom: 1px solid #ddd;
+	border-radius: 8px 8px 0 0;
+	position: sticky;
+	top: 0; /* Sticks to the top of the column */
+	// z-index: 1; /* Ensures it stays above other content */
+  }
+  
+  .kanban-column-header.title {
+		font-size: 16px;
+		line-height: 26px;
+		font-weight: 600;
+		color: #171A1FFF;
+  }
+  
+  .kanban-column-tasks {
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+  }
+  
+  .kanban-card {
+	background-color: white;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 0.75rem;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+  }
+  .kanban-card.priority-high:hover {
+	animation: animate 3s linear infinite;
+	box-shadow: 0px 0px 20px 5px #ea5455b5;  /* Glowing effect */
+	transform: scale(1.05);  /* Zoom effect on hover */
+	animation: dangeranimateGlow 3s linear infinite;
+  }
+  .kanban-card.priority-medium:hover {
+	animation: animate 3s linear infinite;
+	box-shadow: 0px 0px 20px 5px #ffa500a1;  /* Glowing effect */
+	transform: scale(1.05);  /* Zoom effect on hover */
+	animation: animateGlow 3s linear infinite;
+  }
+  .kanban-card.priority-low:hover {
+	animation: animate 3s linear infinite;
+	box-shadow: 0px 0px 20px 5px #0080008c;  /* Glowing effect */
+	transform: scale(1.05);  /* Zoom effect on hover */
+	animation: successanimateGlow 3s linear infinite;
+  }
+  .kanban-card h4 {
+	margin: 0 0 0.5rem;
+  }
+  
+//   .kanban-card.priority-high {
+// 	border-bottom: 4px solid #ea5455b5;
+//   }
+  
+//   .kanban-card.priority-medium {
+// 	border-bottom: 4px solid #ffa500a1;
+//   }
+  
+//   .kanban-card.priority-low {
+// 	border-bottom: 4px solid #0080008c;
+//   }
+.task-title {
+	font-size: 14px;
+	line-height: 22px;
+	font-weight: 400;
+	color: #171A1FFF;
+	}
+	/* Table 1 */
+div.task-list .header {
+	font-size: 14px;
+	line-height: 22px;
+	font-weight: 600;
+	color: #565E6CFF;
+	}
+	/* Button 11 */
+div.add-task.button {
+	position: absolute;
+	top: 890px;
+	left: 614px;
+	width: 288px;
+	height: 32px;
+	padding: 0 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: Nunito Sans;
+	font-size: 12px;
+	line-height: 20px;
+	font-weight: 400;
+	color: #9095A0FF;
+	background: #00000000;
+	opacity: 1;
+	border: none;
+	border-radius: 4px;
+	gap: 4px;
+	}
+	div.add-task.button .icon {
+	width: 12px;
+	height: 12px;
+	fill: #9095A0FF;
+	}
+	/* Hover */
+	div.add-task.button:hover {
+	color: #9095A0FF;
+	background: #EAECEFFF;
+	}
+	/* Pressed */
+	div.add-task.button:hover:active {
+	color: #9095A0FF;
+	background: #DEE1E6FF;
+	}
+	/* Disabled */
+	div.add-task.button:disabled {
+	opacity: 0.4;
+	}
+	.hover-underline:hover{
+		text-decoration: underline;
+	}
+	.modal-md{
+		margin-left: 10%;
+		margin-right: 10%;
+		max-width: 94%;
+	}
+	.attachment-wrapper {
+		white-space: normal; /* Allows text to wrap */
+		word-break: break-word; /* Ensures long strings break correctly */
+		overflow-wrap: anywhere; /* Makes long words wrap within container */
+		color: #4b4b4b;
+		font-size: smaller;
+	  }
+	  .task-manager hr {
+		margin: 0.5rem 0;
+	  }
+	  .border-dotted{
+		border-style: dotted;
+		border-color: gray;
+	  }
+	  .max-vh-160{
+		max-height: 160px;
+	  }
+	  .content-center{
+		align-content: center;
+	  }
+	  .kavpediaHeading {
+		font-size: 18px;
+		line-height: 28px;
+		font-weight: 700;
+		color: #171A1FFF;
+		}
+		.group-header-text, .group-header-text:hover, .group-header-text:active,
+		.group-header-text:visited, .group-header-text:focus{
+				font-size: 20px;
+				line-height: 30px;
+				font-weight: 600;
+				color: #DE3B40FF;
+		}
+		.group-header-count{
+				font-size: 12px;
+				line-height: 26px;
+				font-weight: 400;
+				color: #9095A0FF;
+		}

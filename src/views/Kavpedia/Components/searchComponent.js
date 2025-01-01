@@ -6,15 +6,15 @@ import { Row, Col, Input, Button, Dropdown,
     DropdownMenu,
     DropdownItem,
     DropdownToggle } from 'reactstrap'
-const SearchComponent = ({ Callback, projectsDropdown }) => {
+const SearchComponent = ({ Callback, projects }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [tags, setTags] = useState([])
-  const [projects, setProjects] = useState('') 
-  const [dropdownOpen, setDropdownOpen] = useState(false)
+//   const [projects, setProjects] = useState('') 
+//   const [dropdownOpen, setDropdownOpen] = useState(false)
 
-  const toggleDropDown = () => {
-    setDropdownOpen(!dropdownOpen)
-  }
+//   const toggleDropDown = () => {
+//     setDropdownOpen(!dropdownOpen)
+//   }
 //   const [tagInput, setTagInput] = useState('')
   function handleKeyDown(e) {
     // If user did not press enter key, return
@@ -50,7 +50,7 @@ const SearchComponent = ({ Callback, projectsDropdown }) => {
             <Col md='2'></Col>
             <Col md='8'>
             <InputGroup>
-                    <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
+                    {/* <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
                         <DropdownToggle color='primary' caret outline>
                             {projects === '' ? 'Select Projects' : projectsDropdown.find(pre => pre.value === projects).label}
                         </DropdownToggle>
@@ -64,7 +64,7 @@ const SearchComponent = ({ Callback, projectsDropdown }) => {
                                 </DropdownItem>
                             ))}
                         </DropdownMenu>
-                    </Dropdown>
+                    </Dropdown> */}
                     <Input  
                     placeholder="Search title here..."
                     value={searchQuery}

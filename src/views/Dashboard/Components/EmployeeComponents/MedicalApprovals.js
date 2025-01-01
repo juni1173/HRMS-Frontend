@@ -44,7 +44,7 @@ const MedicalApprovals = ({ data, medical_count }) => {
         <SwiperSlide className='rounded swiper-shadow'>
             <div key={item.id} className=''>
             <div className='text-center'>
-            <a href='../statusrequests/'><Avatar className='rounded mb-2' color='light-primary' icon={<FaHandHoldingMedical size={20}/>} /></a>
+            <a href='../statusrequests/'><Avatar className='rounded mb-2' color='light-primary' icon={<FaHandHoldingMedical color='white' size={20}/>} /></a>
                 <div>
                 <h6 className='transaction-title text-white'>{item.status.toUpperCase()}</h6>
                 <small className='text-white'> {`Rs ${item.amount}`} <br/> {medical_count ? <> {medical_count.remaining_allowance} / {medical_count.emp_yearly_limit} </> : null } </small>

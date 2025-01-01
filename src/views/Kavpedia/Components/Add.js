@@ -1,13 +1,14 @@
 import React, { useState, Fragment } from 'react'
 import Select from 'react-select'
-import { Row, Col, Button, ListGroup, ListGroupItem } from 'reactstrap'
+import { Row, Col, Button, ListGroup, ListGroupItem, Label, Input } from 'reactstrap'
 import { useDropzone } from 'react-dropzone'
-import { FileText, X, DownloadCloud } from 'react-feather'
+import { FileText, X, DownloadCloud, Check } from 'react-feather'
 const AddComponent = ({ CallBack, projectsDropdown, modalCancel, Api }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [tags, setTags] = useState([])
   const [projects, setProjects] = useState('') 
   const [files, setFiles] = useState([])
+  const [privateCheck, setPrivateCheck] = useState(false)
 
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
@@ -93,6 +94,7 @@ const AddComponent = ({ CallBack, projectsDropdown, modalCancel, Api }) => {
         if (projects !== '') formData.append('project', projects)
         formData.append('tags', finalTags)
         formData.append('file', files[0])
+        formData.append('is_public', privateCheck)
         await Api.jsonPost(`/datahive/`, formData, false).then(result => {
             if (result) {
                 if (result.status === 200) {
@@ -105,12 +107,27 @@ const AddComponent = ({ CallBack, projectsDropdown, modalCancel, Api }) => {
         })
       }
   }
+  const CustomLabel = ({ htmlFor }) => {
+    return (
+      <Label className='form-check-label' htmlFor={htmlFor}>
+        <span className='switch-icon-left'>
+          <Check size={14} />
+        </span>
+        <span className='switch-icon-right'>
+          <X size={14} />
+        </span>
+      </Label>
+    )
+  }
+  const handlePrivateSwitch = e => {
+    setPrivateCheck(e)
+  }
   return (
    <Fragment>
     <Row className='justify-content-center'>
-        <Col md={8} className='mb-1'>
+        <Col md={(projects && projects !== '') ? '7' : '8'} className='mb-1'>
             {/* Search Input */}
-                <div className=" mb-1">
+                <div className="mb-1">
                 <label>Title</label>
                     <input
                     type="text"
@@ -123,7 +140,7 @@ const AddComponent = ({ CallBack, projectsDropdown, modalCancel, Api }) => {
                 </div>
         </Col>
       
-                <Col md='4' className='mb-1'>
+                <Col md={(projects && projects !== '') ? '3' : '4'} className='mb-1'>
                     {/* Projects Dropdown */}
                     <div className="">
                         <label>Projects</label>
@@ -134,6 +151,19 @@ const AddComponent = ({ CallBack, projectsDropdown, modalCancel, Api }) => {
                         />
                     </div>
                 </Col>
+                {(projects && projects !== '') && (
+                  <Col md='2'>
+                    <div className='d-flex flex-column'>
+                      <Label for='icon-warning' className='form-check-label mb-50'>
+                      {privateCheck ? 'Private' : 'Public'}
+                      </Label>
+                      <div className='form-switch form-check-warning'>
+                        <Input type='switch' id='icon-warning' name='icon-warning' onClick={e => handlePrivateSwitch(e.target.checked)}/>
+                        <CustomLabel htmlFor='icon-warning' />
+                      </div>
+                    </div>
+                  </Col>
+                )}
                 <Col md='8' className='mb-1'>
                     {/* Tags Filter */}
                     <div className="tags-input-container">

@@ -466,6 +466,10 @@ const Routes = [
     component: lazy(() => import('../../views/TasksModule/index'))
   },
   {
+    path: '/task/:id',
+    component: lazy(() => import('../../views/TasksModule/Components/SingleTaskView'))
+  },
+  {
     path: '/apps',
     component: lazy(() => import('../../views/Apps'))
   },

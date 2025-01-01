@@ -43,10 +43,10 @@ const GymApprovals = ({ data }) => {
         <SwiperSlide className='rounded swiper-shadow'>
             <div key={item.id} className=''>
             <div className='text-center'>
-            <a href='../statusrequests/'><Avatar className='rounded mb-2' color='light-primary' icon={<CgGym size={20}/>} /></a>
+            <a href='../statusrequests/'><Avatar className='rounded mb-2' color='light-primary' icon={<CgGym color='white' size={20}/>} /></a>
                 <div>
-                <h6 className='transaction-title'>{item.status.toUpperCase()}</h6>
-                <small> {`Rs ${item.amount}`}</small>
+                <h6 className='transaction-title text-white'>{item.status.toUpperCase()}</h6>
+                <small className='text-white'> {`Rs ${item.amount}`}</small>
                 </div>
             </div>
             </div>

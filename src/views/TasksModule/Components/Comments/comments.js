@@ -119,7 +119,7 @@ const TaskComments = ({ task_id }) => {
                 {file.type.startsWith('image/') ? (
                     <img src={URL.createObjectURL(file)} alt="preview" style={{ height: '50px', width: 'auto' }} />
                 ) : (
-                    <Paperclip size={20} className="mx-1" />
+                    <Paperclip size={15} className="mx-1" color='gray'/>
                 )}
                 <XCircle className="position-absolute" style={{ top: 0, right: 0, cursor: 'pointer' }} size={16} color="red" onClick={() => handleRemoveFile(index)} />
                 <div className="file-name small text-center">{file.name}</div>
@@ -132,7 +132,10 @@ const TaskComments = ({ task_id }) => {
             <Row>
                 {/* <Col md="12"><h5>Comments</h5></Col> */}
                 <Col md={1} className="text-center">
-                    <Avatar img={Api.user ? Api.user.profile_image : defaultAvatar} />
+                    {(Api.user && Api.user.profile_image) ? (
+                        <Avatar img={Api.user.profile_image} />
+                    ) : <Avatar color="light-primary" content={Api.user.name} initials/>}
+                    
                 </Col>
                 <Col md="6" className="position-relative">
                     <Input
@@ -143,7 +146,7 @@ const TaskComments = ({ task_id }) => {
                         onChange={(e) => setNewComment(e.target.value)}
                     />
                     <label className="position-absolute top-0 end-0 mt-2 me-2" style={{ cursor: 'pointer' }}>
-                        <Paperclip size={24} />
+                        <Paperclip size={20} color="gray"/>
                         <Input type='file' multiple onChange={handleFileChange} style={{ display: 'none' }} />
                     </label>
                 </Col>
@@ -166,23 +169,26 @@ const TaskComments = ({ task_id }) => {
                                 comments.map((comment, key) => (
                                     <Row key={key} onMouseEnter={() => commentMouseEnter(key)} onMouseLeave={() => commentMouseLeave(key)}>
                                         <Col md={1} className="text-center">
-                                            <Avatar img={comment.profile_image ? comment.profile_image : defaultAvatar} />
+                                            {comment.profile_image ? (
+                                                <Avatar img={comment.profile_image ? comment.profile_image : defaultAvatar} />
+                                            ) : <Avatar color='light-primary' content={created_by_name} initials />}
+                                            
                                         </Col>
                                         <Col md={10}>
                                             <h6>{comment.created_by_name}</h6>
-                                            <p>{comment.comment}</p>
+                                            <p className='mb-0'>{comment.comment}</p>
                                             {comment.attachments && comment.attachments.length > 0 ? (
                                         <Row>
                                             {comment.attachments.map(attachment => {
                                                 const isImage = /\.(jpeg|jpg|gif|png|svg)$/i.test(attachment.attachment)
                                                 return (
-                                                    <Col md={4} key={attachment.id} className="mb-2">
-                                                        <Card className="text-center">
+                                                    <Col md={4} key={attachment.id} className="mb-1">
+                                                        <Card className="text-center mb-0">
                                                             {isImage ? (
                                                                 <CardImg
                                                                     top
-                                                                    width="150px"
-                                                                    height="150px"
+                                                                    width="100px"
+                                                                    height="100px"
                                                                     src={attachment.attachment}
                                                                     alt="Attachment preview"
                                                                     onClick={() => handleImageClick(attachment.attachment)}
@@ -190,7 +196,7 @@ const TaskComments = ({ task_id }) => {
                                                                 />
                                                             ) : (
                                                                 <CardBody onClick={() => handleImageClick(attachment.attachment)}>
-                                                                    <FileText size={50} />
+                                                                    <FileText size={30} color="gray"/>
                                                                     <CardText className="">
                                                                         {attachment.attachment.split('/').pop()}
                                                                     </CardText>
@@ -203,7 +209,7 @@ const TaskComments = ({ task_id }) => {
                                         </Row>) : (
                                         null
                                     )}
-                                            <span style={{ color: '#808080b5' }}>{Api.formatDateDifference(comment.updated_at)}</span>
+                                            <span style={{ color: '#808080b5' }} className="small">{Api.formatDateDifference(comment.updated_at)}</span>
                                             <hr></hr>
                                         </Col>
                                         {hoveredIndex === key && (
@@ -214,7 +220,7 @@ const TaskComments = ({ task_id }) => {
                                     </Row>
                                 ))
                             ) : (
-                                <p>No comments found!</p>
+                                <p className='m-0 text-muted small p-0'>No comments found!</p>
                             )) : <div className='text-center'><Spinner color='darkblue' type='grow' /></div>}
                     </div>
                 </Col>

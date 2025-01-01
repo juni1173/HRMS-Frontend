@@ -338,6 +338,7 @@ gymdata()
                             
                     </Table>
                 </Col>
+                {/* <Spinner size={14}></Spinner> */}
             </Row>
             ) : (
                 <div className="text-center">No Gym Allowance Data Found!</div>

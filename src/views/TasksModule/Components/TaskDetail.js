@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Badge, Input, Row, Col, Tooltip, Modal, ModalBody, ModalHeader, ModalFooter, Card, CardBody, CardText, Button, CardImg } from 'reactstrap'
-import { BarChart2, User, Zap, Plus, XCircle, FileText, Trash2 } from 'react-feather'
+import { Badge, Input, Row, Col, Tooltip, Modal, ModalBody, ModalHeader, ModalFooter, Card, CardBody, CardText, Button, CardImg, CardHeader } from 'reactstrap'
+import { BarChart2, User, Zap, Plus, XCircle, FileText, Trash2, Users, Calendar, Clock, Paperclip, Link, GitPullRequest, UserCheck, TrendingUp, Copy } from 'react-feather'
 import apiHelper from '../../Helpers/ApiHelper'
 import Select from 'react-select'
 import TaskComments from './Comments/comments'
@@ -11,6 +11,10 @@ import ChildTasks from './ChildTask'
 import AddTask from './AddTask'
 import { useDropzone } from 'react-dropzone'
 import HistoryLog from './History/history'
+import TimeLogList from './TimeLog/TimeLogList'
+import Avatar from '@components/avatar'
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import { IoTimerOutline } from "react-icons/io5"
 const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild, role }) => {
     const Api = apiHelper()
     const formatTime = (timeValue) => {
@@ -249,7 +253,6 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
         setIsEditingDueDate(false)
     }
     const getStatuses = async (id = null) => {
-        console.warn(id)
         const formData = new FormData()
         if (id) formData['project'] = id
 
@@ -306,7 +309,7 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
     useEffect(() => {
         if (data && Object.values(data).length > 0) getStatuses(data.project)
     }, [data])
-    const assignerFormattedName = formatName(data.employee_name)
+    // const assignerFormattedName = formatName(data.employee_name)
     useEffect(() => {
         if (data.id) {
             fetchChildTasks()
@@ -330,16 +333,15 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
             <div
             ref={innerRef}
             {...innerProps}
-            className={`d-flex align-items-center p-2 ${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary text-white' : 'bg-light'}`}
-            style={{ cursor: 'pointer' }}
+            className={`d-flex align-items-center ${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary text-white' : 'bg-light'}`}
+            style={{ cursor: 'pointer', padding:'5px' }}
             >
-            <img 
-                src={data.img} 
-                alt={data.label} 
-                className="rounded-circle me-2"
-                style={{ width: '30px', height: '30px' }}
-            />
-            <span>{data.label}</span>
+            {data.img ? (
+                <Avatar img={data.img}/>
+                
+            ) : <Avatar color="light-primary" size='sm' content={data.label} initials/>}
+            
+            <span className='mx-1' style={{fontSize: '10px'}}> {data.label}</span>
             </div>
         )
     }
@@ -395,367 +397,436 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
     }
     return (
         <Fragment>
-            <Row className='mt-1 mb-1'>
-                <Col md={8} className='border-right'>
-                    {/* Title */}
-                    <div className="d-flex align-items-center justify-content-between">
-                        {isEditingTitle ? (
-                            <input
-                                type="text"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                onBlur={() => {
-                                    handleSaveData('title', title)      
-                                    setIsEditingTitle(false)
-                                }}
-                                autoFocus
-                                className="form-control title-input"
-                                style={{ border: 'none', backgroundColor: 'transparent', fontSize: '1.75rem', fontWeight: 'bold', width: '100%' }}
-                            />
-                        ) : (
-                            <h3 className="mb-0" onClick={() => setIsEditingTitle(true)} style={{ cursor: 'pointer' }}>
-                                {title || 'Click to add title'}
-                            </h3>
-                        )}
-                        <span>
-                            {isEditingPriority ? (
-                                <Select
-                                    value={selectedPriority}
-                                    options={priorities}
-                                    onChange={(e) =>  handlePriorityChange(e) }
+            <PerfectScrollbar
+                className='list-group todo-task-list-wrapper task-manager'
+                options={{ wheelPropagation: false }}
+                containerRef={(ref) => {
+                if (ref) {
+                    ref._getBoundingClientRect = ref.getBoundingClientRect
+
+                    ref.getBoundingClientRect = () => {
+                    const original = ref._getBoundingClientRect()
+                    return { ...original, height: Math.floor(original.height) }
+                    }
+                }
+                }}
+                style={{ maxHeight: '500px', overflowY: 'auto' }} // Added inline styles for height and scrolling
+            >
+                <Row className='mt-1 mb-1'>
+                    <Col md={8} className='border-right'>
+                        {/* Title */}
+                        <div className="d-flex align-items-center justify-content-between">
+                            {isEditingTitle ? (
+                                <input
+                                    type="text"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    onBlur={() => {
+                                        handleSaveData('title', title)      
+                                        setIsEditingTitle(false)
+                                    }}
                                     autoFocus
+                                    className="form-control title-input"
+                                    style={{ border: 'none', backgroundColor: 'transparent', fontSize: '1.75rem', fontWeight: 'bold', width: '100%' }}
                                 />
                             ) : (
-                                <Badge
-                                    color={PriorityColor(selectedPriority.value)}
-                                    className="cursor-pointer"
-                                    onClick={() => setIsEditingPriority(true)}
-                                    title="Priority"
-                                >
-                                    <BarChart2 size={'18'} /> {selectedPriority.label || 'N/A'}
-                                </Badge>
+                                <h3 className="mb-0" onClick={() => setIsEditingTitle(true)} style={{ cursor: 'pointer' }}>
+                                    {title || 'Click to add title'}
+                                </h3>
                             )}
-                        </span>
-                    </div>
-
-                    {/* Assignee and Type */}
-                    <Row className='mt-1'>
-                        <Col md={6}>
-                            {isEditingAssignee && !isChild ? (
-                                 <Select
-                                 value={selectedAssignee}
-                                 options={employees}
-                                 onChange={handleAssigneeChange}
-                                 components={{ Option: CustomOption }}
-                                 getOptionLabel={(option) => option.label}
-                                 getOptionValue={(option) => option.value}
-                                 autoFocus
-                                 styles={{
-                                   option: (provided) => ({
-                                     ...provided,
-                                    //  Hide the default options to prevent conflicts with CustomOption
-                                     display: 'none'
-                                   }),
-                                   singleValue: (provided) => ({
-                                     ...provided,
-                                     display: 'flex',
-                                     alignItems: 'center'
-                                   }),
-                                   menu: (provided) => ({
-                                     ...provided,
-                                     zIndex: 9999
-                                   })
-                                 }}
-                               />
-                            ) : (
-                                <>
-                                 <Badge
-                                    color='primary'
-                                    className='cursor-pointer'
-                                    onClick={() => setIsEditingAssignee(true)}
-                                    title='Assignee'
-                                >
-                                    <User size={'18'} />
-                                    {/* <img
-                                    src={selectedAssignee.img}
-                                    alt="Assignee"
-                                    className="rounded-circle"
-                                    style={{ width: '24px', height: '24px', marginRight: '8px' }}
-                                  /> */}
-                                     {selectedAssignee.label || 'N/A'}
-                                 </Badge>
-                                </>
-                            )}
-                        </Col>
-                        <Col md={6}>
-                            {isEditingType ? (
-                                <Select
-                                    value={selectedType}
-                                    options={types}
-                                    className="float-right"
-                                    onChange={(e) => handleTypeChange(e)}
-                                    autoFocus
-                                />
-                            ) : (
-                                <Badge
-                                    color='info'
-                                    className='cursor-pointer float-right'
-                                    onClick={() => setIsEditingType(true)}
-                                    title='Task Type'
-                                >
-                                    <Zap size={'18'} /> {selectedType.label || 'N/A'}
-                                </Badge>
-                            )}
-                        </Col>
-                    </Row>
-
-                    {/* Description */}
-                    <div className='mt-2' style={{overflowWrap: 'break-word'}}>
-                        {isEditingDescription ? (
-                            <textarea
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                onBlur={() => {
-                                    handleSaveData('description', description)
-                                    setIsEditingDescription(false)
-                                }}
-                                className="form-control"
-                                rows={4}
-                                autoFocus
-                            />
-                        ) : (
-                            <p onClick={() => setIsEditingDescription(true)}>
-                                {description || <Badge color='light-danger'>Click to add description</Badge>}
-                            </p>
-                        )}
-                    </div>
-                    <div className="mt-2">
-                <h6>External Ticket</h6>
-                {isEditingTicket ? (
-                    <input
-                        type="text"
-                        id="external_ticket_reference"
-                        value={tempUrl}
-                        onChange={handleExternalTicketChange}
-                        onBlur={handleExternalTicketBlur}
-                        autoFocus
-                        className="form-control title-input"
-                        style={{ border: 'none', backgroundColor: 'transparent', width: '100%' }}
-                    />
-                ) : (
-                    <span onClick={() => setIsEditingTicket(true)} style={{ cursor: 'pointer' }}>
-                        {external_ticket_reference || 'N/A'}
-                    </span>
-                )}
-                {urlValidationMessage && <div style={{ color: 'red' }}>{urlValidationMessage}</div>}
-            </div>
-            
-    
-            <Row className="mt-1">
-                <Col md="12" className="d-flex align-items-center">
-                    <h6 className='border-right' style={{ paddingRight: '10px'}}>Attachments</h6> 
-                    <div>
-                        <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa',  padding: '5px', marginTop: '-10px' }} onClick={() => setAddAttachment(!addAttachment)}/>
-                    </div>
-                </Col>
-                {addAttachment && (
-                    <Col md={12} className="mb-1">
-                        <div {...getRootProps({ className: 'dropzone bg-light border-dashed border-2 p-3 text-center' })}>
-                            <input {...getInputProps()} />
-                            <p>Drag 'n' drop some files here, or click to select files</p>
+                            <span>
+                                
+                            </span>
                         </div>
+                        {/* Description */}
+                        <div className='mt-2' style={{overflowWrap: 'break-word'}}>
+                            {isEditingDescription ? (
+                                <textarea
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    onBlur={() => {
+                                        handleSaveData('description', description)
+                                        setIsEditingDescription(false)
+                                    }}
+                                    className="form-control"
+                                    rows={4}
+                                    autoFocus
+                                />
+                            ) : (
+                                <p onClick={() => setIsEditingDescription(true)}>
+                                    {description || <Badge color='light-danger'>Click to add description</Badge>}
+                                </p>
+                            )}
+                        </div>
+                <hr></hr>
+                <Row className="">
+                    <Col md="12" className="d-flex align-items-center">
+                        <h6 className='border-right' style={{ paddingRight: '10px'}}><Paperclip color='gray' size={14}/> Attachments</h6> 
+                        <p className='text-secondary cursor-pointer hover-underline' style={{ paddingLeft: '10px', marginTop:'5px' }} onClick={() => setAddAttachment(!addAttachment)}><Plus color='gray' size='14' /> Add Attachment</p>
+                        {/* <div>
+                            <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa',  padding: '5px', marginTop: '-10px' }} onClick={() => setAddAttachment(!addAttachment)}/>
+                        </div> */}
                     </Col>
-                )}
-                
-            </Row>
-            <Row>
-            {attachments.length > 0 ? (
-                attachments.map((attachment) => {
-                    const isImage = attachment.attachment.match(/\.(jpeg|jpg|gif|png|svg)$/i)
-                    return (
-                        <Col md={4} key={attachment.id} className="position-relative">
-                            <Card
-                                className="text-center"
-                                onMouseEnter={() => handleMouseEnter(attachment.id)}
-                                onMouseLeave={handleMouseLeave}
-                            >
-                                {isImage ? (
-                                    <CardImg
-                                        top
-                                        width="100%"
-                                        height="150px" // Fixed height
+                    {addAttachment && (
+                        <Col md={12} className="mb-1">
+                            <div {...getRootProps({ className: 'dropzone bg-light border-dotted border-2 p-1 text-center' })}>
+                                <input {...getInputProps()} />
+                                <p>Drag 'n' drop some files here, or click to select files</p>
+                            </div>
+                        </Col>
+                    )}
+                </Row>
+                <Row>
+                {attachments.length > 0 ? (
+                    attachments.map((attachment) => {
+                        const isImage = attachment.attachment.match(/\.(jpeg|jpg|gif|png|svg)$/i)
+                        const icons = require.context('@src/assets/images/icons', false, /\.png$/)
+                        const formatImage = attachment.attachment.split('.').pop()
+                        const defaultIcon = require('@src/assets/images/icons/unknown.png')
+                        return (
+                            <>
+                            <Col md={2} key={attachment.id}>
+                                <Card
+                                    className="small w-100 mb-1 text-center"
+                                    onMouseEnter={() => handleMouseEnter(attachment.id)}
+                                    onMouseLeave={handleMouseLeave}
+                                >
+                                    <div>
+                                    {isImage && (
+                                        <img 
                                         src={attachment.attachment}
+                                        onClick={() => handleImageClick(attachment.attachment)}
+                                        style={{ cursor: 'pointer', width: '100%', height: '77px' }}/>
+                                        
+                                    )}
+                                    {(!isImage && formatImage) && (
+                                        <img
+                                        src={icons.keys().includes(`./${formatImage}.png`) ? icons(`./${formatImage}.png`).default : defaultIcon.default}
                                         alt="Attachment preview"
                                         onClick={() => handleImageClick(attachment.attachment)}
-                                        style={{ cursor: 'pointer' }}
+                                        style={{ cursor: 'pointer', width: '100%', height:'77px' }}
                                     />
-                                ) : (
-                                    <CardBody onClick={() => handleImageClick(attachment.attachment)}>
-                                        <FileText size={50} />
-                                        <CardText className="mt-2">
-                                            {attachment.attachment.split('/').pop()}
-                                        </CardText>
-                                    </CardBody>
-                                )}
-                                {hoveredAttachment === attachment.id && (
-                                    <div
-                                        onClick={() => deleteAttachment(attachment.id)} // Call remove function
-                                        style={{
-                                            position: 'absolute',
-                                            top: '5px',
-                                            right: '5px',
-                                            cursor: 'pointer',
-                                            color: 'red'
-                                        }}
-                                    >
-                                        <Trash2 size={20} />
+                                    )}
+                                    
+                                        <div onClick={() => handleImageClick(attachment.attachment)} className='d-flex cursor-pointer hover-underline attachment-wrapper px-1 small'>{attachment.attachment.split('/').pop()}</div>
                                     </div>
-                                )}
-                            </Card>
-                        </Col>
-                    )
-                })
-            ) : (
-                <Col md="12">
-                    No Attachments Found
-                </Col>
-            )}
-            </Row>
-{!isChild ?   <> <Row className="">
-    
-            <Col md="12" className="d-flex align-items-center mt-1">
-                <h6 className='border-right' style={{ paddingRight: '10px'}}>Child Issues</h6>
-                <div>
-                    <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa',  padding: '5px', marginTop: '-10px' }} onClick={() => setCenteredModal(!centeredModal)} />
-                    {/* <Link size={25} className='ms-2' style={{ cursor: 'pointer', backgroundColor: '#f8f9fa', padding: '5px' }} onClick={() => console.log("Link issue clicked")} /> */}
-                </div>
-            </Col>
-        </Row>
-        {!loading ? <ChildTasks childTasks={childTasks} projectsData={projectsData} employees={employees} priorities={priorities} types={types} role={role} onModalToggle={handleModalToggle}/> : null} </> : null}
-        <div className='d-flex align-items-center mb-1'>
-    <div>
-        <h5 style={{ margin: 0 }}> {/* Remove default margin for better alignment */}
-            {selectedAttribute.label}
-        </h5>
-    </div>
-    <div style={{ marginLeft: '10px' }}> {/* Add spacing between label and select */}
-        <Select
-            className='react-select'
-            classNamePrefix='select'
-            defaultValue={selectedAttribute}
-            options={attributeDropdown}
-            onChange={handleAttributeChange}
-            isClearable={false}
-            styles={{
-                control: (provided) => ({
-                    ...provided,
-                    minHeight: '30px', // Adjust height
-                    height: '30px', // Set exact height
-                    fontSize: '12px' // Adjust font size
-                }),
-                dropdownIndicator: (provided) => ({
-                    ...provided,
-                    padding: '4px' // Adjust padding
-                }),
-                indicatorSeparator: (provided) => ({
-                    ...provided,
-                    display: 'none' // Hide separator if desired
-                }),
-                menu: (provided) => ({
-                    ...provided,
-                    fontSize: '12px' // Adjust font size for dropdown menu
-                })
-            }}
-        />
-    </div>
-</div>
-
-                    {selectedAttribute.value === 'comments' ? (
-                        <TaskComments task_id={data.id} />
-                    ) : (
-                        <HistoryLog task_id={data.id} />
-                    )}
+                                    {hoveredAttachment === attachment.id && ( 
+                                        <div
+                                            onClick={() => deleteAttachment(attachment.id)} // Call remove function
+                                            style={{
+                                                position: 'absolute',
+                                                top: '5px',
+                                                right: '5px',
+                                                cursor: 'pointer',
+                                                color: 'red'
+                                            }}
+                                        >
+                                            <Trash2 size={20} />
+                                        </div>
+                                    )}
+                                </Card>
+                            </Col>
+                            </>
+                        )
+                    })
+                ) : <span className='text-muted small'>No attachment found!</span>}
+                </Row>
+                <hr></hr>
+    {!isChild ?   <> <Row className="">
+        
+                <Col md="12" className="d-flex align-items-center">
                     
-                </Col>
-
-                <Col md={4}>
-                    <div className="d-flex flex-column px-2">
-                         {/* Status Dropdown */}
-                    <div className="mb-2">
-                    <Select
-                        isClearable={false}
-                        className='react-select sm custom-dropdown'
-                        styles={{
-                        control: (base) => ({
-                            ...base,
-                            height: '36px',
-                            fontSize: '14px',
-                            padding: '2px 8px',
-                            borderColor: '#ccc'
-                        }),
-                        option: (base) => ({
-                            ...base,
-                            color: '#333'
-                        })
-                        }}
-                        classNamePrefix='select'
-                        theme={theme}
-                        name="status"
-                        options={statusDropdown ? statusDropdown : ''}
-                        value={selectedStatus}
-                        menuPlacement="auto"
-                        onChange={(e) => updateStatus(data.id, e)}
-                    />
+                <h6 className="border-right position-relative pr-3" style={{ paddingRight: '10px' }}>
+                <GitPullRequest color='gray' size={14}/> Child Issues
+                    {childTasks && childTasks.length > 0 && (
+                    <Badge pill color="light-primary" className="badge-top-right">
+                        {childTasks.length}
+                    </Badge>
+                    )}
+                </h6>
+                    
+                    <div>
+                    <p className='text-secondary cursor-pointer hover-underline' style={{ paddingLeft: '10px', marginTop:'5px' }} onClick={() => setCenteredModal(!centeredModal)}><Plus color='gray' size='14' /> Add Child Issue</p>
+                        {/* <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa',  padding: '5px', marginTop: '-10px' }} onClick={() => setCenteredModal(!centeredModal)} /> */}
+                        {/* <Link size={25} className='ms-2' style={{ cursor: 'pointer', backgroundColor: '#f8f9fa', padding: '5px' }} onClick={() => console.log("Link issue clicked")} /> */}
                     </div>
-                    {/* Due Date */}
-                        <div className="mb-1">
-                            <div className="d-flex flex-column">
-                                <span style={{ fontSize: '12px' }}>Assign By</span>
-                                <Badge color='primary' className='mt-1'>
-                                <div className='d-flex align-items-center'>
-                                {data.profile_image_employee && (
-                                  <img
-                                    src={data.profile_image_employee}
-                                    alt="Assigner"
-                                    className="rounded-circle"
-                                    style={{ width: '24px', height: '24px', marginRight: '8px' }}
-                                  />
-                                )}
-                                
-                                <span
-                                  id={`assignBy-${data.id}`}
-                                  className={'text-white cursor-pointer'}
-                                >
-                                  {assignerFormattedName}
+                </Col>
+                
+            </Row>
+            {!loading ? (
+                <div className="border-bottom">
+                    <ChildTasks childTasks={childTasks} projectsData={projectsData} employees={employees} priorities={priorities} types={types} role={role} onModalToggle={handleModalToggle}/>
+                {/* <p className='text-secondary cursor-pointer hover-underline' onClick={() => setCenteredModal(!centeredModal)}><Plus color='gray' size='14' /> Add Child Issue</p> */}
+                </div>
+                ) : null} </> : null}
+                <div className="mt-1">
+                            <h6><Link color='gray' size={14}/> External Ticket {(external_ticket_reference && external_ticket_reference !== 'N/A' && !isEditingTicket) && <Copy size={14} color='gray' onClick={() => Api.copyToClipboard(external_ticket_reference)}/>}</h6>
+                            {isEditingTicket ? (
+                                <input
+                                    type="text"
+                                    id="external_ticket_reference"
+                                    value={tempUrl}
+                                    onChange={handleExternalTicketChange}
+                                    onBlur={handleExternalTicketBlur}
+                                    autoFocus
+                                    className="form-control title-input"
+                                    style={{ border: 'none', backgroundColor: 'transparent', width: '100%' }}
+                                />
+                            ) : (
+                                <span onClick={() => setIsEditingTicket(true)} className={(external_ticket_reference && external_ticket_reference !== 'N/A') ? '' : 'text-muted small'} style={{ cursor: 'pointer' }}>
+                                    {(external_ticket_reference && external_ticket_reference !== 'N/A') ? <span className='link hover-underline'>{external_ticket_reference}</span> : "Add external link"}
                                 </span>
-                               
-                                <Tooltip
-                                  placement="top"
-                                  isOpen={tooltipOpenAssignBy[data.id]}
-                                  target={`assignBy-${data.id}`}
-                                  toggle={() => toggleTooltipAssignBy(data.id)}
-                                >
-                                  {data.employee_name}
-                                </Tooltip>
-                              </div>
-                              </Badge>
-                            </div>
-                           
+                            )}
+                            {urlValidationMessage && <div style={{ color: 'red' }}>{urlValidationMessage}</div>}
                         </div>
-                        {/* Due Date */}
-                        <div className="mb-1">
-                            <div className="d-flex flex-column">
-                                <span style={{ fontSize: '12px' }}>Due Date</span>
-                                {isEditingDueDate ? (
-                                    <Flatpickr
-                                        className='form-control'
-                                        value={dueDate === 'N/A' ? '' : dueDate}
-                                        onChange={handleDateChange}
-                                        options={{ dateFormat: 'Y-m-d' }}
+            <div className='d-flex align-items-center mb-1 mt-1'>
+        <div>
+            <h5 style={{ margin: 0 }}> {/* Remove default margin for better alignment */}
+                {selectedAttribute.label}
+            </h5>
+        </div>
+        <div style={{ marginLeft: '10px' }}> {/* Add spacing between label and select */}
+            <Select
+                className='react-select'
+                classNamePrefix='select'
+                defaultValue={selectedAttribute}
+                options={attributeDropdown}
+                onChange={handleAttributeChange}
+                isClearable={false}
+                styles={{
+                    control: (provided) => ({
+                        ...provided,
+                        minHeight: '30px', // Adjust height
+                        height: '30px', // Set exact height
+                        fontSize: '12px' // Adjust font size
+                    }),
+                    dropdownIndicator: (provided) => ({
+                        ...provided,
+                        padding: '4px' // Adjust padding
+                    }),
+                    indicatorSeparator: (provided) => ({
+                        ...provided,
+                        display: 'none' // Hide separator if desired
+                    }),
+                    menu: (provided) => ({
+                        ...provided,
+                        fontSize: '12px' // Adjust font size for dropdown menu
+                    })
+                }}
+            />
+        </div>
+    </div>
+
+                        {selectedAttribute.value === 'comments' ? (
+                            <TaskComments task_id={data.id} />
+                        ) : (
+                            <HistoryLog task_id={data.id} />
+                        )}
+                        
+                    </Col>
+
+                    <Col md={4}>
+                        <div className="d-flex flex-column mr-1">
+                            {/* Status Dropdown */}
+                        <div className="mb-2">
+                        <Select
+                            isClearable={false}
+                            className='react-select sm custom-dropdown'
+                            styles={{
+                            control: (base) => ({
+                                ...base,
+                                height: '36px',
+                                fontSize: '14px',
+                                padding: '2px 8px',
+                                borderColor: '#ccc'
+                            }),
+                            option: (base) => ({
+                                ...base,
+                                color: '#333'
+                            })
+                            }}
+                            classNamePrefix='select'
+                            theme={theme}
+                            name="status"
+                            options={statusDropdown ? statusDropdown : ''}
+                            value={selectedStatus}
+                            menuPlacement="auto"
+                            onChange={(e) => updateStatus(data.id, e)}
+                        />
+                        </div>
+                            {/* Assignee */}
+                            <div className='border-bottom'>
+                                <Row style={{margin:'10px 0px'}}>
+                                    <Col md='4' className='p-0 content-center'>
+                                        <div className='small text-secondary'><User color='gray' size={12}/> Assignee</div>
+                                    </Col>
+                                    <Col md='8'>
+                                        <div className='d-flex align-items-center'>
+                                            {isEditingAssignee && !isChild ? (
+                                            <Select
+                                            value={selectedAssignee}
+                                            options={employees}
+                                            onChange={handleAssigneeChange}
+                                            components={{ Option: CustomOption }}
+                                            getOptionLabel={(option) => option.label}
+                                            getOptionValue={(option) => option.value}
+                                            autoFocus
+                                            styles={{
+                                            option: (provided) => ({
+                                                ...provided,
+                                                //  Hide the default options to prevent conflicts with CustomOption
+                                                display: 'none'
+                                            }),
+                                            singleValue: (provided) => ({
+                                                ...provided,
+                                                display: 'flex',
+                                                alignItems: 'center'
+                                            }),
+                                            menu: (provided) => ({
+                                                ...provided,
+                                                zIndex: 9999
+                                            })
+                                            }}
+                                        />
+                                            ) : (
+                                                <>
+                                                    {/* <User size={'18'} /> */}
+                                                    {selectedAssignee.img ? (
+                                                        <Avatar
+                                                            img={selectedAssignee.img}
+                                                            alt="Assignee"
+                                                            size="sm"
+                                                        />
+                                                    ) : <Avatar color="light-primary" content={selectedAssignee.label} initials/>}
+                                                    <span
+                                                        className={'cursor-pointer mx-1 small'}
+                                                        onClick={() => setIsEditingAssignee(true)}
+                                                        >
+                                                        {selectedAssignee.label || 'N/A'}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </div>
+                            {/* Priority */}
+                            <div className='border-bottom'>
+                                <Row style={{margin:'10px 0px'}}>
+                                    <Col md='4' className='p-0 content-center'>
+                                        <div className='small text-secondary'><TrendingUp color='gray' size={12}/> Priority</div>
+                                    </Col>
+                                    <Col md='8'>
+                                        {isEditingPriority ? (
+                                                <Select
+                                                    value={selectedPriority}
+                                                    options={priorities}
+                                                    onChange={(e) =>  handlePriorityChange(e) }
+                                                    autoFocus
+                                                />
+                                            ) : (
+                                                <Badge
+                                                    color={PriorityColor(selectedPriority.value)}
+                                                    className="cursor-pointer"
+                                                    onClick={() => setIsEditingPriority(true)}
+                                                    title="Priority"
+                                                >
+                                                    {selectedPriority.label || 'N/A'}
+                                                </Badge>
+                                            )}
+                                    </Col>
+                                </Row>
+                            </div>
+                            {/* Type */}
+                            <div className='border-bottom'>
+                                <Row style={{margin:'10px 0px'}}>
+                                    <Col md='4' className='p-0 content-center'>
+                                        <div className='small text-secondary'><Zap color='gray' size={12}/> Type</div>
+                                    </Col>
+                                    <Col md='8'>
+                                    {isEditingType ? (
+                                    <Select
+                                        value={selectedType}
+                                        options={types}
+                                        className="float-right"
+                                        onChange={(e) => handleTypeChange(e)}
                                         autoFocus
                                     />
-                                ) : (
-                                    <span
+                                    ) : (
+                                        <Badge
+                                            color='light-primary'
+                                            className='cursor-pointer'
+                                            onClick={() => setIsEditingType(true)}
+                                            title='Task Type'
+                                        >
+                                            {selectedType.label || 'N/A'}
+                                        </Badge>
+                                    )}
+                                    </Col>
+                                </Row>
+                            </div>
+                            {/* Due Date */}
+                            <div className="border-bottom">
+                                <Row style={{margin:'10px 0px'}}>
+                                    <Col md="4" className='p-0 content-center'>
+                                        <div className='small text-secondary'><Calendar color='gray' size={12} /> Due Date</div>
+                                    </Col>
+                                    <Col md="8">
+                                        {isEditingDueDate ? (
+                                            <Flatpickr
+                                                className='form-control'
+                                                value={dueDate === 'N/A' ? '' : dueDate}
+                                                onChange={handleDateChange}
+                                                options={{ dateFormat: 'Y-m-d' }}
+                                                autoFocus
+                                            />
+                                        ) : (
+                                            <span
+                                                style={{
+                                                    backgroundColor: "#f8f9fa",
+                                                    padding: '5px',
+                                                    display: 'inline-block',
+                                                    textAlign: 'center', 
+                                                    borderRadius: '4px', 
+                                                    cursor: 'pointer' 
+                                                }}
+                                                className="cursor-pointer"
+                                                onClick={() => setIsEditingDueDate(true)}
+                                                title='Assignee'
+                                            >
+                                                {Api.formatDateWithMonthName(dueDate) || 'N/A'}
+                                            </span>
+
+                                        
+                                        )}
+                                    </Col>
+                                    
+                                    
+                                </Row>
+                            </div>
+
+                            {/* Planned Hours */}
+                            <div className="border-bottom">
+                                <Row style={{margin:'10px 0px'}}>
+                                    <Col md="4" className='p-0 content-center'>
+                                        <div className='small text-secondary'><Clock color='gray' size={12} /> Planned Hours</div>
+                                    </Col>
+                                    <Col md="8">
+                                    {isEditingPlannedHours ? (
+                                        <InputMask
+                                            className="form-control"
+                                            mask="99:99"
+                                            value={plannedHours === 'N/A' ? '' : plannedHours}
+                                            onChange={e => handleTimeChange('planned_hours', e)}
+                                            onBlur={() => {
+                                                setIsEditingPlannedHours(false)
+                                                handleSaveData('planned_hours', plannedHours.replace(':', '.'))
+
+                                            }}
+                                            autoFocus
+                                        />
+                                    ) : (
+                                        <span
                                         style={{
                                             backgroundColor: "#f8f9fa",
                                             padding: '5px',
@@ -765,149 +836,142 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
                                             cursor: 'pointer' 
                                         }}
                                         className="cursor-pointer"
-                                        onClick={() => setIsEditingDueDate(true)}
-                                        title='Assignee'
-                                    >
-                                        {dueDate || 'N/A'}
-                                    </span>
+                                            onClick={() => setIsEditingPlannedHours(true)}
+                                        >
+                                            {plannedHours || 'N/A'}
+                                        </span>
+                                    )}
+                                    </Col>
+                                </Row>
+                            </div>
 
+                            {/* Actual Hours */}
+                            <div className="border-bottom">
+                                <Row style={{margin:'10px 0px'}}>
+                                    <Col md="4" className='p-0 content-center'>
+                                        <div className='small text-secondary'><Clock color='gray' size={12} /> Actual Hours</div>
+                                    </Col>
+                                    <Col md="8">
+                                    {isEditingActualHours ? (
+                                        <InputMask
+                                            className="form-control"
+                                            mask="99:99"
+                                            value={actualHours === 'N/A' ? '' : actualHours}
+                                            onChange={e => handleTimeChange('actual_hours', e)}
+                                            onBlur={() => {
+                                                setIsEditingActualHours(false)
+                                                handleSaveData('actual_hours', actualHours.replace(':', '.'))
+                                            }}
+                                            autoFocus
+                                        />
+                                    ) : (
+                                        <span
+                                        style={{
+                                            backgroundColor: "#f8f9fa",
+                                            padding: '5px',
+                                            display: 'inline-block',
+                                            textAlign: 'center', 
+                                            borderRadius: '4px', 
+                                            cursor: 'pointer' 
+                                        }}
+                                            className="cursor-pointer"
+                                            onClick={() => setIsEditingActualHours(true)}
+                                        >
+                                            {actualHours || 'N/A'}
+                                        </span>
+                                    )}
+                                    </Col>
+                                    
+                                    
+                                </Row>
+                            </div>
+                            {/* Assign by */}
+                            <div className="border-bottom">
+                                <Row style={{margin:'10px 0px'}}>
+                                    <Col md="4" className='p-0 content-center'>
+                                        <div className='small text-secondary'><UserCheck color='gray' size={12}/> Assign By</div>
+                                    </Col>
+                                    <Col md="8">
+                                    <div className='d-flex align-items-center'>
+                                    {data.profile_image_employee ? (
+                                    <Avatar
+                                        img={data.profile_image_employee}
+                                        size='sm'
+                                    />
+                                    ) : <Avatar color="light-primary" content={data.employee_name} initials/>}
+                                    
+                                    <span
+                                    id={`assignBy-${data.id}`}
+                                    className={'cursor-pointer mx-1 small'}
+                                    >
+                                    {data.employee_name}
+                                    </span>
                                 
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Planned Hours */}
-                        <div className="mb-1">
-                            <div className="d-flex flex-column">
-                                <span  style={{ fontSize: '12px' }}>Planned Hours</span>
-                                {isEditingPlannedHours ? (
-                                    <InputMask
-                                        className="form-control"
-                                        mask="99:99"
-                                        value={plannedHours === 'N/A' ? '' : plannedHours}
-                                        onChange={e => handleTimeChange('planned_hours', e)}
-                                        onBlur={() => {
-                                            setIsEditingPlannedHours(false)
-                                            handleSaveData('planned_hours', plannedHours.replace(':', '.'))
-
-                                        }}
-                                        autoFocus
-                                    />
-                                ) : (
-                                    <span
-                                    style={{
-                                        backgroundColor: "#f8f9fa",
-                                        padding: '5px',
-                                        display: 'inline-block',
-                                        textAlign: 'center', 
-                                        borderRadius: '4px', 
-                                        cursor: 'pointer' 
-                                    }}
-                                    className="cursor-pointer"
-                                        onClick={() => setIsEditingPlannedHours(true)}
+                                    <Tooltip
+                                    placement="top"
+                                    isOpen={tooltipOpenAssignBy[data.id]}
+                                    target={`assignBy-${data.id}`}
+                                    toggle={() => toggleTooltipAssignBy(data.id)}
                                     >
-                                        {plannedHours || 'N/A'}
-                                    </span>
-                                )}
+                                    {data.employee_name}
+                                    </Tooltip>
+                                    </div>
+                                    </Col>
+                                </Row>
                             </div>
-                        </div>
-
-                        {/* Actual Hours */}
-                        <div className="mb-1">
-                            <div className="d-flex flex-column">
-                                <span style={{ fontSize: '12px' }}>Actual Hours</span>
-                                {isEditingActualHours ? (
-                                    <InputMask
-                                        className="form-control"
-                                        mask="99:99"
-                                        value={actualHours === 'N/A' ? '' : actualHours}
-                                        onChange={e => handleTimeChange('actual_hours', e)}
-                                        onBlur={() => {
-                                            setIsEditingActualHours(false)
-                                            handleSaveData('actual_hours', actualHours.replace(':', '.'))
-                                        }}
-                                        autoFocus
-                                    />
-                                ) : (
-                                    <span
-                                    style={{
-                                        backgroundColor: "#f8f9fa",
-                                        padding: '5px',
-                                        display: 'inline-block',
-                                        textAlign: 'center', 
-                                        borderRadius: '4px', 
-                                        cursor: 'pointer' 
-                                    }}
-                                        className="cursor-pointer"
-                                        onClick={() => setIsEditingActualHours(true)}
-                                    >
-                                        {actualHours || 'N/A'}
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-                        <div className="mt-3" style={{ height: '200px', overflowY: 'auto', overflowX: 'hidden' }}>
-                            <Col md="12" className="d-flex align-items-center">
-                                <h6 className='border-right' style={{ paddingRight: '10px'}}>Time Logs</h6> 
-                                <div>
-                                    <Plus size={25} style={{ cursor: 'pointer', backgroundColor: '#f8f9fa', padding: '5px', marginTop: '-10px' }} onClick={() => toggletimelogmodal()}/>
+                                <div className="d-flex justify-content-between border-bottom mt-1">
+                                    <div>
+                                        <h6 style={{ paddingRight: '10px'}}><IoTimerOutline size={'15px'}/>Time Logs</h6> 
+                                    </div>
+                                    
+                                    <div>
+                                    <Button.Ripple style={{marginTop: '-10px'}} className="px-0" color='flat-secondary' onClick={() => toggletimelogmodal()}>
+                                        <Plus size={14} color='gray'/>
+                                        <span className='align-middle ms-25'>Add Time Log</span>
+                                    </Button.Ripple>
+                                    </div>
                                 </div>
-                            </Col>
-                            {timeLogs && timeLogs.length > 0 ? (
-                                <>
-                                    {timeLogs.map((log) => (
-                                        <Row key={log.id} className="mb-1 align-items-center">
-                                            <Col md="6">
-                                                {log.date}
-                                            </Col>
-                                            <Col md="6">
-                                                <strong>{log.hours_spent} hours</strong>
-                                            </Col>
-                                        </Row>
-                                    ))}
-                                </>
-                            ) : (
-                                <span>No time logs found.</span>
-                            )}
-                        </div>
+                                <TimeLogList LogData={timeLogs} formatName={formatName}/>
+                            
 
-                        {/* Account Hours */}
-                        {/* <div className="mb-1">
-                            <div className="d-flex flex-column">
-                                <span style={{ fontSize: '12px' }}>Account Hours</span>
-                                {isEditingAccountHours ? (
-                                    <InputMask
-                                        className="form-control"
-                                        mask="99:99"
-                                        value={accountHours === 'N/A' ? '' : accountHours}
-                                        onChange={e => handleTimeChange('account_hour', e)}
-                                        onBlur={() => {
-                                            setIsEditingAccountHours(false)
-                                            handleSaveData('account_hour', accountHours.replace(':', '.'))
+                            {/* Account Hours */}
+                            {/* <div className="mb-1">
+                                <div className="d-flex flex-column">
+                                    <span style={{ fontSize: '12px' }}>Account Hours</span>
+                                    {isEditingAccountHours ? (
+                                        <InputMask
+                                            className="form-control"
+                                            mask="99:99"
+                                            value={accountHours === 'N/A' ? '' : accountHours}
+                                            onChange={e => handleTimeChange('account_hour', e)}
+                                            onBlur={() => {
+                                                setIsEditingAccountHours(false)
+                                                handleSaveData('account_hour', accountHours.replace(':', '.'))
+                                            }}
+                                            autoFocus
+                                        />
+                                    ) : (
+                                        <span
+                                        style={{
+                                            backgroundColor: "#f8f9fa",
+                                            padding: '5px',
+                                            display: 'inline-block',
+                                            textAlign: 'center', 
+                                            borderRadius: '4px', 
+                                            cursor: 'pointer' 
                                         }}
-                                        autoFocus
-                                    />
-                                ) : (
-                                    <span
-                                    style={{
-                                        backgroundColor: "#f8f9fa",
-                                        padding: '5px',
-                                        display: 'inline-block',
-                                        textAlign: 'center', 
-                                        borderRadius: '4px', 
-                                        cursor: 'pointer' 
-                                    }}
-                                    className="cursor-pointer"
-                                        onClick={() => setIsEditingAccountHours(true)}
-                                    >
-                                        {accountHours || 'N/A'}
-                                    </span>
-                                )}
-                            </div>
-                        </div> */}
-                    </div>
-                </Col>
-            </Row>
+                                        className="cursor-pointer"
+                                            onClick={() => setIsEditingAccountHours(true)}
+                                        >
+                                            {accountHours || 'N/A'}
+                                        </span>
+                                    )}
+                                </div>
+                            </div> */}
+                        </div>
+                    </Col>
+                </Row>
+            </PerfectScrollbar>
             <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered modal-lg'>
                 <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Add Task</ModalHeader>
                 <ModalBody>
@@ -918,10 +982,10 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
             <ModalHeader toggle={() => setAddTimeLogModal(false)}>Add Time Log</ModalHeader>
             <ModalBody>
                 <Row className='mt-1'>
-                {(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 3) && (
+                {(role && Object.values(role).length > 0 && role.role_level && role.role_level > 0 && role.role_level < 5) && (
                     <Col md={12}>
                         <Select
-                            value={LogAssignee}
+                            value={employees.find(pre => pre.value === LogAssignee)} // This ensures the selected value shows properly
                             placeholder='Select Team Member'
                             options={employees}
                             onChange={(e) => setLogAsignee(e.value)}
@@ -931,20 +995,20 @@ const TaskDetail = ({ data, projectsData, employees, priorities, types, isChild,
                             className='mb-1'
                             autoFocus
                             styles={{
-                            option: (provided) => ({
+                                option: (provided) => ({
                                 ...provided,
-                            //  Hide the default options to prevent conflicts with CustomOption
-                                display: 'none'
-                            }),
-                            singleValue: (provided) => ({
+                                display: 'flex', // Ensure the option is visible
+                                alignItems: 'center'
+                                }),
+                                singleValue: (provided) => ({
                                 ...provided,
                                 display: 'flex',
                                 alignItems: 'center'
-                            }),
-                            menu: (provided) => ({
+                                }),
+                                menu: (provided) => ({
                                 ...provided,
                                 zIndex: 9999
-                            })
+                                })
                             }}
                         />
                     </Col>

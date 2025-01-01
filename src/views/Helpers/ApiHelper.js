@@ -26,6 +26,7 @@ import Avatar from '@components/avatar'
     const ApiBaseLink = process.env.REACT_APP_API_URL
     const BaseUrl = process.env.REACT_APP_PUBLIC_URL
     const BackendBaseLink = process.env.REACT_APP_BACKEND_URL 
+    const FrontendBaseUrl = process.env.REACT_APP_FRONTEND_URL 
 
     const ToastContent = ({ type, message }) => (
         type === 'success' ? (
@@ -402,7 +403,11 @@ import Avatar from '@components/avatar'
      }
     
      // format date function
-
+     const formatDateWithMonthName = (dateString) => {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' }
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-US', options) // May 20, 2024
+    }
     const formatDate = (date) => {
       const d = new Date(date)
         let month = (`${d.getMonth() + 1}`)
@@ -513,6 +518,48 @@ import Avatar from '@components/avatar'
           return d
       }
   }
+    //Copy to Clipboard Function
+    const copyToClipboard = (text) => {
+      if (navigator.clipboard?.writeText) {
+        // Use modern Clipboard API if available
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            Toast('success', 'Copied to clipboard!')
+          })
+          .catch((err) => {
+            Toast('error', `Failed to copy: ${err.message}`)
+          })
+      } else {
+        // Fallback for older browsers
+        try {
+          const textArea = document.createElement('textarea')
+          textArea.value = text
+          textArea.style.position = 'fixed' // Prevent scrolling
+          textArea.style.left = '-9999px'  // Hide the textarea
+          document.body.appendChild(textArea)
+          textArea.focus()
+          textArea.select()
+    
+          const successful = document.execCommand('copy')
+          document.body.removeChild(textArea)
+          if (document.queryCommandSupported && !document.queryCommandSupported('copy')) {
+            console.warn('Clipboard copying is not supported in this browser.')
+            return
+          }
+          if (!window.isSecureContext) {
+            console.warn('Clipboard API requires a secure context (HTTPS).')
+          }
+          if (successful) {
+            Toast('success', 'Copied to clipboard!')
+          } else {
+            throw new Error('Fallback copy failed')
+          }
+        } catch (err) {
+          Toast('error', `Failed to copy: ${err.message}`)
+        }
+      }
+    }
     
     return {
         get,
@@ -528,6 +575,7 @@ import Avatar from '@components/avatar'
         successModal,
         cancelModal,
         formatDate,
+        formatDateWithMonthName,
         dmyformat,
         formatTime,
         formatDateDifference,
@@ -535,6 +583,7 @@ import Avatar from '@components/avatar'
         getMonthName,
         convertUTCtoDate,
         currentTime,
+        copyToClipboard,
         // controller,
         org,
         user_id,
@@ -543,7 +592,8 @@ import Avatar from '@components/avatar'
         token,
         ApiBaseLink,
         BaseUrl,
-        BackendBaseLink
+        BackendBaseLink,
+        FrontendBaseUrl
         
     }
 }

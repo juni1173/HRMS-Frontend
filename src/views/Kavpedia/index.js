@@ -1,18 +1,20 @@
 import React, {Fragment, useState, useCallback, useEffect} from 'react'
-import { useDispatch } from 'react-redux'
-import { handleLogout } from '@store/authentication'
+// import { useDispatch } from 'react-redux'
+// import { handleLogout } from '@store/authentication'
 import apiHelper from '../Helpers/ApiHelper'
 import SearchComponent from './Components/searchComponent'
 import DocumentsList from './Components/list'
 import AddDocument from './Components/Add'
-import { Spinner, Card, CardBody, Modal, ModalHeader, ModalBody } from 'reactstrap'
+import { Row, Col, Spinner, Card, CardBody, Modal, ModalHeader, ModalBody } from 'reactstrap'
+import { Folder } from 'react-feather'
 const index = () => {
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
     const Api = apiHelper()
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
     const [basicModal, setBasicModal] = useState(false)
     const [projectsDropdown, setProjectsDropdown] = useState([])
+    const [selectedProject, setSelectedProject] = useState('')
     const getData = async (filters = null) => {
         if (filters) {
             setLoading(true)
@@ -27,7 +29,7 @@ const index = () => {
                     setData(resultData)
                 } else {
                     setData([])
-                    Api.Toast('error', result.message)
+                    // Api.Toast('error', result.message)
                 }
             }
         })
@@ -67,37 +69,65 @@ const index = () => {
     useEffect(() => {
         getProjects()
     }, [setProjectsDropdown])
-   
+   const projectClick = project => {
+    if (project) {
+        const filter = {}
+        filter.projects = project
+        setSelectedProject(project)
+        return getData(filter)
+    }
+
+   }
   return (
     <Fragment>
-        <div className='container'>
+        <div className='container kavpedia-container'>
             <nav className="navbar navbar-light bg-light p-2">
-                <a className="navbar-brand" href="#">Kavpedia</a>
+                <a className="navbar-brand" href="#"><h3>Kavpedia</h3></a>
                 <div className="ml-auto">
-                    <button className="btn btn-outline-primary mr-1 cursor-pointer" onClick={() => setBasicModal(!basicModal)}>
-                        Add Document
+                    <button style={{backgroundColor: '#EB7623FF', color:'#fff'}} className="btn btn-md mr-1 cursor-pointer" onClick={() => setBasicModal(!basicModal)}>
+                        Add or Create
                     </button>
-                    <button className="btn btn-outline-danger cursor-pointer" onClick={() => dispatch(handleLogout())}>
+                    {/* <button className="btn btn-outline-danger cursor-pointer" onClick={() => dispatch(handleLogout())}>
                     Logout
-                    </button>
+                    </button> */}
                 </div>
             </nav>
-        
+            <Row className='mt-1'>
+            {(projectsDropdown && projectsDropdown.length > 0) && projectsDropdown.map((item, index) => (
+                <Col md='3' key={index}>
+                <Card onClick={() => projectClick(item.value)} className={selectedProject === item.value ? 'cursor-pointer active' : 'cursor-pointer'} >
+                    <CardBody>
+                            <div className='d-flex justify-content-start'>
+                                <div className='content-center' style={{marginRight: '5px'}}>
+                                    <Folder color={selectedProject === item.value ? '#fff' : '#EB7623FF'} size={'18'}/>
+                                </div>
+                                <div className='content-center'>
+                                    <b className='m-0'>{item.label}</b>
+                                </div>
+                            </div>
+                    </CardBody>
+                </Card>
+                </Col>
+            )) }
+        </Row>
         <Card className='mt-1'>
             <CardBody>
-                <SearchComponent Callback={CallBack} projectsDropdown={projectsDropdown}/>
+                <SearchComponent Callback={CallBack} projects={selectedProject} projectsDropdown={projectsDropdown}/>
             </CardBody>
         </Card> 
         {Object.values(data).length > 0 ? (
-            <Card>
-                <CardBody className='mx-3'>
-                {!loading ? (
-                        <DocumentsList data={data} />
-                ) : (
-                    <div className="text-center"><Spinner /></div>
-                )}
-                </CardBody>
-            </Card>
+            <Row>
+                <Col md='12'>
+                        {!loading ? (
+                            <>
+                            <DocumentsList data={data} projects={projectsDropdown}/>
+                            </>
+                        ) : (
+                            <div className="text-center"><Spinner /></div>
+                        )}
+                </Col>
+            </Row>
+            
            
         ) : (
             <Card>

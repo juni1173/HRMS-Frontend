@@ -7,7 +7,8 @@ import InputMask from 'react-input-mask'
 import Flatpickr from 'react-flatpickr'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import { useDropzone } from 'react-dropzone'
-const AddTask = ({ projectsData, CallBack, task, ChildCallBack }) => {
+const AddTask = ({ projectsData, CallBack, task, ChildCallBack, currentAddStatus }) => {
+    console.warn(currentAddStatus)
     const Api = apiHelper()
     const [TaskData, setTaskData] = useState({
         title: '',
@@ -254,7 +255,10 @@ const AddTask = ({ projectsData, CallBack, task, ChildCallBack }) => {
         if (TaskData.account_hours !== '') formData.append('account_hour', TaskData.account_hours)
         if (TaskData.external_ticket_reference !== '') formData.append('external_ticket_reference', TaskData.external_ticket_reference)
         formData.append('task_type', TaskData.task_type)
-        formData.append('status', TaskData.status)
+        if (currentAddStatus) { 
+            formData.append('status', currentAddStatus)
+         } else formData.append('status', TaskData.status)
+        
         if (task) formData.append('parent', task.id) 
         await Api.jsonPost(`/taskify/new/task/`, formData, false).then(result => {
             if (result) {
@@ -460,7 +464,7 @@ const AddTask = ({ projectsData, CallBack, task, ChildCallBack }) => {
                 />
             </Col> */}
             <Col md={12} className="mb-2">
-                <div {...getRootProps({ className: 'dropzone bg-light border-dashed border-2 p-3 text-center' })}>
+                <div {...getRootProps({ className: 'dropzone bg-light border-dotted border-2 p-1 text-center' })}>
                     <input {...getInputProps()} />
                     <p>Drag 'n' drop some files here, or click to select files</p>
                 </div>
